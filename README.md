@@ -1,14 +1,14 @@
 # PBK models for PFAS 
-This repository contains code for developing PBK model for describing PFAS biodistribution in multiple species and deploying as web services on Jaqpot (https://www.jaqpot.org/). This work is part of the SCENARIOS EU H2020 project (https://scenarios-project.eu/). The list of available PBK models will be updated throughout the lifespan of the project.
+This repository contains R code for developing PBK model for describing PFAS biodistribution in multiple species and deploying as web services on Jaqpot (https://www.jaqpot.org/). This work is part of the SCENARIOS EU H2020 project (https://scenarios-project.eu/). The list of available PBK models will be updated throughout the lifespan of the project.
 
 ## List of PBK models
 - Humans:
 - Rats:
-    * PFOA (male, female) (Loccisano et al., 2012)
-    * PFOS (male, female)(Loccisano et al., 2012)
-    * PFHxS (male, female)(Kim et al., 2018)
-    * PFNA (male, female)(Kim et al., 2019)
-    * PFDA (male, female)(Kim et al., 2019)
+    * PFOA [male, female] (Loccisano et al., 2012)
+    * PFOS [male, female] (Loccisano et al., 2012)
+    * PFHxS [male, female] (Kim et al., 2018)
+    * PFNA [male, female] (Kim et al., 2019)
+    * PFDA [male, female] (Kim et al., 2019)
 - Mice:
 - Monkeys:
 - Fish
@@ -16,7 +16,7 @@ This repository contains code for developing PBK model for describing PFAS biodi
 ## Folder Contents
 *  Bernstein et al.2021 --> This folder transfers the PFOA, PFOS, PFHxS, PFNA and PFDA PBK code presented in Bernstein et al. (2021) to R code in an appropriate format, so that it can be readily exposed as a web service on Jaqpot.
 ## Necessary R packages
-* `deSolve"  --> A library containing functions for solving ODE systems
+* `deSolve`  --> A library containing functions for solving ODE systems
 * `jaqpotr` --> A library containing functions for uploading models on the Jaqpot server. Installation instructions can be found in https://www.jaqpot.org/docs/r
 
 ## References
