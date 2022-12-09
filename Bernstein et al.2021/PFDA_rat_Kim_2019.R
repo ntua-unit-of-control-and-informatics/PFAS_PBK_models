@@ -406,7 +406,7 @@ user_input <- list( "admin.type" = admin.type,
                     "admin.dose" = admin.dose, 
                     "admin.time" = admin.time,
                     "BW"=BW, "BW.times" = BW.times,
-                    "F_unabs" = F_unabs)
+                    "F_unabs" = F_unabs, "sex" = "sex")
 
 
 params <- create.params(user_input)
