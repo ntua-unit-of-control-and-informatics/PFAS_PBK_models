@@ -83,9 +83,9 @@ create.params  <- function(user_input){
     V_rbc <-  0.76456 ;
     
     F_free_init <- 0.022;       # Initial free fraction of chemical in blood
-    delta <- 0.94;               #free fraction adjustment constant
-    k_freec <- 0.035; 
-    K_bilecc <- 1
+    delta <- 0.94;              #free fraction adjustment constant
+    k_freec <- 0.035;           #Rate constant for free fraction variation 
+    K_bilecc <- 1               # Biliary excretion rate constant 
     
     return(list("sex" = sex, "admin.type" = admin.type,
                 "admin.dose" = admin.dose, 
@@ -189,11 +189,17 @@ custom.func <- function(){
 #5. ODEs System
 #==============
 
-ode.func <- function(time, inits, params){
+ode.func <- function(time, inits, params, custom.func){
   with(as.list(c(inits,params)),{
     
-    BW_fnc <- approxfun(BW.times, BW, method = "linear", rule = 2)
-    BW_out <- BW_fnc(time)
+    
+    if(length(BW)>1){
+      # Body weight (kg)
+      BW_fnc <- approxfun(BW.times, BW, method = "linear", rule = 2)
+      BW_out <- BW_fnc(time)
+    }else{
+      BW_out <- BW
+    }
     k_free <- k_freec*(BW_out^-0.25)
     F_free <- F_free_init*(1 - delta*(1 - exp(-k_free*time)))
     K_bilec <- F_free*K_bilecc/K_li
@@ -357,11 +363,12 @@ admin.dose <- 15* BW[1] # administered dose in mg
 admin.time <- 0 # time when doses are administered, in hours
 F_unabs <-   0 # Fraction of unabsorbed dose
 
+
 user_input <- list( "admin.type" = admin.type,
                     "admin.dose" = admin.dose, 
                     "admin.time" = admin.time,
                     "BW"=BW, "BW.times" = BW.times,
-                    "F_unabs" = F_unabs)
+                    "F_unabs" = F_unabs, "sex" = sex)
 
 
 params <- create.params(user_input)
@@ -383,11 +390,12 @@ admin.dose <- 150 * BW # administered dose in mg
 admin.time <- 0 # time when doses are administered, in hours
 F_unabs <-   0 # Fraction of unabsorbed dose
 
-user.input <- list( "admin.type" = admin.type,
+user_input <- list( "admin.type" = admin.type,
                     "admin.dose" = admin.dose, 
                     "admin.time" = admin.time,
                     "BW"=BW, "BW.times" = BW.times,
-                    "F_unabs" = F_unabs)
+                    "F_unabs" = F_unabs, "sex" = sex)
+
 
 
 params <- create.params(user_input)
@@ -405,12 +413,13 @@ print(tail(solution))
 # Subset of features to be displayed on the user interface
 predicted.feats <- c("A_li", "A_ki", "A_fil", "A_rb", "A_bl", "A_lib",
                      "A_fecal", "A_urine",  "A_fst",  "A_ust", "A_glumen", 
-                     "C_li", "C_ki", "C_fil", "C_rb", "C_bl","BW_out", "Free")
+                     "C_li", "C_ki", "C_fil", "C_rb", "C_bl","BW_out", "F_free")
 
 # Log in Jaqpot server
 jaqpotr::login.cred()
 
 # Deploy the model on the Jaqpot server to create a web service
-jaqpotr::deploy.pbpk(user_input, predicted.feats, create.params, create.inits, 
-                     create.events,custom.func, ode.fun, method = "bdf",
-                     url = "https://api.jaqpot.org/jaqpot/")
+jaqpotr::deploy.pbpk(user.input = user_input,out.vars = predicted.feats,
+                     create.params = create.params,  create.inits = create.inits,
+                     create.events = create.events, custom.func = custom.func, 
+                     method = "bdf",url = "https://api.jaqpot.org/jaqpot/")

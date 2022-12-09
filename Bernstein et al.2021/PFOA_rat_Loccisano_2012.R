@@ -185,7 +185,7 @@ custom.func <- function(){
 #5. ODEs System
 #==============
 
-ode.func <- function(time, inits, params){
+ode.func <- function(time, inits, params, custom.func){
   with(as.list(c(inits,params)),{
     
     if(length(BW)>1){
@@ -359,7 +359,7 @@ user_input <- list( "admin.type" = admin.type,
                     "admin.dose" = admin.dose, 
                     "admin.time" = admin.time,
                     "BW"=BW, "BW.times" = BW.times,
-                    "F_unabs" = F_unabs)
+                    "F_unabs" = F_unabs, "sex" = sex)
 
 
 params <- create.params(user_input)
@@ -384,7 +384,7 @@ user_input <- list( "admin.type" = admin.type,
                     "admin.dose" = admin.dose, 
                     "admin.time" = admin.time,
                     "BW"=BW, "BW.times" = BW.times,
-                    "F_unabs" = F_unabs)
+                    "F_unabs" = F_unabs, "sex" = sex)
 
 
 params <- create.params(user_input)
@@ -411,7 +411,7 @@ user_input <- list( "admin.type" = admin.type,
                     "admin.dose" = admin.dose, 
                     "admin.time" = admin.time,
                     "BW"=BW, "BW.times" = BW.times,
-                    "F_unabs" = F_unabs)
+                    "F_unabs" = F_unabs, "sex" = sex)
 
 
 params <- create.params(user_input)
@@ -437,11 +437,12 @@ admin.dose <- c(100,300,1000) # administered dose in mg
 admin.time <- c(0, 3,8) # time when doses are administered, in hours
 F_unabs <-   0 # Fraction of unabsorbed dose
 
+
 user_input <- list( "admin.type" = admin.type,
                     "admin.dose" = admin.dose, 
                     "admin.time" = admin.time,
                     "BW"=BW, "BW.times" = BW.times,
-                    "F_unabs" = F_unabs)
+                    "F_unabs" = F_unabs, "sex" = sex)
 
 
 params <- create.params(user_input)
@@ -470,7 +471,7 @@ user_input <- list( "admin.type" = admin.type,
                     "admin.dose" = admin.dose, 
                     "admin.time" = admin.time,
                     "BW"=BW, "BW.times" = BW.times,
-                    "F_unabs" = F_unabs)
+                    "F_unabs" = F_unabs, "sex" = sex)
 
 
 params <- create.params(user_input)
@@ -493,6 +494,7 @@ predicted.feats <- c("A_li", "A_ki", "A_fil", "A_rb", "A_bl",
 jaqpotr::login.cred()
 
 # Deploy the model on the Jaqpot server to create a web service
-jaqpotr::deploy.pbpk(user_input, predicted.feats, create.params, create.inits, 
-                     create.events,custom.func, ode.fun, method = "bdf",
-                     url = "https://api.jaqpot.org/jaqpot/")
+jaqpotr::deploy.pbpk(user.input = user_input,out.vars = predicted.feats,
+                     create.params = create.params,  create.inits = create.inits,
+                     create.events = create.events, custom.func = custom.func, 
+                     method = "bdf",url = "https://api.jaqpot.org/jaqpot/")
