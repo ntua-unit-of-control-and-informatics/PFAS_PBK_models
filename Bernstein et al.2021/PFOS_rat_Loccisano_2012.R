@@ -383,12 +383,11 @@ admin.dose <- 150 * BW # administered dose in mg
 admin.time <- 0 # time when doses are administered, in hours
 F_unabs <-   0 # Fraction of unabsorbed dose
 
-user.input <- list( "admin.type" = admin.type,
+user_input <- list( "admin.type" = admin.type,
                     "admin.dose" = admin.dose, 
                     "admin.time" = admin.time,
                     "BW"=BW, "BW.times" = BW.times,
-                    "F_unabs" = F_unabs)
-
+                    "F_unabs" = F_unabs, "sex" = "sex")
 
 params <- create.params(user_input)
 inits <- create.inits(params)
