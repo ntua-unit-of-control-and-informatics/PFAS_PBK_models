@@ -16,7 +16,7 @@ This repository contains R code for developing PBK model for describing PFAS bio
 ## Folder Contents
 *  Bernstein et al.2021 --> This folder transfers the PFOA, PFOS, PFHxS, PFNA and PFDA PBK code presented in Bernstein et al. (2021) to R code in an appropriate format, so that it can be readily exposed as a web service on Jaqpot.
 ## Necessary R packages
-]* `deSolve`  --> A library containing functions for solving ODE systems
+* `deSolve`  --> A library containing functions for solving ODE systems
 * `jaqpotr` --> A library containing functions for uploading models on the Jaqpot server. Installation instructions can be found in https://www.jaqpot.org/docs/r
 
 ## References
