@@ -51,33 +51,33 @@ create.params <- function(user_input){
     
     
     if(substance == 'PFOA'){
-      Tm = 1000*6*BW^0.75 #ug/h
-      Kt = 1000*0.116 #ug/L
+      Tm = 6*BW^0.75 #ug/h
+      Kt = 0.116 #ug/L
       Free = 0.03 # Fabrega (2014) Table 1
-      PL = 4.23#1.03 # Partition Coefficient for Liver: Fabrega (2014) Table 1
+      PL = 1.03 # Partition Coefficient for Liver: Fabrega (2014) Table 1
       PF = 0.467; # Partition Coefficient for Fat: Fabrega (2014) Table 1
-      PB = 0.37#0.17; # Partition Coefficient for Brain: Fabrega (2014) Table 1
-      PLu = 9.08#1.27; # Partition Coefficient for Lungs: Fabrega (2014) Table 1
-      PK = 0.62#1.17 # Partition Coefficient for Kiney: Fabrega (2014) Table 1
+      PB = 0.17; # Partition Coefficient for Brain: Fabrega (2014) Table 1
+      PLu = 1.27; # Partition Coefficient for Lungs: Fabrega (2014) Table 1
+      PK = 1.17 # Partition Coefficient for Kiney: Fabrega (2014) Table 1
       PG = 0.05 # Partition Coefficient for Gut: Loccisano (2011) Table 1
       PR = 0.12 # Partition Coefficient for Rest of boy: Loccisano (2011) Table 1
       kurinec = 3e-04	#urinary elimination rate constant  (/h/kg^-0.25); 
       kurine = kurinec*BW**(-0.25) # Elimination rate (1/h)
-      Total_hourly_Intake = 0.388/24 #0.331/24 # ug/h
+      Total_hourly_Intake = 0.331/24 # ug/h
     }else if(substance == 'PFOS'){
-      Tm = 1000*3.5*BW^0.75 #ug/h
-      Kt = 1000*0.0176 #ug/L
+      Tm = 3.5*BW^0.75 #ug/h
+      Kt = 0.0176 #ug/L
       Free = 0.03 # Fabrega (2014) Table 1
-      PL = 7.48#2.67 # Partition Coefficient for Liver: Fabrega (2014) Table 1
+      PL = 2.67 # Partition Coefficient for Liver: Fabrega (2014) Table 1
       PF = 0.33 # Partition Coefficient for Fat: Fabrega (2014) Table 1
-      PB = 0.36#0.255 # Partition Coefficient for Brain: Fabrega (2014) Table 1
-      PLu = 2.13#0.155 # Partition Coefficient for Lungs: Fabrega (2014) Table 1
-      PK = 5.54#1.26 # Partition Coefficient for Kiney: Fabrega (2014) Table 1
+      PB = 0.255 # Partition Coefficient for Brain: Fabrega (2014) Table 1
+      PLu = 0.155 # Partition Coefficient for Lungs: Fabrega (2014) Table 1
+      PK = 1.26 # Partition Coefficient for Kiney: Fabrega (2014) Table 1
       PG = 0.57 # Partition Coefficient for Gut: Loccisano (2011) Table 1
       PR = 0.2 # Partition Coefficient for Rest of boy: Loccisano (2011) Table 1
       kurinec = 1e-3	#urinary elimination rate constant  (/h/kg^-0.25); estimated from Harada, 
       kurine = kurinec*BW**(-0.25) # Elimination rate (1/h)
-      Total_hourly_Intake = 0.1625/24#0.130/24 #0.161/24 # ug/h
+      Total_hourly_Intake = 0.161/24 # ug/h
     }
     return(list('QC'=QC, 'QCP'=QCP, 'QL'=QL, 'QF'=QF, 'QK'=QK, 
                 'QFil'=QFil, 'QG'=QG, 'QLu'=QLu, 'QB'=QB, 'QR'=QR,
