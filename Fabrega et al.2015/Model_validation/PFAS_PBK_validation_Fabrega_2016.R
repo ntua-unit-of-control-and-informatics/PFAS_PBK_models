@@ -15,8 +15,8 @@ create.params <- function(user_input){
     #fractional tissue volumes
     VLC = 0.023		  # Fraction liver volume
     VFC = 0.02 #0.214		  # Fraction fat volume
-    VKC = 0.004		  # Fraction kiney volume
-    VFilC = 0.0004	# Fraction filtrate compartment volume (10% of kiney volume)
+    VKC = 0.004		  # Fraction kidney volume
+    VFilC = 0.0004	# Fraction filtrate compartment volume (10% of kidney volume)
     VGC = 0.0171		# Fraction gut volume
     VPlasC = 0.0428	# Fraction plasma volume
     VLuC = 0.014	# Fraction lungs volume
@@ -58,9 +58,9 @@ create.params <- function(user_input){
       PF = 0.467; # Partition Coefficient for Fat: Fabrega (2014) Table 1
       PB = 0.17; # Partition Coefficient for Brain: Fabrega (2014) Table 1
       PLu = 1.27; # Partition Coefficient for Lungs: Fabrega (2014) Table 1
-      PK = 1.17 # Partition Coefficient for Kiney: Fabrega (2014) Table 1
+      PK = 1.17 # Partition Coefficient for Kidney: Fabrega (2014) Table 1
       PG = 0.05 # Partition Coefficient for Gut: Loccisano (2011) Table 1
-      PR = 0.12 # Partition Coefficient for Rest of boy: Loccisano (2011) Table 1
+      PR = 0.12 # Partition Coefficient for Rest of body: Loccisano (2011) Table 1
       kurinec = 3e-04	#urinary elimination rate constant  (/h/kg^-0.25); 
       kurine = kurinec*BW**(-0.25) # Elimination rate (1/h)
       Total_hourly_Intake = 0.331/24 # ug/h
@@ -72,9 +72,9 @@ create.params <- function(user_input){
       PF = 0.33 # Partition Coefficient for Fat: Fabrega (2014) Table 1
       PB = 0.255 # Partition Coefficient for Brain: Fabrega (2014) Table 1
       PLu = 0.155 # Partition Coefficient for Lungs: Fabrega (2014) Table 1
-      PK = 1.26 # Partition Coefficient for Kiney: Fabrega (2014) Table 1
+      PK = 1.26 # Partition Coefficient for Kidney: Fabrega (2014) Table 1
       PG = 0.57 # Partition Coefficient for Gut: Loccisano (2011) Table 1
-      PR = 0.2 # Partition Coefficient for Rest of boy: Loccisano (2011) Table 1
+      PR = 0.2 # Partition Coefficient for Rest of body: Loccisano (2011) Table 1
       kurinec = 1e-3	#urinary elimination rate constant  (/h/kg^-0.25); estimated from Harada, 
       kurine = kurinec*BW**(-0.25) # Elimination rate (1/h)
       Total_hourly_Intake = 0.161/24 # ug/h
@@ -129,9 +129,9 @@ ode.func <- function(time, inits, params){
     CF <- AF/VF # Concentration in Fat
     CLu <- ALu/VLu # Concentration in Lungs
     CB <- AB/VB # Concentration in Brain
-    CK <- AK/VK # Concentration in Kiney
+    CK <- AK/VK # Concentration in Kidney
     CFil <- AFil/VFil # Concentration in Filtration compartment
-    CR <- AR/VR  # Concentration in Rest of the boy compartment
+    CR <- AR/VR  # Concentration in Rest of the body compartment
     
     # Plasma compartment (ng)
     dAPlas <- QF*Free*CF/PF + (QL+QG)*Free*CL/PL + QR*Free*CR/PR + QK*Free*CK/PK + 
@@ -152,7 +152,7 @@ ode.func <- function(time, inits, params){
     # Brain Compartment
     dAB <- QB*Free*(CPlas - CB/PB)
     
-    # Kiney compartment
+    # Kidney compartment
     dAK <- QK*Free*(CPlas - CK/PK) + (Tm*CFil)/(Kt+CFil)
     
     # Filtrate compartment
@@ -164,7 +164,7 @@ ode.func <- function(time, inits, params){
     # Amount excrete via urine
     dAUrine <- kurine*AStor
     
-    # Rest of the boy
+    # Rest of the body
     dAR <- QR*Free*(CPlas - CR/PR)
     
     dIntake <- 0 
@@ -181,8 +181,8 @@ ode.func <- function(time, inits, params){
 }
 
 ########################################
-BW <- 70#71.4 # kg
-substance <- 'PFOA'
+BW <- 71.4 # kg
+substance <- 'PFOS'
 exposure <- 0
 exposure_times <- 0
 user_input <- list('BW'=BW,
