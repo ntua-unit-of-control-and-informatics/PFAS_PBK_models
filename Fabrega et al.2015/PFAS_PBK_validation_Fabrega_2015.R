@@ -1,4 +1,4 @@
-setwd('C:/Users/vassi/Documents/GitHub/PFAS_PBK_models/Fabrega et al.2015/Model_validation')
+setwd('C:/Users/vassi/Documents/GitHub/PFAS_PBK_models/Fabrega et al.2015')
 create.params <- function(user_input){
   with(as.list(user_input),{
     # Physiological parameters (from Brown, et al)

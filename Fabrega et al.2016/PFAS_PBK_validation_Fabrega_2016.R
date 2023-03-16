@@ -2,7 +2,7 @@ create.params <- function(user_input){
   with(as.list(user_input),{
     # Physiological parameters (from Brown, et al)
     # fractional bloo flows to tissues
-    QCC = 12.5		  # Cariac blood output (L/h/kg^0.75)
+    QCC = 12.5		  # Cardiac blood output (L/h/kg^0.75)
     QFC = 0.052		  # Fraction cardiac output going to fat
     QLC = 0.19 #0.25 from Loccisano 2011 		  # Fraction cariac output going to liver
     QKC = 0.175		  # Fraction cardiac output going to kiney
@@ -24,7 +24,7 @@ create.params <- function(user_input){
     
     # Scaling parameters
     QC = QCC*BW**0.75	#Cardiac output (L/h)
-    Htc = 0#0.44        #hematocrit
+    Htc = 0#0.44      #hematocrit
     QCP = QC*(1-Htc)	# Plasma flow
     QL = QLC*QCP			# Plasma flow to liver (L/h)
     QF = QFC*QCP			# Plasma flow to fat (L/h)
@@ -63,7 +63,7 @@ create.params <- function(user_input){
       PR = 0.12 # Partition Coefficient for Rest of body: Loccisano (2011) Table 1
       kurinec = 3e-04	#urinary elimination rate constant  (/h/kg^-0.25); 
       kurine = kurinec*BW**(-0.25) # Elimination rate (1/h)
-      Total_hourly_Intake = 0.331/24 # ug/h
+      Total_hourly_Intake = 0.11/24 # ug/h
     }else if(substance == 'PFOS'){
       Tm = 3.5*BW^0.75 #ug/h
       Kt = 0.0176 #ug/L
@@ -77,7 +77,7 @@ create.params <- function(user_input){
       PR = 0.2 # Partition Coefficient for Rest of body: Loccisano (2011) Table 1
       kurinec = 1e-3	#urinary elimination rate constant  (/h/kg^-0.25); estimated from Harada, 
       kurine = kurinec*BW**(-0.25) # Elimination rate (1/h)
-      Total_hourly_Intake = 0.161/24 # ug/h
+      Total_hourly_Intake = 0.13/24 # ug/h
     }
     return(list('QC'=QC, 'QCP'=QCP, 'QL'=QL, 'QF'=QF, 'QK'=QK, 
                 'QFil'=QFil, 'QG'=QG, 'QLu'=QLu, 'QB'=QB, 'QR'=QR,
@@ -200,8 +200,22 @@ solution <- data.frame(ode(times = sample_time,  func = ode.func, y = inits, par
                            events = events, 
                            method="lsodes",rtol = 1e-05, atol = 1e-05)) 
 
-print(tail(solution,1))
+#print(tail(solution,1))
+
+my_simulation <- (tail(solution[,c('CL', 'CB', 'CLu', 'CK')],1))
+colnames(my_simulation) <- c('Liver', 'Brain', 'Lung', 'Kidney')
+  
+targets <- data.frame(matrix(data=c(3.33, 0.54, 4.06, 4.50,
+                                    36.4, 3.48, 2.11, 20.5), nrow = 2, byrow = T))
+colnames(targets) <- c('Liver', 'Brain', 'Lung', 'Kidney')
+rownames(targets) <- c('PFOA', 'PFOS')
+
+#print(my_simulation)
+#print(targets[substance,])
+results_df <- rbind(my_simulation, targets[substance,])
+rownames(results_df) <- c('model', 'targets')
+print(results_df)
+results_df[1,]/results_df[2,]
 
 # plot(solution$time/24/360, solution$CL)
-# plot(solution$time/24/360, solution$Mass_Balance)
-plot(solution$time/24/360, solution$CFil)
+
