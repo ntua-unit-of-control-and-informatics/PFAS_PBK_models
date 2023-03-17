@@ -110,7 +110,7 @@ create.params <- function(user.input){
     T_Qc_ref   = 279.15  	# Kelvin
     
     return(list('L0'=L0, 'Texp'=Texp, 'Cox'=Cox, 'Concentration_water'=Concentration_water,
-                'admin.dose'=admin.dose, 'admin.time'=admin.time,
+                'admin.dose_dietary'=admin.dose_dietary, 'admin.time_dietary'=admin.time_dietary,
                 'plasma'=plasma, 'Free'=Free, 'f_reab'=f_reab, 'C_permeab'=C_permeab,
                 'Lm'=Lm, 'kappa'=kappa, 'a_bio'=a_bio, 'b_bio'=b_bio, 'f'=f, 
                 'sc_blood'=sc_blood, 'sc_liver'=sc_liver, 'sc_muscle'=sc_muscle,
@@ -155,15 +155,15 @@ create.events <- function(parameters){
   with(as.list(parameters),{
     
     # Calculate number of administrated doses and corresponding administration time
-    ldose <- length(admin.dose)
-    ltimes <- length(admin.time)
+    ldose_dietary <- length(admin.dose_dietary)
+    ltimes_dietary <- length(admin.time_dietary)
     # If not equal, then stop 
-    if (ltimes != ldose){
+    if (ltimes_dietary != ldose_dietary){
       stop("The times of administration should be equal in number to the doses")
     }else{
-      events <- data.frame(var = c(rep(c('Q_lumen_1', 'Qadmin_food'), ltimes)), 
-                           time = sort(rep(admin.time,2)),
-                           value = sort(rep(admin.dose,2)),
+      events <- data.frame(var = c(rep(c('Q_lumen_1', 'Qadmin_food'), ltimes_dietary)), 
+                           time = sort(rep(admin.time_dietary,2)),
+                           value = sort(rep(admin.dose_dietary,2)),
                            method = 'add')
     }
     
@@ -346,35 +346,12 @@ ode.func <- function(time, inits, params){
                 'Total_accumulated'=Total_accumulated, 'Mass_equilibrium'=Mass_equilibrium))
   })
 }
-################################################################################
-
-
-# user.input_19 <- list(Texp = 19 + 273,      # C
-#                       Cox = 8.05,   # mg(O2)/L
-#                       L0 = 30.88,   # cm
-#                       f = 0.69, #0.616003, # unitless
-#                       Feeding=500, # ng PFOS/g dw of food
-#                       Concentration_water =	0	# PFOS concentration in water (ng/L)
-# )
-# 
-# 
-# user.input_7 <- list(Texp = 7 + 273,      # C
-#                      Cox = 11.44,   # mg(O2)/L
-#                      L0 = 30.1,   # cm
-#                      f = 0.55 ,#0.616003, # unitless
-#                      Feeding=500, # ng PFOS/g dw of food
-#                      Concentration_water =	0	# PFOS concentration in water (ng/L)
-# )
-# params <- create.params(user.input_19)
-# inits <- create.inits(params)
-# sample_time <- seq(0, (42+35)*24, 1)
-# 
-# solution <- data.frame(ode(times = sample_time,  func = ode.func, y = inits, parms = params,
-#                            #events = events,
-#                            method="lsodes",rtol = 1e-05, atol = 1e-05))
 
 
 ################################################################################
+
+# Reproduce results for T_exp <- 19 # C
+
 growth_inits <- c("L"=30.88)
 gworth_params <- c(Lm = 73.91,			# Optimised value RB revision (cm)
                    kappa =  0.0096, # Optimised value RB revision (cm/day)
@@ -395,21 +372,21 @@ growth_solution <- data.frame(ode(times = growth_times,  func = growth_function,
                                   #events = events,
                                   method="lsodes",rtol = 1e-05, atol = 1e-05))
 
-admin.dose <- 0.01*growth_solution$BW*1000*500 # ng PFOS
-admin.time <- growth_solution$time
+admin.dose_dietary <- 0.01*growth_solution$BW*1000*500 # ng PFOS
+admin.time_dietary <- growth_solution$time
 
 user.input_19 <- list(Texp = 19 + 273,      # C
                       Cox = 8.05,   # mg(O2)/L
                       L0 = 30.88,   # cm
                       f = 0.616003, # unitless
-                      admin.dose=admin.dose, # ng PFOS/g dw of food
-                      admin.time=admin.time,
-                      Concentration_water =	0	# PFOS concentration in water (ng/L)
+                      admin.dose_dietary=admin.dose_dietary, # ng PFOS/g dw of food
+                      admin.time_dietary=admin.time_dietary,
+                      Concentration_water =	0.4	# PFOS concentration in water (ng/L)
 )
 params <- create.params(user.input_19)
 inits <- create.inits(params)
 events <- create.events(params)
-sample_time <- seq(0, (42+35)*24, 0.1)
+sample_time <- seq(0, (42+35)*24, 1)
 
 solution <- data.frame(ode(times = sample_time,  func = ode.func, y = inits, parms = params,
                            events = events,
