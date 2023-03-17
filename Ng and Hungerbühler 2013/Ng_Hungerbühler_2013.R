@@ -59,6 +59,185 @@ create.params <- funtion(user.input){
     C_Alb_MF <- 0.06 # Albumin binding protein concentration in muscle fluid
     C_Alb_AF <- 0.03 # Albumin binding protein concentration in adipose fluid
     C_Fapb_LT <- 0.05 # Fatty acid binding protein concentration in liver tissue
+    
+    if(substance == 'PFOA'){
+      
+      # Ng and Hungerbuhler 2013 Table S6
+      # Parameters associated with PFAA uptake and loss via the gills.
+      P_eff <- 1.7e-08 # m/s
+      CR_ss_cw <- 1.62 # unitless
+      k_w_B <- 1.23    # L/kg/day
+      k_B_w <- 0.59    # L/kg/day
+      
+      # Ng and Hungerbuhler 2013 Table S7
+      # Flux (J) for protein-facilitated uptake and 
+      # calculated rate constants (b) for clearance and reabsorption used in our model.
+      J_Oat1 <- 0.46    # nmol/mg/protein/min
+      J_Oat3 <-  0.60   # nmol/mg/protein/min
+      J_Oatp1a1 <- 0.50 # nmol/mg/protein/min
+      b_clear <- 0.029  # 1/s
+      b_reab <- 0.14    # 1/s
+      
+      # Association Constant KA for Albumin - Table 2
+      KA_ALB <- 3.7e+03 # 1/M
+      k_off <- 0.01 # 1/s
+      k_ALB_on <- KA_ALB*k_off
+      
+      # Association Constant KA for FAPB - Table 2
+      KA_FAPB <- 5.6e+04 # 1/M
+      k_FAPB_on <- KA_FAPB*k_off
+      
+    }else if(substance == 'PFDA'){
+      
+      # Ng and Hungerbuhler 2013 Table S6
+      # Parameters associated with PFAA uptake and loss via the gills.
+      P_eff <- 9.5e-08 # m/s
+      CR_ss_cw <- 16.0 # unitless
+      k_w_B <- 6.72    # L/kg/day
+      k_B_w <- 0.30    # L/kg/day
+      
+      # Ng and Hungerbuhler 2013 Table S7
+      # Flux (J) for protein-facilitated uptake and 
+      # calculated rate constants (b) for clearance and reabsorption used in our model.
+      J_Oat1 <- 0.76    # nmol/mg/protein/min
+      J_Oat3 <-  1.04   # nmol/mg/protein/min
+      J_Oatp1a1 <- 1.56 # nmol/mg/protein/min
+      b_clear <- 0.049  # 1/s
+      b_reab <- 0.042   # 1/s
+      
+      # Association Constant KA for Albumin - Table 2
+      KA_ALB <- 4.7e+04 # 1/M
+      k_off <- 0.01 # 1/s
+      k_ALB_on <- KA_ALB*k_off
+      
+      # Association Constant KA for FAPB - Table 2
+      KA_FAPB <- 6.4+05 # 1/M
+      k_FAPB_on <- KA_FAPB*k_off
+      
+    }else if(substance == 'PFUnA'){
+      
+      # Ng and Hungerbuhler 2013 Table S6
+      # Parameters associated with PFAA uptake and loss via the gills.
+      P_eff <- 1.2e-07 # m/s
+      CR_ss_cw <- 52.9 # unitless
+      k_w_B <- 8.68    # L/kg/day
+      k_B_w <- 0.12    # L/kg/day
+      
+      # Ng and Hungerbuhler 2013 Table S7
+      # Flux (J) for protein-facilitated uptake and 
+      # calculated rate constants (b) for clearance and reabsorption used in our model.
+      J_Oat1 <- 0.89    # nmol/mg/protein/min
+      J_Oat3 <-  1.42   # nmol/mg/protein/min
+      J_Oatp1a1 <- 2.19 # nmol/mg/protein/min
+      b_clear <- 0.062  # 1/s
+      b_reab <- 0.059    # 1/s
+      
+      # Association Constant KA for Albumin - Table 2
+      KA_ALB <- 4.3e+04 # 1/M
+      k_off <- 0.01 # 1/s
+      k_ALB_on <- KA_ALB*k_off
+      
+      # Association Constant KA for FAPB - Table 2
+      KA_FAPB <- 2.2+06 # 1/M
+      k_FAPB_on <- KA_FAPB*k_off
+      
+    }else if(substance == 'PFDoA'){
+      
+      # Ng and Hungerbuhler 2013 Table S6
+      # Parameters associated with PFAA uptake and loss via the gills.
+      P_eff <- 1.5e-07 # m/s
+      CR_ss_cw <- 175  # unitless
+      k_w_B <- 10.9    # L/kg/day
+      k_B_w <- 0.04    # L/kg/day
+      
+      # Ng and Hungerbuhler 2013 Table S7
+      # Flux (J) for protein-facilitated uptake and 
+      # calculated rate constants (b) for clearance and reabsorption used in our model.
+      J_Oat1 <- 1.01    # nmol/mg/protein/min
+      J_Oat3 <-  1.66   # nmol/mg/protein/min
+      J_Oatp1a1 <- 2.70 # nmol/mg/protein/min
+      b_clear <- 0.072  # 1/s
+      b_reab <- 0.073   # 1/s
+      
+      # Association Constant KA for Albumin - Table 2
+      KA_ALB <- 1.2e+06 # 1/M
+      k_off <- 0.01 # 1/s
+      k_ALB_on <- KA_ALB*k_off
+      
+      # Association Constant KA for FAPB - Table 2
+      KA_FAPB <- 7.4+06 # 1/M
+      k_FAPB_on <- KA_FAPB*k_off
+      
+    }else if(substance == 'PFHxS'){
+      
+      # Ng and Hungerbuhler 2013 Table S6
+      # Parameters associated with PFAA uptake and loss via the gills.
+      P_eff <- 5.9e-09 # m/s
+      CR_ss_cw <- 0.39 # unitless
+      k_w_B <- 0.42    # L/kg/day
+      k_B_w <- 0.84    # L/kg/day
+      
+      # Ng and Hungerbuhler 2013 Table S7
+      # Flux (J) for protein-facilitated uptake and 
+      # calculated rate constants (b) for clearance and reabsorption used in our model.
+      J_Oat1 <- 0.41    # nmol/mg/protein/min
+      J_Oat3 <-  0.44   # nmol/mg/protein/min
+      J_Oatp1a1 <- 0.13 # nmol/mg/protein/min
+      b_clear <- 0.023  # 1/s
+      b_reab <- 0.004   # 1/s
+      
+      # Association Constant KA for Albumin - Table 2
+      KA_ALB <- 1.2e+04 # 1/M
+      k_off <- 0.01 # 1/s
+      k_ALB_on <- KA_ALB*k_off
+      
+      # Association Constant KA for FAPB - Table 2
+      KA_FAPB <- 1.7+04 # 1/M
+      k_FAPB_on <- KA_FAPB*k_off
+      
+    }else if(substance == 'PFOS'){
+      
+      # Ng and Hungerbuhler 2013 Table S6
+      # Parameters associated with PFAA uptake and loss via the gills.
+      P_eff <- 6.1e-08 # m/s
+      CR_ss_cw <- 4.30 # unitless
+      k_w_B <- 4.37    # L/kg/day
+      k_B_w <- 0.79    # L/kg/day
+      
+      # Ng and Hungerbuhler 2013 Table S7
+      # Flux (J) for protein-facilitated uptake and 
+      # calculated rate constants (b) for clearance and reabsorption used in our model.
+      J_Oat1 <- 0.66    # nmol/mg/protein/min
+      J_Oat3 <-  1.20   # nmol/mg/protein/min
+      J_Oatp1a1 <- 0.13 # nmol/mg/protein/min
+      b_clear <- 0.023  # 1/s
+      b_reab <- 0.004    # 1/s
+      
+      # Association Constant KA for Albumin - Table 2
+      KA_ALB <- 8.9e+03 # 1/M
+      k_off <- 0.01 # 1/s
+      k_ALB_on <- KA_ALB*k_off
+      
+      # Association Constant KA for FAPB - Table 2
+      KA_FAPB <- 1.9+05 # 1/M
+      k_FAPB_on <- KA_FAPB*k_off
+    }
+    
+    
+    
+    return(list('V_LT'=V_LT, 'V_KT'=V_KT, 'V_MT'=V_MT, 'V_AT'=V_AT, 'V_B'=V_B,
+                'V_LF'=V_LF, 'V_KF'=V_KF, 'V_MF'=V_MF, 'V_AF'=V_AF,
+                'A_G'=A_G, 'A_L'=A_L, 'A_K'=A_K, 'A_M'=A_M, 'A_A'=A_A,
+                'Q_W'=Q_W, 'Q_G'=Q_G, 'Q_L'=Q_L, 'Q_K'=Q_K, 'Q_M'=Q_M, 'Q_A'=Q_A, 'Q_Ur'=Q_Ur,
+                'C_Alb_B'=C_Alb_B, 'C_Alb_LF'=C_Alb_LF, 'C_Alb_KF'=C_Alb_KF, 
+                'C_Alb_MF'=C_Alb_MF, 'C_Alb_AF'=C_Alb_AF, 'C_Fapb_LT'=C_Fapb_LT,
+                'P_eff'=P_eff, 'CR_ss_cw'=CR_ss_cw, 'k_w_B'=k_w_B, 'k_B_w'=k_B_w,
+                'J_Oat1'=J_Oat1, 'J_Oat3'=J_Oat3, 'J_Oatp1a1'=J_Oatp1a1,
+                'b_clear'=b_clear, 'b_reab'=b_reab,
+                'KA_ALB'=KA_ALB, 'k_off'=k_off, 'k_ALB_on'=k_ALB_on,
+                'KA_FAPB'=KA_FAPB, 'k_FAPB_on'=k_FAPB_on
+                ))
+    
   })
 }
 
@@ -76,6 +255,63 @@ create.events <- funtion(parameters){
 
 ode.func <- function(time, inits, params){
   with(as.list(c(inits, params)),{
+    
+    # Uptake and loss rate constant from gills
+    b_W_B <- k_W_B     # m^3/s
+    b_B_W <- k_B_W/V_B # 1/s
+    
+    # Mass Transfer Coefficients - MTC 
+    # For diffusion from the interstitial fluid back to blood, the same overall resistance is
+    # assumed (that is, kiF-B = kB-iF)
+    k_B_AF = (1/Q_A + 1/(P_eff*A_A))^(-1) # adipose MTC
+    k_B_MF = (1/Q_M + 1/(P_eff*A_M))^(-1) # muscle MTC
+    k_B_LF = (1/Q_L + 1/(P_eff*A_L))^(-1) # liver MTC
+    k_B_KF = (1/Q_K + 1/(P_eff*A_K))^(-1) # kidney <TC
+
+    # Rate constants 
+    # Adipose
+    b_B_AF = k_B_AF/V_B
+    b_AF_B = k_B_AF/V_AF
+    # Muscle
+    b_B_MF = k_B_MF/V_B
+    b_MF_B = k_B_MF/V_MF
+    # Liver
+    b_B_LF = k_B_LF/V_B
+    b_LF_B = k_B_LF/V_LF
+    # Kidney
+    b_B_KF = k_B_KF/V_B
+    b_KF_B = k_B_KF/V_KF
+    
+    # MTC from Interstitial fluid to Tissue sub-compartments
+    k_AF_AT <- P_eff*A_A # Adipose
+    k_MF_MT <- P_eff*A_M # Muscle
+    k_LF_LT <- P_eff*A_L # Liver
+    k_KF_KT <- P_eff*A_K # Kidney
+    
+    # First-order rate constants for diffusion 
+    # Adipose
+    b_AF_AT <- k_AF_AT/V_AF # from fluid to issue
+    b_AT_AF <- k_AF_AT/V_AT # from tissue to fluid
+    # Muscle
+    b_MF_MT <- k_MF_MT/V_MF # from fluid to issue
+    b_MT_MF <- k_MF_MT/V_MT # from tissue to fluid
+    # Liver
+    b_LF_LT <- k_LF_LT/V_LF # from fluid to issue
+    b_LT_LF <- k_LF_LT/V_LT # from tissue to fluid
+    # Kidney
+    b_KF_KT <- k_KF_KT/V_KF # from fluid to issue
+    b_KT_KF <- k_KF_KT/V_KT # from tissue to fluid
+    
+    # Urinary removal rate constant 
+    b_Ur <- Q_Ur/V_Ur
+
+    # Blood - Unoccupied Albumin binding cites concentration 
+    dC_B_ALB <- k_ALB_off*C_B_bound - k_ALB_on*C_B_ALB*C_B_free
+    
+    # Binding rate constant in Blood - 1/s
+    b_B_on <- k_ALB_on*C_B_ALB
+    b_B_off <- k_off
+    
     # Blood - Free
     dM_B_free <- b_W_B*C_W_free - b_B_W*M_B_free - 
       (b_B_AF*M_B_free + b_B_MF*M_B_free + b_B_LF*M_B_free + b_B_KF*M_B_free) +
@@ -84,6 +320,13 @@ ode.func <- function(time, inits, params){
     
     # Blood - Bound
     dM_B_bound <- b_B_on*M_B_free - b_B_off*M_B_bound
+    
+    # Adipose - Unoccupied Albumin binding cites concentration in fluid
+    dC_AF_ALB <- k_ALB_off*C_AF_bound - k_ALB_on*C_AF_ALB*C_AF_free
+    
+    # Binding rate constant in Adipose fluid - 1/s
+    b_AF_on <- k_ALB_on*C_AF_ALB
+    b_AF_off <- k_off
     
     # Adipose fluid - Free
     dM_AF_free <- b_B_AF*M_B_free + b_AT_AF*M_AT_free - (b_AF_B + b_AF_AT)*M_AF_free - 
@@ -95,6 +338,13 @@ ode.func <- function(time, inits, params){
     # Adipose tissue - Free
     dM_AT_free <- b_AF_AT*M_AF_free - b_AT_AF*M_AT_free
     
+    # Muscle - Unoccupied Albumin binding cites concentration in fluid
+    dC_MF_ALB <- k_ALB_off*C_MF_bound - k_ALB_on*C_MF_ALB*C_MF_free
+    
+    # Binding rate constant in Muscle fluid - 1/s
+    b_MF_on <- k_ALB_on*C_MF_ALB
+    b_MF_off <- k_off
+    
     # Muscle Fluid - Free
     dM_MF_free <- b_B_MF*M_B_free + b_MT_MF*M_MT_free - (b_MF_B + b_MF_MT)*M_MF_free - 
       b_MF_on*M_MF_free + b_MF_off*M_MF_bound
@@ -104,6 +354,19 @@ ode.func <- function(time, inits, params){
     
     # Muscle Tissue - Free
     dM_MT_free <- b_MF_MT*M_MF_free - b_MT_MF*M_MT_free
+    
+    # Liver - Unoccupied Albumin binding cites concentration in fluid 
+    dC_LF_ALB <- k_ALB_off*C_LF_bound - k_ALB_on*C_LF_ALB*C_LF_free
+    # Liver - Unoccupied FAPB binding cites concentration in tissue 
+    dC_LT_FAPB <- k_FAPB_off*C_LT_bound - k_ALB_on*C_LT_ALB*C_LT_free
+    
+    # Binding rate constant in Liver fluid - 1/s
+    b_LF_on <- k_ALB_on*C_LF_ALB
+    b_LF_off <- k_off
+    
+    # Binding rate constant in Liver Tissue - 1/s
+    b_LT_on <- k_FAPB_on*C_LT_FAPB
+    b_LT_off <- k_off
     
     # Liver Fluid - Free
     dM_LF_free <- b_B_LF*M_B_free + b_LT_LF*M_LT_free - (b_LF_B + b_LF_LT)*M_LF_free - 
@@ -117,6 +380,13 @@ ode.func <- function(time, inits, params){
     
     # Liver Tissue - Bound
     dM_LT_bound <- b_LT_on*M_LT_free - b_LT_off*M_LT_bound
+    
+    # Kidney - Unoccupied Albumin binding cites concentration in fluid 
+    dC_KF_ALB <- k_ALB_off*C_KF_bound - k_ALB_on*C_KF_ALB*C_KF_free
+    
+    # Binding rate constant in Kidney fluid - 1/s
+    b_KF_on <- k_ALB_on*C_KF_ALB
+    b_KF_off <- k_off
     
     # Kidney Fluid - Free
     dM_KF_free <- b_B_KF*M_B_free + b_KT_KF*M_KT_free - (b_KF_B + b_KF_KT)*M_KF_free - 
@@ -133,15 +403,19 @@ ode.func <- function(time, inits, params){
     dM_Ur_free <- b_KT_Ur*M_KT_free - b_Ur_KT*M_Ur_free + b_clear*M_KT_free - b_reab_M_Ur_free - 
       (Q_Ur/V_Ur)*M_Ur_free
     
-    return(list('dM_B_free'=dM_B_free, 'dM_B_bound'=dM_B_bound, 'dM_AF_free'=dM_AF_free,
-                'dM_AF_bound'=dM_AF_bound, 'dM_AT_free'=dM_AT_free, 'dM_MF_free'=dM_MF_free,
-                'dM_MF_bound'=dM_MF_bound, 'dM_MT_free'=dM_MT_free, 'dM_LF_free'=dM_LF_free,
-                'dM_LF_bound'=dM_LF_bound, 'dM_LT_free'=dM_LT_free, 'dM_LT_bound'=dM_LT_bound,
-                'dM_KF_free'=dM_KF_free, 'd_M_KF_bound'=d_M_KF_bound, 'd_M_KT_free'=d_M_KT_free,
+    return(list('dC_B_ALB'=dC_B_ALB, 'dM_B_free'=dM_B_free, 'dM_B_bound'=dM_B_bound,
+                'dC_AF_ALB'=dC_AF_ALB, 'dM_AF_free'=dM_AF_free, 'dM_AF_bound'=dM_AF_bound, 'dM_AT_free'=dM_AT_free,
+                'dC_MF_ALB'=dC_MF_ALB, 'dM_MF_free'=dM_MF_free, 'dM_MF_bound'=dM_MF_bound, 'dM_MT_free'=dM_MT_free,
+                'dC_LF_ALB'=dC_LF_ALB, 'dC_LT_FAPB'=dC_LT_FAPB, 
+                'dM_LF_free'=dM_LF_free, 'dM_LF_bound'=dM_LF_bound, 'dM_LT_free'=dM_LT_free, 'dM_LT_bound'=dM_LT_bound,
+                'dC_KF_ALB'=dC_KF_ALB, 'dM_KF_free'=dM_KF_free, 'd_M_KF_bound'=d_M_KF_bound, 'd_M_KT_free'=d_M_KT_free,
                 'dM_Ur_free'=dM_Ur_free))
     
   })
 }
 
 ################################################################################
-BW = 8 # Total body weight - g
+BW <- 8 # Total body weight - g
+substance <- 'PFOA'
+
+
