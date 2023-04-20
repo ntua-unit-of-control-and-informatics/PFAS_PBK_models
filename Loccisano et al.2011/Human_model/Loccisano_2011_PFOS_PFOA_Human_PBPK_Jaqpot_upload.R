@@ -151,7 +151,7 @@ custom.func <- function(){
   return()
 }
 
-ode.func <- function(time, inits, params){
+ode.func <- function(time, inits, params, custom.func){
   with(as.list(c(inits, params)),{
     # Concentrations
     CPlas <- APlas/VPlas # Concentration in plasma 
@@ -246,7 +246,7 @@ predicted.feats <- c('APlas', 'AG', 'AL', 'AF',
                      'CK', 'Cfil', 'CSk', 'CR')
 
 # Log in Jaqpot server
-jaqpotr::login.cred()
+jaqpotr::login.api()
 # Deploy the model on the Jaqpot server to create a web service
 jaqpotr::deploy.pbpk(user.input = user_input,out.vars = predicted.feats,
                      create.params = create.params,  create.inits = create.inits,
