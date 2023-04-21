@@ -37,6 +37,7 @@ create.params <- function(user.input){
     # Biometric data
     #--------------------------------------------
     Lm = 73.91;			# Optimised value RB revision (cm)
+    f = 0.616003 # unitless
     kappa =  0.0096 # Optimised value RB revision (cm/day)
     a_bio = 9.57767e-06 
     b_bio = 3.05088 
@@ -109,10 +110,11 @@ create.params <- function(user.input){
     BW_Qc_ref  = 0.2701  	# kg 
     T_Qc_ref   = 279.15  	# Kelvin
     
-    return(list('L0'=L0, 'Texp'=Texp, 'Cox'=Cox, 'Concentration_water'=Concentration_water,
+    return(list('L0'=L0, 'Texp'=Texp, 'Cox'=Cox,
                 'admin.dose_dietary'=admin.dose_dietary, 'admin.time_dietary'=admin.time_dietary,
+                'C_water'=C_water, 'admin.time_oral'=admin.time_oral,
                 'plasma'=plasma, 'Free'=Free, 'f_reab'=f_reab, 'C_permeab'=C_permeab,
-                'Lm'=Lm, 'kappa'=kappa, 'a_bio'=a_bio, 'b_bio'=b_bio, 'f'=f, 
+                'Lm'=Lm, 'f'=f, 'kappa'=kappa, 'a_bio'=a_bio, 'b_bio'=b_bio, 'f'=f, 
                 'sc_blood'=sc_blood, 'sc_liver'=sc_liver, 'sc_muscle'=sc_muscle,
                 'sc_skin'=sc_skin, 'sc_gill'=sc_gill, 'sc_kidney'=sc_kidney,
                 'sc_viscera'=sc_viscera, 'sc_brain'=sc_brain, 'sc_lumen'=sc_lumen,
@@ -134,13 +136,13 @@ create.params <- function(user.input){
 
 create.inits <- function(parameters){
   with(as.list(parameters),{
-    Qadmin_water=0; Qadmin_food=0; 
+    Qadmin_water=0; Qadmin_food=0; C_water=0;
     L = L0; Q_lumen_1 = 0; Q_lumen_2 = 0; Q_art= 0; Q_ven= 0; Q_liver= 0;
     Q_muscle= 0; Q_brain= 0; Q_viscera= 0; Q_kidney= 0; Q_skin= 0;
     Q_gill= 0; Q_carcass= 0; Qexcret_gill= 0; Qexcret_bile= 0; Qexcret_urine= 0;
     Qexcret_feces<-0
     
-    return(c('Qadmin_food'=Qadmin_food, 'Qadmin_water'=Qadmin_water,
+    return(c('Qadmin_food'=Qadmin_food, 'Qadmin_water'=Qadmin_water, 'C_water'=C_water,
              'L'=L, 'Q_lumen_1'=Q_lumen_1, 'Q_lumen_2'=Q_lumen_2,
              'Q_art'=Q_art, 'Q_ven'=Q_ven, 'Q_liver'=Q_liver,
              'Q_muscle'=Q_muscle, 'Q_brain'=Q_brain, 'Q_viscera'=Q_viscera,
@@ -157,19 +159,37 @@ create.events <- function(parameters){
     # Calculate number of administrated doses and corresponding administration time
     ldose_dietary <- length(admin.dose_dietary)
     ltimes_dietary <- length(admin.time_dietary)
+    
+    ldose_oral <- length(C_water)
+    ltimes_oral <- length(admin.time_oral)
     # If not equal, then stop 
     if (ltimes_dietary != ldose_dietary){
       stop("The times of administration should be equal in number to the doses")
     }else{
-      events <- data.frame(var = c(rep(c('Q_lumen_1', 'Qadmin_food'), ltimes_dietary)), 
+      events_dietary <- data.frame(var = c(rep(c('Q_lumen_1', 'Qadmin_food'), ltimes_dietary)), 
                            time = sort(rep(admin.time_dietary,2)),
                            value = sort(rep(admin.dose_dietary,2)),
                            method = 'add')
     }
     
-    #events <- events[order(events$time),] 
-    return(list(data=events))
+    if (ltimes_oral != ldose_oral){
+      stop("The times of administration should be equal in number to the doses")
+    }else{
+      events_oral <- data.frame(var = c(rep(c('Qadmin_water'), ltimes_oral)), 
+                                time = sort(admin.time_oral),
+                                value = sort(C_water),
+                                method = 'rep')
+    }
+
+    merged_events <- rbind(events_dietary, events_oral)
+    merged_events <- merged_events[order(merged_events$time),]
+
+    return(list(data=merged_events))
   })
+}
+
+custom.func <- function(){
+  return()
 }
 
 ode.func <- function(time, inits, params, custom.func){
@@ -280,7 +300,8 @@ ode.func <- function(time, inits, params, custom.func){
     #--------------------------------------------
     dQadmin_food = 0	# ng/h
     
-    dQadmin_water = C_permeab * Kx * Concentration_water
+    dC_water <- 0
+    dQadmin_water = C_permeab * Kx * C_water
     
     # Excretion
     #--------------------------------------------
@@ -318,7 +339,7 @@ ode.func <- function(time, inits, params, custom.func){
       F_viscera * C_art - F_kidney  * C_art - F_skin * C_art - F_gill * C_art -
       F_carcass * C_art
     
-    dQ_ven = (C_permeab * Kx * Concentration_water) - (Kx * ( Free * C_ven/PC_blood_water)) -
+    dQ_ven = (C_permeab * Kx * C_water) - (Kx * ( Free * C_ven/PC_blood_water)) -
       Qc * C_ven * Free + (F_liver + F_viscera)* C_liver/PC_liver +
       (1-a) * F_muscle  * C_muscle/PC_muscle +  F_brain * C_brain/PC_brain +
       (a* F_muscle + b * F_skin + F_kidney ) * C_kidney/PC_kidney +
@@ -331,7 +352,7 @@ ode.func <- function(time, inits, params, custom.func){
       Q_viscera + Q_kidney + Q_skin + Q_gill + Q_carcass + Q_lumen_1 + Q_lumen_2
     Mass_equilibrium = (Total_admin - Total_excreted - Total_accumulated)
     
-    return(list(c('dQadmin_food'=dQadmin_food, 'dQadmin_water'=dQadmin_water, 
+    return(list(c('dQadmin_food'=dQadmin_food, 'dQadmin_water'=dQadmin_water, 'dC_water'=dC_water,
                   'dL'=dL, 'dQ_lumen_1'=dQ_lumen_1, 'dQ_lumen_2'=dQ_lumen_2,
                   'dQ_art'=dQ_art, 'dQ_ven'=dQ_ven, 'dQ_liver'=dQ_liver,
                   'dQ_muscle'=dQ_muscle, 'dQ_brain'=dQ_brain, 'dQ_viscera'=dQ_viscera,
@@ -350,43 +371,22 @@ ode.func <- function(time, inits, params, custom.func){
   })
 }
 
+###############################################################################
+admin.dose_dietary <- c(1679.023, 1692.754, 1706.534, 1720.362, 1734.239, 1748.165, 1762.138, 1776.159, 1790.228, 1804.344, 1818.507, 1832.718, 1846.976, 1861.280, 1875.632, 1890.029,
+                        1904.473, 1918.963, 1933.499, 1948.081, 1962.708, 1977.380, 1992.098, 2006.861, 2021.668, 2036.521, 2051.417, 2066.358, 2081.344, 2096.373, 2111.445, 2126.562,
+                        2141.721, 2156.924, 2172.170, 2187.459, 2202.790, 2218.164, 2233.580, 2249.038, 2264.538, 2280.080)
+admin.time_dietary <- c(0,  24 , 48,  72,  96, 120, 144, 168, 192, 216, 240, 264, 288, 312, 336, 360, 384, 408, 432, 456, 480, 504, 528, 552, 576, 600, 624, 648, 672, 696, 720, 744 ,768,
+                        792, 816, 840, 864, 888, 912, 936, 960, 984)
 
-################################################################################
-
-# Reproduce results for T_exp <- 19 # C
-
-growth_inits <- c("L"=30.88)
-gworth_params <- c(Lm = 73.91,			# Optimised value RB revision (cm)
-                   kappa =  0.0096, # Optimised value RB revision (cm/day)
-                   a_bio = 9.57767e-06, 
-                   b_bio = 3.05088,
-                   f = 0.616003)
-
-growth_function <- function(time, inits, params){
-  with(as.list(c(inits,params)),{
-    dL = kappa *f* (1 - (L/Lm))
-    # Body weight - kg
-    BW <- a_bio*L^b_bio
-    return(list(c("dL"=dL),"BW"=BW))
-  })
-}
-growth_times <- seq(0,41*24,24)
-growth_solution <- data.frame(ode(times = growth_times,  func = growth_function, y = growth_inits, parms = gworth_params,
-                                  #events = events,
-                                  method="lsodes",rtol = 1e-05, atol = 1e-05))
-
-admin.dose_dietary <- 0.01*growth_solution$BW*1000*500 # ng PFOS
-admin.time_dietary <- growth_solution$time
-
-user.input_19 <- list(Texp = 19 + 273,      # C
-                      Cox = 8.05,   # mg(O2)/L
-                      L0 = 30.88,   # cm
-                      f = 0.616003, # unitless
-                      admin.dose_dietary=admin.dose_dietary, # ng PFOS/g dw of food
-                      admin.time_dietary=admin.time_dietary,
-                      Concentration_water =	0.4	# PFOS concentration in water (ng/L)
+user.input <- list(Texp = 19,      # C
+                   Cox = 8.05,   # mg(O2)/L
+                   L0 = 30.88,   # cm
+                   admin.dose_dietary=admin.dose_dietary, # ng PFOS/g dw of food
+                   admin.time_dietary=admin.time_dietary,
+                   admin.time_oral=c(0),
+                   C_water =	c(0.4)	# PFOS concentration in water (ng/L)
 )
-params <- create.params(user.input_19)
+params <- create.params(user.input)
 inits <- create.inits(params)
 events <- create.events(params)
 sample_time <- seq(0, (42+35)*24, 1)
@@ -394,11 +394,27 @@ sample_time <- seq(0, (42+35)*24, 1)
 solution <- data.frame(ode(times = sample_time,  func = ode.func, y = inits, parms = params,
                            events = events,
                            method="lsodes",rtol = 1e-05, atol = 1e-05))
+predicted.feats <- c('Qadmin_food', 'Qadmin_water', 'C_water',
+                     'L', 'Q_lumen_1', 'Q_lumen_2',
+                     'Q_art', 'Q_ven', 'Q_liver',
+                     'Q_muscle', 'Q_brain', 'Q_viscera',
+                     'Q_kidney', 'Q_skin', 'Q_gill',
+                     'Q_carcass', 'Qexcret_gill',
+                     'Qexcret_bile', 'Qexcret_urine', 
+                     'Qexcret_feces', 
+                     'C_liver', 'C_muscle', 'C_brain',
+                     'C_viscera', 'C_kidney', 'C_skin', 'C_gill',
+                     'C_carcass', 'C_lumen_1', 'C_lumen_2', 
+                     'C_lumen_viscera', 'C_art', 'C_ven',
+                     'C_blood_total',
+                     'Total_excreted', 'Total_admin',
+                     'Total_accumulated', 'Mass_equilibrium',
+                     'BW')
 
-
-plot(solution$time, solution$C_liver/1000)
-plot(solution$time, solution$C_muscle/1000)
-plot(solution$time, solution$C_blood_total/1000)
-plot(solution$time, solution$C_brain/1000)
-plot(solution$time, solution$C_kidney/1000)
-plot(solution$time, solution$C_viscera/1000)
+# Log in Jaqpot server
+jaqpotr::login.api()
+# Deploy the model on the Jaqpot server to create a web service
+jaqpotr::deploy.pbpk(user.input = user.input,out.vars = predicted.feats,
+                     create.params = create.params,  create.inits = create.inits,
+                     create.events = create.events, custom.func = custom.func, 
+                     method = "bdf",url = "https://api.jaqpot.org/jaqpot/")
