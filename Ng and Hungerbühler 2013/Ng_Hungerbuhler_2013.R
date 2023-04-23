@@ -227,7 +227,11 @@ create.params <- function(user.input){
       k_FAPB_on <- KA_FAPB*k_off
     }
     
+    k_ALB_off <- k_off
+    k_FAPB_off <- k_off
     
+    b_KT_Ur <- 0
+    b_Ur_KT <- 0
     
     return(list('V_LT'=V_LT, 'V_KT'=V_KT, 'V_MT'=V_MT, 'V_AT'=V_AT, 'V_B'=V_B,
                 'V_LF'=V_LF, 'V_KF'=V_KF, 'V_MF'=V_MF, 'V_AF'=V_AF, 'V_Ur'=V_Ur,
@@ -239,7 +243,11 @@ create.params <- function(user.input){
                 #'J_Oat1'=J_Oat1, 'J_Oat3'=J_Oat3, 'J_Oatp1a1'=J_Oatp1a1,
                 'b_clear'=b_clear, 'b_reab'=b_reab,
                 'KA_ALB'=KA_ALB, 'k_off'=k_off, 'k_ALB_on'=k_ALB_on,
-                'KA_FAPB'=KA_FAPB, 'k_FAPB_on'=k_FAPB_on
+                'k_ALB_off'=k_ALB_off, 'k_FAPB_off'=k_FAPB_off,
+                'KA_FAPB'=KA_FAPB, 'k_FAPB_on'=k_FAPB_on,
+                'b_KT_Ur'=b_KT_Ur, 'b_Ur_KT'=b_Ur_KT,
+                "admin.dose" = admin.dose, 
+                "admin.time" = admin.time
                 ))
     
   })
@@ -247,6 +255,7 @@ create.params <- function(user.input){
 
 create.inits <- function(parameters){
   with(as.list(parameters),{
+    C_W_free<-0;
     M_B_free<-0; M_B_bound<-0;
     M_AF_free<-0; M_AF_bound<-0; M_AT_free<-0;
     M_MF_free<-0; M_MF_bound<-0; M_MT_free<-0; 
@@ -256,24 +265,35 @@ create.inits <- function(parameters){
     C_B_ALB<-0; C_AF_ALB<-0; C_MF_ALB<-0; C_LF_ALB<-0;
     C_LT_FAPB<-0; C_KF_ALB<-0
     
-    return(list('M_B_free'=M_B_free, 'M_B_bound'=M_B_bound,
-                'M_AF_free'=M_AF_free, 'M_AF_bound'=M_AF_bound, 'M_AT_free'=M_AT_free,
-                'M_MF_free'=M_MF_free, 'M_MF_bound'=M_MF_bound, 'M_MT_free'=M_MT_free, 
-                'M_LF_free'=M_LF_free, 'M_LF_bound'=M_LF_bound, 'M_LT_free'=M_LT_free, M_LT_bound=M_LT_bound,
-                'M_KF_free'=M_KF_free, 'M_KF_bound'=M_KF_bound, 'M_KT_free'=M_KT_free,
-                'M_Ur_free'=M_Ur_free, 
-                'C_B_ALB'=C_B_ALB, 'C_AF_ALB'=C_AF_ALB, 'C_MF_ALB'=C_MF_ALB, 'C_LF_ALB'=C_LF_ALB,
-                'C_LT_FAPB'=C_LT_FAPB, 'C_KF_ALB'=C_KF_ALB))
+    return(c('C_W_free'=C_W_free,
+            'M_B_free'=M_B_free, 'M_B_bound'=M_B_bound,
+            'M_AF_free'=M_AF_free, 'M_AF_bound'=M_AF_bound, 'M_AT_free'=M_AT_free,
+            'M_MF_free'=M_MF_free, 'M_MF_bound'=M_MF_bound, 'M_MT_free'=M_MT_free, 
+            'M_LF_free'=M_LF_free, 'M_LF_bound'=M_LF_bound, 'M_LT_free'=M_LT_free, 'M_LT_bound'=M_LT_bound,
+            'M_KF_free'=M_KF_free, 'M_KF_bound'=M_KF_bound, 'M_KT_free'=M_KT_free,
+            'M_Ur_free'=M_Ur_free, 
+            'C_B_ALB'=C_B_ALB, 'C_AF_ALB'=C_AF_ALB, 'C_MF_ALB'=C_MF_ALB, 'C_LF_ALB'=C_LF_ALB,
+            'C_LT_FAPB'=C_LT_FAPB, 'C_KF_ALB'=C_KF_ALB))
   })
 }
 
 create.events <- function(parameters){
   with(as.list(parameters),{
+    ltimes <- length(admin.time)
+    lexposure <- length(admin.dose)
     
+    events <- data.frame(var = rep('C_W_free', ltimes),
+                         time = admin.time,
+                         value = admin.dose, method = rep('rep',ltimes))
+    return(list(data=events))
   })
 }
 
-ode.func <- function(time, inits, params){
+custom.func <- function(){
+  return()
+}
+
+ode.func <- function(time, inits, params,custom.func){
   with(as.list(c(inits, params)),{
     
     # Uptake and loss rate constant from gills
@@ -347,6 +367,9 @@ ode.func <- function(time, inits, params){
     b_B_on <- k_ALB_on*C_B_ALB
     b_B_off <- k_off
     
+    # Water concentration
+    dC_W_free <- 0 
+    
     # Blood - Free
     dM_B_free <- b_W_B*C_W_free - b_B_W*M_B_free - 
       (b_B_AF*M_B_free + b_B_MF*M_B_free + b_B_LF*M_B_free + b_B_KF*M_B_free) +
@@ -393,7 +416,7 @@ ode.func <- function(time, inits, params){
     # Liver - Unoccupied Albumin binding cites concentration in fluid 
     dC_LF_ALB <- k_ALB_off*C_LF_bound - k_ALB_on*C_LF_ALB*C_LF_free
     # Liver - Unoccupied FAPB binding cites concentration in tissue 
-    dC_LT_FAPB <- k_FAPB_off*C_LT_bound - k_ALB_on*C_LT_ALB*C_LT_free
+    dC_LT_FAPB <- k_FAPB_off*C_LT_bound - k_FAPB_on*C_LT_FAPB*C_LT_free
     
     # Binding rate constant in Liver fluid - 1/s
     b_LF_on <- k_ALB_on*C_LF_ALB
@@ -433,12 +456,13 @@ ode.func <- function(time, inits, params){
     # Kidney Tissue - Free
     dM_KT_free <- b_KF_KT*M_KF_free - (b_KT_KF + b_KT_Ur)*M_KT_free + b_Ur_KT*M_Ur_free -
       b_clear*M_KT_free + b_reab*M_Ur_free
-    
+
     # Urine 
-    dM_Ur_free <- b_KT_Ur*M_KT_free - b_Ur_KT*M_Ur_free + b_clear*M_KT_free - b_reab_M_Ur_free - 
+    dM_Ur_free <- b_KT_Ur*M_KT_free - b_Ur_KT*M_Ur_free + b_clear*M_KT_free - b_reab*M_Ur_free - 
       (Q_Ur/V_Ur)*M_Ur_free
     
-    return(list(c('dM_B_free'=dM_B_free, 'dM_B_bound'=dM_B_bound,
+    return(list(c('dC_W_free'=dC_W_free,
+                  'dM_B_free'=dM_B_free, 'dM_B_bound'=dM_B_bound,
                   'dM_AF_free'=dM_AF_free, 'dM_AF_bound'=dM_AF_bound, 'dM_AT_free'=dM_AT_free,
                   'dM_MF_free'=dM_MF_free, 'dM_MF_bound'=dM_MF_bound, 'dM_MT_free'=dM_MT_free, 
                   'dM_LF_free'=dM_LF_free, 'dM_LF_bound'=dM_LF_bound, 'dM_LT_free'=dM_LT_free, 'dM_LT_bound'=dM_LT_bound,
@@ -453,7 +477,40 @@ ode.func <- function(time, inits, params){
 ################################################################################
 BW <- 8/1000 # Total body weight - kg
 substance <- 'PFOA'
+admin.dose <- c(1000) # administered dose in ug/L or ug
+admin.time <- c(0) # time when doses are administered, in hours
+user_input <- list('BW'=BW,
+                   'substance'=substance,
+                   "admin.dose"=admin.dose,
+                   "admin.time"= admin.time)
 
+params <- create.params(user_input)
+inits <- create.inits(params)
+events <- create.events(params)
 
+sample_time <- seq(0,40,1)
+solution <- data.frame(ode(times = sample_time,  func = ode.func, y = inits, parms = params,
+                           events = events, 
+                           method="lsodes",rtol = 1e-05, atol = 1e-05)) 
 
+#====================
+# Upload on Jaqpot 
+#===================
+# Subset of features to be displayed on the user interface
+predicted.feats <- c('C_W_free',
+                     'M_B_free', 'M_B_bound',
+                     'M_AF_free', 'M_AF_bound', 'M_AT_free',
+                     'M_MF_free', 'M_MF_bound', 'M_MT_free', 
+                     'M_LF_free', 'M_LF_bound', 'M_LT_free', 'M_LT_bound',
+                     'M_KF_free', 'M_KF_bound', 'M_KT_free',
+                     'M_Ur_free', 
+                     'C_B_ALB', 'C_AF_ALB', 'C_MF_ALB', 'C_LF_ALB',
+                     'C_LT_FAPB', 'C_KF_ALB') 
 
+# Log in Jaqpot server
+jaqpotr::login.api()
+# Deploy the model on the Jaqpot server to create a web service
+jaqpotr::deploy.pbpk(user.input = user_input,out.vars = predicted.feats,
+                     create.params = create.params,  create.inits = create.inits,
+                     create.events = create.events, custom.func = custom.func, 
+                     method = "bdf",url = "https://api.jaqpot.org/jaqpot/")
