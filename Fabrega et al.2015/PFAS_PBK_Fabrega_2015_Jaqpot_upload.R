@@ -194,25 +194,6 @@ ode.func <- function(time, inits, params, custom.func){
 }
 
 ########################################
-# BW <- 70 # kg
-# substance <- 'PFOA'
-# exposure <- 0
-# exposure_times <- 0
-# user_input <- list('BW'=BW,
-#                    'substance'=substance,
-#                    "exposure"=exposure,
-#                    "exposure_times"= exposure_times)
-# 
-# params <- create.params(user_input)
-# inits <- create.inits(params)
-# events <- create.events(params)
-# Lifetime <- 90 #years
-# sample_time <- seq(0,Lifetime*360*24,24)
-# 
-# solution <- data.frame(ode(times = sample_time,  func = ode.func, y = inits, parms = params,
-#                            events = events, 
-#                            method="lsodes",rtol = 1e-05, atol = 1e-05)) 
-
 BW <- 70 # kg
 substance <- 'PFOA'
 admin.dose <- c(262.43) # administered dose in ug
