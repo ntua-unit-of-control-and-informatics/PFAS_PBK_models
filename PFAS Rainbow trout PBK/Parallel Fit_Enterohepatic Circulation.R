@@ -320,7 +320,7 @@ main_func <- function(substance){
     y_obs <- unlist(observations)
     y_pred <- unlist(predictions)
     # Total number of observations
-    N<- length(y_obs)
+    N <- length(y_obs)
     log_ratio <- rep(NA, N) 
     for ( i in 1:N){
       log_ratio[i] <- abs(log((y_pred[i]/y_obs[i]), base = 10))
@@ -478,7 +478,7 @@ main_func <- function(substance){
   events <- create.events(params)
   sample_time <- seq(0,56*24,1)
   
-  N_iter <- 2000
+  N_iter <- 1500
   opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA",  #"NLOPT_LN_SBPLX" ,
                 "xtol_rel" = 0.0,
                 "ftol_rel" = 0.0,
@@ -489,15 +489,12 @@ main_func <- function(substance){
   
   optimization <- nloptr::nloptr( x0 = x0,
                                   eval_f = obj.func,
-                                  lb	= rep(1e-08, length(x0)),
-                                  ub = rep(20, length(x0)),
+                                  lb	= rep(1e-05, length(x0)),
+                                  ub = c(rep(1e03, length(x0)-1), 1),
                                   opts = opts,
                                   user.input=user.input,
                                   substance = substance)
-  
-  
-  
-  
+
   # Plot Concentration - Time profiles
   #------------------------------------
   
@@ -506,7 +503,8 @@ main_func <- function(substance){
   x_opt <- optimization$solution
   names(x_opt) <- names(x0)
   
-  user.input <- list('Texp'=Texp,
+  user.input <- list('substance'=substance,
+                     'Texp'=Texp,
                      'admin.dose_dietary'=admin.dose_dietary,
                      'admin.time_dietary'=admin.time_dietary)
   
