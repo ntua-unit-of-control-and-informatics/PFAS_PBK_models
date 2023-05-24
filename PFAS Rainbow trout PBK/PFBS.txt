@@ -1,0 +1,20 @@
+iteration: 1
+	f(x) = 1.860949
+iteration: 2
+	f(x) = 1.759146
+iteration: 3
+	f(x) = 2.701709
+iteration: 4
+	f(x) = 5.414115
+iteration: 5
+	f(x) = 2.244908
+iteration: 6
+	f(x) = 1.607750
+iteration: 7
+	f(x) = 5.414115
+iteration: 8
+	f(x) = 1.475706
+iteration: 9
+	f(x) = 1.736638
+iteration: 10
+	f(x) = 4.731548
