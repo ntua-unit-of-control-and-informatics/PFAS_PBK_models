@@ -21,7 +21,7 @@ PFOS_data$Time <- PFOS_data$Time*24
 
 df <- PFOS_data
 
-Weighting.func <- function(df, a_first=1, a_last=1, a_tp=2){
+Weighting.func <- function(df, a_first=2, a_last=2, a_tp=2){
   x_values <- df[,1] # Take the x values 
   y_values <- df[,-1] # Take th y values
   
@@ -32,24 +32,24 @@ Weighting.func <- function(df, a_first=1, a_last=1, a_tp=2){
   
   # Transform the data df to a list of dataframes. Each dataframe will have 
   # the x values and y values of a tissue.
-  data_list <- list()
+  sub_list <- list()
   
   # Create a list to save the weights
   weights_list <- list()
   for (i in 1:Ny) { # Loop over the y outputs
     
     # Create a 2-column dataframe with x and y values
-    data_list[[i]] <- cbind(x_values, y_values[,i])
-    names(data_list)[i] <- colnames(y_values)[i]
-    colnames(data_list[[i]]) <- colnames(df)[c(1,i+1)]
+    sub_list[[i]] <- cbind(x_values, y_values[,i])
+    names(sub_list)[i] <- colnames(y_values)[i]
+    colnames(sub_list[[i]]) <- colnames(df)[c(1,i+1)]
     
     weights_list <- append(weights_list, NA)
-    # Select a df from the data_list to calulcate its weights
-    sub_df <- data_list[[i]]
+    # Select a df from the sub_list to calulcate its weights
+    sub_df <- sub_list[[i]]
     N <- dim(sub_df)[1] # Number of x values of sub_df
     
     # Estimate the weight of the 1st point
-    weights_list[[i]][1] <- a_first*(abs(sub_df[1,1] - sub_df[1+1,1]) + abs(sub_df[1,2] - sub_df[1+1,2]))/(abs(sub_df[N,1] - sub_df[1,1]) + abs(sub_df[N,2] - sub_df[1,2]))
+    weights_list[[i]][1] <- a_first*(abs(sub_df[1,1] - sub_df[2,1]) + abs(sub_df[1,2] - sub_df[2,2]))/(abs(sub_df[N,1] - sub_df[1,1]) + abs(sub_df[N,2] - sub_df[1,2]))
     # Estimate the weight of the Last point
     weights_list[[i]][N] <- a_last*(abs(sub_df[N,1] - sub_df[N-1,1]) + abs(sub_df[N,2] - sub_df[N-1,2]))/(abs(sub_df[N,1] - sub_df[1,1]) + abs(sub_df[N,2] - sub_df[1,2]))
     

@@ -84,22 +84,27 @@ main_func <- function(substance){
     # estimated by Cao et al., 2022
     # K_urine = Cl_urine/f_reab_urine estimated by Ng et al., 2013 (unitless)
     if(substance=='PFOA'){
+      a <- 0.138
       f_reab_hep <- 0.30
       K_urine <- 2.08 
       Free <- 0.385
     }else if(substance=='PFNA'){
+      a <- 0.522
       f_reab_hep <- 0.34
       K_urine <- 1.35
       Free <- 0.622
     }else if(substance=='PFBS'){
+      a <- 0.3
       f_reab_hep <- 0.23
       K_urine <- 10.41
       Free <- 0.1 # assumed
     }else if(substance=='PFHxS'){
+      a <- 0.558
       f_reab_hep <- 0.30
       K_urine <- 5.88
       Free <- 0.217
     }else if(substance=='PFOS'){
+      a <- 0.721
       f_reab_hep <- 0.42
       K_urine <- 1.35
       Free <- 0.819
@@ -108,7 +113,7 @@ main_func <- function(substance){
     # Bile flow coefficient
     Q_bile_coef <- 7.5e-05 # ml/g BW/h Grosell et al., 2000
     Q_urine_coef <- 2.755e-03 # ml/h/g of BW Urinary flow rate
-    V_urine_coef <- 2.2e-03 # ml/g of BW Urine volume inside gallbladder
+    V_urine_coef <- 2.2e-03 # ml/g of BW Urine volume inside urinary bladder
     
     a_skin <- 0.9 # 90% of venous blood of skin was assumed to flow directly to kidney (Nichols et al.1996)
     a_muscle <- 0.6 # 60% of venous blood of muscle was assumed to flow directly to kidney (Nichols et al.1996)
@@ -130,7 +135,7 @@ main_func <- function(substance){
                 'Q_bile_coef'=Q_bile_coef,
                 'Q_urine_coef'=Q_urine_coef, 'V_urine_coef'=V_urine_coef,
                 'K_urine'=K_urine,
-                'f_reab_hep'=f_reab_hep, 'plasma'=plasma, "Free"=Free))
+                'f_reab_hep'=f_reab_hep, 'plasma'=plasma, "Free"=Free, "a"=a))
   }
   
   create.inits <- function(parameters){
@@ -195,12 +200,12 @@ main_func <- function(substance){
                            w_gills + w_kidney + w_viscera + w_lumen)
       
       # Calculate the regional blood flows - ml/h
-      Q_liver <- fb_Liver*BW*plasma     # Liver blood flow - ml/h
-      Q_skin <- fb_Skin*BW*plasma      # Skin blood flow - ml/h
-      Q_muscle <- fb_Muscle*BW*plasma   # Muscle blood flow - ml/h
+      Q_liver <- fb_Liver*Q_total     # Liver blood flow - ml/h
+      Q_skin <- fb_Skin*Q_total      # Skin blood flow - ml/h
+      Q_muscle <- fb_Muscle*Q_total   # Muscle blood flow - ml/h
       Q_gills <- Q_total #fb_Gills*BW     # Gills blood flow - ml/h
-      Q_kidney <- fb_Kidney*BW*plasma   # Kidney blood flow - ml/h
-      Q_viscera <- fb_Viscera*BW*plasma # Viscera blood flow - ml/h
+      Q_kidney <- fb_Kidney*Q_total   # Kidney blood flow - ml/h
+      Q_viscera <- fb_Viscera*Q_total # Viscera blood flow - ml/h
       Q_carcass <- Q_total - (Q_liver + Q_skin + Q_muscle + 
                                 Q_kidney + Q_viscera)
       
@@ -246,13 +251,13 @@ main_func <- function(substance){
       dM_input=0
       
       # Viscera lumen - Available PFAS for absorption and elimination
-      dM_lumen = f_reab_hep*Q_bile*C_liver - Ku*M_lumen - Cl_feces*M_lumen 
+      dM_lumen = f_reab_hep*Q_bile*C_liver - Ku*a*M_lumen - Cl_feces*(1-a)*M_lumen 
       
       # Viscera lumen_2- Unavailable PFAS for absorption. Can be only eliminated.
       dM_lumen_2 = (1-f_reab_hep)*Q_bile*C_liver - Cl_feces*M_lumen_2 
       
       # Viscera tissue
-      dM_viscera <- Q_viscera*Free*(C_art - C_viscera/P_viscera) + Ku*M_lumen 
+      dM_viscera <- Q_viscera*Free*(C_art - C_viscera/P_viscera) + Ku*a*M_lumen 
       
       # Liver
       dM_Liver <- Q_liver*Free*C_art + Q_viscera*Free*C_viscera/P_viscera - 
@@ -280,7 +285,7 @@ main_func <- function(substance){
       dM_urine <- Q_urine*C_storage
       
       # Feces
-      dM_feces <- Cl_feces*(M_lumen + M_lumen_2)
+      dM_feces <- Cl_feces*((1-a)*M_lumen + M_lumen_2)
       
       Mass_balance <- M_input - (M_art + M_venous + M_gills + M_lumen + M_lumen_2 + 
                                    M_viscera + M_liver + M_kidney + M_muscle + 
@@ -427,24 +432,24 @@ main_func <- function(substance){
     
     # Transform the data df to a list of dataframes. Each dataframe will have 
     # the x values and y values of a tissue.
-    data_list <- list()
+    sub_list <- list()
     
     # Create a list to save the weights
     weights_list <- list()
     for (i in 1:Ny) { # Loop over the y outputs
       
       # Create a 2-column dataframe with x and y values
-      data_list[[i]] <- cbind(x_values, y_values[,i])
-      names(data_list)[i] <- colnames(y_values)[i]
-      colnames(data_list[[i]]) <- colnames(df)[c(1,i+1)]
+      sub_list[[i]] <- cbind(x_values, y_values[,i])
+      names(sub_list)[i] <- colnames(y_values)[i]
+      colnames(sub_list[[i]]) <- colnames(df)[c(1,i+1)]
       
       weights_list <- append(weights_list, NA)
-      # Select a df from the data_list to calulcate its weights
-      sub_df <- data_list[[i]]
+      # Select a df from the sub_list to calulcate its weights
+      sub_df <- sub_list[[i]]
       N <- dim(sub_df)[1] # Number of x values of sub_df
       
       # Estimate the weight of the 1st point
-      weights_list[[i]][1] <- a_first*(abs(sub_df[1,1] - sub_df[1+1,1]) + abs(sub_df[1,2] - sub_df[1+1,2]))/(abs(sub_df[N,1] - sub_df[1,1]) + abs(sub_df[N,2] - sub_df[1,2]))
+      weights_list[[i]][1] <- a_first*(abs(sub_df[1,1] - sub_df[2,1]) + abs(sub_df[1,2] - sub_df[2,2]))/(abs(sub_df[N,1] - sub_df[1,1]) + abs(sub_df[N,2] - sub_df[1,2]))
       # Estimate the weight of the Last point
       weights_list[[i]][N] <- a_last*(abs(sub_df[N,1] - sub_df[N-1,1]) + abs(sub_df[N,2] - sub_df[N-1,2]))/(abs(sub_df[N,1] - sub_df[1,1]) + abs(sub_df[N,2] - sub_df[1,2]))
       
@@ -584,7 +589,7 @@ main_func <- function(substance){
   events <- create.events(params)
   sample_time <- seq(0,56*24,1)
   
-  N_iter <- 10
+  N_iter <- 3000
   opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA",  #"NLOPT_LN_SBPLX" ,
                 "xtol_rel" = 0.0,
                 "ftol_rel" = 0.0,
@@ -709,3 +714,14 @@ for (i in 1:5) {
   scores[i] <- output[[i]]$optimizations$objective
 }
 print(total.duration)
+
+
+for (i in 1:length(output)) {
+  jpeg(file = paste0(getwd(),"/plots/Test_6_" ,output[[i]]$substance, "_plot.jpeg"),
+       width = 12, height = 9, units = 'in', res = 150)
+  plot(output[[i]][["plot"]])
+  dev.off()
+}
+
+
+

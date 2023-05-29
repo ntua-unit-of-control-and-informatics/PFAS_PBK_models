@@ -168,7 +168,7 @@ create.events <- function(parameters){
     }else{
       events_dietary <- data.frame(var = c(rep(c('Q_lumen_1', 'Qadmin_food'), ltimes_dietary)), 
                            time = sort(rep(admin.time_dietary,2)),
-                           value = sort(rep(admin.dose_dietary,2)),
+                           value = rep(admin.dose_dietary,each=2),
                            method = 'add')
     }
     
@@ -177,7 +177,7 @@ create.events <- function(parameters){
     }else{
       events_oral <- data.frame(var = c(rep(c('Qadmin_water'), ltimes_oral)), 
                                 time = sort(admin.time_oral),
-                                value = sort(C_water),
+                                value = C_water,
                                 method = 'rep')
     }
 

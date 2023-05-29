@@ -1,20 +1,6000 @@
 iteration: 1
-	f(x) = 1.860949
+	f(x) = 3.351118
 iteration: 2
-	f(x) = 1.759146
+	f(x) = 3.273688
 iteration: 3
-	f(x) = 2.701709
+	f(x) = 3.536237
 iteration: 4
-	f(x) = 5.414115
+	f(x) = 2.809093
 iteration: 5
-	f(x) = 2.244908
+	f(x) = 574.039847
 iteration: 6
-	f(x) = 1.607750
+	f(x) = 2.738704
 iteration: 7
-	f(x) = 5.414115
+	f(x) = 615.246894
 iteration: 8
-	f(x) = 1.475706
+	f(x) = 584.202374
 iteration: 9
-	f(x) = 1.736638
+	f(x) = 3.069985
 iteration: 10
-	f(x) = 4.731548
+	f(x) = 589.322742
+iteration: 11
+	f(x) = 2.931885
+iteration: 12
+	f(x) = 2.710219
+iteration: 13
+	f(x) = 589.322742
+iteration: 14
+	f(x) = 2.663367
+iteration: 15
+	f(x) = 627.080239
+iteration: 16
+	f(x) = 599.629386
+iteration: 17
+	f(x) = 2.663334
+iteration: 18
+	f(x) = 2.616713
+iteration: 19
+	f(x) = 2.618646
+iteration: 20
+	f(x) = 2.713224
+iteration: 21
+	f(x) = 2.620941
+iteration: 22
+	f(x) = 2.580219
+iteration: 23
+	f(x) = 2.562858
+iteration: 24
+	f(x) = 2.537492
+iteration: 25
+	f(x) = 2.502646
+iteration: 26
+	f(x) = 2.494379
+iteration: 27
+	f(x) = 2.697946
+iteration: 28
+	f(x) = 2.413785
+iteration: 29
+	f(x) = 2.362770
+iteration: 30
+	f(x) = 2.367338
+iteration: 31
+	f(x) = 2.266243
+iteration: 32
+	f(x) = 2.216085
+iteration: 33
+	f(x) = 2.268705
+iteration: 34
+	f(x) = 2.188306
+iteration: 35
+	f(x) = 2.174728
+iteration: 36
+	f(x) = 2.141842
+iteration: 37
+	f(x) = 2.141913
+iteration: 38
+	f(x) = 2.195035
+iteration: 39
+	f(x) = 2.169059
+iteration: 40
+	f(x) = 2.146079
+iteration: 41
+	f(x) = 2.122452
+iteration: 42
+	f(x) = 2.130842
+iteration: 43
+	f(x) = 2.138593
+iteration: 44
+	f(x) = 2.145398
+iteration: 45
+	f(x) = 2.131814
+iteration: 46
+	f(x) = 2.134346
+iteration: 47
+	f(x) = 2.128156
+iteration: 48
+	f(x) = 2.125800
+iteration: 49
+	f(x) = 2.121971
+iteration: 50
+	f(x) = 2.126449
+iteration: 51
+	f(x) = 2.121359
+iteration: 52
+	f(x) = 2.128230
+iteration: 53
+	f(x) = 2.124355
+iteration: 54
+	f(x) = 2.120831
+iteration: 55
+	f(x) = 2.126330
+iteration: 56
+	f(x) = 2.120555
+iteration: 57
+	f(x) = 2.122682
+iteration: 58
+	f(x) = 2.120560
+iteration: 59
+	f(x) = 2.120671
+iteration: 60
+	f(x) = 2.120447
+iteration: 61
+	f(x) = 2.121087
+iteration: 62
+	f(x) = 2.120408
+iteration: 63
+	f(x) = 2.120684
+iteration: 64
+	f(x) = 2.120433
+iteration: 65
+	f(x) = 1.735857
+iteration: 66
+	f(x) = 1.674915
+iteration: 67
+	f(x) = 1.679240
+iteration: 68
+	f(x) = 1.626002
+iteration: 69
+	f(x) = 1.717884
+iteration: 70
+	f(x) = 1.666711
+iteration: 71
+	f(x) = 1.600899
+iteration: 72
+	f(x) = 1.685791
+iteration: 73
+	f(x) = 1.954655
+iteration: 74
+	f(x) = 1.592481
+iteration: 75
+	f(x) = 1.590682
+iteration: 76
+	f(x) = 1.633111
+iteration: 77
+	f(x) = 1.670713
+iteration: 78
+	f(x) = 1.583789
+iteration: 79
+	f(x) = 1.580386
+iteration: 80
+	f(x) = 1.582174
+iteration: 81
+	f(x) = 1.594035
+iteration: 82
+	f(x) = 1.582936
+iteration: 83
+	f(x) = 1.587424
+iteration: 84
+	f(x) = 1.581206
+iteration: 85
+	f(x) = 1.581462
+iteration: 86
+	f(x) = 1.580531
+iteration: 87
+	f(x) = 1.580892
+iteration: 88
+	f(x) = 1.580423
+iteration: 89
+	f(x) = 1.660462
+iteration: 90
+	f(x) = 1.874748
+iteration: 91
+	f(x) = 2.658037
+iteration: 92
+	f(x) = 1.737250
+iteration: 93
+	f(x) = 1.635405
+iteration: 94
+	f(x) = 1.638550
+iteration: 95
+	f(x) = 1.583852
+iteration: 96
+	f(x) = 1.570386
+iteration: 97
+	f(x) = 2804.757203
+iteration: 98
+	f(x) = 1.639351
+iteration: 99
+	f(x) = 1.558197
+iteration: 100
+	f(x) = 1.575222
+iteration: 101
+	f(x) = 1.556292
+iteration: 102
+	f(x) = 1.568411
+iteration: 103
+	f(x) = 1.555963
+iteration: 104
+	f(x) = 1.560632
+iteration: 105
+	f(x) = 1.554059
+iteration: 106
+	f(x) = 1.573260
+iteration: 107
+	f(x) = 1.552155
+iteration: 108
+	f(x) = 1.554486
+iteration: 109
+	f(x) = 1.552983
+iteration: 110
+	f(x) = 1.554885
+iteration: 111
+	f(x) = 1.552888
+iteration: 112
+	f(x) = 1.513429
+iteration: 113
+	f(x) = 1.654744
+iteration: 114
+	f(x) = 2.610939
+iteration: 115
+	f(x) = 1.554030
+iteration: 116
+	f(x) = 1.706478
+iteration: 117
+	f(x) = 1.527948
+iteration: 118
+	f(x) = 1.483434
+iteration: 119
+	f(x) = 1.461129
+iteration: 120
+	f(x) = 1.465053
+iteration: 121
+	f(x) = 1.429878
+iteration: 122
+	f(x) = 1.425746
+iteration: 123
+	f(x) = 1.450386
+iteration: 124
+	f(x) = 1.486231
+iteration: 125
+	f(x) = 1.436802
+iteration: 126
+	f(x) = 1.431211
+iteration: 127
+	f(x) = 1.425345
+iteration: 128
+	f(x) = 1.438622
+iteration: 129
+	f(x) = 1.432991
+iteration: 130
+	f(x) = 1.423901
+iteration: 131
+	f(x) = 1.446960
+iteration: 132
+	f(x) = 1.422206
+iteration: 133
+	f(x) = 1.427199
+iteration: 134
+	f(x) = 1.423037
+iteration: 135
+	f(x) = 1.422742
+iteration: 136
+	f(x) = 2.082867
+iteration: 137
+	f(x) = 1.597541
+iteration: 138
+	f(x) = 2.330843
+iteration: 139
+	f(x) = 1.562468
+iteration: 140
+	f(x) = 1.948210
+iteration: 141
+	f(x) = 1.499760
+iteration: 142
+	f(x) = 1.562022
+iteration: 143
+	f(x) = 1.485862
+iteration: 144
+	f(x) = 1.394933
+iteration: 145
+	f(x) = 1.354564
+iteration: 146
+	f(x) = 1.346764
+iteration: 147
+	f(x) = 2096.730398
+iteration: 148
+	f(x) = 1195.905519
+iteration: 149
+	f(x) = 1.364368
+iteration: 150
+	f(x) = 1.559736
+iteration: 151
+	f(x) = 1.339900
+iteration: 152
+	f(x) = 1.406673
+iteration: 153
+	f(x) = 1.414673
+iteration: 154
+	f(x) = 1.674963
+iteration: 155
+	f(x) = 1.378605
+iteration: 156
+	f(x) = 1.328302
+iteration: 157
+	f(x) = 1.315991
+iteration: 158
+	f(x) = 1.249244
+iteration: 159
+	f(x) = 1.185049
+iteration: 160
+	f(x) = 1.211987
+iteration: 161
+	f(x) = 1.071056
+iteration: 162
+	f(x) = 8402.947961
+iteration: 163
+	f(x) = 1.057409
+iteration: 164
+	f(x) = 1.178720
+iteration: 165
+	f(x) = 1.063919
+iteration: 166
+	f(x) = 0.987721
+iteration: 167
+	f(x) = 1.084981
+iteration: 168
+	f(x) = 1.408486
+iteration: 169
+	f(x) = 0.940681
+iteration: 170
+	f(x) = 3.311914
+iteration: 171
+	f(x) = 0.998035
+iteration: 172
+	f(x) = 0.884050
+iteration: 173
+	f(x) = 3.311914
+iteration: 174
+	f(x) = 0.966375
+iteration: 175
+	f(x) = 0.902435
+iteration: 176
+	f(x) = 1.055757
+iteration: 177
+	f(x) = 0.908783
+iteration: 178
+	f(x) = 0.887224
+iteration: 179
+	f(x) = 0.949646
+iteration: 180
+	f(x) = 0.883340
+iteration: 181
+	f(x) = 0.894319
+iteration: 182
+	f(x) = 0.878157
+iteration: 183
+	f(x) = 0.901933
+iteration: 184
+	f(x) = 0.878421
+iteration: 185
+	f(x) = 1.065555
+iteration: 186
+	f(x) = 2893.169278
+iteration: 187
+	f(x) = 1.419259
+iteration: 188
+	f(x) = 1.179550
+iteration: 189
+	f(x) = 0.872537
+iteration: 190
+	f(x) = 2893.169278
+iteration: 191
+	f(x) = 1.089501
+iteration: 192
+	f(x) = 0.945231
+iteration: 193
+	f(x) = 0.835574
+iteration: 194
+	f(x) = 1.089501
+iteration: 195
+	f(x) = 1.456575
+iteration: 196
+	f(x) = 0.842440
+iteration: 197
+	f(x) = 0.828407
+iteration: 198
+	f(x) = 1378.937309
+iteration: 199
+	f(x) = 1.247050
+iteration: 200
+	f(x) = 0.822087
+iteration: 201
+	f(x) = 0.831503
+iteration: 202
+	f(x) = 0.820323
+iteration: 203
+	f(x) = 2.132252
+iteration: 204
+	f(x) = 1958.767632
+iteration: 205
+	f(x) = 2.284803
+iteration: 206
+	f(x) = 1.982643
+iteration: 207
+	f(x) = 3221.977680
+iteration: 208
+	f(x) = 1.853036
+iteration: 209
+	f(x) = 11.979611
+iteration: 210
+	f(x) = 1.716543
+iteration: 211
+	f(x) = 3461.271509
+iteration: 212
+	f(x) = 1.601021
+iteration: 213
+	f(x) = 3701.832256
+iteration: 214
+	f(x) = 1.480613
+iteration: 215
+	f(x) = 3548.878731
+iteration: 216
+	f(x) = 1.378484
+iteration: 217
+	f(x) = 2.655528
+iteration: 218
+	f(x) = 1.277632
+iteration: 219
+	f(x) = 3.285599
+iteration: 220
+	f(x) = 1.191789
+iteration: 221
+	f(x) = 1.391238
+iteration: 222
+	f(x) = 1.111996
+iteration: 223
+	f(x) = 1.290649
+iteration: 224
+	f(x) = 1.044589
+iteration: 225
+	f(x) = 1.085744
+iteration: 226
+	f(x) = 0.785069
+iteration: 227
+	f(x) = 3624.329845
+iteration: 228
+	f(x) = 0.874492
+iteration: 229
+	f(x) = 1.473135
+iteration: 230
+	f(x) = 5.150046
+iteration: 231
+	f(x) = 14.720164
+iteration: 232
+	f(x) = 1.066341
+iteration: 233
+	f(x) = 10.808185
+iteration: 234
+	f(x) = 0.894441
+iteration: 235
+	f(x) = 1.665751
+iteration: 236
+	f(x) = 0.807319
+iteration: 237
+	f(x) = 2.946646
+iteration: 238
+	f(x) = 0.783533
+iteration: 239
+	f(x) = 0.824624
+iteration: 240
+	f(x) = 0.766358
+iteration: 241
+	f(x) = 0.833302
+iteration: 242
+	f(x) = 0.754432
+iteration: 243
+	f(x) = 0.836367
+iteration: 244
+	f(x) = 0.762814
+iteration: 245
+	f(x) = 0.762845
+iteration: 246
+	f(x) = 0.757125
+iteration: 247
+	f(x) = 0.758686
+iteration: 248
+	f(x) = 0.754126
+iteration: 249
+	f(x) = 33.857045
+iteration: 250
+	f(x) = 14599.218154
+iteration: 251
+	f(x) = 18.900560
+iteration: 252
+	f(x) = 0.996750
+iteration: 253
+	f(x) = 305.883878
+iteration: 254
+	f(x) = 2.283137
+iteration: 255
+	f(x) = 3.828129
+iteration: 256
+	f(x) = 0.942651
+iteration: 257
+	f(x) = 1.832918
+iteration: 258
+	f(x) = 0.810430
+iteration: 259
+	f(x) = 1.051169
+iteration: 260
+	f(x) = 0.787308
+iteration: 261
+	f(x) = 0.845082
+iteration: 262
+	f(x) = 0.773138
+iteration: 263
+	f(x) = 0.804497
+iteration: 264
+	f(x) = 0.761812
+iteration: 265
+	f(x) = 0.760961
+iteration: 266
+	f(x) = 0.862633
+iteration: 267
+	f(x) = 0.751561
+iteration: 268
+	f(x) = 0.763761
+iteration: 269
+	f(x) = 0.752337
+iteration: 270
+	f(x) = 9539.767338
+iteration: 271
+	f(x) = 0.869508
+iteration: 272
+	f(x) = 0.911955
+iteration: 273
+	f(x) = 0.829317
+iteration: 274
+	f(x) = 0.752625
+iteration: 275
+	f(x) = 0.756778
+iteration: 276
+	f(x) = 0.745939
+iteration: 277
+	f(x) = 0.773872
+iteration: 278
+	f(x) = 0.746776
+iteration: 279
+	f(x) = 0.753406
+iteration: 280
+	f(x) = 0.746011
+iteration: 281
+	f(x) = 0.748216
+iteration: 282
+	f(x) = 0.745281
+iteration: 283
+	f(x) = 1.297939
+iteration: 284
+	f(x) = 1557.695071
+iteration: 285
+	f(x) = 1.177027
+iteration: 286
+	f(x) = 0.800473
+iteration: 287
+	f(x) = 4.591168
+iteration: 288
+	f(x) = 0.879611
+iteration: 289
+	f(x) = 3.325567
+iteration: 290
+	f(x) = 0.776584
+iteration: 291
+	f(x) = 0.848588
+iteration: 292
+	f(x) = 0.759725
+iteration: 293
+	f(x) = 0.872531
+iteration: 294
+	f(x) = 0.752053
+iteration: 295
+	f(x) = 0.752879
+iteration: 296
+	f(x) = 0.742942
+iteration: 297
+	f(x) = 0.782110
+iteration: 298
+	f(x) = 0.743576
+iteration: 299
+	f(x) = 0.753570
+iteration: 300
+	f(x) = 0.741812
+iteration: 301
+	f(x) = 0.746324
+iteration: 302
+	f(x) = 0.742089
+iteration: 303
+	f(x) = 0.743182
+iteration: 304
+	f(x) = 0.741930
+iteration: 305
+	f(x) = 0.742441
+iteration: 306
+	f(x) = 0.741721
+iteration: 307
+	f(x) = 1.813267
+iteration: 308
+	f(x) = 1.651533
+iteration: 309
+	f(x) = 1275.235532
+iteration: 310
+	f(x) = 1.893054
+iteration: 311
+	f(x) = 1.338059
+iteration: 312
+	f(x) = 1.184407
+iteration: 313
+	f(x) = 1791.105852
+iteration: 314
+	f(x) = 1.228868
+iteration: 315
+	f(x) = 2041.393536
+iteration: 316
+	f(x) = 1.095225
+iteration: 317
+	f(x) = 13834.102282
+iteration: 318
+	f(x) = 1.033299
+iteration: 319
+	f(x) = 2.747209
+iteration: 320
+	f(x) = 0.950815
+iteration: 321
+	f(x) = 0.846800
+iteration: 322
+	f(x) = 3.896560
+iteration: 323
+	f(x) = 2697.951692
+iteration: 324
+	f(x) = 4.111782
+iteration: 325
+	f(x) = 2.307937
+iteration: 326
+	f(x) = 0.858319
+iteration: 327
+	f(x) = 4.914467
+iteration: 328
+	f(x) = 1.053387
+iteration: 329
+	f(x) = 1.595017
+iteration: 330
+	f(x) = 0.826880
+iteration: 331
+	f(x) = 0.892950
+iteration: 332
+	f(x) = 0.792733
+iteration: 333
+	f(x) = 0.856892
+iteration: 334
+	f(x) = 0.782135
+iteration: 335
+	f(x) = 0.742315
+iteration: 336
+	f(x) = 0.696879
+iteration: 337
+	f(x) = 0.687395
+iteration: 338
+	f(x) = 0.749785
+iteration: 339
+	f(x) = 0.714520
+iteration: 340
+	f(x) = 0.730641
+iteration: 341
+	f(x) = 0.678892
+iteration: 342
+	f(x) = 1207.297554
+iteration: 343
+	f(x) = 0.688758
+iteration: 344
+	f(x) = 0.758919
+iteration: 345
+	f(x) = 0.681418
+iteration: 346
+	f(x) = 15.407591
+iteration: 347
+	f(x) = 1.502509
+iteration: 348
+	f(x) = 346.087726
+iteration: 349
+	f(x) = 1.914897
+iteration: 350
+	f(x) = 3.797526
+iteration: 351
+	f(x) = 1.010054
+iteration: 352
+	f(x) = 4402.575007
+iteration: 353
+	f(x) = 1.075047
+iteration: 354
+	f(x) = 3438.482428
+iteration: 355
+	f(x) = 0.923917
+iteration: 356
+	f(x) = 0.813896
+iteration: 357
+	f(x) = 1021.771969
+iteration: 358
+	f(x) = 0.823117
+iteration: 359
+	f(x) = 1178.797377
+iteration: 360
+	f(x) = 0.771956
+iteration: 361
+	f(x) = 0.777550
+iteration: 362
+	f(x) = 0.729707
+iteration: 363
+	f(x) = 0.699158
+iteration: 364
+	f(x) = 0.649885
+iteration: 365
+	f(x) = 1928.375618
+iteration: 366
+	f(x) = 0.636321
+iteration: 367
+	f(x) = 0.662323
+iteration: 368
+	f(x) = 1.040256
+iteration: 369
+	f(x) = 0.648606
+iteration: 370
+	f(x) = 0.712280
+iteration: 371
+	f(x) = 0.630981
+iteration: 372
+	f(x) = 0.618928
+iteration: 373
+	f(x) = 0.642615
+iteration: 374
+	f(x) = 0.640955
+iteration: 375
+	f(x) = 0.625917
+iteration: 376
+	f(x) = 0.626684
+iteration: 377
+	f(x) = 0.621804
+iteration: 378
+	f(x) = 0.626941
+iteration: 379
+	f(x) = 0.621745
+iteration: 380
+	f(x) = 1559.766529
+iteration: 381
+	f(x) = 0.617656
+iteration: 382
+	f(x) = 0.625006
+iteration: 383
+	f(x) = 0.674951
+iteration: 384
+	f(x) = 0.640273
+iteration: 385
+	f(x) = 0.662303
+iteration: 386
+	f(x) = 0.626640
+iteration: 387
+	f(x) = 0.626504
+iteration: 388
+	f(x) = 0.620794
+iteration: 389
+	f(x) = 0.614234
+iteration: 390
+	f(x) = 0.614173
+iteration: 391
+	f(x) = 0.612659
+iteration: 392
+	f(x) = 0.615482
+iteration: 393
+	f(x) = 0.609856
+iteration: 394
+	f(x) = 0.613526
+iteration: 395
+	f(x) = 0.627226
+iteration: 396
+	f(x) = 0.612584
+iteration: 397
+	f(x) = 0.613442
+iteration: 398
+	f(x) = 0.611571
+iteration: 399
+	f(x) = 0.610699
+iteration: 400
+	f(x) = 0.610262
+iteration: 401
+	f(x) = 0.611201
+iteration: 402
+	f(x) = 0.609926
+iteration: 403
+	f(x) = 0.613284
+iteration: 404
+	f(x) = 0.609772
+iteration: 405
+	f(x) = 0.610197
+iteration: 406
+	f(x) = 0.609752
+iteration: 407
+	f(x) = 1118.508853
+iteration: 408
+	f(x) = 1.351878
+iteration: 409
+	f(x) = 1.565353
+iteration: 410
+	f(x) = 1.104334
+iteration: 411
+	f(x) = 0.648157
+iteration: 412
+	f(x) = 1.547112
+iteration: 413
+	f(x) = 0.726021
+iteration: 414
+	f(x) = 0.844906
+iteration: 415
+	f(x) = 0.639972
+iteration: 416
+	f(x) = 0.665086
+iteration: 417
+	f(x) = 0.625020
+iteration: 418
+	f(x) = 0.641737
+iteration: 419
+	f(x) = 0.622487
+iteration: 420
+	f(x) = 0.612946
+iteration: 421
+	f(x) = 0.611153
+iteration: 422
+	f(x) = 0.616127
+iteration: 423
+	f(x) = 0.608342
+iteration: 424
+	f(x) = 0.616920
+iteration: 425
+	f(x) = 0.622864
+iteration: 426
+	f(x) = 0.612060
+iteration: 427
+	f(x) = 0.597600
+iteration: 428
+	f(x) = 0.595726
+iteration: 429
+	f(x) = 0.648339
+iteration: 430
+	f(x) = 0.600968
+iteration: 431
+	f(x) = 0.593388
+iteration: 432
+	f(x) = 0.612442
+iteration: 433
+	f(x) = 0.599725
+iteration: 434
+	f(x) = 0.593371
+iteration: 435
+	f(x) = 0.604568
+iteration: 436
+	f(x) = 0.592584
+iteration: 437
+	f(x) = 0.600081
+iteration: 438
+	f(x) = 0.592059
+iteration: 439
+	f(x) = 0.592905
+iteration: 440
+	f(x) = 0.592210
+iteration: 441
+	f(x) = 0.592847
+iteration: 442
+	f(x) = 0.592106
+iteration: 443
+	f(x) = 0.592224
+iteration: 444
+	f(x) = 0.592025
+iteration: 445
+	f(x) = 0.592260
+iteration: 446
+	f(x) = 0.591985
+iteration: 447
+	f(x) = 0.654436
+iteration: 448
+	f(x) = 8.785012
+iteration: 449
+	f(x) = 0.871095
+iteration: 450
+	f(x) = 0.723467
+iteration: 451
+	f(x) = 0.684127
+iteration: 452
+	f(x) = 0.602284
+iteration: 453
+	f(x) = 0.685654
+iteration: 454
+	f(x) = 0.637236
+iteration: 455
+	f(x) = 0.605418
+iteration: 456
+	f(x) = 0.610093
+iteration: 457
+	f(x) = 0.595761
+iteration: 458
+	f(x) = 0.595917
+iteration: 459
+	f(x) = 0.593036
+iteration: 460
+	f(x) = 0.591054
+iteration: 461
+	f(x) = 0.592196
+iteration: 462
+	f(x) = 0.591821
+iteration: 463
+	f(x) = 0.590783
+iteration: 464
+	f(x) = 0.590790
+iteration: 465
+	f(x) = 0.590988
+iteration: 466
+	f(x) = 0.590617
+iteration: 467
+	f(x) = 0.591083
+iteration: 468
+	f(x) = 0.591533
+iteration: 469
+	f(x) = 0.590622
+iteration: 470
+	f(x) = 0.591292
+iteration: 471
+	f(x) = 0.590579
+iteration: 472
+	f(x) = 0.590690
+iteration: 473
+	f(x) = 0.590566
+iteration: 474
+	f(x) = 0.590690
+iteration: 475
+	f(x) = 0.590562
+iteration: 476
+	f(x) = 0.590658
+iteration: 477
+	f(x) = 0.590556
+iteration: 478
+	f(x) = 0.591313
+iteration: 479
+	f(x) = 0.592392
+iteration: 480
+	f(x) = 0.595980
+iteration: 481
+	f(x) = 0.590581
+iteration: 482
+	f(x) = 0.715580
+iteration: 483
+	f(x) = 0.643977
+iteration: 484
+	f(x) = 0.859200
+iteration: 485
+	f(x) = 0.615471
+iteration: 486
+	f(x) = 0.652281
+iteration: 487
+	f(x) = 0.597485
+iteration: 488
+	f(x) = 0.617832
+iteration: 489
+	f(x) = 0.596609
+iteration: 490
+	f(x) = 0.600005
+iteration: 491
+	f(x) = 0.591749
+iteration: 492
+	f(x) = 0.594089
+iteration: 493
+	f(x) = 0.590650
+iteration: 494
+	f(x) = 0.596456
+iteration: 495
+	f(x) = 0.589977
+iteration: 496
+	f(x) = 0.968744
+iteration: 497
+	f(x) = 0.592701
+iteration: 498
+	f(x) = 0.635259
+iteration: 499
+	f(x) = 0.605247
+iteration: 500
+	f(x) = 0.617845
+iteration: 501
+	f(x) = 0.594605
+iteration: 502
+	f(x) = 0.593788
+iteration: 503
+	f(x) = 0.590002
+iteration: 504
+	f(x) = 0.596763
+iteration: 505
+	f(x) = 0.630043
+iteration: 506
+	f(x) = 0.635508
+iteration: 507
+	f(x) = 0.606016
+iteration: 508
+	f(x) = 0.595010
+iteration: 509
+	f(x) = 0.605211
+iteration: 510
+	f(x) = 0.590884
+iteration: 511
+	f(x) = 0.598120
+iteration: 512
+	f(x) = 0.590135
+iteration: 513
+	f(x) = 0.590982
+iteration: 514
+	f(x) = 0.589675
+iteration: 515
+	f(x) = 0.589503
+iteration: 516
+	f(x) = 0.589473
+iteration: 517
+	f(x) = 0.589424
+iteration: 518
+	f(x) = 0.589549
+iteration: 519
+	f(x) = 0.589528
+iteration: 520
+	f(x) = 0.589446
+iteration: 521
+	f(x) = 0.589439
+iteration: 522
+	f(x) = 0.589522
+iteration: 523
+	f(x) = 0.589422
+iteration: 524
+	f(x) = 0.589440
+iteration: 525
+	f(x) = 0.589424
+iteration: 526
+	f(x) = 0.595869
+iteration: 527
+	f(x) = 0.591608
+iteration: 528
+	f(x) = 0.598528
+iteration: 529
+	f(x) = 0.590748
+iteration: 530
+	f(x) = 0.591262
+iteration: 531
+	f(x) = 0.590034
+iteration: 532
+	f(x) = 0.589158
+iteration: 533
+	f(x) = 0.589795
+iteration: 534
+	f(x) = 0.590518
+iteration: 535
+	f(x) = 0.589319
+iteration: 536
+	f(x) = 0.589332
+iteration: 537
+	f(x) = 0.589178
+iteration: 538
+	f(x) = 0.589373
+iteration: 539
+	f(x) = 0.589168
+iteration: 540
+	f(x) = 0.597644
+iteration: 541
+	f(x) = 0.607090
+iteration: 542
+	f(x) = 0.644977
+iteration: 543
+	f(x) = 0.591512
+iteration: 544
+	f(x) = 0.603345
+iteration: 545
+	f(x) = 0.590312
+iteration: 546
+	f(x) = 0.595467
+iteration: 547
+	f(x) = 0.589443
+iteration: 548
+	f(x) = 0.590990
+iteration: 549
+	f(x) = 0.589324
+iteration: 550
+	f(x) = 0.589997
+iteration: 551
+	f(x) = 0.589159
+iteration: 552
+	f(x) = 0.589387
+iteration: 553
+	f(x) = 0.589155
+iteration: 554
+	f(x) = 0.591517
+iteration: 555
+	f(x) = 0.589389
+iteration: 556
+	f(x) = 0.590138
+iteration: 557
+	f(x) = 0.589252
+iteration: 558
+	f(x) = 0.588725
+iteration: 559
+	f(x) = 0.588568
+iteration: 560
+	f(x) = 0.589652
+iteration: 561
+	f(x) = 0.588864
+iteration: 562
+	f(x) = 0.588655
+iteration: 563
+	f(x) = 0.588528
+iteration: 564
+	f(x) = 0.588837
+iteration: 565
+	f(x) = 0.588645
+iteration: 566
+	f(x) = 0.588519
+iteration: 567
+	f(x) = 0.588705
+iteration: 568
+	f(x) = 0.588492
+iteration: 569
+	f(x) = 0.588711
+iteration: 570
+	f(x) = 0.588483
+iteration: 571
+	f(x) = 0.588490
+iteration: 572
+	f(x) = 0.588529
+iteration: 573
+	f(x) = 0.588479
+iteration: 574
+	f(x) = 0.588501
+iteration: 575
+	f(x) = 0.588480
+iteration: 576
+	f(x) = 0.588490
+iteration: 577
+	f(x) = 0.588479
+iteration: 578
+	f(x) = 0.588481
+iteration: 579
+	f(x) = 0.588478
+iteration: 580
+	f(x) = 0.588483
+iteration: 581
+	f(x) = 0.588478
+iteration: 582
+	f(x) = 0.588479
+iteration: 583
+	f(x) = 0.588478
+iteration: 584
+	f(x) = 0.602434
+iteration: 585
+	f(x) = 0.588896
+iteration: 586
+	f(x) = 0.600232
+iteration: 587
+	f(x) = 0.589732
+iteration: 588
+	f(x) = 0.593508
+iteration: 589
+	f(x) = 0.588291
+iteration: 590
+	f(x) = 0.588071
+iteration: 591
+	f(x) = 0.588617
+iteration: 592
+	f(x) = 0.589632
+iteration: 593
+	f(x) = 0.588112
+iteration: 594
+	f(x) = 0.588022
+iteration: 595
+	f(x) = 0.587786
+iteration: 596
+	f(x) = 0.587772
+iteration: 597
+	f(x) = 0.587758
+iteration: 598
+	f(x) = 0.587837
+iteration: 599
+	f(x) = 0.587743
+iteration: 600
+	f(x) = 0.587930
+iteration: 601
+	f(x) = 0.587738
+iteration: 602
+	f(x) = 0.587740
+iteration: 603
+	f(x) = 0.587777
+iteration: 604
+	f(x) = 0.587731
+iteration: 605
+	f(x) = 0.587749
+iteration: 606
+	f(x) = 0.587732
+iteration: 607
+	f(x) = 0.587747
+iteration: 608
+	f(x) = 0.587731
+iteration: 609
+	f(x) = 0.588155
+iteration: 610
+	f(x) = 0.588052
+iteration: 611
+	f(x) = 0.587589
+iteration: 612
+	f(x) = 0.587527
+iteration: 613
+	f(x) = 0.587023
+iteration: 614
+	f(x) = 0.586725
+iteration: 615
+	f(x) = 0.586654
+iteration: 616
+	f(x) = 0.586888
+iteration: 617
+	f(x) = 0.586078
+iteration: 618
+	f(x) = 0.586163
+iteration: 619
+	f(x) = 0.586140
+iteration: 620
+	f(x) = 0.585761
+iteration: 621
+	f(x) = 0.586091
+iteration: 622
+	f(x) = 0.586866
+iteration: 623
+	f(x) = 0.585844
+iteration: 624
+	f(x) = 0.585668
+iteration: 625
+	f(x) = 0.585831
+iteration: 626
+	f(x) = 0.585745
+iteration: 627
+	f(x) = 0.585787
+iteration: 628
+	f(x) = 0.585678
+iteration: 629
+	f(x) = 0.585783
+iteration: 630
+	f(x) = 0.585669
+iteration: 631
+	f(x) = 0.585685
+iteration: 632
+	f(x) = 0.585654
+iteration: 633
+	f(x) = 0.585701
+iteration: 634
+	f(x) = 0.585650
+iteration: 635
+	f(x) = 0.585722
+iteration: 636
+	f(x) = 0.585649
+iteration: 637
+	f(x) = 0.585651
+iteration: 638
+	f(x) = 0.585648
+iteration: 639
+	f(x) = 0.587832
+iteration: 640
+	f(x) = 0.587859
+iteration: 641
+	f(x) = 0.589156
+iteration: 642
+	f(x) = 0.586017
+iteration: 643
+	f(x) = 0.590391
+iteration: 644
+	f(x) = 0.585710
+iteration: 645
+	f(x) = 0.585223
+iteration: 646
+	f(x) = 0.585803
+iteration: 647
+	f(x) = 0.586408
+iteration: 648
+	f(x) = 0.585271
+iteration: 649
+	f(x) = 0.585992
+iteration: 650
+	f(x) = 0.585280
+iteration: 651
+	f(x) = 0.585427
+iteration: 652
+	f(x) = 0.585202
+iteration: 653
+	f(x) = 0.588965
+iteration: 654
+	f(x) = 0.588172
+iteration: 655
+	f(x) = 0.602712
+iteration: 656
+	f(x) = 0.585252
+iteration: 657
+	f(x) = 0.588343
+iteration: 658
+	f(x) = 0.585689
+iteration: 659
+	f(x) = 0.585956
+iteration: 660
+	f(x) = 0.585139
+iteration: 661
+	f(x) = 0.586602
+iteration: 662
+	f(x) = 0.585006
+iteration: 663
+	f(x) = 0.585075
+iteration: 664
+	f(x) = 0.584527
+iteration: 665
+	f(x) = 0.584376
+iteration: 666
+	f(x) = 0.584584
+iteration: 667
+	f(x) = 0.584424
+iteration: 668
+	f(x) = 0.584379
+iteration: 669
+	f(x) = 0.584304
+iteration: 670
+	f(x) = 0.584305
+iteration: 671
+	f(x) = 0.584459
+iteration: 672
+	f(x) = 0.584332
+iteration: 673
+	f(x) = 0.584336
+iteration: 674
+	f(x) = 0.584315
+iteration: 675
+	f(x) = 0.584299
+iteration: 676
+	f(x) = 0.584312
+iteration: 677
+	f(x) = 0.584308
+iteration: 678
+	f(x) = 0.584300
+iteration: 679
+	f(x) = 0.584307
+iteration: 680
+	f(x) = 0.584299
+iteration: 681
+	f(x) = 0.584063
+iteration: 682
+	f(x) = 0.584211
+iteration: 683
+	f(x) = 0.584161
+iteration: 684
+	f(x) = 0.583998
+iteration: 685
+	f(x) = 0.584013
+iteration: 686
+	f(x) = 0.584104
+iteration: 687
+	f(x) = 0.584027
+iteration: 688
+	f(x) = 0.583996
+iteration: 689
+	f(x) = 0.584066
+iteration: 690
+	f(x) = 0.584094
+iteration: 691
+	f(x) = 0.583991
+iteration: 692
+	f(x) = 0.584011
+iteration: 693
+	f(x) = 0.583988
+iteration: 694
+	f(x) = 0.584011
+iteration: 695
+	f(x) = 0.583987
+iteration: 696
+	f(x) = 0.584002
+iteration: 697
+	f(x) = 0.583987
+iteration: 698
+	f(x) = 0.584048
+iteration: 699
+	f(x) = 0.586382
+iteration: 700
+	f(x) = 0.586417
+iteration: 701
+	f(x) = 0.584470
+iteration: 702
+	f(x) = 0.584574
+iteration: 703
+	f(x) = 0.584022
+iteration: 704
+	f(x) = 0.584971
+iteration: 705
+	f(x) = 0.583896
+iteration: 706
+	f(x) = 0.583902
+iteration: 707
+	f(x) = 0.584066
+iteration: 708
+	f(x) = 0.583911
+iteration: 709
+	f(x) = 0.583950
+iteration: 710
+	f(x) = 0.583897
+iteration: 711
+	f(x) = 0.583903
+iteration: 712
+	f(x) = 0.583897
+iteration: 713
+	f(x) = 0.583897
+iteration: 714
+	f(x) = 0.583896
+iteration: 715
+	f(x) = 0.583871
+iteration: 716
+	f(x) = 0.606076
+iteration: 717
+	f(x) = 0.606734
+iteration: 718
+	f(x) = 0.589430
+iteration: 719
+	f(x) = 0.589502
+iteration: 720
+	f(x) = 0.585242
+iteration: 721
+	f(x) = 0.585246
+iteration: 722
+	f(x) = 0.584190
+iteration: 723
+	f(x) = 0.608092
+iteration: 724
+	f(x) = 0.590540
+iteration: 725
+	f(x) = 0.604922
+iteration: 726
+	f(x) = 0.591577
+iteration: 727
+	f(x) = 0.587860
+iteration: 728
+	f(x) = 0.591160
+iteration: 729
+	f(x) = 0.585289
+iteration: 730
+	f(x) = 0.587154
+iteration: 731
+	f(x) = 0.584788
+iteration: 732
+	f(x) = 0.586991
+iteration: 733
+	f(x) = 0.584110
+iteration: 734
+	f(x) = 0.583854
+iteration: 735
+	f(x) = 0.585267
+iteration: 736
+	f(x) = 0.584763
+iteration: 737
+	f(x) = 0.583699
+iteration: 738
+	f(x) = 0.584315
+iteration: 739
+	f(x) = 0.583677
+iteration: 740
+	f(x) = 0.594711
+iteration: 741
+	f(x) = 0.584162
+iteration: 742
+	f(x) = 0.586404
+iteration: 743
+	f(x) = 0.583689
+iteration: 744
+	f(x) = 0.583654
+iteration: 745
+	f(x) = 0.583691
+iteration: 746
+	f(x) = 0.583659
+iteration: 747
+	f(x) = 0.583637
+iteration: 748
+	f(x) = 0.583635
+iteration: 749
+	f(x) = 0.583645
+iteration: 750
+	f(x) = 0.583662
+iteration: 751
+	f(x) = 0.583639
+iteration: 752
+	f(x) = 0.583645
+iteration: 753
+	f(x) = 0.583637
+iteration: 754
+	f(x) = 0.583639
+iteration: 755
+	f(x) = 0.583635
+iteration: 756
+	f(x) = 0.583637
+iteration: 757
+	f(x) = 0.583634
+iteration: 758
+	f(x) = 0.583643
+iteration: 759
+	f(x) = 0.583634
+iteration: 760
+	f(x) = 0.583634
+iteration: 761
+	f(x) = 0.583634
+iteration: 762
+	f(x) = 0.583635
+iteration: 763
+	f(x) = 0.583634
+iteration: 764
+	f(x) = 0.583551
+iteration: 765
+	f(x) = 0.583594
+iteration: 766
+	f(x) = 0.583596
+iteration: 767
+	f(x) = 0.583569
+iteration: 768
+	f(x) = 0.583893
+iteration: 769
+	f(x) = 0.585106
+iteration: 770
+	f(x) = 0.586524
+iteration: 771
+	f(x) = 0.583618
+iteration: 772
+	f(x) = 0.584385
+iteration: 773
+	f(x) = 0.583458
+iteration: 774
+	f(x) = 0.584079
+iteration: 775
+	f(x) = 0.583407
+iteration: 776
+	f(x) = 0.583782
+iteration: 777
+	f(x) = 0.583413
+iteration: 778
+	f(x) = 0.583511
+iteration: 779
+	f(x) = 0.583400
+iteration: 780
+	f(x) = 0.583469
+iteration: 781
+	f(x) = 0.583390
+iteration: 782
+	f(x) = 0.583348
+iteration: 783
+	f(x) = 0.584018
+iteration: 784
+	f(x) = 0.583232
+iteration: 785
+	f(x) = 0.583749
+iteration: 786
+	f(x) = 0.582956
+iteration: 787
+	f(x) = 0.582799
+iteration: 788
+	f(x) = 0.583159
+iteration: 789
+	f(x) = 0.582617
+iteration: 790
+	f(x) = 0.582550
+iteration: 791
+	f(x) = 0.582820
+iteration: 792
+	f(x) = 0.582601
+iteration: 793
+	f(x) = 0.582714
+iteration: 794
+	f(x) = 0.582560
+iteration: 795
+	f(x) = 0.582831
+iteration: 796
+	f(x) = 0.582527
+iteration: 797
+	f(x) = 0.582552
+iteration: 798
+	f(x) = 0.582528
+iteration: 799
+	f(x) = 0.582569
+iteration: 800
+	f(x) = 0.582526
+iteration: 801
+	f(x) = 0.582531
+iteration: 802
+	f(x) = 0.582521
+iteration: 803
+	f(x) = 0.582560
+iteration: 804
+	f(x) = 0.582520
+iteration: 805
+	f(x) = 0.582525
+iteration: 806
+	f(x) = 0.582521
+iteration: 807
+	f(x) = 0.582525
+iteration: 808
+	f(x) = 0.582520
+iteration: 809
+	f(x) = 0.582519
+iteration: 810
+	f(x) = 0.582521
+iteration: 811
+	f(x) = 0.582520
+iteration: 812
+	f(x) = 0.582519
+iteration: 813
+	f(x) = 0.582520
+iteration: 814
+	f(x) = 0.582519
+iteration: 815
+	f(x) = 0.582520
+iteration: 816
+	f(x) = 0.582519
+iteration: 817
+	f(x) = 0.582519
+iteration: 818
+	f(x) = 0.587226
+iteration: 819
+	f(x) = 0.582752
+iteration: 820
+	f(x) = 0.586755
+iteration: 821
+	f(x) = 0.583470
+iteration: 822
+	f(x) = 0.583596
+iteration: 823
+	f(x) = 0.582645
+iteration: 824
+	f(x) = 0.582459
+iteration: 825
+	f(x) = 0.583234
+iteration: 826
+	f(x) = 0.584504
+iteration: 827
+	f(x) = 0.582304
+iteration: 828
+	f(x) = 0.582301
+iteration: 829
+	f(x) = 0.582489
+iteration: 830
+	f(x) = 0.582633
+iteration: 831
+	f(x) = 0.582306
+iteration: 832
+	f(x) = 0.582723
+iteration: 833
+	f(x) = 0.582281
+iteration: 834
+	f(x) = 0.582029
+iteration: 835
+	f(x) = 0.581951
+iteration: 836
+	f(x) = 0.581904
+iteration: 837
+	f(x) = 0.581960
+iteration: 838
+	f(x) = 0.582336
+iteration: 839
+	f(x) = 0.582012
+iteration: 840
+	f(x) = 0.582030
+iteration: 841
+	f(x) = 0.581946
+iteration: 842
+	f(x) = 0.581913
+iteration: 843
+	f(x) = 0.581869
+iteration: 844
+	f(x) = 0.581850
+iteration: 845
+	f(x) = 0.581900
+iteration: 846
+	f(x) = 0.581882
+iteration: 847
+	f(x) = 0.581831
+iteration: 848
+	f(x) = 0.581831
+iteration: 849
+	f(x) = 0.581860
+iteration: 850
+	f(x) = 0.581839
+iteration: 851
+	f(x) = 0.581829
+iteration: 852
+	f(x) = 0.581843
+iteration: 853
+	f(x) = 0.581847
+iteration: 854
+	f(x) = 0.581830
+iteration: 855
+	f(x) = 0.581836
+iteration: 856
+	f(x) = 0.581828
+iteration: 857
+	f(x) = 0.581831
+iteration: 858
+	f(x) = 0.581828
+iteration: 859
+	f(x) = 0.581832
+iteration: 860
+	f(x) = 0.581827
+iteration: 861
+	f(x) = 0.581816
+iteration: 862
+	f(x) = 0.581851
+iteration: 863
+	f(x) = 0.581860
+iteration: 864
+	f(x) = 0.581827
+iteration: 865
+	f(x) = 0.581824
+iteration: 866
+	f(x) = 0.581819
+iteration: 867
+	f(x) = 0.581826
+iteration: 868
+	f(x) = 0.581818
+iteration: 869
+	f(x) = 0.581821
+iteration: 870
+	f(x) = 0.581816
+iteration: 871
+	f(x) = 0.581818
+iteration: 872
+	f(x) = 0.581816
+iteration: 873
+	f(x) = 0.581820
+iteration: 874
+	f(x) = 0.581816
+iteration: 875
+	f(x) = 0.581816
+iteration: 876
+	f(x) = 0.581816
+iteration: 877
+	f(x) = 0.581816
+iteration: 878
+	f(x) = 0.581816
+iteration: 879
+	f(x) = 0.581816
+iteration: 880
+	f(x) = 0.583637
+iteration: 881
+	f(x) = 0.582214
+iteration: 882
+	f(x) = 0.584732
+iteration: 883
+	f(x) = 0.582183
+iteration: 884
+	f(x) = 0.582929
+iteration: 885
+	f(x) = 0.581878
+iteration: 886
+	f(x) = 0.582147
+iteration: 887
+	f(x) = 0.581888
+iteration: 888
+	f(x) = 0.581907
+iteration: 889
+	f(x) = 0.581826
+iteration: 890
+	f(x) = 0.581916
+iteration: 891
+	f(x) = 0.581818
+iteration: 892
+	f(x) = 0.581822
+iteration: 893
+	f(x) = 0.581807
+iteration: 894
+	f(x) = 0.581561
+iteration: 895
+	f(x) = 0.583133
+iteration: 896
+	f(x) = 0.583544
+iteration: 897
+	f(x) = 0.581916
+iteration: 898
+	f(x) = 0.582241
+iteration: 899
+	f(x) = 0.581678
+iteration: 900
+	f(x) = 0.582360
+iteration: 901
+	f(x) = 0.581553
+iteration: 902
+	f(x) = 0.582092
+iteration: 903
+	f(x) = 0.581666
+iteration: 904
+	f(x) = 0.581777
+iteration: 905
+	f(x) = 0.581569
+iteration: 906
+	f(x) = 0.581621
+iteration: 907
+	f(x) = 0.581551
+iteration: 908
+	f(x) = 0.581544
+iteration: 909
+	f(x) = 0.581736
+iteration: 910
+	f(x) = 0.581611
+iteration: 911
+	f(x) = 0.581547
+iteration: 912
+	f(x) = 0.581559
+iteration: 913
+	f(x) = 0.581541
+iteration: 914
+	f(x) = 0.581581
+iteration: 915
+	f(x) = 0.581539
+iteration: 916
+	f(x) = 0.581543
+iteration: 917
+	f(x) = 0.581540
+iteration: 918
+	f(x) = 0.581544
+iteration: 919
+	f(x) = 0.581539
+iteration: 920
+	f(x) = 0.581538
+iteration: 921
+	f(x) = 0.581540
+iteration: 922
+	f(x) = 0.581539
+iteration: 923
+	f(x) = 0.581538
+iteration: 924
+	f(x) = 0.581549
+iteration: 925
+	f(x) = 0.582286
+iteration: 926
+	f(x) = 0.582230
+iteration: 927
+	f(x) = 0.581727
+iteration: 928
+	f(x) = 0.581713
+iteration: 929
+	f(x) = 0.581580
+iteration: 930
+	f(x) = 0.581592
+iteration: 931
+	f(x) = 0.581549
+iteration: 932
+	f(x) = 0.581556
+iteration: 933
+	f(x) = 0.581542
+iteration: 934
+	f(x) = 0.581543
+iteration: 935
+	f(x) = 0.581539
+iteration: 936
+	f(x) = 0.581541
+iteration: 937
+	f(x) = 0.581539
+iteration: 938
+	f(x) = 0.581567
+iteration: 939
+	f(x) = 0.583875
+iteration: 940
+	f(x) = 0.583842
+iteration: 941
+	f(x) = 0.582113
+iteration: 942
+	f(x) = 0.582138
+iteration: 943
+	f(x) = 0.581686
+iteration: 944
+	f(x) = 0.581699
+iteration: 945
+	f(x) = 0.581581
+iteration: 946
+	f(x) = 0.582535
+iteration: 947
+	f(x) = 0.581324
+iteration: 948
+	f(x) = 0.582508
+iteration: 949
+	f(x) = 0.581654
+iteration: 950
+	f(x) = 0.581712
+iteration: 951
+	f(x) = 0.581457
+iteration: 952
+	f(x) = 0.581262
+iteration: 953
+	f(x) = 0.583021
+iteration: 954
+	f(x) = 0.583690
+iteration: 955
+	f(x) = 0.581714
+iteration: 956
+	f(x) = 0.581874
+iteration: 957
+	f(x) = 0.581379
+iteration: 958
+	f(x) = 0.581438
+iteration: 959
+	f(x) = 0.581300
+iteration: 960
+	f(x) = 0.581325
+iteration: 961
+	f(x) = 0.581287
+iteration: 962
+	f(x) = 0.581281
+iteration: 963
+	f(x) = 0.581272
+iteration: 964
+	f(x) = 0.581261
+iteration: 965
+	f(x) = 0.581256
+iteration: 966
+	f(x) = 0.581258
+iteration: 967
+	f(x) = 0.581253
+iteration: 968
+	f(x) = 0.581252
+iteration: 969
+	f(x) = 0.581247
+iteration: 970
+	f(x) = 0.581243
+iteration: 971
+	f(x) = 0.581245
+iteration: 972
+	f(x) = 0.581235
+iteration: 973
+	f(x) = 0.581229
+iteration: 974
+	f(x) = 0.581230
+iteration: 975
+	f(x) = 0.581220
+iteration: 976
+	f(x) = 0.581217
+iteration: 977
+	f(x) = 0.581223
+iteration: 978
+	f(x) = 0.581231
+iteration: 979
+	f(x) = 0.581221
+iteration: 980
+	f(x) = 0.581221
+iteration: 981
+	f(x) = 0.581220
+iteration: 982
+	f(x) = 0.581219
+iteration: 983
+	f(x) = 0.581222
+iteration: 984
+	f(x) = 0.581218
+iteration: 985
+	f(x) = 0.581218
+iteration: 986
+	f(x) = 0.581217
+iteration: 987
+	f(x) = 0.581219
+iteration: 988
+	f(x) = 0.581217
+iteration: 989
+	f(x) = 0.581217
+iteration: 990
+	f(x) = 0.581217
+iteration: 991
+	f(x) = 0.581217
+iteration: 992
+	f(x) = 0.581217
+iteration: 993
+	f(x) = 0.581217
+iteration: 994
+	f(x) = 0.581216
+iteration: 995
+	f(x) = 0.581217
+iteration: 996
+	f(x) = 0.581216
+iteration: 997
+	f(x) = 0.581220
+iteration: 998
+	f(x) = 0.581167
+iteration: 999
+	f(x) = 0.581176
+iteration: 1000
+	f(x) = 0.581180
+iteration: 1001
+	f(x) = 0.581169
+iteration: 1002
+	f(x) = 0.581202
+iteration: 1003
+	f(x) = 0.581164
+iteration: 1004
+	f(x) = 0.581200
+iteration: 1005
+	f(x) = 0.581161
+iteration: 1006
+	f(x) = 0.581165
+iteration: 1007
+	f(x) = 0.581162
+iteration: 1008
+	f(x) = 0.581166
+iteration: 1009
+	f(x) = 0.581161
+iteration: 1010
+	f(x) = 0.581161
+iteration: 1011
+	f(x) = 0.581161
+iteration: 1012
+	f(x) = 0.581161
+iteration: 1013
+	f(x) = 0.581161
+iteration: 1014
+	f(x) = 0.581161
+iteration: 1015
+	f(x) = 0.581161
+iteration: 1016
+	f(x) = 0.581161
+iteration: 1017
+	f(x) = 0.581161
+iteration: 1018
+	f(x) = 0.581161
+iteration: 1019
+	f(x) = 0.581161
+iteration: 1020
+	f(x) = 0.581161
+iteration: 1021
+	f(x) = 0.581161
+iteration: 1022
+	f(x) = 0.581161
+iteration: 1023
+	f(x) = 0.581161
+iteration: 1024
+	f(x) = 0.581161
+iteration: 1025
+	f(x) = 0.581161
+iteration: 1026
+	f(x) = 0.581161
+iteration: 1027
+	f(x) = 0.581161
+iteration: 1028
+	f(x) = 0.581161
+iteration: 1029
+	f(x) = 0.581161
+iteration: 1030
+	f(x) = 0.581161
+iteration: 1031
+	f(x) = 0.581161
+iteration: 1032
+	f(x) = 0.581161
+iteration: 1033
+	f(x) = 0.581161
+iteration: 1034
+	f(x) = 0.581161
+iteration: 1035
+	f(x) = 0.581282
+iteration: 1036
+	f(x) = 0.581189
+iteration: 1037
+	f(x) = 0.581132
+iteration: 1038
+	f(x) = 0.581196
+iteration: 1039
+	f(x) = 0.581174
+iteration: 1040
+	f(x) = 0.581142
+iteration: 1041
+	f(x) = 0.581172
+iteration: 1042
+	f(x) = 0.581138
+iteration: 1043
+	f(x) = 0.581137
+iteration: 1044
+	f(x) = 0.581166
+iteration: 1045
+	f(x) = 0.581130
+iteration: 1046
+	f(x) = 0.581134
+iteration: 1047
+	f(x) = 0.581130
+iteration: 1048
+	f(x) = 0.581135
+iteration: 1049
+	f(x) = 0.581130
+iteration: 1050
+	f(x) = 0.581135
+iteration: 1051
+	f(x) = 0.581129
+iteration: 1052
+	f(x) = 0.581130
+iteration: 1053
+	f(x) = 0.581135
+iteration: 1054
+	f(x) = 0.581144
+iteration: 1055
+	f(x) = 0.581130
+iteration: 1056
+	f(x) = 0.581132
+iteration: 1057
+	f(x) = 0.581129
+iteration: 1058
+	f(x) = 0.581132
+iteration: 1059
+	f(x) = 0.581129
+iteration: 1060
+	f(x) = 0.581129
+iteration: 1061
+	f(x) = 0.581130
+iteration: 1062
+	f(x) = 0.581129
+iteration: 1063
+	f(x) = 0.581129
+iteration: 1064
+	f(x) = 0.581129
+iteration: 1065
+	f(x) = 0.581129
+iteration: 1066
+	f(x) = 0.581129
+iteration: 1067
+	f(x) = 0.581129
+iteration: 1068
+	f(x) = 0.581541
+iteration: 1069
+	f(x) = 0.581477
+iteration: 1070
+	f(x) = 0.582348
+iteration: 1071
+	f(x) = 0.581197
+iteration: 1072
+	f(x) = 0.581574
+iteration: 1073
+	f(x) = 0.581211
+iteration: 1074
+	f(x) = 0.581270
+iteration: 1075
+	f(x) = 0.581154
+iteration: 1076
+	f(x) = 0.581186
+iteration: 1077
+	f(x) = 0.581146
+iteration: 1078
+	f(x) = 0.581155
+iteration: 1079
+	f(x) = 0.581138
+iteration: 1080
+	f(x) = 0.581132
+iteration: 1081
+	f(x) = 0.581193
+iteration: 1082
+	f(x) = 0.581349
+iteration: 1083
+	f(x) = 0.581125
+iteration: 1084
+	f(x) = 0.581123
+iteration: 1085
+	f(x) = 0.581147
+iteration: 1086
+	f(x) = 0.581191
+iteration: 1087
+	f(x) = 0.581117
+iteration: 1088
+	f(x) = 0.581117
+iteration: 1089
+	f(x) = 0.581123
+iteration: 1090
+	f(x) = 0.581128
+iteration: 1091
+	f(x) = 0.581117
+iteration: 1092
+	f(x) = 0.581120
+iteration: 1093
+	f(x) = 0.581116
+iteration: 1094
+	f(x) = 0.581117
+iteration: 1095
+	f(x) = 0.581116
+iteration: 1096
+	f(x) = 0.581117
+iteration: 1097
+	f(x) = 0.581116
+iteration: 1098
+	f(x) = 0.581116
+iteration: 1099
+	f(x) = 0.581116
+iteration: 1100
+	f(x) = 0.581117
+iteration: 1101
+	f(x) = 0.581116
+iteration: 1102
+	f(x) = 0.581252
+iteration: 1103
+	f(x) = 0.581030
+iteration: 1104
+	f(x) = 0.581170
+iteration: 1105
+	f(x) = 0.581082
+iteration: 1106
+	f(x) = 0.581031
+iteration: 1107
+	f(x) = 0.581105
+iteration: 1108
+	f(x) = 0.581012
+iteration: 1109
+	f(x) = 0.581050
+iteration: 1110
+	f(x) = 0.581004
+iteration: 1111
+	f(x) = 0.581004
+iteration: 1112
+	f(x) = 0.581040
+iteration: 1113
+	f(x) = 0.581011
+iteration: 1114
+	f(x) = 0.581011
+iteration: 1115
+	f(x) = 0.581007
+iteration: 1116
+	f(x) = 0.581001
+iteration: 1117
+	f(x) = 0.581002
+iteration: 1118
+	f(x) = 0.581006
+iteration: 1119
+	f(x) = 0.581003
+iteration: 1120
+	f(x) = 0.581002
+iteration: 1121
+	f(x) = 0.581000
+iteration: 1122
+	f(x) = 0.581001
+iteration: 1123
+	f(x) = 0.581002
+iteration: 1124
+	f(x) = 0.581001
+iteration: 1125
+	f(x) = 0.581001
+iteration: 1126
+	f(x) = 0.581001
+iteration: 1127
+	f(x) = 0.581000
+iteration: 1128
+	f(x) = 0.581002
+iteration: 1129
+	f(x) = 0.580997
+iteration: 1130
+	f(x) = 0.581000
+iteration: 1131
+	f(x) = 0.580997
+iteration: 1132
+	f(x) = 0.580998
+iteration: 1133
+	f(x) = 0.580994
+iteration: 1134
+	f(x) = 0.580991
+iteration: 1135
+	f(x) = 0.580994
+iteration: 1136
+	f(x) = 0.580991
+iteration: 1137
+	f(x) = 0.580989
+iteration: 1138
+	f(x) = 0.580986
+iteration: 1139
+	f(x) = 0.580983
+iteration: 1140
+	f(x) = 0.580986
+iteration: 1141
+	f(x) = 0.580981
+iteration: 1142
+	f(x) = 0.580981
+iteration: 1143
+	f(x) = 0.580982
+iteration: 1144
+	f(x) = 0.580980
+iteration: 1145
+	f(x) = 0.580988
+iteration: 1146
+	f(x) = 0.580994
+iteration: 1147
+	f(x) = 0.580979
+iteration: 1148
+	f(x) = 0.580977
+iteration: 1149
+	f(x) = 0.580977
+iteration: 1150
+	f(x) = 0.580981
+iteration: 1151
+	f(x) = 0.580979
+iteration: 1152
+	f(x) = 0.580982
+iteration: 1153
+	f(x) = 0.580978
+iteration: 1154
+	f(x) = 0.580976
+iteration: 1155
+	f(x) = 0.580976
+iteration: 1156
+	f(x) = 0.580977
+iteration: 1157
+	f(x) = 0.580977
+iteration: 1158
+	f(x) = 0.580978
+iteration: 1159
+	f(x) = 0.580976
+iteration: 1160
+	f(x) = 0.580975
+iteration: 1161
+	f(x) = 0.580976
+iteration: 1162
+	f(x) = 0.580977
+iteration: 1163
+	f(x) = 0.580976
+iteration: 1164
+	f(x) = 0.580977
+iteration: 1165
+	f(x) = 0.580975
+iteration: 1166
+	f(x) = 0.580976
+iteration: 1167
+	f(x) = 0.580975
+iteration: 1168
+	f(x) = 0.580972
+iteration: 1169
+	f(x) = 0.580973
+iteration: 1170
+	f(x) = 0.581000
+iteration: 1171
+	f(x) = 0.580970
+iteration: 1172
+	f(x) = 0.580970
+iteration: 1173
+	f(x) = 0.580972
+iteration: 1174
+	f(x) = 0.580975
+iteration: 1175
+	f(x) = 0.580970
+iteration: 1176
+	f(x) = 0.580973
+iteration: 1177
+	f(x) = 0.580937
+iteration: 1178
+	f(x) = 0.580934
+iteration: 1179
+	f(x) = 0.580915
+iteration: 1180
+	f(x) = 0.580884
+iteration: 1181
+	f(x) = 0.580845
+iteration: 1182
+	f(x) = 0.580826
+iteration: 1183
+	f(x) = 0.580778
+iteration: 1184
+	f(x) = 0.580721
+iteration: 1185
+	f(x) = 0.580649
+iteration: 1186
+	f(x) = 0.580607
+iteration: 1187
+	f(x) = 0.580547
+iteration: 1188
+	f(x) = 0.580522
+iteration: 1189
+	f(x) = 0.580583
+iteration: 1190
+	f(x) = 0.580565
+iteration: 1191
+	f(x) = 0.580527
+iteration: 1192
+	f(x) = 0.580565
+iteration: 1193
+	f(x) = 0.580526
+iteration: 1194
+	f(x) = 0.580538
+iteration: 1195
+	f(x) = 0.580522
+iteration: 1196
+	f(x) = 0.580527
+iteration: 1197
+	f(x) = 0.580522
+iteration: 1198
+	f(x) = 0.580461
+iteration: 1199
+	f(x) = 0.580634
+iteration: 1200
+	f(x) = 0.580390
+iteration: 1201
+	f(x) = 0.580355
+iteration: 1202
+	f(x) = 0.580349
+iteration: 1203
+	f(x) = 0.580429
+iteration: 1204
+	f(x) = 0.580458
+iteration: 1205
+	f(x) = 0.580372
+iteration: 1206
+	f(x) = 0.580373
+iteration: 1207
+	f(x) = 0.580350
+iteration: 1208
+	f(x) = 0.580383
+iteration: 1209
+	f(x) = 0.580345
+iteration: 1210
+	f(x) = 0.580349
+iteration: 1211
+	f(x) = 0.580350
+iteration: 1212
+	f(x) = 0.580345
+iteration: 1213
+	f(x) = 0.580350
+iteration: 1214
+	f(x) = 0.580345
+iteration: 1215
+	f(x) = 0.580329
+iteration: 1216
+	f(x) = 0.580336
+iteration: 1217
+	f(x) = 0.580329
+iteration: 1218
+	f(x) = 0.580334
+iteration: 1219
+	f(x) = 0.580328
+iteration: 1220
+	f(x) = 0.580433
+iteration: 1221
+	f(x) = 0.580300
+iteration: 1222
+	f(x) = 0.580236
+iteration: 1223
+	f(x) = 0.580200
+iteration: 1224
+	f(x) = 0.580165
+iteration: 1225
+	f(x) = 0.580141
+iteration: 1226
+	f(x) = 0.580274
+iteration: 1227
+	f(x) = 0.580189
+iteration: 1228
+	f(x) = 0.580195
+iteration: 1229
+	f(x) = 0.580169
+iteration: 1230
+	f(x) = 0.580120
+iteration: 1231
+	f(x) = 0.580099
+iteration: 1232
+	f(x) = 0.580114
+iteration: 1233
+	f(x) = 0.580099
+iteration: 1234
+	f(x) = 0.580083
+iteration: 1235
+	f(x) = 0.580094
+iteration: 1236
+	f(x) = 0.580127
+iteration: 1237
+	f(x) = 0.580087
+iteration: 1238
+	f(x) = 0.580091
+iteration: 1239
+	f(x) = 0.580085
+iteration: 1240
+	f(x) = 0.580087
+iteration: 1241
+	f(x) = 0.580084
+iteration: 1242
+	f(x) = 0.580088
+iteration: 1243
+	f(x) = 0.580083
+iteration: 1244
+	f(x) = 0.580084
+iteration: 1245
+	f(x) = 0.580083
+iteration: 1246
+	f(x) = 0.581241
+iteration: 1247
+	f(x) = 0.580560
+iteration: 1248
+	f(x) = 0.582253
+iteration: 1249
+	f(x) = 0.580357
+iteration: 1250
+	f(x) = 0.580641
+iteration: 1251
+	f(x) = 0.580240
+iteration: 1252
+	f(x) = 0.580384
+iteration: 1253
+	f(x) = 0.580188
+iteration: 1254
+	f(x) = 0.580127
+iteration: 1255
+	f(x) = 0.580122
+iteration: 1256
+	f(x) = 0.580149
+iteration: 1257
+	f(x) = 0.580089
+iteration: 1258
+	f(x) = 0.580147
+iteration: 1259
+	f(x) = 0.580085
+iteration: 1260
+	f(x) = 0.580089
+iteration: 1261
+	f(x) = 0.580078
+iteration: 1262
+	f(x) = 0.579917
+iteration: 1263
+	f(x) = 0.580039
+iteration: 1264
+	f(x) = 0.580060
+iteration: 1265
+	f(x) = 0.579983
+iteration: 1266
+	f(x) = 0.579852
+iteration: 1267
+	f(x) = 0.579806
+iteration: 1268
+	f(x) = 0.579940
+iteration: 1269
+	f(x) = 0.579872
+iteration: 1270
+	f(x) = 0.579812
+iteration: 1271
+	f(x) = 0.579739
+iteration: 1272
+	f(x) = 0.579695
+iteration: 1273
+	f(x) = 0.579725
+iteration: 1274
+	f(x) = 0.579651
+iteration: 1275
+	f(x) = 0.579664
+iteration: 1276
+	f(x) = 0.579673
+iteration: 1277
+	f(x) = 0.579668
+iteration: 1278
+	f(x) = 0.579682
+iteration: 1279
+	f(x) = 0.579654
+iteration: 1280
+	f(x) = 0.579678
+iteration: 1281
+	f(x) = 0.579651
+iteration: 1282
+	f(x) = 0.579655
+iteration: 1283
+	f(x) = 0.579648
+iteration: 1284
+	f(x) = 0.579659
+iteration: 1285
+	f(x) = 0.579647
+iteration: 1286
+	f(x) = 0.579663
+iteration: 1287
+	f(x) = 0.579647
+iteration: 1288
+	f(x) = 0.579647
+iteration: 1289
+	f(x) = 0.579647
+iteration: 1290
+	f(x) = 0.579650
+iteration: 1291
+	f(x) = 0.579647
+iteration: 1292
+	f(x) = 0.579647
+iteration: 1293
+	f(x) = 0.579647
+iteration: 1294
+	f(x) = 0.579647
+iteration: 1295
+	f(x) = 0.579647
+iteration: 1296
+	f(x) = 0.580100
+iteration: 1297
+	f(x) = 0.580566
+iteration: 1298
+	f(x) = 0.580504
+iteration: 1299
+	f(x) = 0.579879
+iteration: 1300
+	f(x) = 0.579614
+iteration: 1301
+	f(x) = 0.580330
+iteration: 1302
+	f(x) = 0.581109
+iteration: 1303
+	f(x) = 0.579542
+iteration: 1304
+	f(x) = 0.579546
+iteration: 1305
+	f(x) = 0.579835
+iteration: 1306
+	f(x) = 0.579514
+iteration: 1307
+	f(x) = 0.579577
+iteration: 1308
+	f(x) = 0.579512
+iteration: 1309
+	f(x) = 0.579593
+iteration: 1310
+	f(x) = 0.579509
+iteration: 1311
+	f(x) = 0.579558
+iteration: 1312
+	f(x) = 0.579504
+iteration: 1313
+	f(x) = 0.579509
+iteration: 1314
+	f(x) = 0.579517
+iteration: 1315
+	f(x) = 0.579515
+iteration: 1316
+	f(x) = 0.579508
+iteration: 1317
+	f(x) = 0.579504
+iteration: 1318
+	f(x) = 0.579507
+iteration: 1319
+	f(x) = 0.579507
+iteration: 1320
+	f(x) = 0.579504
+iteration: 1321
+	f(x) = 0.579504
+iteration: 1322
+	f(x) = 0.579503
+iteration: 1323
+	f(x) = 0.579506
+iteration: 1324
+	f(x) = 0.579503
+iteration: 1325
+	f(x) = 0.579505
+iteration: 1326
+	f(x) = 0.579503
+iteration: 1327
+	f(x) = 0.579503
+iteration: 1328
+	f(x) = 0.579503
+iteration: 1329
+	f(x) = 0.579503
+iteration: 1330
+	f(x) = 0.579503
+iteration: 1331
+	f(x) = 0.579503
+iteration: 1332
+	f(x) = 0.579503
+iteration: 1333
+	f(x) = 0.579471
+iteration: 1334
+	f(x) = 0.579395
+iteration: 1335
+	f(x) = 0.579360
+iteration: 1336
+	f(x) = 0.579326
+iteration: 1337
+	f(x) = 0.579373
+iteration: 1338
+	f(x) = 0.579376
+iteration: 1339
+	f(x) = 0.579344
+iteration: 1340
+	f(x) = 0.579317
+iteration: 1341
+	f(x) = 0.579350
+iteration: 1342
+	f(x) = 0.579388
+iteration: 1343
+	f(x) = 0.579320
+iteration: 1344
+	f(x) = 0.579314
+iteration: 1345
+	f(x) = 0.579324
+iteration: 1346
+	f(x) = 0.579324
+iteration: 1347
+	f(x) = 0.579314
+iteration: 1348
+	f(x) = 0.579326
+iteration: 1349
+	f(x) = 0.579313
+iteration: 1350
+	f(x) = 0.579468
+iteration: 1351
+	f(x) = 0.580397
+iteration: 1352
+	f(x) = 0.579795
+iteration: 1353
+	f(x) = 0.579373
+iteration: 1354
+	f(x) = 0.579490
+iteration: 1355
+	f(x) = 0.579341
+iteration: 1356
+	f(x) = 0.579514
+iteration: 1357
+	f(x) = 0.579311
+iteration: 1358
+	f(x) = 0.579310
+iteration: 1359
+	f(x) = 0.579379
+iteration: 1360
+	f(x) = 0.579349
+iteration: 1361
+	f(x) = 0.579297
+iteration: 1362
+	f(x) = 0.579358
+iteration: 1363
+	f(x) = 0.579297
+iteration: 1364
+	f(x) = 0.579311
+iteration: 1365
+	f(x) = 0.579299
+iteration: 1366
+	f(x) = 0.579978
+iteration: 1367
+	f(x) = 0.579202
+iteration: 1368
+	f(x) = 0.580369
+iteration: 1369
+	f(x) = 0.579388
+iteration: 1370
+	f(x) = 0.579529
+iteration: 1371
+	f(x) = 0.579249
+iteration: 1372
+	f(x) = 0.579201
+iteration: 1373
+	f(x) = 0.580473
+iteration: 1374
+	f(x) = 0.582423
+iteration: 1375
+	f(x) = 0.579373
+iteration: 1376
+	f(x) = 0.580134
+iteration: 1377
+	f(x) = 0.579160
+iteration: 1378
+	f(x) = 0.579164
+iteration: 1379
+	f(x) = 0.579369
+iteration: 1380
+	f(x) = 0.579147
+iteration: 1381
+	f(x) = 0.579151
+iteration: 1382
+	f(x) = 0.579199
+iteration: 1383
+	f(x) = 0.579145
+iteration: 1384
+	f(x) = 0.579151
+iteration: 1385
+	f(x) = 0.579145
+iteration: 1386
+	f(x) = 0.579113
+iteration: 1387
+	f(x) = 0.581293
+iteration: 1388
+	f(x) = 0.582962
+iteration: 1389
+	f(x) = 0.579465
+iteration: 1390
+	f(x) = 0.580284
+iteration: 1391
+	f(x) = 0.579107
+iteration: 1392
+	f(x) = 0.579149
+iteration: 1393
+	f(x) = 0.579087
+iteration: 1394
+	f(x) = 0.579063
+iteration: 1395
+	f(x) = 0.579091
+iteration: 1396
+	f(x) = 0.579129
+iteration: 1397
+	f(x) = 0.579073
+iteration: 1398
+	f(x) = 0.579052
+iteration: 1399
+	f(x) = 0.579047
+iteration: 1400
+	f(x) = 0.579046
+iteration: 1401
+	f(x) = 0.579063
+iteration: 1402
+	f(x) = 0.579059
+iteration: 1403
+	f(x) = 0.579047
+iteration: 1404
+	f(x) = 0.579057
+iteration: 1405
+	f(x) = 0.579044
+iteration: 1406
+	f(x) = 0.579049
+iteration: 1407
+	f(x) = 0.579044
+iteration: 1408
+	f(x) = 0.579051
+iteration: 1409
+	f(x) = 0.579044
+iteration: 1410
+	f(x) = 0.579044
+iteration: 1411
+	f(x) = 0.579045
+iteration: 1412
+	f(x) = 0.579045
+iteration: 1413
+	f(x) = 0.579043
+iteration: 1414
+	f(x) = 0.579053
+iteration: 1415
+	f(x) = 0.580917
+iteration: 1416
+	f(x) = 0.580535
+iteration: 1417
+	f(x) = 0.579297
+iteration: 1418
+	f(x) = 0.579626
+iteration: 1419
+	f(x) = 0.579059
+iteration: 1420
+	f(x) = 0.579240
+iteration: 1421
+	f(x) = 0.579025
+iteration: 1422
+	f(x) = 0.579020
+iteration: 1423
+	f(x) = 0.579033
+iteration: 1424
+	f(x) = 0.579052
+iteration: 1425
+	f(x) = 0.579025
+iteration: 1426
+	f(x) = 0.579031
+iteration: 1427
+	f(x) = 0.579021
+iteration: 1428
+	f(x) = 0.579024
+iteration: 1429
+	f(x) = 0.579021
+iteration: 1430
+	f(x) = 0.579024
+iteration: 1431
+	f(x) = 0.579020
+iteration: 1432
+	f(x) = 0.579869
+iteration: 1433
+	f(x) = 0.579077
+iteration: 1434
+	f(x) = 0.580005
+iteration: 1435
+	f(x) = 0.579199
+iteration: 1436
+	f(x) = 0.579299
+iteration: 1437
+	f(x) = 0.579050
+iteration: 1438
+	f(x) = 0.579217
+iteration: 1439
+	f(x) = 0.579022
+iteration: 1440
+	f(x) = 0.579037
+iteration: 1441
+	f(x) = 0.579018
+iteration: 1442
+	f(x) = 0.579042
+iteration: 1443
+	f(x) = 0.579014
+iteration: 1444
+	f(x) = 0.579039
+iteration: 1445
+	f(x) = 0.579013
+iteration: 1446
+	f(x) = 0.581135
+iteration: 1447
+	f(x) = 0.579016
+iteration: 1448
+	f(x) = 0.581301
+iteration: 1449
+	f(x) = 0.579524
+iteration: 1450
+	f(x) = 0.579600
+iteration: 1451
+	f(x) = 0.579130
+iteration: 1452
+	f(x) = 0.579167
+iteration: 1453
+	f(x) = 0.579036
+iteration: 1454
+	f(x) = 0.578898
+iteration: 1455
+	f(x) = 0.579910
+iteration: 1456
+	f(x) = 0.579477
+iteration: 1457
+	f(x) = 0.579034
+iteration: 1458
+	f(x) = 0.579212
+iteration: 1459
+	f(x) = 0.578939
+iteration: 1460
+	f(x) = 0.578874
+iteration: 1461
+	f(x) = 0.578930
+iteration: 1462
+	f(x) = 0.578858
+iteration: 1463
+	f(x) = 0.578848
+iteration: 1464
+	f(x) = 0.578831
+iteration: 1465
+	f(x) = 0.578830
+iteration: 1466
+	f(x) = 0.578909
+iteration: 1467
+	f(x) = 0.578841
+iteration: 1468
+	f(x) = 0.578812
+iteration: 1469
+	f(x) = 0.578803
+iteration: 1470
+	f(x) = 0.578850
+iteration: 1471
+	f(x) = 0.578820
+iteration: 1472
+	f(x) = 0.578799
+iteration: 1473
+	f(x) = 0.578801
+iteration: 1474
+	f(x) = 0.578788
+iteration: 1475
+	f(x) = 0.578789
+iteration: 1476
+	f(x) = 0.578792
+iteration: 1477
+	f(x) = 0.578787
+iteration: 1478
+	f(x) = 0.578798
+iteration: 1479
+	f(x) = 0.578795
+iteration: 1480
+	f(x) = 0.578787
+iteration: 1481
+	f(x) = 0.578793
+iteration: 1482
+	f(x) = 0.578786
+iteration: 1483
+	f(x) = 0.578791
+iteration: 1484
+	f(x) = 0.578786
+iteration: 1485
+	f(x) = 0.578787
+iteration: 1486
+	f(x) = 0.578786
+iteration: 1487
+	f(x) = 0.578787
+iteration: 1488
+	f(x) = 0.578786
+iteration: 1489
+	f(x) = 0.578787
+iteration: 1490
+	f(x) = 0.578786
+iteration: 1491
+	f(x) = 0.578790
+iteration: 1492
+	f(x) = 0.579154
+iteration: 1493
+	f(x) = 0.579231
+iteration: 1494
+	f(x) = 0.578861
+iteration: 1495
+	f(x) = 0.578916
+iteration: 1496
+	f(x) = 0.578798
+iteration: 1497
+	f(x) = 0.578828
+iteration: 1498
+	f(x) = 0.578786
+iteration: 1499
+	f(x) = 0.578786
+iteration: 1500
+	f(x) = 0.578793
+iteration: 1501
+	f(x) = 0.578786
+iteration: 1502
+	f(x) = 0.578785
+iteration: 1503
+	f(x) = 0.578789
+iteration: 1504
+	f(x) = 0.578784
+iteration: 1505
+	f(x) = 0.578790
+iteration: 1506
+	f(x) = 0.578784
+iteration: 1507
+	f(x) = 0.578804
+iteration: 1508
+	f(x) = 0.578705
+iteration: 1509
+	f(x) = 0.578774
+iteration: 1510
+	f(x) = 0.578788
+iteration: 1511
+	f(x) = 0.578743
+iteration: 1512
+	f(x) = 0.578952
+iteration: 1513
+	f(x) = 0.578693
+iteration: 1514
+	f(x) = 0.578855
+iteration: 1515
+	f(x) = 0.578686
+iteration: 1516
+	f(x) = 0.578753
+iteration: 1517
+	f(x) = 0.578681
+iteration: 1518
+	f(x) = 0.578709
+iteration: 1519
+	f(x) = 0.578681
+iteration: 1520
+	f(x) = 0.578700
+iteration: 1521
+	f(x) = 0.578679
+iteration: 1522
+	f(x) = 0.578689
+iteration: 1523
+	f(x) = 0.578679
+iteration: 1524
+	f(x) = 0.579309
+iteration: 1525
+	f(x) = 0.578694
+iteration: 1526
+	f(x) = 0.579104
+iteration: 1527
+	f(x) = 0.578765
+iteration: 1528
+	f(x) = 0.578866
+iteration: 1529
+	f(x) = 0.578693
+iteration: 1530
+	f(x) = 0.578675
+iteration: 1531
+	f(x) = 0.578683
+iteration: 1532
+	f(x) = 0.578698
+iteration: 1533
+	f(x) = 0.578676
+iteration: 1534
+	f(x) = 0.578678
+iteration: 1535
+	f(x) = 0.578676
+iteration: 1536
+	f(x) = 0.578676
+iteration: 1537
+	f(x) = 0.578679
+iteration: 1538
+	f(x) = 0.578675
+iteration: 1539
+	f(x) = 0.578675
+iteration: 1540
+	f(x) = 0.578676
+iteration: 1541
+	f(x) = 0.578675
+iteration: 1542
+	f(x) = 0.578675
+iteration: 1543
+	f(x) = 0.578675
+iteration: 1544
+	f(x) = 0.578675
+iteration: 1545
+	f(x) = 0.578675
+iteration: 1546
+	f(x) = 0.578675
+iteration: 1547
+	f(x) = 0.578836
+iteration: 1548
+	f(x) = 0.578851
+iteration: 1549
+	f(x) = 0.578715
+iteration: 1550
+	f(x) = 0.578718
+iteration: 1551
+	f(x) = 0.578685
+iteration: 1552
+	f(x) = 0.578686
+iteration: 1553
+	f(x) = 0.578677
+iteration: 1554
+	f(x) = 0.578677
+iteration: 1555
+	f(x) = 0.578675
+iteration: 1556
+	f(x) = 0.578677
+iteration: 1557
+	f(x) = 0.578675
+iteration: 1558
+	f(x) = 0.578902
+iteration: 1559
+	f(x) = 0.579187
+iteration: 1560
+	f(x) = 0.579520
+iteration: 1561
+	f(x) = 0.578800
+iteration: 1562
+	f(x) = 0.578972
+iteration: 1563
+	f(x) = 0.578753
+iteration: 1564
+	f(x) = 0.578785
+iteration: 1565
+	f(x) = 0.578721
+iteration: 1566
+	f(x) = 0.578688
+iteration: 1567
+	f(x) = 0.578699
+iteration: 1568
+	f(x) = 0.578677
+iteration: 1569
+	f(x) = 0.578690
+iteration: 1570
+	f(x) = 0.578675
+iteration: 1571
+	f(x) = 0.578585
+iteration: 1572
+	f(x) = 0.578571
+iteration: 1573
+	f(x) = 0.578518
+iteration: 1574
+	f(x) = 0.578500
+iteration: 1575
+	f(x) = 0.578482
+iteration: 1576
+	f(x) = 0.578489
+iteration: 1577
+	f(x) = 0.578567
+iteration: 1578
+	f(x) = 0.578509
+iteration: 1579
+	f(x) = 0.578510
+iteration: 1580
+	f(x) = 0.578494
+iteration: 1581
+	f(x) = 0.578479
+iteration: 1582
+	f(x) = 0.578478
+iteration: 1583
+	f(x) = 0.578471
+iteration: 1584
+	f(x) = 0.578479
+iteration: 1585
+	f(x) = 0.578487
+iteration: 1586
+	f(x) = 0.578475
+iteration: 1587
+	f(x) = 0.578476
+iteration: 1588
+	f(x) = 0.578473
+iteration: 1589
+	f(x) = 0.578475
+iteration: 1590
+	f(x) = 0.578472
+iteration: 1591
+	f(x) = 0.578474
+iteration: 1592
+	f(x) = 0.578472
+iteration: 1593
+	f(x) = 0.578502
+iteration: 1594
+	f(x) = 0.578585
+iteration: 1595
+	f(x) = 0.578667
+iteration: 1596
+	f(x) = 0.578385
+iteration: 1597
+	f(x) = 0.579390
+iteration: 1598
+	f(x) = 0.578333
+iteration: 1599
+	f(x) = 0.578355
+iteration: 1600
+	f(x) = 0.578553
+iteration: 1601
+	f(x) = 0.578329
+iteration: 1602
+	f(x) = 0.578371
+iteration: 1603
+	f(x) = 0.578332
+iteration: 1604
+	f(x) = 0.578324
+iteration: 1605
+	f(x) = 0.578328
+iteration: 1606
+	f(x) = 0.578356
+iteration: 1607
+	f(x) = 0.578325
+iteration: 1608
+	f(x) = 0.578325
+iteration: 1609
+	f(x) = 0.578323
+iteration: 1610
+	f(x) = 0.578323
+iteration: 1611
+	f(x) = 0.578326
+iteration: 1612
+	f(x) = 0.578323
+iteration: 1613
+	f(x) = 0.578326
+iteration: 1614
+	f(x) = 0.578324
+iteration: 1615
+	f(x) = 0.578322
+iteration: 1616
+	f(x) = 0.578324
+iteration: 1617
+	f(x) = 0.578542
+iteration: 1618
+	f(x) = 0.578503
+iteration: 1619
+	f(x) = 0.578363
+iteration: 1620
+	f(x) = 0.578383
+iteration: 1621
+	f(x) = 0.578330
+iteration: 1622
+	f(x) = 0.578340
+iteration: 1623
+	f(x) = 0.578323
+iteration: 1624
+	f(x) = 0.578325
+iteration: 1625
+	f(x) = 0.578322
+iteration: 1626
+	f(x) = 0.578325
+iteration: 1627
+	f(x) = 0.578322
+iteration: 1628
+	f(x) = 0.578322
+iteration: 1629
+	f(x) = 0.578323
+iteration: 1630
+	f(x) = 0.578322
+iteration: 1631
+	f(x) = 0.578322
+iteration: 1632
+	f(x) = 0.578323
+iteration: 1633
+	f(x) = 0.578322
+iteration: 1634
+	f(x) = 0.578334
+iteration: 1635
+	f(x) = 0.578320
+iteration: 1636
+	f(x) = 0.578311
+iteration: 1637
+	f(x) = 0.578305
+iteration: 1638
+	f(x) = 0.578305
+iteration: 1639
+	f(x) = 0.578303
+iteration: 1640
+	f(x) = 0.578316
+iteration: 1641
+	f(x) = 0.578302
+iteration: 1642
+	f(x) = 0.578305
+iteration: 1643
+	f(x) = 0.578314
+iteration: 1644
+	f(x) = 0.578302
+iteration: 1645
+	f(x) = 0.578302
+iteration: 1646
+	f(x) = 0.578302
+iteration: 1647
+	f(x) = 0.578304
+iteration: 1648
+	f(x) = 0.578301
+iteration: 1649
+	f(x) = 0.578321
+iteration: 1650
+	f(x) = 0.578253
+iteration: 1651
+	f(x) = 0.578242
+iteration: 1652
+	f(x) = 0.578220
+iteration: 1653
+	f(x) = 0.578167
+iteration: 1654
+	f(x) = 0.578117
+iteration: 1655
+	f(x) = 0.578134
+iteration: 1656
+	f(x) = 0.578060
+iteration: 1657
+	f(x) = 0.578044
+iteration: 1658
+	f(x) = 0.578016
+iteration: 1659
+	f(x) = 0.578025
+iteration: 1660
+	f(x) = 0.578101
+iteration: 1661
+	f(x) = 0.578041
+iteration: 1662
+	f(x) = 0.578021
+iteration: 1663
+	f(x) = 0.578044
+iteration: 1664
+	f(x) = 0.578020
+iteration: 1665
+	f(x) = 0.578029
+iteration: 1666
+	f(x) = 0.578015
+iteration: 1667
+	f(x) = 0.578020
+iteration: 1668
+	f(x) = 0.578015
+iteration: 1669
+	f(x) = 0.578019
+iteration: 1670
+	f(x) = 0.578269
+iteration: 1671
+	f(x) = 0.577982
+iteration: 1672
+	f(x) = 0.578259
+iteration: 1673
+	f(x) = 0.577898
+iteration: 1674
+	f(x) = 0.577941
+iteration: 1675
+	f(x) = 0.578073
+iteration: 1676
+	f(x) = 0.577923
+iteration: 1677
+	f(x) = 0.578108
+iteration: 1678
+	f(x) = 0.577911
+iteration: 1679
+	f(x) = 0.577892
+iteration: 1680
+	f(x) = 0.577918
+iteration: 1681
+	f(x) = 0.577905
+iteration: 1682
+	f(x) = 0.577891
+iteration: 1683
+	f(x) = 0.577904
+iteration: 1684
+	f(x) = 0.577889
+iteration: 1685
+	f(x) = 0.577921
+iteration: 1686
+	f(x) = 0.577887
+iteration: 1687
+	f(x) = 0.577889
+iteration: 1688
+	f(x) = 0.577887
+iteration: 1689
+	f(x) = 0.577890
+iteration: 1690
+	f(x) = 0.577887
+iteration: 1691
+	f(x) = 0.577914
+iteration: 1692
+	f(x) = 0.577919
+iteration: 1693
+	f(x) = 0.577983
+iteration: 1694
+	f(x) = 0.577897
+iteration: 1695
+	f(x) = 0.577869
+iteration: 1696
+	f(x) = 0.577859
+iteration: 1697
+	f(x) = 0.577848
+iteration: 1698
+	f(x) = 0.577844
+iteration: 1699
+	f(x) = 0.577835
+iteration: 1700
+	f(x) = 0.577864
+iteration: 1701
+	f(x) = 0.577860
+iteration: 1702
+	f(x) = 0.577839
+iteration: 1703
+	f(x) = 0.577860
+iteration: 1704
+	f(x) = 0.577834
+iteration: 1705
+	f(x) = 0.577836
+iteration: 1706
+	f(x) = 0.577832
+iteration: 1707
+	f(x) = 0.577844
+iteration: 1708
+	f(x) = 0.577845
+iteration: 1709
+	f(x) = 0.577897
+iteration: 1710
+	f(x) = 0.577832
+iteration: 1711
+	f(x) = 0.577844
+iteration: 1712
+	f(x) = 0.577835
+iteration: 1713
+	f(x) = 0.577835
+iteration: 1714
+	f(x) = 0.577833
+iteration: 1715
+	f(x) = 0.577833
+iteration: 1716
+	f(x) = 0.577832
+iteration: 1717
+	f(x) = 0.577836
+iteration: 1718
+	f(x) = 0.577832
+iteration: 1719
+	f(x) = 0.577832
+iteration: 1720
+	f(x) = 0.577832
+iteration: 1721
+	f(x) = 0.577831
+iteration: 1722
+	f(x) = 0.577940
+iteration: 1723
+	f(x) = 0.577941
+iteration: 1724
+	f(x) = 0.577859
+iteration: 1725
+	f(x) = 0.577857
+iteration: 1726
+	f(x) = 0.577837
+iteration: 1727
+	f(x) = 0.577838
+iteration: 1728
+	f(x) = 0.577832
+iteration: 1729
+	f(x) = 0.577833
+iteration: 1730
+	f(x) = 0.577831
+iteration: 1731
+	f(x) = 0.577831
+iteration: 1732
+	f(x) = 0.577831
+iteration: 1733
+	f(x) = 0.577831
+iteration: 1734
+	f(x) = 0.577831
+iteration: 1735
+	f(x) = 0.577878
+iteration: 1736
+	f(x) = 0.577843
+iteration: 1737
+	f(x) = 0.578067
+iteration: 1738
+	f(x) = 0.577824
+iteration: 1739
+	f(x) = 0.577820
+iteration: 1740
+	f(x) = 0.577844
+iteration: 1741
+	f(x) = 0.577878
+iteration: 1742
+	f(x) = 0.577818
+iteration: 1743
+	f(x) = 0.577814
+iteration: 1744
+	f(x) = 0.577817
+iteration: 1745
+	f(x) = 0.577827
+iteration: 1746
+	f(x) = 0.577815
+iteration: 1747
+	f(x) = 0.577816
+iteration: 1748
+	f(x) = 0.577814
+iteration: 1749
+	f(x) = 0.577759
+iteration: 1750
+	f(x) = 0.577913
+iteration: 1751
+	f(x) = 0.578196
+iteration: 1752
+	f(x) = 0.577785
+iteration: 1753
+	f(x) = 0.577778
+iteration: 1754
+	f(x) = 0.578437
+iteration: 1755
+	f(x) = 0.577930
+iteration: 1756
+	f(x) = 0.577745
+iteration: 1757
+	f(x) = 0.577748
+iteration: 1758
+	f(x) = 0.577941
+iteration: 1759
+	f(x) = 0.577727
+iteration: 1760
+	f(x) = 0.577735
+iteration: 1761
+	f(x) = 0.577768
+iteration: 1762
+	f(x) = 0.577732
+iteration: 1763
+	f(x) = 0.577729
+iteration: 1764
+	f(x) = 0.577721
+iteration: 1765
+	f(x) = 0.577717
+iteration: 1766
+	f(x) = 0.577730
+iteration: 1767
+	f(x) = 0.577724
+iteration: 1768
+	f(x) = 0.577716
+iteration: 1769
+	f(x) = 0.577714
+iteration: 1770
+	f(x) = 0.577705
+iteration: 1771
+	f(x) = 0.577699
+iteration: 1772
+	f(x) = 0.577709
+iteration: 1773
+	f(x) = 0.577698
+iteration: 1774
+	f(x) = 0.577701
+iteration: 1775
+	f(x) = 0.577691
+iteration: 1776
+	f(x) = 0.577692
+iteration: 1777
+	f(x) = 0.577693
+iteration: 1778
+	f(x) = 0.577689
+iteration: 1779
+	f(x) = 0.577696
+iteration: 1780
+	f(x) = 0.577700
+iteration: 1781
+	f(x) = 0.577690
+iteration: 1782
+	f(x) = 0.577692
+iteration: 1783
+	f(x) = 0.577689
+iteration: 1784
+	f(x) = 0.577691
+iteration: 1785
+	f(x) = 0.577689
+iteration: 1786
+	f(x) = 0.577691
+iteration: 1787
+	f(x) = 0.577689
+iteration: 1788
+	f(x) = 0.577689
+iteration: 1789
+	f(x) = 0.577689
+iteration: 1790
+	f(x) = 0.577689
+iteration: 1791
+	f(x) = 0.577689
+iteration: 1792
+	f(x) = 0.577693
+iteration: 1793
+	f(x) = 0.577686
+iteration: 1794
+	f(x) = 0.577690
+iteration: 1795
+	f(x) = 0.577687
+iteration: 1796
+	f(x) = 0.577691
+iteration: 1797
+	f(x) = 0.577687
+iteration: 1798
+	f(x) = 0.577686
+iteration: 1799
+	f(x) = 0.577687
+iteration: 1800
+	f(x) = 0.577686
+iteration: 1801
+	f(x) = 0.577686
+iteration: 1802
+	f(x) = 0.577686
+iteration: 1803
+	f(x) = 0.579010
+iteration: 1804
+	f(x) = 0.577690
+iteration: 1805
+	f(x) = 0.579151
+iteration: 1806
+	f(x) = 0.577997
+iteration: 1807
+	f(x) = 0.578072
+iteration: 1808
+	f(x) = 0.577754
+iteration: 1809
+	f(x) = 0.577792
+iteration: 1810
+	f(x) = 0.577698
+iteration: 1811
+	f(x) = 0.578171
+iteration: 1812
+	f(x) = 0.577761
+iteration: 1813
+	f(x) = 0.577903
+iteration: 1814
+	f(x) = 0.577718
+iteration: 1815
+	f(x) = 0.577762
+iteration: 1816
+	f(x) = 0.577703
+iteration: 1817
+	f(x) = 0.577774
+iteration: 1818
+	f(x) = 0.577689
+iteration: 1819
+	f(x) = 0.577684
+iteration: 1820
+	f(x) = 0.577711
+iteration: 1821
+	f(x) = 0.577712
+iteration: 1822
+	f(x) = 0.577680
+iteration: 1823
+	f(x) = 0.577695
+iteration: 1824
+	f(x) = 0.577680
+iteration: 1825
+	f(x) = 0.577687
+iteration: 1826
+	f(x) = 0.577680
+iteration: 1827
+	f(x) = 0.577682
+iteration: 1828
+	f(x) = 0.577679
+iteration: 1829
+	f(x) = 0.577590
+iteration: 1830
+	f(x) = 0.578088
+iteration: 1831
+	f(x) = 0.577995
+iteration: 1832
+	f(x) = 0.577712
+iteration: 1833
+	f(x) = 0.577743
+iteration: 1834
+	f(x) = 0.577642
+iteration: 1835
+	f(x) = 0.577666
+iteration: 1836
+	f(x) = 0.579008
+iteration: 1837
+	f(x) = 0.578108
+iteration: 1838
+	f(x) = 0.577660
+iteration: 1839
+	f(x) = 0.577665
+iteration: 1840
+	f(x) = 0.577599
+iteration: 1841
+	f(x) = 0.577612
+iteration: 1842
+	f(x) = 0.577568
+iteration: 1843
+	f(x) = 0.577790
+iteration: 1844
+	f(x) = 0.577560
+iteration: 1845
+	f(x) = 0.577560
+iteration: 1846
+	f(x) = 0.577591
+iteration: 1847
+	f(x) = 0.577577
+iteration: 1848
+	f(x) = 0.577562
+iteration: 1849
+	f(x) = 0.577570
+iteration: 1850
+	f(x) = 0.577560
+iteration: 1851
+	f(x) = 0.577560
+iteration: 1852
+	f(x) = 0.577561
+iteration: 1853
+	f(x) = 0.577562
+iteration: 1854
+	f(x) = 0.577559
+iteration: 1855
+	f(x) = 0.577559
+iteration: 1856
+	f(x) = 0.577559
+iteration: 1857
+	f(x) = 0.577560
+iteration: 1858
+	f(x) = 0.577559
+iteration: 1859
+	f(x) = 0.577559
+iteration: 1860
+	f(x) = 0.577559
+iteration: 1861
+	f(x) = 0.577559
+iteration: 1862
+	f(x) = 0.577559
+iteration: 1863
+	f(x) = 0.577559
+iteration: 1864
+	f(x) = 0.577556
+iteration: 1865
+	f(x) = 0.577586
+iteration: 1866
+	f(x) = 0.577549
+iteration: 1867
+	f(x) = 0.577560
+iteration: 1868
+	f(x) = 0.577548
+iteration: 1869
+	f(x) = 0.577552
+iteration: 1870
+	f(x) = 0.577560
+iteration: 1871
+	f(x) = 0.577550
+iteration: 1872
+	f(x) = 0.577552
+iteration: 1873
+	f(x) = 0.577549
+iteration: 1874
+	f(x) = 0.577547
+iteration: 1875
+	f(x) = 0.577547
+iteration: 1876
+	f(x) = 0.577546
+iteration: 1877
+	f(x) = 0.577545
+iteration: 1878
+	f(x) = 0.577543
+iteration: 1879
+	f(x) = 0.577541
+iteration: 1880
+	f(x) = 0.577542
+iteration: 1881
+	f(x) = 0.577538
+iteration: 1882
+	f(x) = 0.577537
+iteration: 1883
+	f(x) = 0.577540
+iteration: 1884
+	f(x) = 0.577540
+iteration: 1885
+	f(x) = 0.577538
+iteration: 1886
+	f(x) = 0.577537
+iteration: 1887
+	f(x) = 0.577539
+iteration: 1888
+	f(x) = 0.577538
+iteration: 1889
+	f(x) = 0.577537
+iteration: 1890
+	f(x) = 0.577537
+iteration: 1891
+	f(x) = 0.577537
+iteration: 1892
+	f(x) = 0.577538
+iteration: 1893
+	f(x) = 0.577537
+iteration: 1894
+	f(x) = 0.577537
+iteration: 1895
+	f(x) = 0.577537
+iteration: 1896
+	f(x) = 0.577537
+iteration: 1897
+	f(x) = 0.577537
+iteration: 1898
+	f(x) = 0.577537
+iteration: 1899
+	f(x) = 0.577537
+iteration: 1900
+	f(x) = 0.577537
+iteration: 1901
+	f(x) = 0.577537
+iteration: 1902
+	f(x) = 0.577537
+iteration: 1903
+	f(x) = 0.577537
+iteration: 1904
+	f(x) = 0.577537
+iteration: 1905
+	f(x) = 0.577537
+iteration: 1906
+	f(x) = 0.577537
+iteration: 1907
+	f(x) = 0.577537
+iteration: 1908
+	f(x) = 0.577537
+iteration: 1909
+	f(x) = 0.577537
+iteration: 1910
+	f(x) = 0.577537
+iteration: 1911
+	f(x) = 0.577537
+iteration: 1912
+	f(x) = 0.577537
+iteration: 1913
+	f(x) = 0.577537
+iteration: 1914
+	f(x) = 0.577537
+iteration: 1915
+	f(x) = 0.577537
+iteration: 1916
+	f(x) = 0.577537
+iteration: 1917
+	f(x) = 0.577515
+iteration: 1918
+	f(x) = 0.577513
+iteration: 1919
+	f(x) = 0.577492
+iteration: 1920
+	f(x) = 0.577472
+iteration: 1921
+	f(x) = 0.577469
+iteration: 1922
+	f(x) = 0.577448
+iteration: 1923
+	f(x) = 0.577414
+iteration: 1924
+	f(x) = 0.577376
+iteration: 1925
+	f(x) = 0.577356
+iteration: 1926
+	f(x) = 0.577315
+iteration: 1927
+	f(x) = 0.577288
+iteration: 1928
+	f(x) = 0.577284
+iteration: 1929
+	f(x) = 0.577286
+iteration: 1930
+	f(x) = 0.577452
+iteration: 1931
+	f(x) = 0.577274
+iteration: 1932
+	f(x) = 0.577308
+iteration: 1933
+	f(x) = 0.577275
+iteration: 1934
+	f(x) = 0.577264
+iteration: 1935
+	f(x) = 0.577265
+iteration: 1936
+	f(x) = 0.577292
+iteration: 1937
+	f(x) = 0.577268
+iteration: 1938
+	f(x) = 0.577261
+iteration: 1939
+	f(x) = 0.577261
+iteration: 1940
+	f(x) = 0.577257
+iteration: 1941
+	f(x) = 0.577256
+iteration: 1942
+	f(x) = 0.577253
+iteration: 1943
+	f(x) = 0.577255
+iteration: 1944
+	f(x) = 0.577257
+iteration: 1945
+	f(x) = 0.577254
+iteration: 1946
+	f(x) = 0.577254
+iteration: 1947
+	f(x) = 0.577253
+iteration: 1948
+	f(x) = 0.577257
+iteration: 1949
+	f(x) = 0.577253
+iteration: 1950
+	f(x) = 0.577253
+iteration: 1951
+	f(x) = 0.577253
+iteration: 1952
+	f(x) = 0.577254
+iteration: 1953
+	f(x) = 0.577253
+iteration: 1954
+	f(x) = 0.577253
+iteration: 1955
+	f(x) = 0.577253
+iteration: 1956
+	f(x) = 0.577254
+iteration: 1957
+	f(x) = 0.577257
+iteration: 1958
+	f(x) = 0.577251
+iteration: 1959
+	f(x) = 0.577251
+iteration: 1960
+	f(x) = 0.577249
+iteration: 1961
+	f(x) = 0.577248
+iteration: 1962
+	f(x) = 0.577246
+iteration: 1963
+	f(x) = 0.577245
+iteration: 1964
+	f(x) = 0.577241
+iteration: 1965
+	f(x) = 0.577239
+iteration: 1966
+	f(x) = 0.577237
+iteration: 1967
+	f(x) = 0.577240
+iteration: 1968
+	f(x) = 0.577238
+iteration: 1969
+	f(x) = 0.577238
+iteration: 1970
+	f(x) = 0.577236
+iteration: 1971
+	f(x) = 0.577244
+iteration: 1972
+	f(x) = 0.577236
+iteration: 1973
+	f(x) = 0.577239
+iteration: 1974
+	f(x) = 0.577236
+iteration: 1975
+	f(x) = 0.577236
+iteration: 1976
+	f(x) = 0.577237
+iteration: 1977
+	f(x) = 0.577236
+iteration: 1978
+	f(x) = 0.577236
+iteration: 1979
+	f(x) = 0.577236
+iteration: 1980
+	f(x) = 0.577236
+iteration: 1981
+	f(x) = 0.577235
+iteration: 1982
+	f(x) = 0.577236
+iteration: 1983
+	f(x) = 0.577235
+iteration: 1984
+	f(x) = 0.577235
+iteration: 1985
+	f(x) = 0.577235
+iteration: 1986
+	f(x) = 0.577160
+iteration: 1987
+	f(x) = 0.577160
+iteration: 1988
+	f(x) = 0.577169
+iteration: 1989
+	f(x) = 0.577152
+iteration: 1990
+	f(x) = 0.577150
+iteration: 1991
+	f(x) = 0.577157
+iteration: 1992
+	f(x) = 0.577160
+iteration: 1993
+	f(x) = 0.577151
+iteration: 1994
+	f(x) = 0.577164
+iteration: 1995
+	f(x) = 0.577149
+iteration: 1996
+	f(x) = 0.577149
+iteration: 1997
+	f(x) = 0.577151
+iteration: 1998
+	f(x) = 0.577149
+iteration: 1999
+	f(x) = 0.577133
+iteration: 2000
+	f(x) = 0.577234
+iteration: 2001
+	f(x) = 0.577103
+iteration: 2002
+	f(x) = 0.577120
+iteration: 2003
+	f(x) = 0.577079
+iteration: 2004
+	f(x) = 0.577058
+iteration: 2005
+	f(x) = 0.577100
+iteration: 2006
+	f(x) = 0.577074
+iteration: 2007
+	f(x) = 0.577028
+iteration: 2008
+	f(x) = 0.577019
+iteration: 2009
+	f(x) = 0.577101
+iteration: 2010
+	f(x) = 0.577040
+iteration: 2011
+	f(x) = 0.577008
+iteration: 2012
+	f(x) = 0.577012
+iteration: 2013
+	f(x) = 0.577021
+iteration: 2014
+	f(x) = 0.577011
+iteration: 2015
+	f(x) = 0.577009
+iteration: 2016
+	f(x) = 0.577020
+iteration: 2017
+	f(x) = 0.577007
+iteration: 2018
+	f(x) = 0.577013
+iteration: 2019
+	f(x) = 0.577007
+iteration: 2020
+	f(x) = 0.577009
+iteration: 2021
+	f(x) = 0.577006
+iteration: 2022
+	f(x) = 0.577007
+iteration: 2023
+	f(x) = 0.577006
+iteration: 2024
+	f(x) = 0.578224
+iteration: 2025
+	f(x) = 0.577022
+iteration: 2026
+	f(x) = 0.578192
+iteration: 2027
+	f(x) = 0.577301
+iteration: 2028
+	f(x) = 0.577320
+iteration: 2029
+	f(x) = 0.577082
+iteration: 2030
+	f(x) = 0.577092
+iteration: 2031
+	f(x) = 0.577028
+iteration: 2032
+	f(x) = 0.577004
+iteration: 2033
+	f(x) = 0.576917
+iteration: 2034
+	f(x) = 0.576923
+iteration: 2035
+	f(x) = 0.577048
+iteration: 2036
+	f(x) = 0.577537
+iteration: 2037
+	f(x) = 0.577009
+iteration: 2038
+	f(x) = 0.577034
+iteration: 2039
+	f(x) = 0.576932
+iteration: 2040
+	f(x) = 0.576950
+iteration: 2041
+	f(x) = 0.576890
+iteration: 2042
+	f(x) = 0.577176
+iteration: 2043
+	f(x) = 0.576880
+iteration: 2044
+	f(x) = 0.576887
+iteration: 2045
+	f(x) = 0.576945
+iteration: 2046
+	f(x) = 0.576876
+iteration: 2047
+	f(x) = 0.576891
+iteration: 2048
+	f(x) = 0.576879
+iteration: 2049
+	f(x) = 0.576877
+iteration: 2050
+	f(x) = 0.577800
+iteration: 2051
+	f(x) = 0.577366
+iteration: 2052
+	f(x) = 0.578074
+iteration: 2053
+	f(x) = 0.577165
+iteration: 2054
+	f(x) = 0.577135
+iteration: 2055
+	f(x) = 0.577038
+iteration: 2056
+	f(x) = 0.577072
+iteration: 2057
+	f(x) = 0.576925
+iteration: 2058
+	f(x) = 0.577138
+iteration: 2059
+	f(x) = 0.576906
+iteration: 2060
+	f(x) = 0.576887
+iteration: 2061
+	f(x) = 0.577040
+iteration: 2062
+	f(x) = 0.576864
+iteration: 2063
+	f(x) = 0.576889
+iteration: 2064
+	f(x) = 0.576867
+iteration: 2065
+	f(x) = 0.576898
+iteration: 2066
+	f(x) = 0.576863
+iteration: 2067
+	f(x) = 0.576862
+iteration: 2068
+	f(x) = 0.576881
+iteration: 2069
+	f(x) = 0.576893
+iteration: 2070
+	f(x) = 0.576865
+iteration: 2071
+	f(x) = 0.576871
+iteration: 2072
+	f(x) = 0.576861
+iteration: 2073
+	f(x) = 0.576863
+iteration: 2074
+	f(x) = 0.576861
+iteration: 2075
+	f(x) = 0.576865
+iteration: 2076
+	f(x) = 0.576861
+iteration: 2077
+	f(x) = 0.576862
+iteration: 2078
+	f(x) = 0.576861
+iteration: 2079
+	f(x) = 0.576861
+iteration: 2080
+	f(x) = 0.576861
+iteration: 2081
+	f(x) = 0.576861
+iteration: 2082
+	f(x) = 0.576861
+iteration: 2083
+	f(x) = 0.576865
+iteration: 2084
+	f(x) = 0.577189
+iteration: 2085
+	f(x) = 0.577392
+iteration: 2086
+	f(x) = 0.576927
+iteration: 2087
+	f(x) = 0.577009
+iteration: 2088
+	f(x) = 0.576869
+iteration: 2089
+	f(x) = 0.576908
+iteration: 2090
+	f(x) = 0.576859
+iteration: 2091
+	f(x) = 0.576862
+iteration: 2092
+	f(x) = 0.576859
+iteration: 2093
+	f(x) = 0.576865
+iteration: 2094
+	f(x) = 0.576858
+iteration: 2095
+	f(x) = 0.577320
+iteration: 2096
+	f(x) = 0.576941
+iteration: 2097
+	f(x) = 0.577214
+iteration: 2098
+	f(x) = 0.576944
+iteration: 2099
+	f(x) = 0.577010
+iteration: 2100
+	f(x) = 0.576888
+iteration: 2101
+	f(x) = 0.576913
+iteration: 2102
+	f(x) = 0.576874
+iteration: 2103
+	f(x) = 0.576881
+iteration: 2104
+	f(x) = 0.576866
+iteration: 2105
+	f(x) = 0.576762
+iteration: 2106
+	f(x) = 0.578326
+iteration: 2107
+	f(x) = 0.577881
+iteration: 2108
+	f(x) = 0.577053
+iteration: 2109
+	f(x) = 0.577190
+iteration: 2110
+	f(x) = 0.576849
+iteration: 2111
+	f(x) = 0.578994
+iteration: 2112
+	f(x) = 0.576791
+iteration: 2113
+	f(x) = 0.577772
+iteration: 2114
+	f(x) = 0.576873
+iteration: 2115
+	f(x) = 0.577479
+iteration: 2116
+	f(x) = 0.576723
+iteration: 2117
+	f(x) = 0.576729
+iteration: 2118
+	f(x) = 0.576885
+iteration: 2119
+	f(x) = 0.576718
+iteration: 2120
+	f(x) = 0.576717
+iteration: 2121
+	f(x) = 0.576734
+iteration: 2122
+	f(x) = 0.576780
+iteration: 2123
+	f(x) = 0.576716
+iteration: 2124
+	f(x) = 0.576716
+iteration: 2125
+	f(x) = 0.576735
+iteration: 2126
+	f(x) = 0.576714
+iteration: 2127
+	f(x) = 0.576714
+iteration: 2128
+	f(x) = 0.576717
+iteration: 2129
+	f(x) = 0.576714
+iteration: 2130
+	f(x) = 0.576715
+iteration: 2131
+	f(x) = 0.576714
+iteration: 2132
+	f(x) = 0.576714
+iteration: 2133
+	f(x) = 0.576714
+iteration: 2134
+	f(x) = 0.576714
+iteration: 2135
+	f(x) = 0.576718
+iteration: 2136
+	f(x) = 0.576731
+iteration: 2137
+	f(x) = 0.576713
+iteration: 2138
+	f(x) = 0.576715
+iteration: 2139
+	f(x) = 0.576713
+iteration: 2140
+	f(x) = 0.576713
+iteration: 2141
+	f(x) = 0.576713
+iteration: 2142
+	f(x) = 0.576693
+iteration: 2143
+	f(x) = 0.576692
+iteration: 2144
+	f(x) = 0.576674
+iteration: 2145
+	f(x) = 0.576658
+iteration: 2146
+	f(x) = 0.576658
+iteration: 2147
+	f(x) = 0.576645
+iteration: 2148
+	f(x) = 0.576626
+iteration: 2149
+	f(x) = 0.576617
+iteration: 2150
+	f(x) = 0.576619
+iteration: 2151
+	f(x) = 0.576652
+iteration: 2152
+	f(x) = 0.576624
+iteration: 2153
+	f(x) = 0.576627
+iteration: 2154
+	f(x) = 0.576619
+iteration: 2155
+	f(x) = 0.576621
+iteration: 2156
+	f(x) = 0.576618
+iteration: 2157
+	f(x) = 0.576618
+iteration: 2158
+	f(x) = 0.576617
+iteration: 2159
+	f(x) = 0.576616
+iteration: 2160
+	f(x) = 0.576616
+iteration: 2161
+	f(x) = 0.576616
+iteration: 2162
+	f(x) = 0.576616
+iteration: 2163
+	f(x) = 0.576616
+iteration: 2164
+	f(x) = 0.576615
+iteration: 2165
+	f(x) = 0.576616
+iteration: 2166
+	f(x) = 0.576616
+iteration: 2167
+	f(x) = 0.576616
+iteration: 2168
+	f(x) = 0.576616
+iteration: 2169
+	f(x) = 0.576616
+iteration: 2170
+	f(x) = 0.576615
+iteration: 2171
+	f(x) = 0.576616
+iteration: 2172
+	f(x) = 0.576616
+iteration: 2173
+	f(x) = 0.576615
+iteration: 2174
+	f(x) = 0.576616
+iteration: 2175
+	f(x) = 0.576615
+iteration: 2176
+	f(x) = 0.576615
+iteration: 2177
+	f(x) = 0.576615
+iteration: 2178
+	f(x) = 0.576620
+iteration: 2179
+	f(x) = 0.576575
+iteration: 2180
+	f(x) = 0.576571
+iteration: 2181
+	f(x) = 0.576567
+iteration: 2182
+	f(x) = 0.576603
+iteration: 2183
+	f(x) = 0.576576
+iteration: 2184
+	f(x) = 0.576582
+iteration: 2185
+	f(x) = 0.576570
+iteration: 2186
+	f(x) = 0.576579
+iteration: 2187
+	f(x) = 0.576570
+iteration: 2188
+	f(x) = 0.576612
+iteration: 2189
+	f(x) = 0.576577
+iteration: 2190
+	f(x) = 0.576550
+iteration: 2191
+	f(x) = 0.576545
+iteration: 2192
+	f(x) = 0.576543
+iteration: 2193
+	f(x) = 0.576562
+iteration: 2194
+	f(x) = 0.576590
+iteration: 2195
+	f(x) = 0.576547
+iteration: 2196
+	f(x) = 0.576559
+iteration: 2197
+	f(x) = 0.576543
+iteration: 2198
+	f(x) = 0.576541
+iteration: 2199
+	f(x) = 0.576542
+iteration: 2200
+	f(x) = 0.576545
+iteration: 2201
+	f(x) = 0.576542
+iteration: 2202
+	f(x) = 0.576543
+iteration: 2203
+	f(x) = 0.576542
+iteration: 2204
+	f(x) = 0.576542
+iteration: 2205
+	f(x) = 0.576541
+iteration: 2206
+	f(x) = 0.576540
+iteration: 2207
+	f(x) = 0.576606
+iteration: 2208
+	f(x) = 0.576537
+iteration: 2209
+	f(x) = 0.576596
+iteration: 2210
+	f(x) = 0.576536
+iteration: 2211
+	f(x) = 0.576558
+iteration: 2212
+	f(x) = 0.576596
+iteration: 2213
+	f(x) = 0.576530
+iteration: 2214
+	f(x) = 0.576530
+iteration: 2215
+	f(x) = 0.576532
+iteration: 2216
+	f(x) = 0.576540
+iteration: 2217
+	f(x) = 0.576531
+iteration: 2218
+	f(x) = 0.576533
+iteration: 2219
+	f(x) = 0.576530
+iteration: 2220
+	f(x) = 0.576530
+iteration: 2221
+	f(x) = 0.576530
+iteration: 2222
+	f(x) = 0.576530
+iteration: 2223
+	f(x) = 0.576530
+iteration: 2224
+	f(x) = 0.576530
+iteration: 2225
+	f(x) = 0.576530
+iteration: 2226
+	f(x) = 0.576530
+iteration: 2227
+	f(x) = 0.576530
+iteration: 2228
+	f(x) = 0.576530
+iteration: 2229
+	f(x) = 0.576530
+iteration: 2230
+	f(x) = 0.576530
+iteration: 2231
+	f(x) = 0.576530
+iteration: 2232
+	f(x) = 0.576530
+iteration: 2233
+	f(x) = 0.576530
+iteration: 2234
+	f(x) = 0.576530
+iteration: 2235
+	f(x) = 0.576528
+iteration: 2236
+	f(x) = 0.576534
+iteration: 2237
+	f(x) = 0.576553
+iteration: 2238
+	f(x) = 0.576528
+iteration: 2239
+	f(x) = 0.576528
+iteration: 2240
+	f(x) = 0.576531
+iteration: 2241
+	f(x) = 0.576534
+iteration: 2242
+	f(x) = 0.576527
+iteration: 2243
+	f(x) = 0.576526
+iteration: 2244
+	f(x) = 0.576526
+iteration: 2245
+	f(x) = 0.576528
+iteration: 2246
+	f(x) = 0.576527
+iteration: 2247
+	f(x) = 0.576526
+iteration: 2248
+	f(x) = 0.576525
+iteration: 2249
+	f(x) = 0.576525
+iteration: 2250
+	f(x) = 0.576524
+iteration: 2251
+	f(x) = 0.576525
+iteration: 2252
+	f(x) = 0.576524
+iteration: 2253
+	f(x) = 0.576524
+iteration: 2254
+	f(x) = 0.576525
+iteration: 2255
+	f(x) = 0.576524
+iteration: 2256
+	f(x) = 0.576524
+iteration: 2257
+	f(x) = 0.576524
+iteration: 2258
+	f(x) = 0.576525
+iteration: 2259
+	f(x) = 0.576524
+iteration: 2260
+	f(x) = 0.576524
+iteration: 2261
+	f(x) = 0.576524
+iteration: 2262
+	f(x) = 0.576524
+iteration: 2263
+	f(x) = 0.576524
+iteration: 2264
+	f(x) = 0.576524
+iteration: 2265
+	f(x) = 0.576524
+iteration: 2266
+	f(x) = 0.576524
+iteration: 2267
+	f(x) = 0.576524
+iteration: 2268
+	f(x) = 0.576525
+iteration: 2269
+	f(x) = 0.576503
+iteration: 2270
+	f(x) = 0.576528
+iteration: 2271
+	f(x) = 0.576515
+iteration: 2272
+	f(x) = 0.576506
+iteration: 2273
+	f(x) = 0.576501
+iteration: 2274
+	f(x) = 0.576500
+iteration: 2275
+	f(x) = 0.576500
+iteration: 2276
+	f(x) = 0.576499
+iteration: 2277
+	f(x) = 0.576499
+iteration: 2278
+	f(x) = 0.576500
+iteration: 2279
+	f(x) = 0.576499
+iteration: 2280
+	f(x) = 0.576540
+iteration: 2281
+	f(x) = 0.576501
+iteration: 2282
+	f(x) = 0.576538
+iteration: 2283
+	f(x) = 0.576509
+iteration: 2284
+	f(x) = 0.576510
+iteration: 2285
+	f(x) = 0.576502
+iteration: 2286
+	f(x) = 0.576502
+iteration: 2287
+	f(x) = 0.576500
+iteration: 2288
+	f(x) = 0.576502
+iteration: 2289
+	f(x) = 0.576500
+iteration: 2290
+	f(x) = 0.576499
+iteration: 2291
+	f(x) = 0.576498
+iteration: 2292
+	f(x) = 0.576499
+iteration: 2293
+	f(x) = 0.576499
+iteration: 2294
+	f(x) = 0.576499
+iteration: 2295
+	f(x) = 0.576498
+iteration: 2296
+	f(x) = 0.576499
+iteration: 2297
+	f(x) = 0.576499
+iteration: 2298
+	f(x) = 0.576498
+iteration: 2299
+	f(x) = 0.576499
+iteration: 2300
+	f(x) = 0.576499
+iteration: 2301
+	f(x) = 0.576499
+iteration: 2302
+	f(x) = 0.576499
+iteration: 2303
+	f(x) = 0.576499
+iteration: 2304
+	f(x) = 0.576498
+iteration: 2305
+	f(x) = 0.576499
+iteration: 2306
+	f(x) = 0.576498
+iteration: 2307
+	f(x) = 0.576499
+iteration: 2308
+	f(x) = 0.576498
+iteration: 2309
+	f(x) = 0.576498
+iteration: 2310
+	f(x) = 0.576498
+iteration: 2311
+	f(x) = 0.576499
+iteration: 2312
+	f(x) = 0.576498
+iteration: 2313
+	f(x) = 0.576501
+iteration: 2314
+	f(x) = 0.576572
+iteration: 2315
+	f(x) = 0.576628
+iteration: 2316
+	f(x) = 0.576510
+iteration: 2317
+	f(x) = 0.576539
+iteration: 2318
+	f(x) = 0.576498
+iteration: 2319
+	f(x) = 0.576502
+iteration: 2320
+	f(x) = 0.576498
+iteration: 2321
+	f(x) = 0.576499
+iteration: 2322
+	f(x) = 0.576497
+iteration: 2323
+	f(x) = 0.576499
+iteration: 2324
+	f(x) = 0.576497
+iteration: 2325
+	f(x) = 0.576498
+iteration: 2326
+	f(x) = 0.576538
+iteration: 2327
+	f(x) = 0.576539
+iteration: 2328
+	f(x) = 0.576507
+iteration: 2329
+	f(x) = 0.576508
+iteration: 2330
+	f(x) = 0.576500
+iteration: 2331
+	f(x) = 0.576500
+iteration: 2332
+	f(x) = 0.576498
+iteration: 2333
+	f(x) = 0.576498
+iteration: 2334
+	f(x) = 0.576497
+iteration: 2335
+	f(x) = 0.576502
+iteration: 2336
+	f(x) = 0.576634
+iteration: 2337
+	f(x) = 0.576696
+iteration: 2338
+	f(x) = 0.576524
+iteration: 2339
+	f(x) = 0.576555
+iteration: 2340
+	f(x) = 0.576501
+iteration: 2341
+	f(x) = 0.576516
+iteration: 2342
+	f(x) = 0.576497
+iteration: 2343
+	f(x) = 0.576505
+iteration: 2344
+	f(x) = 0.576497
+iteration: 2345
+	f(x) = 0.576463
+iteration: 2346
+	f(x) = 0.576529
+iteration: 2347
+	f(x) = 0.576511
+iteration: 2348
+	f(x) = 0.576485
+iteration: 2349
+	f(x) = 0.576462
+iteration: 2350
+	f(x) = 0.576464
+iteration: 2351
+	f(x) = 0.576461
+iteration: 2352
+	f(x) = 0.576460
+iteration: 2353
+	f(x) = 0.576460
+iteration: 2354
+	f(x) = 0.576459
+iteration: 2355
+	f(x) = 0.576458
+iteration: 2356
+	f(x) = 0.576459
+iteration: 2357
+	f(x) = 0.576459
+iteration: 2358
+	f(x) = 0.576459
+iteration: 2359
+	f(x) = 0.576458
+iteration: 2360
+	f(x) = 0.576459
+iteration: 2361
+	f(x) = 0.576458
+iteration: 2362
+	f(x) = 0.576458
+iteration: 2363
+	f(x) = 0.576459
+iteration: 2364
+	f(x) = 0.576458
+iteration: 2365
+	f(x) = 0.576458
+iteration: 2366
+	f(x) = 0.576458
+iteration: 2367
+	f(x) = 0.576458
+iteration: 2368
+	f(x) = 0.576458
+iteration: 2369
+	f(x) = 0.576458
+iteration: 2370
+	f(x) = 0.576458
+iteration: 2371
+	f(x) = 0.576458
+iteration: 2372
+	f(x) = 0.576458
+iteration: 2373
+	f(x) = 0.576458
+iteration: 2374
+	f(x) = 0.576458
+iteration: 2375
+	f(x) = 0.576458
+iteration: 2376
+	f(x) = 0.576458
+iteration: 2377
+	f(x) = 0.576458
+iteration: 2378
+	f(x) = 0.576458
+iteration: 2379
+	f(x) = 0.576458
+iteration: 2380
+	f(x) = 0.576458
+iteration: 2381
+	f(x) = 0.576458
+iteration: 2382
+	f(x) = 0.576458
+iteration: 2383
+	f(x) = 0.576458
+iteration: 2384
+	f(x) = 0.576458
+iteration: 2385
+	f(x) = 0.576458
+iteration: 2386
+	f(x) = 0.576458
+iteration: 2387
+	f(x) = 0.576458
+iteration: 2388
+	f(x) = 0.576458
+iteration: 2389
+	f(x) = 0.576458
+iteration: 2390
+	f(x) = 0.576458
+iteration: 2391
+	f(x) = 0.576458
+iteration: 2392
+	f(x) = 0.576458
+iteration: 2393
+	f(x) = 0.576457
+iteration: 2394
+	f(x) = 0.576458
+iteration: 2395
+	f(x) = 0.576457
+iteration: 2396
+	f(x) = 0.576458
+iteration: 2397
+	f(x) = 0.576458
+iteration: 2398
+	f(x) = 0.576458
+iteration: 2399
+	f(x) = 0.576457
+iteration: 2400
+	f(x) = 0.576457
+iteration: 2401
+	f(x) = 0.576458
+iteration: 2402
+	f(x) = 0.576458
+iteration: 2403
+	f(x) = 0.576458
+iteration: 2404
+	f(x) = 0.576457
+iteration: 2405
+	f(x) = 0.576457
+iteration: 2406
+	f(x) = 0.576458
+iteration: 2407
+	f(x) = 0.576457
+iteration: 2408
+	f(x) = 0.576458
+iteration: 2409
+	f(x) = 0.576457
+iteration: 2410
+	f(x) = 0.576458
+iteration: 2411
+	f(x) = 0.576457
+iteration: 2412
+	f(x) = 0.576457
+iteration: 2413
+	f(x) = 0.576458
+iteration: 2414
+	f(x) = 0.576457
+iteration: 2415
+	f(x) = 0.576457
+iteration: 2416
+	f(x) = 0.576457
+iteration: 2417
+	f(x) = 0.576457
+iteration: 2418
+	f(x) = 0.576457
+iteration: 2419
+	f(x) = 0.576457
+iteration: 2420
+	f(x) = 0.576457
+iteration: 2421
+	f(x) = 0.576457
+iteration: 2422
+	f(x) = 0.576457
+iteration: 2423
+	f(x) = 0.576458
+iteration: 2424
+	f(x) = 0.576458
+iteration: 2425
+	f(x) = 0.576457
+iteration: 2426
+	f(x) = 0.576457
+iteration: 2427
+	f(x) = 0.576457
+iteration: 2428
+	f(x) = 0.576457
+iteration: 2429
+	f(x) = 0.576457
+iteration: 2430
+	f(x) = 0.576457
+iteration: 2431
+	f(x) = 0.576457
+iteration: 2432
+	f(x) = 0.576457
+iteration: 2433
+	f(x) = 0.576457
+iteration: 2434
+	f(x) = 0.576456
+iteration: 2435
+	f(x) = 0.576456
+iteration: 2436
+	f(x) = 0.576456
+iteration: 2437
+	f(x) = 0.576456
+iteration: 2438
+	f(x) = 0.576456
+iteration: 2439
+	f(x) = 0.576456
+iteration: 2440
+	f(x) = 0.576456
+iteration: 2441
+	f(x) = 0.576456
+iteration: 2442
+	f(x) = 0.576456
+iteration: 2443
+	f(x) = 0.576456
+iteration: 2444
+	f(x) = 0.576456
+iteration: 2445
+	f(x) = 0.576456
+iteration: 2446
+	f(x) = 0.576456
+iteration: 2447
+	f(x) = 0.576456
+iteration: 2448
+	f(x) = 0.576456
+iteration: 2449
+	f(x) = 0.576456
+iteration: 2450
+	f(x) = 0.576456
+iteration: 2451
+	f(x) = 0.576456
+iteration: 2452
+	f(x) = 0.576456
+iteration: 2453
+	f(x) = 0.576456
+iteration: 2454
+	f(x) = 0.576456
+iteration: 2455
+	f(x) = 0.576456
+iteration: 2456
+	f(x) = 0.576456
+iteration: 2457
+	f(x) = 0.576457
+iteration: 2458
+	f(x) = 0.576460
+iteration: 2459
+	f(x) = 0.576465
+iteration: 2460
+	f(x) = 0.576456
+iteration: 2461
+	f(x) = 0.576461
+iteration: 2462
+	f(x) = 0.576456
+iteration: 2463
+	f(x) = 0.576457
+iteration: 2464
+	f(x) = 0.576456
+iteration: 2465
+	f(x) = 0.576456
+iteration: 2466
+	f(x) = 0.576456
+iteration: 2467
+	f(x) = 0.576449
+iteration: 2468
+	f(x) = 0.576450
+iteration: 2469
+	f(x) = 0.576443
+iteration: 2470
+	f(x) = 0.576437
+iteration: 2471
+	f(x) = 0.576436
+iteration: 2472
+	f(x) = 0.576430
+iteration: 2473
+	f(x) = 0.576417
+iteration: 2474
+	f(x) = 0.576402
+iteration: 2475
+	f(x) = 0.576397
+iteration: 2476
+	f(x) = 0.576382
+iteration: 2477
+	f(x) = 0.576353
+iteration: 2478
+	f(x) = 0.576320
+iteration: 2479
+	f(x) = 0.576313
+iteration: 2480
+	f(x) = 0.576294
+iteration: 2481
+	f(x) = 0.576248
+iteration: 2482
+	f(x) = 0.576227
+iteration: 2483
+	f(x) = 0.576296
+iteration: 2484
+	f(x) = 0.576261
+iteration: 2485
+	f(x) = 0.576263
+iteration: 2486
+	f(x) = 0.576244
+iteration: 2487
+	f(x) = 0.576214
+iteration: 2488
+	f(x) = 0.576204
+iteration: 2489
+	f(x) = 0.576192
+iteration: 2490
+	f(x) = 0.576190
+iteration: 2491
+	f(x) = 0.576197
+iteration: 2492
+	f(x) = 0.576235
+iteration: 2493
+	f(x) = 0.576188
+iteration: 2494
+	f(x) = 0.576207
+iteration: 2495
+	f(x) = 0.576188
+iteration: 2496
+	f(x) = 0.576201
+iteration: 2497
+	f(x) = 0.576186
+iteration: 2498
+	f(x) = 0.576192
+iteration: 2499
+	f(x) = 0.576186
+iteration: 2500
+	f(x) = 0.576187
+iteration: 2501
+	f(x) = 0.576186
+iteration: 2502
+	f(x) = 0.576186
+iteration: 2503
+	f(x) = 0.576186
+iteration: 2504
+	f(x) = 0.576187
+iteration: 2505
+	f(x) = 0.576186
+iteration: 2506
+	f(x) = 0.576186
+iteration: 2507
+	f(x) = 0.576186
+iteration: 2508
+	f(x) = 0.576186
+iteration: 2509
+	f(x) = 0.576186
+iteration: 2510
+	f(x) = 0.576186
+iteration: 2511
+	f(x) = 0.576186
+iteration: 2512
+	f(x) = 0.576186
+iteration: 2513
+	f(x) = 0.576186
+iteration: 2514
+	f(x) = 0.576186
+iteration: 2515
+	f(x) = 0.576186
+iteration: 2516
+	f(x) = 0.576186
+iteration: 2517
+	f(x) = 0.576186
+iteration: 2518
+	f(x) = 0.576186
+iteration: 2519
+	f(x) = 0.576186
+iteration: 2520
+	f(x) = 0.576186
+iteration: 2521
+	f(x) = 0.576186
+iteration: 2522
+	f(x) = 0.576186
+iteration: 2523
+	f(x) = 0.576186
+iteration: 2524
+	f(x) = 0.576188
+iteration: 2525
+	f(x) = 0.576171
+iteration: 2526
+	f(x) = 0.576168
+iteration: 2527
+	f(x) = 0.576159
+iteration: 2528
+	f(x) = 0.576147
+iteration: 2529
+	f(x) = 0.576133
+iteration: 2530
+	f(x) = 0.576125
+iteration: 2531
+	f(x) = 0.576111
+iteration: 2532
+	f(x) = 0.576105
+iteration: 2533
+	f(x) = 0.576111
+iteration: 2534
+	f(x) = 0.576103
+iteration: 2535
+	f(x) = 0.576120
+iteration: 2536
+	f(x) = 0.576116
+iteration: 2537
+	f(x) = 0.576104
+iteration: 2538
+	f(x) = 0.576100
+iteration: 2539
+	f(x) = 0.576099
+iteration: 2540
+	f(x) = 0.576114
+iteration: 2541
+	f(x) = 0.576100
+iteration: 2542
+	f(x) = 0.576096
+iteration: 2543
+	f(x) = 0.576094
+iteration: 2544
+	f(x) = 0.576093
+iteration: 2545
+	f(x) = 0.576091
+iteration: 2546
+	f(x) = 0.576085
+iteration: 2547
+	f(x) = 0.576082
+iteration: 2548
+	f(x) = 0.576082
+iteration: 2549
+	f(x) = 0.576078
+iteration: 2550
+	f(x) = 0.576085
+iteration: 2551
+	f(x) = 0.576087
+iteration: 2552
+	f(x) = 0.576079
+iteration: 2553
+	f(x) = 0.576079
+iteration: 2554
+	f(x) = 0.576078
+iteration: 2555
+	f(x) = 0.576081
+iteration: 2556
+	f(x) = 0.576078
+iteration: 2557
+	f(x) = 0.576079
+iteration: 2558
+	f(x) = 0.576078
+iteration: 2559
+	f(x) = 0.576078
+iteration: 2560
+	f(x) = 0.576078
+iteration: 2561
+	f(x) = 0.576078
+iteration: 2562
+	f(x) = 0.576078
+iteration: 2563
+	f(x) = 0.576078
+iteration: 2564
+	f(x) = 0.576078
+iteration: 2565
+	f(x) = 0.576078
+iteration: 2566
+	f(x) = 0.576078
+iteration: 2567
+	f(x) = 0.576098
+iteration: 2568
+	f(x) = 0.576072
+iteration: 2569
+	f(x) = 0.576086
+iteration: 2570
+	f(x) = 0.576073
+iteration: 2571
+	f(x) = 0.576103
+iteration: 2572
+	f(x) = 0.576071
+iteration: 2573
+	f(x) = 0.576071
+iteration: 2574
+	f(x) = 0.576078
+iteration: 2575
+	f(x) = 0.576071
+iteration: 2576
+	f(x) = 0.576264
+iteration: 2577
+	f(x) = 0.576186
+iteration: 2578
+	f(x) = 0.576174
+iteration: 2579
+	f(x) = 0.576092
+iteration: 2580
+	f(x) = 0.576146
+iteration: 2581
+	f(x) = 0.576072
+iteration: 2582
+	f(x) = 0.576196
+iteration: 2583
+	f(x) = 0.576056
+iteration: 2584
+	f(x) = 0.576071
+iteration: 2585
+	f(x) = 0.576058
+iteration: 2586
+	f(x) = 0.576075
+iteration: 2587
+	f(x) = 0.576057
+iteration: 2588
+	f(x) = 0.576059
+iteration: 2589
+	f(x) = 0.576054
+iteration: 2590
+	f(x) = 0.576045
+iteration: 2591
+	f(x) = 0.576050
+iteration: 2592
+	f(x) = 0.576044
+iteration: 2593
+	f(x) = 0.576045
+iteration: 2594
+	f(x) = 0.576038
+iteration: 2595
+	f(x) = 0.576034
+iteration: 2596
+	f(x) = 0.576034
+iteration: 2597
+	f(x) = 0.576027
+iteration: 2598
+	f(x) = 0.576027
+iteration: 2599
+	f(x) = 0.576034
+iteration: 2600
+	f(x) = 0.576031
+iteration: 2601
+	f(x) = 0.576027
+iteration: 2602
+	f(x) = 0.576028
+iteration: 2603
+	f(x) = 0.576025
+iteration: 2604
+	f(x) = 0.576026
+iteration: 2605
+	f(x) = 0.576027
+iteration: 2606
+	f(x) = 0.576026
+iteration: 2607
+	f(x) = 0.576025
+iteration: 2608
+	f(x) = 0.576025
+iteration: 2609
+	f(x) = 0.576025
+iteration: 2610
+	f(x) = 0.576025
+iteration: 2611
+	f(x) = 0.576025
+iteration: 2612
+	f(x) = 0.576025
+iteration: 2613
+	f(x) = 0.576025
+iteration: 2614
+	f(x) = 0.576025
+iteration: 2615
+	f(x) = 0.575973
+iteration: 2616
+	f(x) = 0.575985
+iteration: 2617
+	f(x) = 0.575958
+iteration: 2618
+	f(x) = 0.575963
+iteration: 2619
+	f(x) = 0.575945
+iteration: 2620
+	f(x) = 0.575934
+iteration: 2621
+	f(x) = 0.575955
+iteration: 2622
+	f(x) = 0.575951
+iteration: 2623
+	f(x) = 0.575922
+iteration: 2624
+	f(x) = 0.575914
+iteration: 2625
+	f(x) = 0.575941
+iteration: 2626
+	f(x) = 0.575925
+iteration: 2627
+	f(x) = 0.575915
+iteration: 2628
+	f(x) = 0.575915
+iteration: 2629
+	f(x) = 0.575912
+iteration: 2630
+	f(x) = 0.575918
+iteration: 2631
+	f(x) = 0.575912
+iteration: 2632
+	f(x) = 0.575917
+iteration: 2633
+	f(x) = 0.575912
+iteration: 2634
+	f(x) = 0.575912
+iteration: 2635
+	f(x) = 0.575912
+iteration: 2636
+	f(x) = 0.575913
+iteration: 2637
+	f(x) = 0.575912
+iteration: 2638
+	f(x) = 0.575913
+iteration: 2639
+	f(x) = 0.575912
+iteration: 2640
+	f(x) = 0.575912
+iteration: 2641
+	f(x) = 0.575912
+iteration: 2642
+	f(x) = 0.575912
+iteration: 2643
+	f(x) = 0.575912
+iteration: 2644
+	f(x) = 0.575912
+iteration: 2645
+	f(x) = 0.575912
+iteration: 2646
+	f(x) = 0.575912
+iteration: 2647
+	f(x) = 0.575912
+iteration: 2648
+	f(x) = 0.575912
+iteration: 2649
+	f(x) = 0.575912
+iteration: 2650
+	f(x) = 0.575912
+iteration: 2651
+	f(x) = 0.575912
+iteration: 2652
+	f(x) = 0.575912
+iteration: 2653
+	f(x) = 0.575912
+iteration: 2654
+	f(x) = 0.575912
+iteration: 2655
+	f(x) = 0.575912
+iteration: 2656
+	f(x) = 0.575912
+iteration: 2657
+	f(x) = 0.575912
+iteration: 2658
+	f(x) = 0.575912
+iteration: 2659
+	f(x) = 0.575912
+iteration: 2660
+	f(x) = 0.576528
+iteration: 2661
+	f(x) = 0.575955
+iteration: 2662
+	f(x) = 0.576268
+iteration: 2663
+	f(x) = 0.575914
+iteration: 2664
+	f(x) = 0.575888
+iteration: 2665
+	f(x) = 0.576208
+iteration: 2666
+	f(x) = 0.576694
+iteration: 2667
+	f(x) = 0.575798
+iteration: 2668
+	f(x) = 0.575832
+iteration: 2669
+	f(x) = 0.575926
+iteration: 2670
+	f(x) = 0.575820
+iteration: 2671
+	f(x) = 0.575837
+iteration: 2672
+	f(x) = 0.575808
+iteration: 2673
+	f(x) = 0.575817
+iteration: 2674
+	f(x) = 0.575803
+iteration: 2675
+	f(x) = 0.575819
+iteration: 2676
+	f(x) = 0.575800
+iteration: 2677
+	f(x) = 0.575800
+iteration: 2678
+	f(x) = 0.575799
+iteration: 2679
+	f(x) = 0.575801
+iteration: 2680
+	f(x) = 0.575798
+iteration: 2681
+	f(x) = 0.575802
+iteration: 2682
+	f(x) = 0.575798
+iteration: 2683
+	f(x) = 0.575798
+iteration: 2684
+	f(x) = 0.575799
+iteration: 2685
+	f(x) = 0.575799
+iteration: 2686
+	f(x) = 0.575797
+iteration: 2687
+	f(x) = 0.575798
+iteration: 2688
+	f(x) = 0.575798
+iteration: 2689
+	f(x) = 0.575798
+iteration: 2690
+	f(x) = 0.575798
+iteration: 2691
+	f(x) = 0.576713
+iteration: 2692
+	f(x) = 0.576314
+iteration: 2693
+	f(x) = 0.576359
+iteration: 2694
+	f(x) = 0.575993
+iteration: 2695
+	f(x) = 0.576135
+iteration: 2696
+	f(x) = 0.575887
+iteration: 2697
+	f(x) = 0.576029
+iteration: 2698
+	f(x) = 0.575859
+iteration: 2699
+	f(x) = 0.575864
+iteration: 2700
+	f(x) = 0.575819
+iteration: 2701
+	f(x) = 0.575857
+iteration: 2702
+	f(x) = 0.575815
+iteration: 2703
+	f(x) = 0.575838
+iteration: 2704
+	f(x) = 0.575805
+iteration: 2705
+	f(x) = 0.575853
+iteration: 2706
+	f(x) = 0.575810
+iteration: 2707
+	f(x) = 0.575838
+iteration: 2708
+	f(x) = 0.575809
+iteration: 2709
+	f(x) = 0.575793
+iteration: 2710
+	f(x) = 0.575793
+iteration: 2711
+	f(x) = 0.575793
+iteration: 2712
+	f(x) = 0.575814
+iteration: 2713
+	f(x) = 0.575800
+iteration: 2714
+	f(x) = 0.575791
+iteration: 2715
+	f(x) = 0.575809
+iteration: 2716
+	f(x) = 0.575789
+iteration: 2717
+	f(x) = 0.575796
+iteration: 2718
+	f(x) = 0.575790
+iteration: 2719
+	f(x) = 0.575789
+iteration: 2720
+	f(x) = 0.575791
+iteration: 2721
+	f(x) = 0.575789
+iteration: 2722
+	f(x) = 0.575790
+iteration: 2723
+	f(x) = 0.575789
+iteration: 2724
+	f(x) = 0.575935
+iteration: 2725
+	f(x) = 0.575725
+iteration: 2726
+	f(x) = 0.575914
+iteration: 2727
+	f(x) = 0.575791
+iteration: 2728
+	f(x) = 0.575797
+iteration: 2729
+	f(x) = 0.575760
+iteration: 2730
+	f(x) = 0.575862
+iteration: 2731
+	f(x) = 0.575767
+iteration: 2732
+	f(x) = 0.576085
+iteration: 2733
+	f(x) = 0.575748
+iteration: 2734
+	f(x) = 0.575748
+iteration: 2735
+	f(x) = 0.575710
+iteration: 2736
+	f(x) = 0.575726
+iteration: 2737
+	f(x) = 0.575796
+iteration: 2738
+	f(x) = 0.575717
+iteration: 2739
+	f(x) = 0.575730
+iteration: 2740
+	f(x) = 0.575714
+iteration: 2741
+	f(x) = 0.575724
+iteration: 2742
+	f(x) = 0.575712
+iteration: 2743
+	f(x) = 0.575712
+iteration: 2744
+	f(x) = 0.575715
+iteration: 2745
+	f(x) = 0.575710
+iteration: 2746
+	f(x) = 0.575711
+iteration: 2747
+	f(x) = 0.575710
+iteration: 2748
+	f(x) = 0.575711
+iteration: 2749
+	f(x) = 0.575710
+iteration: 2750
+	f(x) = 0.575710
+iteration: 2751
+	f(x) = 0.575710
+iteration: 2752
+	f(x) = 0.575710
+iteration: 2753
+	f(x) = 0.575710
+iteration: 2754
+	f(x) = 0.575710
+iteration: 2755
+	f(x) = 0.575710
+iteration: 2756
+	f(x) = 0.575710
+iteration: 2757
+	f(x) = 0.575710
+iteration: 2758
+	f(x) = 0.575711
+iteration: 2759
+	f(x) = 0.575710
+iteration: 2760
+	f(x) = 0.575713
+iteration: 2761
+	f(x) = 0.575710
+iteration: 2762
+	f(x) = 0.575711
+iteration: 2763
+	f(x) = 0.575710
+iteration: 2764
+	f(x) = 0.575711
+iteration: 2765
+	f(x) = 0.575710
+iteration: 2766
+	f(x) = 0.575710
+iteration: 2767
+	f(x) = 0.575710
+iteration: 2768
+	f(x) = 0.575710
+iteration: 2769
+	f(x) = 0.575710
+iteration: 2770
+	f(x) = 0.575722
+iteration: 2771
+	f(x) = 0.575696
+iteration: 2772
+	f(x) = 0.575706
+iteration: 2773
+	f(x) = 0.575699
+iteration: 2774
+	f(x) = 0.575707
+iteration: 2775
+	f(x) = 0.575712
+iteration: 2776
+	f(x) = 0.575699
+iteration: 2777
+	f(x) = 0.575702
+iteration: 2778
+	f(x) = 0.575698
+iteration: 2779
+	f(x) = 0.575696
+iteration: 2780
+	f(x) = 0.575695
+iteration: 2781
+	f(x) = 0.575693
+iteration: 2782
+	f(x) = 0.575690
+iteration: 2783
+	f(x) = 0.575692
+iteration: 2784
+	f(x) = 0.575686
+iteration: 2785
+	f(x) = 0.575682
+iteration: 2786
+	f(x) = 0.575682
+iteration: 2787
+	f(x) = 0.575680
+iteration: 2788
+	f(x) = 0.575670
+iteration: 2789
+	f(x) = 0.575663
+iteration: 2790
+	f(x) = 0.575669
+iteration: 2791
+	f(x) = 0.575656
+iteration: 2792
+	f(x) = 0.575655
+iteration: 2793
+	f(x) = 0.575650
+iteration: 2794
+	f(x) = 0.575658
+iteration: 2795
+	f(x) = 0.575669
+iteration: 2796
+	f(x) = 0.575653
+iteration: 2797
+	f(x) = 0.575658
+iteration: 2798
+	f(x) = 0.575651
+iteration: 2799
+	f(x) = 0.575653
+iteration: 2800
+	f(x) = 0.575650
+iteration: 2801
+	f(x) = 0.575652
+iteration: 2802
+	f(x) = 0.575650
+iteration: 2803
+	f(x) = 0.575650
+iteration: 2804
+	f(x) = 0.575650
+iteration: 2805
+	f(x) = 0.575650
+iteration: 2806
+	f(x) = 0.575650
+iteration: 2807
+	f(x) = 0.575650
+iteration: 2808
+	f(x) = 0.575650
+iteration: 2809
+	f(x) = 0.575650
+iteration: 2810
+	f(x) = 0.575650
+iteration: 2811
+	f(x) = 0.575649
+iteration: 2812
+	f(x) = 0.575650
+iteration: 2813
+	f(x) = 0.575650
+iteration: 2814
+	f(x) = 0.575650
+iteration: 2815
+	f(x) = 0.575650
+iteration: 2816
+	f(x) = 0.575650
+iteration: 2817
+	f(x) = 0.575650
+iteration: 2818
+	f(x) = 0.575649
+iteration: 2819
+	f(x) = 0.575649
+iteration: 2820
+	f(x) = 0.575649
+iteration: 2821
+	f(x) = 0.575695
+iteration: 2822
+	f(x) = 0.575685
+iteration: 2823
+	f(x) = 0.575683
+iteration: 2824
+	f(x) = 0.575685
+iteration: 2825
+	f(x) = 0.575665
+iteration: 2826
+	f(x) = 0.575668
+iteration: 2827
+	f(x) = 0.575656
+iteration: 2828
+	f(x) = 0.575657
+iteration: 2829
+	f(x) = 0.575652
+iteration: 2830
+	f(x) = 0.575650
+iteration: 2831
+	f(x) = 0.575652
+iteration: 2832
+	f(x) = 0.575649
+iteration: 2833
+	f(x) = 0.575650
+iteration: 2834
+	f(x) = 0.575922
+iteration: 2835
+	f(x) = 0.575916
+iteration: 2836
+	f(x) = 0.575718
+iteration: 2837
+	f(x) = 0.575715
+iteration: 2838
+	f(x) = 0.575665
+iteration: 2839
+	f(x) = 0.575667
+iteration: 2840
+	f(x) = 0.575653
+iteration: 2841
+	f(x) = 0.575654
+iteration: 2842
+	f(x) = 0.575650
+iteration: 2843
+	f(x) = 0.575654
+iteration: 2844
+	f(x) = 0.575649
+iteration: 2845
+	f(x) = 0.575649
+iteration: 2846
+	f(x) = 0.575650
+iteration: 2847
+	f(x) = 0.575649
+iteration: 2848
+	f(x) = 0.575651
+iteration: 2849
+	f(x) = 0.576625
+iteration: 2850
+	f(x) = 0.576563
+iteration: 2851
+	f(x) = 0.575871
+iteration: 2852
+	f(x) = 0.575900
+iteration: 2853
+	f(x) = 0.575701
+iteration: 2854
+	f(x) = 0.575715
+iteration: 2855
+	f(x) = 0.575661
+iteration: 2856
+	f(x) = 0.575667
+iteration: 2857
+	f(x) = 0.575651
+iteration: 2858
+	f(x) = 0.575653
+iteration: 2859
+	f(x) = 0.575649
+iteration: 2860
+	f(x) = 0.575653
+iteration: 2861
+	f(x) = 0.575649
+iteration: 2862
+	f(x) = 0.576234
+iteration: 2863
+	f(x) = 0.575667
+iteration: 2864
+	f(x) = 0.576197
+iteration: 2865
+	f(x) = 0.575771
+iteration: 2866
+	f(x) = 0.575818
+iteration: 2867
+	f(x) = 0.575676
+iteration: 2868
+	f(x) = 0.575703
+iteration: 2869
+	f(x) = 0.575656
+iteration: 2870
+	f(x) = 0.575663
+iteration: 2871
+	f(x) = 0.575653
+iteration: 2872
+	f(x) = 0.575654
+iteration: 2873
+	f(x) = 0.575651
+iteration: 2874
+	f(x) = 0.575685
+iteration: 2875
+	f(x) = 0.575659
+iteration: 2876
+	f(x) = 0.575714
+iteration: 2877
+	f(x) = 0.575657
+iteration: 2878
+	f(x) = 0.575662
+iteration: 2879
+	f(x) = 0.575653
+iteration: 2880
+	f(x) = 0.575659
+iteration: 2881
+	f(x) = 0.575652
+iteration: 2882
+	f(x) = 0.575649
+iteration: 2883
+	f(x) = 0.575649
+iteration: 2884
+	f(x) = 0.575652
+iteration: 2885
+	f(x) = 0.575651
+iteration: 2886
+	f(x) = 0.575648
+iteration: 2887
+	f(x) = 0.575580
+iteration: 2888
+	f(x) = 0.575834
+iteration: 2889
+	f(x) = 0.575892
+iteration: 2890
+	f(x) = 0.575653
+iteration: 2891
+	f(x) = 0.575690
+iteration: 2892
+	f(x) = 0.575614
+iteration: 2893
+	f(x) = 0.575580
+iteration: 2894
+	f(x) = 0.575579
+iteration: 2895
+	f(x) = 0.575579
+iteration: 2896
+	f(x) = 0.575579
+iteration: 2897
+	f(x) = 0.575578
+iteration: 2898
+	f(x) = 0.575576
+iteration: 2899
+	f(x) = 0.575576
+iteration: 2900
+	f(x) = 0.575576
+iteration: 2901
+	f(x) = 0.575574
+iteration: 2902
+	f(x) = 0.575574
+iteration: 2903
+	f(x) = 0.575577
+iteration: 2904
+	f(x) = 0.575575
+iteration: 2905
+	f(x) = 0.575573
+iteration: 2906
+	f(x) = 0.575572
+iteration: 2907
+	f(x) = 0.575575
+iteration: 2908
+	f(x) = 0.575574
+iteration: 2909
+	f(x) = 0.575571
+iteration: 2910
+	f(x) = 0.575570
+iteration: 2911
+	f(x) = 0.575569
+iteration: 2912
+	f(x) = 0.575569
+iteration: 2913
+	f(x) = 0.575567
+iteration: 2914
+	f(x) = 0.575566
+iteration: 2915
+	f(x) = 0.575570
+iteration: 2916
+	f(x) = 0.575567
+iteration: 2917
+	f(x) = 0.575566
+iteration: 2918
+	f(x) = 0.575567
+iteration: 2919
+	f(x) = 0.575565
+iteration: 2920
+	f(x) = 0.575565
+iteration: 2921
+	f(x) = 0.575566
+iteration: 2922
+	f(x) = 0.575569
+iteration: 2923
+	f(x) = 0.575565
+iteration: 2924
+	f(x) = 0.575565
+iteration: 2925
+	f(x) = 0.575564
+iteration: 2926
+	f(x) = 0.575565
+iteration: 2927
+	f(x) = 0.575564
+iteration: 2928
+	f(x) = 0.575565
+iteration: 2929
+	f(x) = 0.575564
+iteration: 2930
+	f(x) = 0.575565
+iteration: 2931
+	f(x) = 0.575564
+iteration: 2932
+	f(x) = 0.575564
+iteration: 2933
+	f(x) = 0.575565
+iteration: 2934
+	f(x) = 0.575564
+iteration: 2935
+	f(x) = 0.575565
+iteration: 2936
+	f(x) = 0.575565
+iteration: 2937
+	f(x) = 0.575564
+iteration: 2938
+	f(x) = 0.575564
+iteration: 2939
+	f(x) = 0.575564
+iteration: 2940
+	f(x) = 0.575564
+iteration: 2941
+	f(x) = 0.575564
+iteration: 2942
+	f(x) = 0.575564
+iteration: 2943
+	f(x) = 0.575564
+iteration: 2944
+	f(x) = 0.575564
+iteration: 2945
+	f(x) = 0.575564
+iteration: 2946
+	f(x) = 0.575564
+iteration: 2947
+	f(x) = 0.575564
+iteration: 2948
+	f(x) = 0.575564
+iteration: 2949
+	f(x) = 0.575565
+iteration: 2950
+	f(x) = 0.575556
+iteration: 2951
+	f(x) = 0.575557
+iteration: 2952
+	f(x) = 0.575550
+iteration: 2953
+	f(x) = 0.575544
+iteration: 2954
+	f(x) = 0.575543
+iteration: 2955
+	f(x) = 0.575536
+iteration: 2956
+	f(x) = 0.575528
+iteration: 2957
+	f(x) = 0.575519
+iteration: 2958
+	f(x) = 0.575514
+iteration: 2959
+	f(x) = 0.575508
+iteration: 2960
+	f(x) = 0.575514
+iteration: 2961
+	f(x) = 0.575523
+iteration: 2962
+	f(x) = 0.575511
+iteration: 2963
+	f(x) = 0.575520
+iteration: 2964
+	f(x) = 0.575510
+iteration: 2965
+	f(x) = 0.575508
+iteration: 2966
+	f(x) = 0.575509
+iteration: 2967
+	f(x) = 0.575505
+iteration: 2968
+	f(x) = 0.575503
+iteration: 2969
+	f(x) = 0.575503
+iteration: 2970
+	f(x) = 0.575502
+iteration: 2971
+	f(x) = 0.575496
+iteration: 2972
+	f(x) = 0.575492
+iteration: 2973
+	f(x) = 0.575494
+iteration: 2974
+	f(x) = 0.575486
+iteration: 2975
+	f(x) = 0.575486
+iteration: 2976
+	f(x) = 0.575493
+iteration: 2977
+	f(x) = 0.575489
+iteration: 2978
+	f(x) = 0.575486
+iteration: 2979
+	f(x) = 0.575486
+iteration: 2980
+	f(x) = 0.575489
+iteration: 2981
+	f(x) = 0.575487
+iteration: 2982
+	f(x) = 0.575486
+iteration: 2983
+	f(x) = 0.575488
+iteration: 2984
+	f(x) = 0.575485
+iteration: 2985
+	f(x) = 0.575487
+iteration: 2986
+	f(x) = 0.575485
+iteration: 2987
+	f(x) = 0.575485
+iteration: 2988
+	f(x) = 0.575485
+iteration: 2989
+	f(x) = 0.575486
+iteration: 2990
+	f(x) = 0.575485
+iteration: 2991
+	f(x) = 0.575486
+iteration: 2992
+	f(x) = 0.575485
+iteration: 2993
+	f(x) = 0.575485
+iteration: 2994
+	f(x) = 0.575485
+iteration: 2995
+	f(x) = 0.575485
+iteration: 2996
+	f(x) = 0.575485
+iteration: 2997
+	f(x) = 0.575485
+iteration: 2998
+	f(x) = 0.575485
+iteration: 2999
+	f(x) = 0.575485
+iteration: 3000
+	f(x) = 0.575485
