@@ -4699,3 +4699,69 @@ iteration: 2349
 iteration: 2350
 	f(x) = 0.412393
 iteration: 2351
+	f(x) = 0.412401
+iteration: 2352
+	f(x) = 0.412518
+iteration: 2353
+	f(x) = 0.412439
+iteration: 2354
+	f(x) = 0.412395
+iteration: 2355
+	f(x) = 0.412411
+iteration: 2356
+	f(x) = 0.412387
+iteration: 2357
+	f(x) = 0.412425
+iteration: 2358
+	f(x) = 0.412384
+iteration: 2359
+	f(x) = 0.412409
+iteration: 2360
+	f(x) = 0.412385
+iteration: 2361
+	f(x) = 0.412389
+iteration: 2362
+	f(x) = 0.412384
+iteration: 2363
+	f(x) = 0.412388
+iteration: 2364
+	f(x) = 0.412383
+iteration: 2365
+	f(x) = 0.421558
+iteration: 2366
+	f(x) = 0.536428
+iteration: 2367
+	f(x) = 0.648094
+iteration: 2368
+	f(x) = 0.430856
+iteration: 2369
+	f(x) = 0.496986
+iteration: 2370
+	f(x) = 0.408784
+iteration: 2371
+	f(x) = 0.416806
+iteration: 2372
+	f(x) = 0.409923
+iteration: 2373
+	f(x) = 0.424248
+iteration: 2374
+	f(x) = 0.408307
+iteration: 2375
+	f(x) = 0.411293
+iteration: 2376
+	f(x) = 0.422947
+iteration: 2377
+	f(x) = 0.423346
+iteration: 2378
+	f(x) = 0.410660
+iteration: 2379
+	f(x) = 0.414658
+iteration: 2380
+	f(x) = 0.408387
+iteration: 2381
+	f(x) = 0.410622
+iteration: 2382
+	f(x) = 0.408655
+iteration: 2383
+	f(x) = 0.408421
+iteration: 2384
