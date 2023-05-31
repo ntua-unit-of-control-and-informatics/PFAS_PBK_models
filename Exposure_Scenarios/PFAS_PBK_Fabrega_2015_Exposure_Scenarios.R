@@ -317,7 +317,7 @@ plot <- ggplot()+
   
   scale_y_log10()+
   
-  labs(title = paste0('Concenrtation of PFOA in liver for different exposures'),
+  labs(title = paste0('Concenrtation of PFBS in liver for different exposures'),
        y = 'Liver Concentration (ng/g)' , x = "Time (years)")+
   theme(plot.title = element_text(hjust = 0.5,size=30), 
         axis.title.y =element_text(hjust = 0.5,size=25,face="bold"),
