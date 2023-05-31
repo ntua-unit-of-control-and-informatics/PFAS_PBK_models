@@ -194,95 +194,6 @@ ode.func <- function(time, inits, params, custom.func){
   })
 }
 
-
-
-
-
-
-
-########################################
-# PFOA - Total intake_low
-daily_intake <- (18.92+0.06+0.056)*70 # ng of PFAS per day
-BW <- 70 # kg
-substance <- 'PFOA'
-f_unabs <- 0.1
-admin.dose <- rep(daily_intake, 40*365 ) # administered dose in ug
-admin.time <- seq(0, 40*365*24-1, 24) # time when doses are administered, in hours
-user_input <- list('BW'=BW,
-                   'substance'=substance,
-                   "f_unabs"=f_unabs,
-                   "admin.dose"=admin.dose,
-                   "admin.time"= admin.time)
-
-params <- create.params(user_input)
-inits <- create.inits(params)
-events <- create.events(params)
-
-sample_time <- seq(0,40*365*24-1,24)
-start.time <- Sys.time()
-total_low_solution <- data.frame(ode(times = sample_time,  func = ode.func, y = inits, parms = params,
-                                 events = events, 
-                                 method="lsodes",rtol = 1e-05, atol = 1e-05)) 
-end.time <- Sys.time()
-print(end.time-start.time)
-
-
-########################################
-# PFOA - Total intake_medium
-daily_intake <- (18.92+0.06+0.056)*70 # ng of PFAS per day
-BW <- 70 # kg
-substance <- 'PFOA'
-f_unabs <- 0.5
-admin.dose <- rep(daily_intake, 40*365 ) # administered dose in ug
-admin.time <- seq(0, 40*365*24-1, 24) # time when doses are administered, in hours
-user_input <- list('BW'=BW,
-                   'substance'=substance,
-                   "f_unabs"=f_unabs,
-                   "admin.dose"=admin.dose,
-                   "admin.time"= admin.time)
-
-params <- create.params(user_input)
-inits <- create.inits(params)
-events <- create.events(params)
-
-sample_time <- seq(0,40*365*24-1,24)
-start.time <- Sys.time()
-total_medium_solution <- data.frame(ode(times = sample_time,  func = ode.func, y = inits, parms = params,
-                                     events = events, 
-                                     method="lsodes",rtol = 1e-05, atol = 1e-05)) 
-end.time <- Sys.time()
-print(end.time-start.time)
-
-
-########################################
-# PFOA - Total intake_high
-daily_intake <- (18.92+0.06+0.056)*70 # ng of PFAS per day
-BW <- 70 # kg
-substance <- 'PFOA'
-f_unabs <- 0.9
-admin.dose <- rep(daily_intake, 40*365 ) # administered dose in ug
-admin.time <- seq(0, 40*365*24-1, 24) # time when doses are administered, in hours
-user_input <- list('BW'=BW,
-                   'substance'=substance,
-                   "f_unabs"=f_unabs,
-                   "admin.dose"=admin.dose,
-                   "admin.time"= admin.time)
-
-params <- create.params(user_input)
-inits <- create.inits(params)
-events <- create.events(params)
-
-sample_time <- seq(0,40*365*24-1,24)
-start.time <- Sys.time()
-total_high_solution <- data.frame(ode(times = sample_time,  func = ode.func, y = inits, parms = params,
-                                     events = events, 
-                                     method="lsodes",rtol = 1e-05, atol = 1e-05)) 
-end.time <- Sys.time()
-print(end.time-start.time)
-
-
-
-
 ########################################
 # PFNA - Total intake_low
 daily_intake <- (0.65+0.01+0.002)*70 # ng of PFAS per day
@@ -365,3 +276,36 @@ total_high_solution <- data.frame(ode(times = sample_time,  func = ode.func, y =
                                      method="lsodes",rtol = 1e-05, atol = 1e-05)) 
 end.time <- Sys.time()
 print(end.time-start.time)
+
+#----------
+# PLOTS
+#----------
+
+color_codes <- scales::hue_pal()(3)
+names(color_codes) <-  c("f_unabs = 0.1", "f_unabs = 0.5", "f_unabs = 0.9")
+
+library(ggplot2)
+PFNA_plot <- ggplot()+
+  geom_line(data = total_low_solution, aes(x = time/24/365, y = CL, color="f_unabs = 0.1"), size=1.3)+
+  geom_line(data = total_medium_solution, aes(x = time/24/365, y = CL, color="f_unabs = 0.5"), size=1.3)+
+  geom_line(data = total_high_solution, aes(x = time/24/365, y = CL, color="f_unabs = 0.9"), size=1.3)+
+
+
+  labs(title = paste0('Concenrtation of PFNA in liver considering different assimilation efficiencies'),
+       y = 'Liver Concentration (ng/g)' , x = "Time (years)")+
+  theme(plot.title = element_text(hjust = 0.5,size=30), 
+        axis.title.y =element_text(hjust = 0.5,size=25,face="bold"),
+        axis.text.y=element_text(size=22),
+        axis.title.x =element_text(hjust = 0.5,size=25,face="bold"),
+        axis.text.x=element_text(size=22),
+        legend.title=element_text(hjust = 0.5,size=25), 
+        legend.text=element_text(size=22),
+        panel.border = element_rect(colour = "black", fill=NA, size=1.0)) + 
+  
+  scale_x_continuous(limits=c(0, 40))+ 
+  scale_color_manual("Exposure", values=color_codes)+
+  theme(legend.key.size = unit(1.5, 'cm'),  
+        legend.title = element_text(size=14),
+        legend.text = element_text(size=14),
+        axis.text = element_text(size = 14))
+PFNA_plot
