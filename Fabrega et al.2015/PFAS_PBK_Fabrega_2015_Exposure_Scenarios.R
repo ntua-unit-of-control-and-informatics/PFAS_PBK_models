@@ -214,10 +214,34 @@ events <- create.events(params)
 
 sample_time <- seq(0,40*365*24-1,24)
 start.time <- Sys.time()
-solution <- data.frame(ode(times = sample_time,  func = ode.func, y = inits, parms = params,
+total_solution <- data.frame(ode(times = sample_time,  func = ode.func, y = inits, parms = params,
                            events = events, 
                            method="lsodes",rtol = 1e-05, atol = 1e-05)) 
 end.time <- Sys.time()
 print(end.time-start.time)
 
+########################################
+# PFOA - Dietary intake
+daily_intake <- (18.92)*70 # ng of PFAS per day
+BW <- 70 # kg
+substance <- 'PFOA'
+f_unabs <- 0
+admin.dose <- rep(daily_intake, 40*365 ) # administered dose in ug
+admin.time <- seq(0, 40*365*24-1, 24) # time when doses are administered, in hours
+user_input <- list('BW'=BW,
+                   'substance'=substance,
+                   "f_unabs"=f_unabs,
+                   "admin.dose"=admin.dose,
+                   "admin.time"= admin.time)
 
+params <- create.params(user_input)
+inits <- create.inits(params)
+events <- create.events(params)
+
+sample_time <- seq(0,40*365*24-1,24)
+start.time <- Sys.time()
+dietary_solution <- data.frame(ode(times = sample_time,  func = ode.func, y = inits, parms = params,
+                                 events = events, 
+                                 method="lsodes",rtol = 1e-05, atol = 1e-05)) 
+end.time <- Sys.time()
+print(end.time-start.time)
