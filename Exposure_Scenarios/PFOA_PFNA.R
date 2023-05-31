@@ -302,6 +302,7 @@ PFNA_plot <- ggplot()+
         legend.text=element_text(size=22),
         panel.border = element_rect(colour = "black", fill=NA, size=1.0)) + 
   
+  scale_y_log10(limits=c(5,350))+
   scale_x_continuous(limits=c(0, 40))+ 
   scale_color_manual("Exposure", values=color_codes)+
   theme(legend.key.size = unit(1.5, 'cm'),  
@@ -309,3 +310,9 @@ PFNA_plot <- ggplot()+
         legend.text = element_text(size=14),
         axis.text = element_text(size = 14))
 PFNA_plot
+
+setwd('C:/Users/vassi/Documents/GitHub/PFAS_PBK_models/Exposure_Scenarios')
+jpeg(file = paste0(getwd(), "/PFNA_plot.jpeg"),
+     width = 16, height = 12, units = 'in', res = 150)
+plot(PFNA_plot)
+dev.off()

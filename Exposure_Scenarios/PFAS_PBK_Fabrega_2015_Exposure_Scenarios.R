@@ -309,13 +309,11 @@ color_codes <- scales::hue_pal()(4)
 names(color_codes) <-  c("Total", "Water", "Food", "Dust")
 
 library(ggplot2)
-plot <- ggplot()+
+PFBS_plot <- ggplot()+
   geom_line(data = dietary_solution, aes(x = time/24/365, y = CL, color='Food'), size=1.3)+
   geom_line(data = dwater_solution, aes(x = time/24/365, y = CL, color='Water'), size=1.3)+
   geom_line(data = dust_solution, aes(x = time/24/365, y = CL, color='Dust'), size=1.3)+
   geom_line(data = total_solution, aes(x = time/24/365, y = CL, color='Total'), size=1.3)+
-  
-  scale_y_log10()+
   
   labs(title = paste0('Concenrtation of PFBS in liver for different exposures'),
        y = 'Liver Concentration (ng/g)' , x = "Time (years)")+
@@ -328,10 +326,17 @@ plot <- ggplot()+
         legend.text=element_text(size=22),
         panel.border = element_rect(colour = "black", fill=NA, size=1.0)) + 
   
+  scale_y_log10()+
   scale_x_continuous(limits=c(0, 40))+ 
   scale_color_manual("Exposure", values=color_codes)+
   theme(legend.key.size = unit(1.5, 'cm'),  
         legend.title = element_text(size=14),
         legend.text = element_text(size=14),
         axis.text = element_text(size = 14))
-plot
+PFBS_plot
+
+setwd('C:/Users/vassi/Documents/GitHub/PFAS_PBK_models/Exposure_Scenarios')
+jpeg(file = paste0(getwd(), "/PFBS_plot.jpeg"),
+     width = 16, height = 12, units = 'in', res = 150)
+plot(PFBS_plot)
+dev.off()
