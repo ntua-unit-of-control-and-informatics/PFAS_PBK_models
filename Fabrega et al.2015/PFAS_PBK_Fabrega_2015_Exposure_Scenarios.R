@@ -195,10 +195,10 @@ ode.func <- function(time, inits, params, custom.func){
 }
 
 ########################################
-# PFOA - Total intake
-daily_intake <- (18.92+0.06+0.056)*70 # ng of PFAS per day
+# PFBS - Total intake
+daily_intake <- (0.33+0.01+0.004)*70 # ng of PFAS per day
 BW <- 70 # kg
-substance <- 'PFOA'
+substance <- 'PFBS'
 f_unabs <- 0
 admin.dose <- rep(daily_intake, 40*365 ) # administered dose in ug
 admin.time <- seq(0, 40*365*24-1, 24) # time when doses are administered, in hours
@@ -221,10 +221,10 @@ end.time <- Sys.time()
 print(end.time-start.time)
 
 ########################################
-# PFOA - Dietary intake
-daily_intake <- (18.92)*70 # ng of PFAS per day
+# PFBS - Dietary intake
+daily_intake <- (0.33)*70 # ng of PFAS per day
 BW <- 70 # kg
-substance <- 'PFOA'
+substance <- 'PFBS'
 f_unabs <- 0
 admin.dose <- rep(daily_intake, 40*365 ) # administered dose in ug
 admin.time <- seq(0, 40*365*24-1, 24) # time when doses are administered, in hours
@@ -249,10 +249,10 @@ print(end.time-start.time)
 
 
 ########################################
-# PFOA - dwater intake
-daily_intake <- (0.06)*70 # ng of PFAS per day
+# PFBS - dwater intake
+daily_intake <- (0.01)*70 # ng of PFAS per day
 BW <- 70 # kg
-substance <- 'PFOA'
+substance <- 'PFBS'
 f_unabs <- 0
 admin.dose <- rep(daily_intake, 40*365 ) # administered dose in ug
 admin.time <- seq(0, 40*365*24-1, 24) # time when doses are administered, in hours
@@ -277,9 +277,9 @@ print(end.time-start.time)
 
 ########################################
 # PFOA - Dust intake
-daily_intake <- (0.056)*70 # ng of PFAS per day
+daily_intake <- (0.004)*70 # ng of PFAS per day
 BW <- 70 # kg
-substance <- 'PFOA'
+substance <- 'PFBS'
 f_unabs <- 0
 admin.dose <- rep(daily_intake, 40*365 ) # administered dose in ug
 admin.time <- seq(0, 40*365*24-1, 24) # time when doses are administered, in hours
