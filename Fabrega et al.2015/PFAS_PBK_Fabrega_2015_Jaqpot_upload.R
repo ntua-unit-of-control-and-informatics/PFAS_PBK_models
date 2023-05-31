@@ -95,7 +95,8 @@ create.params <- function(user_input){
                 'PL'=PL, 'PF'=PF, 'PB'=PB, 'PBm'=PBm, 'PLu'=PLu, 'PK'=PK, 
                 'PG'=PG, 'PR'=PR,
                 'Tm'=Tm, 'Kt'=Kt, 'Free'=Free, 'kurine'=kurine,
-                'admin.dose'=admin.dose, 'admin.time'=admin.time))
+                'admin.dose'=admin.dose, 'admin.time'=admin.time,
+                'f_unabs'=f_unabs))
   })
 }
 
@@ -119,7 +120,7 @@ create.events <- function(parameters){
     
     events <- data.frame(var = rep('AG', ltimes),
                          time = admin.time,
-                         value = admin.dose, method = rep('add',ltimes))
+                         value = (1-f_unabs)*admin.dose, method = rep('add',ltimes))
     return(list(data=events))
   })
 }
@@ -196,10 +197,12 @@ ode.func <- function(time, inits, params, custom.func){
 ########################################
 BW <- 70 # kg
 substance <- 'PFOA'
-admin.dose <- c(262.43) # administered dose in ug
+f_unabs <- 0.5
+admin.dose <- c(10) # administered dose in ug
 admin.time <- c(0) # time when doses are administered, in hours
 user_input <- list('BW'=BW,
                    'substance'=substance,
+                   "f_unabs"=f_unabs,
                    "admin.dose"=admin.dose,
                    "admin.time"= admin.time)
 
@@ -207,7 +210,7 @@ params <- create.params(user_input)
 inits <- create.inits(params)
 events <- create.events(params)
 
-sample_time <- seq(0,10,1)
+sample_time <- seq(0,15,1)
 solution <- data.frame(ode(times = sample_time,  func = ode.func, y = inits, parms = params,
                            events = events, 
                            method="lsodes",rtol = 1e-05, atol = 1e-05)) 

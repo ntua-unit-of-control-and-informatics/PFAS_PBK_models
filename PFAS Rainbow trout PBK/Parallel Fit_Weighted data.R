@@ -4,22 +4,27 @@ main_func <- function(substance){
     # Transform input temperature into Kelvin scale
     Texp <- 273 + Texp # K
     
+    Tref <- 273 + c(6,12,18) # Reference Temperature K - Grech et al.2018
+    keep_ref_value <- which.min(abs(Tref - Texp))
+    
     # Cardiac output reference value at T = 6 C (Barron et al. 1987, Table II)
     F_card_ref_6 <- 1.188 # ml/h/g 
     # Cardiac output reference value at T = 12 C (Barron et al. 1987, Table II)
     F_card_ref_12 <- 2.322 # ml/h/g 
     # Cardiac output reference value at T = 18 C (Barron et al. 1987, Table II)
     F_card_ref_18 <- 3.75 # ml/h/g 
+    F_card_ref_values <- c(F_card_ref_6,F_card_ref_12,F_card_ref_18)
+    F_card_ref <- F_card_ref_values[keep_ref_value]
     
-    if(Texp <= 273+6){
-      F_card_ref <- F_card_ref_6
-    }else if (Texp >= 273+18){
-      F_card_ref <- F_card_ref_18
-    }else if(Texp >= 273+6 & Texp <= 273+12){
-      F_card_ref <- approx(x=c(273+6, 273+12), y=c(F_card_ref_6, F_card_ref_12), xout = Texp)$y
-    }else if(Texp >= 273+12 & Texp <= 273+18){
-      F_card_ref <- approx(x=c(273+12, 273+18), y=c(F_card_ref_12, F_card_ref_18), xout = Texp)$y
-    }
+    # if(Texp <= 273+6){
+    #   F_card_ref <- F_card_ref_6
+    # }else if (Texp >= 273+18){
+    #   F_card_ref <- F_card_ref_18
+    # }else if(Texp >= 273+6 & Texp <= 273+12){
+    #   F_card_ref <- approx(x=c(273+6, 273+12), y=c(F_card_ref_6, F_card_ref_12), xout = Texp)$y
+    # }else if(Texp >= 273+12 & Texp <= 273+18){
+    #   F_card_ref <- approx(x=c(273+12, 273+18), y=c(F_card_ref_12, F_card_ref_18), xout = Texp)$y
+    # }
     
     # Body weight reference value at T = 6 C (Barron et al. 1987, Table II)
     BW_ref_6 <- 270.1 # g 
@@ -27,20 +32,21 @@ main_func <- function(substance){
     BW_ref_12 <- 296.4 # g 
     # Body weight reference value at T = 18 C (Barron et al. 1987, Table II)
     BW_ref_18 <- 414.5 # g
+    BW_ref_values <- c(BW_ref_6,BW_ref_12,BW_ref_18)
+    BW_ref <- BW_ref_values[keep_ref_value]
     
-    if(Texp <= 273+6){
-      BW_ref <- BW_ref_6
-    }else if (Texp >= 273+18){
-      BW_ref <- BW_ref_18
-    }else if(Texp >= 273+6 & Texp <= 273+12){
-      BW_ref <- approx(x=c(273+6, 273+12), y=c(BW_ref_6, BW_ref_12), xout = Texp)$y
-    }else if(Texp >= 273+12 & Texp <= 273+18){
-      BW_ref <- approx(x=c(273+12, 273+18), y=c(BW_ref_12, BW_ref_18), xout = Texp)$y
-    }
+    # if(Texp <= 273+6){
+    #   BW_ref <- BW_ref_6
+    # }else if (Texp >= 273+18){
+    #   BW_ref <- BW_ref_18
+    # }else if(Texp >= 273+6 & Texp <= 273+12){
+    #   BW_ref <- approx(x=c(273+6, 273+12), y=c(BW_ref_6, BW_ref_12), xout = Texp)$y
+    # }else if(Texp >= 273+12 & Texp <= 273+18){
+    #   BW_ref <- approx(x=c(273+12, 273+18), y=c(BW_ref_12, BW_ref_18), xout = Texp)$y
+    # }
     
     # Arrhenius Temperature function 
     TA <- 6930 # Arrhenius Temperature K - Grech et al.2018
-    Tref <- 273 + c(6,12,18) # Reference Temperature K - Grech et al.2018
     Tr <- Tref[which.min(abs(Tref - Texp))]
     KT <- exp(TA/Tr - TA/Texp)
     
@@ -603,7 +609,7 @@ main_func <- function(substance){
   optimization <- nloptr::nloptr( x0 = x0,
                                   eval_f = obj.func,
                                   lb	= rep(1e-05, length(x0)),
-                                  ub = rep(1e03, length(x0)),
+                                  ub = rep(1e02, length(x0)),
                                   opts = opts,
                                   user.input=user.input,
                                   substance = substance,
@@ -717,7 +723,7 @@ print(total.duration)
 
 
 for (i in 1:length(output)) {
-  jpeg(file = paste0(getwd(),"/plots/Test_6_" ,output[[i]]$substance, "_plot.jpeg"),
+  jpeg(file = paste0(getwd(),"/plots/Test_8_" ,output[[i]]$substance, "_plot.jpeg"),
        width = 12, height = 9, units = 'in', res = 150)
   plot(output[[i]][["plot"]])
   dev.off()

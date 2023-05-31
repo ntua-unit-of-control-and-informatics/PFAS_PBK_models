@@ -1,6000 +1,6000 @@
 iteration: 1
-	f(x) = 2.337229
+	f(x) = 5789.764750
 iteration: 2
-	f(x) = 2.221984
+	f(x) = 4096.524315
 iteration: 3
-	f(x) = 2.476150
+	f(x) = 254.887766
 iteration: 4
-	f(x) = 2.034418
+	f(x) = 215.481837
 iteration: 5
-	f(x) = 326.517592
+	f(x) = 84.406289
 iteration: 6
-	f(x) = 1.927758
+	f(x) = 27.212948
 iteration: 7
-	f(x) = 339.183183
+	f(x) = 10.854581
 iteration: 8
-	f(x) = 329.633570
+	f(x) = 7.954207
 iteration: 9
-	f(x) = 2.105276
+	f(x) = 4.554254
 iteration: 10
-	f(x) = 331.208964
+	f(x) = 3.250144
 iteration: 11
-	f(x) = 2.042047
+	f(x) = 2.786905
 iteration: 12
-	f(x) = 1.952341
+	f(x) = 2.755294
 iteration: 13
-	f(x) = 1.877983
+	f(x) = 2.979736
 iteration: 14
-	f(x) = 342.818028
+	f(x) = 3.031991
 iteration: 15
-	f(x) = 1.880550
+	f(x) = 2.840977
 iteration: 16
-	f(x) = 1.862050
+	f(x) = 2.975367
 iteration: 17
-	f(x) = 349.299677
+	f(x) = 2.777550
 iteration: 18
-	f(x) = 340.800423
+	f(x) = 2.853437
 iteration: 19
-	f(x) = 1.848149
+	f(x) = 2.756485
 iteration: 20
-	f(x) = 1.833198
+	f(x) = 2.749751
 iteration: 21
-	f(x) = 1.837123
+	f(x) = 2.776999
 iteration: 22
-	f(x) = 1.872177
+	f(x) = 2.739458
 iteration: 23
-	f(x) = 1.833873
+	f(x) = 2.735487
 iteration: 24
-	f(x) = 1.819955
+	f(x) = 2.741087
 iteration: 25
-	f(x) = 1.816466
+	f(x) = 2.723664
 iteration: 26
-	f(x) = 1.802769
+	f(x) = 2.723591
 iteration: 27
-	f(x) = 1.788595
+	f(x) = 2.762430
 iteration: 28
-	f(x) = 1.789646
+	f(x) = 2.726401
 iteration: 29
-	f(x) = 1.749679
+	f(x) = 2.719086
 iteration: 30
-	f(x) = 1.728209
+	f(x) = 2.725168
 iteration: 31
-	f(x) = 1.763689
+	f(x) = 2.724590
 iteration: 32
-	f(x) = 1.717514
+	f(x) = 2.720990
 iteration: 33
-	f(x) = 1.703921
+	f(x) = 2.722322
 iteration: 34
-	f(x) = 1.673627
+	f(x) = 2.719677
 iteration: 35
-	f(x) = 1.654778
+	f(x) = 2.724604
 iteration: 36
-	f(x) = 1.689347
+	f(x) = 2.719283
 iteration: 37
-	f(x) = 1.681162
+	f(x) = 2.719062
 iteration: 38
-	f(x) = 1.659298
+	f(x) = 2.720255
 iteration: 39
-	f(x) = 1.706469
+	f(x) = 2.720060
 iteration: 40
-	f(x) = 1.657088
+	f(x) = 2.718884
 iteration: 41
-	f(x) = 1.675614
+	f(x) = 2.719929
 iteration: 42
-	f(x) = 1.648469
+	f(x) = 2.718836
 iteration: 43
-	f(x) = 1.656344
+	f(x) = 2.719110
 iteration: 44
-	f(x) = 1.650109
+	f(x) = 2.718877
 iteration: 45
-	f(x) = 1.652913
+	f(x) = 2.718967
 iteration: 46
-	f(x) = 1.647912
+	f(x) = 2.718834
 iteration: 47
-	f(x) = 1.661123
+	f(x) = 6.601172
 iteration: 48
-	f(x) = 1.647122
+	f(x) = 2.628428
 iteration: 49
-	f(x) = 1.648345
+	f(x) = 2.191540
 iteration: 50
-	f(x) = 1.647367
+	f(x) = 8518.725963
 iteration: 51
-	f(x) = 1.649148
+	f(x) = 2.212325
 iteration: 52
-	f(x) = 1.647181
+	f(x) = 8571.198501
 iteration: 53
-	f(x) = 1.647018
+	f(x) = 2.096926
 iteration: 54
-	f(x) = 1.647381
+	f(x) = 2.138936
 iteration: 55
-	f(x) = 1.647542
+	f(x) = 2.662608
 iteration: 56
-	f(x) = 1.646990
+	f(x) = 2.048446
 iteration: 57
-	f(x) = 1.647280
+	f(x) = 2.046151
 iteration: 58
-	f(x) = 1.646992
+	f(x) = 2.116034
 iteration: 59
-	f(x) = 1.647116
+	f(x) = 2.198472
 iteration: 60
-	f(x) = 1.646973
+	f(x) = 2.050141
 iteration: 61
-	f(x) = 1.647032
+	f(x) = 2.084056
 iteration: 62
-	f(x) = 1.646971
+	f(x) = 2.040944
 iteration: 63
-	f(x) = 1.265448
+	f(x) = 1.960010
 iteration: 64
-	f(x) = 1.362874
+	f(x) = 1.721805
 iteration: 65
-	f(x) = 1.175473
+	f(x) = 1.691444
 iteration: 66
-	f(x) = 1.114406
+	f(x) = 1.641880
 iteration: 67
-	f(x) = 1.072031
+	f(x) = 1.600011
 iteration: 68
-	f(x) = 1.078089
+	f(x) = 1.595554
 iteration: 69
-	f(x) = 1.120724
+	f(x) = 1.626061
 iteration: 70
-	f(x) = 1.088549
+	f(x) = 1.632551
 iteration: 71
-	f(x) = 1.077639
+	f(x) = 1.619859
 iteration: 72
-	f(x) = 1.043129
+	f(x) = 1.586852
 iteration: 73
-	f(x) = 2274.331331
+	f(x) = 1.566299
 iteration: 74
-	f(x) = 1.071194
+	f(x) = 1.594611
 iteration: 75
-	f(x) = 1939.472929
+	f(x) = 1.635533
 iteration: 76
-	f(x) = 1.059036
+	f(x) = 1.574320
 iteration: 77
-	f(x) = 1.066319
+	f(x) = 1.601191
 iteration: 78
-	f(x) = 1.050844
+	f(x) = 1.563653
 iteration: 79
-	f(x) = 1.084891
+	f(x) = 1.553431
 iteration: 80
-	f(x) = 1.048441
+	f(x) = 1.555055
 iteration: 81
-	f(x) = 1.041311
+	f(x) = 1.585923
 iteration: 82
-	f(x) = 1.051419
+	f(x) = 1.559426
 iteration: 83
-	f(x) = 1.079169
+	f(x) = 1.553501
 iteration: 84
-	f(x) = 1.043342
+	f(x) = 1.547112
 iteration: 85
-	f(x) = 1.048755
+	f(x) = 1.544828
 iteration: 86
-	f(x) = 1.041490
+	f(x) = 1.558570
 iteration: 87
-	f(x) = 1.046417
+	f(x) = 1.549323
 iteration: 88
-	f(x) = 1.041139
+	f(x) = 1.541484
 iteration: 89
-	f(x) = 1.041598
+	f(x) = 1.538442
 iteration: 90
-	f(x) = 1.040977
+	f(x) = 1.539859
 iteration: 91
-	f(x) = 1.043040
+	f(x) = 1.534808
 iteration: 92
-	f(x) = 1.040816
+	f(x) = 1.533220
 iteration: 93
-	f(x) = 1.041633
+	f(x) = 1.534400
 iteration: 94
-	f(x) = 1.040866
+	f(x) = 1.530705
 iteration: 95
-	f(x) = 1.040755
+	f(x) = 1.530256
 iteration: 96
-	f(x) = 1.040930
+	f(x) = 1.538327
 iteration: 97
-	f(x) = 1.040990
+	f(x) = 1.531578
 iteration: 98
-	f(x) = 1.040768
+	f(x) = 1.529756
 iteration: 99
-	f(x) = 1.040858
+	f(x) = 1.530121
 iteration: 100
-	f(x) = 1.040758
+	f(x) = 1.529516
 iteration: 101
-	f(x) = 1.040789
+	f(x) = 1.530581
 iteration: 102
-	f(x) = 1.040748
+	f(x) = 1.529157
 iteration: 103
-	f(x) = 1.119761
+	f(x) = 1.529697
 iteration: 104
-	f(x) = 1.044927
+	f(x) = 1.529329
 iteration: 105
-	f(x) = 1.031687
+	f(x) = 1.528853
 iteration: 106
-	f(x) = 2265.315444
+	f(x) = 1.529387
 iteration: 107
-	f(x) = 1.042028
+	f(x) = 1.531081
 iteration: 108
-	f(x) = 0.997033
+	f(x) = 1.528801
 iteration: 109
-	f(x) = 2280.920811
+	f(x) = 1.528690
 iteration: 110
-	f(x) = 1.007411
+	f(x) = 1.528985
 iteration: 111
-	f(x) = 1.026766
+	f(x) = 1.529328
 iteration: 112
-	f(x) = 1.010774
+	f(x) = 1.528704
 iteration: 113
-	f(x) = 0.997260
+	f(x) = 1.528582
 iteration: 114
-	f(x) = 1.090661
+	f(x) = 1.528536
 iteration: 115
-	f(x) = 0.997900
+	f(x) = 1.528616
 iteration: 116
-	f(x) = 0.961199
+	f(x) = 1.528475
 iteration: 117
-	f(x) = 0.969254
+	f(x) = 1.528452
 iteration: 118
-	f(x) = 0.938984
+	f(x) = 1.528623
 iteration: 119
-	f(x) = 0.920135
+	f(x) = 1.528509
 iteration: 120
-	f(x) = 0.912877
+	f(x) = 1.528467
 iteration: 121
-	f(x) = 0.895361
+	f(x) = 1.528431
 iteration: 122
-	f(x) = 0.878409
+	f(x) = 1.528429
 iteration: 123
-	f(x) = 0.873156
+	f(x) = 1.528486
 iteration: 124
-	f(x) = 0.858040
+	f(x) = 1.528439
 iteration: 125
-	f(x) = 0.859187
+	f(x) = 1.528435
 iteration: 126
-	f(x) = 0.902082
+	f(x) = 1.528431
 iteration: 127
-	f(x) = 0.869923
+	f(x) = 1.528441
 iteration: 128
-	f(x) = 0.864304
+	f(x) = 1.528430
 iteration: 129
-	f(x) = 0.855187
+	f(x) = 1.528433
 iteration: 130
-	f(x) = 0.858227
+	f(x) = 1.528429
 iteration: 131
-	f(x) = 0.861228
+	f(x) = 1.528432
 iteration: 132
-	f(x) = 0.856201
+	f(x) = 1.528428
 iteration: 133
-	f(x) = 0.856194
+	f(x) = 1.528433
 iteration: 134
-	f(x) = 0.866058
+	f(x) = 1.528428
 iteration: 135
-	f(x) = 0.854423
+	f(x) = 1.528428
 iteration: 136
-	f(x) = 0.855703
+	f(x) = 1.528429
 iteration: 137
-	f(x) = 0.854651
+	f(x) = 1.528428
 iteration: 138
-	f(x) = 0.855522
+	f(x) = 1.528429
 iteration: 139
-	f(x) = 0.854527
+	f(x) = 1.528429
 iteration: 140
-	f(x) = 0.854621
+	f(x) = 1.528428
 iteration: 141
-	f(x) = 0.854406
+	f(x) = 1.528429
 iteration: 142
-	f(x) = 0.855061
+	f(x) = 1.528428
 iteration: 143
-	f(x) = 0.854353
+	f(x) = 1.528428
 iteration: 144
-	f(x) = 0.854588
+	f(x) = 1.528428
 iteration: 145
-	f(x) = 0.854357
+	f(x) = 1.528428
 iteration: 146
-	f(x) = 0.854334
+	f(x) = 1.528428
 iteration: 147
-	f(x) = 0.854400
+	f(x) = 1.528428
 iteration: 148
-	f(x) = 0.854438
+	f(x) = 1.528428
 iteration: 149
-	f(x) = 0.854330
+	f(x) = 1.528428
 iteration: 150
-	f(x) = 0.930643
+	f(x) = 1.528428
 iteration: 151
-	f(x) = 1.021827
+	f(x) = 1.528428
 iteration: 152
-	f(x) = 0.904952
+	f(x) = 1.528428
 iteration: 153
-	f(x) = 0.690786
+	f(x) = 1.528428
 iteration: 154
-	f(x) = 643.626593
+	f(x) = 1.528428
 iteration: 155
-	f(x) = 1.050428
+	f(x) = 1.528428
 iteration: 156
-	f(x) = 0.795222
+	f(x) = 1.528428
 iteration: 157
-	f(x) = 1033.493781
+	f(x) = 1.528428
 iteration: 158
-	f(x) = 0.790770
+	f(x) = 1.534105
 iteration: 159
-	f(x) = 0.737992
+	f(x) = 1.528461
 iteration: 160
-	f(x) = 0.743933
+	f(x) = 1.522726
 iteration: 161
-	f(x) = 0.657098
+	f(x) = 1.520812
 iteration: 162
-	f(x) = 836.005670
+	f(x) = 1.520838
 iteration: 163
-	f(x) = 0.701516
+	f(x) = 1.520825
 iteration: 164
-	f(x) = 0.734685
+	f(x) = 1.520903
 iteration: 165
-	f(x) = 0.684908
+	f(x) = 1.520814
 iteration: 166
-	f(x) = 0.681168
+	f(x) = 1.520831
 iteration: 167
-	f(x) = 0.692233
+	f(x) = 1.520815
 iteration: 168
-	f(x) = 0.658329
+	f(x) = 1.463867
 iteration: 169
-	f(x) = 0.626682
+	f(x) = 1.182442
 iteration: 170
-	f(x) = 0.602824
+	f(x) = 1.268712
 iteration: 171
-	f(x) = 0.588977
+	f(x) = 1.182082
 iteration: 172
-	f(x) = 0.552287
+	f(x) = 1.188607
 iteration: 173
-	f(x) = 0.506155
+	f(x) = 1.225691
 iteration: 174
-	f(x) = 1.283711
+	f(x) = 1.179838
 iteration: 175
-	f(x) = 0.437837
+	f(x) = 1.179566
 iteration: 176
-	f(x) = 8791.249423
+	f(x) = 1.182972
 iteration: 177
-	f(x) = 10167.552291
+	f(x) = 1.188487
 iteration: 178
-	f(x) = 0.513118
+	f(x) = 1.179024
 iteration: 179
-	f(x) = 0.505070
+	f(x) = 1.178736
 iteration: 180
-	f(x) = 8946.190365
+	f(x) = 1.179575
 iteration: 181
-	f(x) = 0.469590
+	f(x) = 1.181919
 iteration: 182
-	f(x) = 0.480600
+	f(x) = 1.178782
 iteration: 183
-	f(x) = 0.467224
+	f(x) = 1.178527
 iteration: 184
-	f(x) = 0.438811
+	f(x) = 1.178658
 iteration: 185
-	f(x) = 0.414878
+	f(x) = 1.178481
 iteration: 186
-	f(x) = 0.437132
+	f(x) = 1.178697
 iteration: 187
-	f(x) = 0.446402
+	f(x) = 1.178300
 iteration: 188
-	f(x) = 0.430702
+	f(x) = 1.178455
 iteration: 189
-	f(x) = 0.414274
+	f(x) = 1.178254
 iteration: 190
-	f(x) = 0.444950
+	f(x) = 1.178481
 iteration: 191
-	f(x) = 0.426361
+	f(x) = 1.178097
 iteration: 192
-	f(x) = 0.413269
+	f(x) = 1.178272
 iteration: 193
-	f(x) = 0.433758
+	f(x) = 1.178049
 iteration: 194
-	f(x) = 0.412202
+	f(x) = 1.178286
 iteration: 195
-	f(x) = 0.417012
+	f(x) = 1.177914
 iteration: 196
-	f(x) = 0.412345
+	f(x) = 1.178107
 iteration: 197
-	f(x) = 0.415054
+	f(x) = 1.177864
 iteration: 198
-	f(x) = 0.411967
+	f(x) = 1.178110
 iteration: 199
-	f(x) = 1.457361
+	f(x) = 1.177748
 iteration: 200
-	f(x) = 1110.510399
+	f(x) = 1.177957
 iteration: 201
-	f(x) = 1.528239
+	f(x) = 1.177697
 iteration: 202
-	f(x) = 1.265689
+	f(x) = 1.177949
 iteration: 203
-	f(x) = 482.103776
+	f(x) = 1.177597
 iteration: 204
-	f(x) = 1.174977
+	f(x) = 1.177820
 iteration: 205
-	f(x) = 0.524153
+	f(x) = 1.177544
 iteration: 206
-	f(x) = 483.140488
+	f(x) = 1.177801
 iteration: 207
-	f(x) = 0.784060
+	f(x) = 1.177459
 iteration: 208
-	f(x) = 482.935160
+	f(x) = 1.177695
 iteration: 209
-	f(x) = 0.576253
+	f(x) = 1.177404
 iteration: 210
-	f(x) = 482.843187
+	f(x) = 1.177667
 iteration: 211
-	f(x) = 0.469490
+	f(x) = 1.177333
 iteration: 212
-	f(x) = 0.577956
+	f(x) = 1.177580
 iteration: 213
-	f(x) = 0.366853
+	f(x) = 1.177275
 iteration: 214
-	f(x) = 482.636291
+	f(x) = 1.177543
 iteration: 215
-	f(x) = 0.431255
+	f(x) = 1.177216
 iteration: 216
-	f(x) = 0.388329
+	f(x) = 1.177473
 iteration: 217
-	f(x) = 0.461968
+	f(x) = 1.177157
 iteration: 218
-	f(x) = 0.383851
+	f(x) = 1.177428
 iteration: 219
-	f(x) = 0.404979
+	f(x) = 1.177109
 iteration: 220
-	f(x) = 0.363851
+	f(x) = 1.177374
 iteration: 221
-	f(x) = 1.433058
+	f(x) = 1.177047
 iteration: 222
-	f(x) = 1266.199774
+	f(x) = 1.177321
 iteration: 223
-	f(x) = 1.505723
+	f(x) = 1.177009
 iteration: 224
-	f(x) = 1.233319
+	f(x) = 1.177327
 iteration: 225
-	f(x) = 520.307638
+	f(x) = 1.176960
 iteration: 226
-	f(x) = 1.136684
+	f(x) = 1.177308
 iteration: 227
-	f(x) = 510.040931
+	f(x) = 1.176982
 iteration: 228
-	f(x) = 1.002211
+	f(x) = 1.176960
 iteration: 229
-	f(x) = 515.699457
+	f(x) = 1.177308
 iteration: 230
-	f(x) = 0.913484
+	f(x) = 1.780479
 iteration: 231
-	f(x) = 512.210216
+	f(x) = 1.187491
 iteration: 232
-	f(x) = 0.817743
+	f(x) = 2.489444
 iteration: 233
-	f(x) = 514.308600
+	f(x) = 1.477555
 iteration: 234
-	f(x) = 0.745688
+	f(x) = 1.015473
 iteration: 235
-	f(x) = 1.632612
+	f(x) = 2.489444
 iteration: 236
-	f(x) = 0.677202
+	f(x) = 1.001392
 iteration: 237
-	f(x) = 513.885627
+	f(x) = 1.150090
 iteration: 238
-	f(x) = 0.622868
+	f(x) = 2.454436
 iteration: 239
-	f(x) = 0.528394
+	f(x) = 1.059477
 iteration: 240
-	f(x) = 512.569312
+	f(x) = 1.165664
 iteration: 241
-	f(x) = 0.462145
+	f(x) = 1.021001
 iteration: 242
-	f(x) = 1.201290
+	f(x) = 1.041625
 iteration: 243
-	f(x) = 0.374214
+	f(x) = 1.010502
 iteration: 244
-	f(x) = 0.685514
+	f(x) = 1.004183
 iteration: 245
-	f(x) = 0.468660
+	f(x) = 1.000939
 iteration: 246
-	f(x) = 0.545407
+	f(x) = 1.003184
 iteration: 247
-	f(x) = 0.394723
+	f(x) = 0.973895
 iteration: 248
-	f(x) = 0.422770
+	f(x) = 1.218946
 iteration: 249
-	f(x) = 0.372897
+	f(x) = 4227.746780
 iteration: 250
-	f(x) = 4502.032894
+	f(x) = 1.099337
 iteration: 251
-	f(x) = 0.369746
+	f(x) = 4149.583719
 iteration: 252
-	f(x) = 0.371332
+	f(x) = 1.040899
 iteration: 253
-	f(x) = 0.368750
+	f(x) = 1.582156
 iteration: 254
-	f(x) = 3951.568802
+	f(x) = 1.010764
 iteration: 255
-	f(x) = 0.368412
+	f(x) = 1.012530
 iteration: 256
-	f(x) = 0.366328
+	f(x) = 0.994969
 iteration: 257
-	f(x) = 0.388338
+	f(x) = 0.998019
 iteration: 258
-	f(x) = 0.366296
+	f(x) = 0.988084
 iteration: 259
-	f(x) = 0.364689
+	f(x) = 0.977038
 iteration: 260
-	f(x) = 0.366699
+	f(x) = 289171721.566461
 iteration: 261
-	f(x) = 0.365157
+	f(x) = 1.098115
 iteration: 262
-	f(x) = 0.362876
+	f(x) = 3926.275698
 iteration: 263
-	f(x) = 0.366699
+	f(x) = 3900.150227
 iteration: 264
-	f(x) = 0.368080
+	f(x) = 2.409327
 iteration: 265
-	f(x) = 0.363558
+	f(x) = 1.327917
 iteration: 266
-	f(x) = 0.362729
+	f(x) = 6.491664
 iteration: 267
-	f(x) = 0.362810
+	f(x) = 0.664838
 iteration: 268
-	f(x) = 0.363083
+	f(x) = 1.833853
 iteration: 269
-	f(x) = 0.362493
+	f(x) = 1.823935
 iteration: 270
-	f(x) = 0.947176
+	f(x) = 0.664837
 iteration: 271
-	f(x) = 0.448165
+	f(x) = 0.695094
 iteration: 272
-	f(x) = 4.728786
+	f(x) = 0.677221
 iteration: 273
-	f(x) = 0.542385
+	f(x) = 0.670934
 iteration: 274
-	f(x) = 0.612057
+	f(x) = 0.675354
 iteration: 275
-	f(x) = 0.437115
+	f(x) = 0.665108
 iteration: 276
-	f(x) = 0.352653
+	f(x) = 0.668602
 iteration: 277
-	f(x) = 0.376503
+	f(x) = 0.664387
 iteration: 278
-	f(x) = 0.393066
+	f(x) = 0.664387
 iteration: 279
-	f(x) = 0.371655
+	f(x) = 0.664588
 iteration: 280
-	f(x) = 0.411555
+	f(x) = 0.665108
 iteration: 281
-	f(x) = 0.418836
+	f(x) = 0.664477
 iteration: 282
-	f(x) = 0.390024
+	f(x) = 0.664589
 iteration: 283
-	f(x) = 0.327807
+	f(x) = 0.664397
 iteration: 284
-	f(x) = 0.333096
+	f(x) = 0.664450
 iteration: 285
-	f(x) = 0.374748
+	f(x) = 0.664383
 iteration: 286
-	f(x) = 0.351164
+	f(x) = 0.664382
 iteration: 287
-	f(x) = 0.333750
+	f(x) = 0.664387
 iteration: 288
-	f(x) = 0.327940
+	f(x) = 0.664397
 iteration: 289
-	f(x) = 0.344279
+	f(x) = 0.664382
 iteration: 290
-	f(x) = 0.327737
+	f(x) = 0.664382
 iteration: 291
-	f(x) = 0.342027
+	f(x) = 0.664383
 iteration: 292
-	f(x) = 0.325825
+	f(x) = 0.664386
 iteration: 293
-	f(x) = 0.329981
+	f(x) = 0.664382
 iteration: 294
-	f(x) = 0.326272
+	f(x) = 0.664381
 iteration: 295
-	f(x) = 0.326810
+	f(x) = 0.664381
 iteration: 296
-	f(x) = 0.325835
+	f(x) = 0.664383
 iteration: 297
-	f(x) = 0.326928
+	f(x) = 0.664382
 iteration: 298
-	f(x) = 0.325762
+	f(x) = 0.664381
 iteration: 299
-	f(x) = 0.379455
+	f(x) = 0.664380
 iteration: 300
-	f(x) = 252.745050
+	f(x) = 0.664380
 iteration: 301
-	f(x) = 0.346100
+	f(x) = 0.664379
 iteration: 302
-	f(x) = 0.325901
+	f(x) = 0.664376
 iteration: 303
-	f(x) = 0.325762
+	f(x) = 0.664377
 iteration: 304
-	f(x) = 252.745050
+	f(x) = 0.664355
 iteration: 305
-	f(x) = 0.325853
+	f(x) = 315.719066
 iteration: 306
-	f(x) = 0.325558
+	f(x) = 0.664332
 iteration: 307
-	f(x) = 252.745050
+	f(x) = 316.110198
 iteration: 308
-	f(x) = 0.325558
+	f(x) = 315.840688
 iteration: 309
-	f(x) = 252.745050
+	f(x) = 0.664369
 iteration: 310
-	f(x) = 0.325680
+	f(x) = 315.805980
 iteration: 311
-	f(x) = 0.986958
+	f(x) = 0.664362
 iteration: 312
-	f(x) = 1140.637985
+	f(x) = 0.664280
 iteration: 313
-	f(x) = 1.058912
+	f(x) = 315.805980
 iteration: 314
-	f(x) = 0.870712
+	f(x) = 316.031909
 iteration: 315
-	f(x) = 494.684141
+	f(x) = 0.664342
 iteration: 316
-	f(x) = 0.802011
+	f(x) = 0.664180
 iteration: 317
-	f(x) = 0.686088
+	f(x) = 316.031909
 iteration: 318
-	f(x) = 494.736715
+	f(x) = 315.831996
 iteration: 319
-	f(x) = 0.555027
+	f(x) = 0.664308
 iteration: 320
-	f(x) = 0.627767
+	f(x) = 0.663786
 iteration: 321
-	f(x) = 0.538116
+	f(x) = 315.831996
 iteration: 322
-	f(x) = 0.479619
+	f(x) = 315.994968
 iteration: 323
-	f(x) = 494.667036
+	f(x) = 0.664228
 iteration: 324
-	f(x) = 0.431546
+	f(x) = 0.664228
 iteration: 325
-	f(x) = 0.450210
+	f(x) = 0.663808
 iteration: 326
-	f(x) = 0.415929
+	f(x) = 3.846353
 iteration: 327
-	f(x) = 0.317931
+	f(x) = 12714.890214
 iteration: 328
-	f(x) = 494.681190
+	f(x) = 4.585111
 iteration: 329
-	f(x) = 494.671156
+	f(x) = 3.214634
 iteration: 330
-	f(x) = 0.366828
+	f(x) = 0.854464
 iteration: 331
-	f(x) = 0.826105
+	f(x) = 0.663786
 iteration: 332
-	f(x) = 0.339691
+	f(x) = 0.703413
 iteration: 333
-	f(x) = 0.480414
+	f(x) = 0.624105
 iteration: 334
-	f(x) = 1.113121
+	f(x) = 0.624105
 iteration: 335
-	f(x) = 2.074314
+	f(x) = 0.703413
 iteration: 336
-	f(x) = 0.407824
+	f(x) = 0.635557
 iteration: 337
-	f(x) = 0.973467
+	f(x) = 0.659814
 iteration: 338
-	f(x) = 0.607969
+	f(x) = 0.613784
 iteration: 339
-	f(x) = 588.244246
+	f(x) = 0.672623
 iteration: 340
-	f(x) = 0.709581
+	f(x) = 0.614841
 iteration: 341
-	f(x) = 574.008636
+	f(x) = 64083061202091.343750
 iteration: 342
-	f(x) = 0.573221
+	f(x) = 4143.877825
 iteration: 343
-	f(x) = 1368.539555
+	f(x) = 4855.669247
 iteration: 344
-	f(x) = 0.512760
+	f(x) = 3193.794389
 iteration: 345
-	f(x) = 546.840841
+	f(x) = 1.911194
 iteration: 346
-	f(x) = 0.488271
+	f(x) = 3791.515149
 iteration: 347
-	f(x) = 0.360377
+	f(x) = 2.023759
 iteration: 348
-	f(x) = 1309.596052
+	f(x) = 1.137547
 iteration: 349
-	f(x) = 0.385574
+	f(x) = 0.671234
 iteration: 350
-	f(x) = 0.317844
+	f(x) = 1.237086
 iteration: 351
-	f(x) = 0.321338
+	f(x) = 0.656196
 iteration: 352
-	f(x) = 0.318361
+	f(x) = 0.802176
 iteration: 353
-	f(x) = 0.318103
+	f(x) = 0.613170
 iteration: 354
-	f(x) = 0.317543
+	f(x) = 0.751096
 iteration: 355
-	f(x) = 0.321338
+	f(x) = 0.604829
 iteration: 356
-	f(x) = 0.318012
+	f(x) = 0.614876
 iteration: 357
-	f(x) = 0.317734
+	f(x) = 0.604253
 iteration: 358
-	f(x) = 0.317507
+	f(x) = 0.610900
 iteration: 359
-	f(x) = 0.318586
+	f(x) = 0.602581
 iteration: 360
-	f(x) = 0.320698
+	f(x) = 0.601949
 iteration: 361
-	f(x) = 0.317594
+	f(x) = 0.625207
 iteration: 362
-	f(x) = 0.317720
+	f(x) = 0.601560
 iteration: 363
-	f(x) = 0.317535
+	f(x) = 325.663706
 iteration: 364
-	f(x) = 0.317579
+	f(x) = 0.600970
 iteration: 365
-	f(x) = 0.317512
+	f(x) = 0.604598
 iteration: 366
-	f(x) = 0.317528
+	f(x) = 0.610505
 iteration: 367
-	f(x) = 0.317501
+	f(x) = 0.599741
 iteration: 368
-	f(x) = 0.317582
+	f(x) = 0.599710
 iteration: 369
-	f(x) = 0.317499
+	f(x) = 0.600288
 iteration: 370
-	f(x) = 0.317504
+	f(x) = 0.601935
 iteration: 371
-	f(x) = 0.317499
+	f(x) = 0.599992
 iteration: 372
-	f(x) = 1132.553839
+	f(x) = 0.600303
 iteration: 373
-	f(x) = 0.319895
+	f(x) = 0.599759
 iteration: 374
-	f(x) = 0.390330
+	f(x) = 0.599893
 iteration: 375
-	f(x) = 0.355501
+	f(x) = 0.599714
 iteration: 376
-	f(x) = 0.336828
+	f(x) = 0.599698
 iteration: 377
-	f(x) = 0.309516
+	f(x) = 0.599709
 iteration: 378
-	f(x) = 0.308472
+	f(x) = 0.599701
 iteration: 379
-	f(x) = 0.319195
+	f(x) = 0.599692
 iteration: 380
-	f(x) = 0.335841
+	f(x) = 0.599705
 iteration: 381
-	f(x) = 0.310067
+	f(x) = 0.599739
 iteration: 382
-	f(x) = 0.317388
+	f(x) = 0.599691
 iteration: 383
-	f(x) = 0.308188
+	f(x) = 0.599687
 iteration: 384
-	f(x) = 0.309195
+	f(x) = 0.599688
 iteration: 385
-	f(x) = 0.308152
+	f(x) = 0.599698
 iteration: 386
-	f(x) = 489.449990
+	f(x) = 0.599689
 iteration: 387
-	f(x) = 534.932434
+	f(x) = 0.599685
 iteration: 388
-	f(x) = 495.357603
+	f(x) = 0.599685
 iteration: 389
-	f(x) = 0.490988
+	f(x) = 0.599682
 iteration: 390
-	f(x) = 0.319996
+	f(x) = 0.599681
 iteration: 391
-	f(x) = 0.350788
+	f(x) = 0.599683
 iteration: 392
-	f(x) = 0.325900
+	f(x) = 0.599679
 iteration: 393
-	f(x) = 0.343756
+	f(x) = 0.599679
 iteration: 394
-	f(x) = 0.314092
+	f(x) = 0.599683
 iteration: 395
-	f(x) = 0.330271
+	f(x) = 0.599680
 iteration: 396
-	f(x) = 0.310113
+	f(x) = 0.599680
 iteration: 397
-	f(x) = 0.316787
+	f(x) = 0.599679
 iteration: 398
-	f(x) = 0.307709
+	f(x) = 0.599679
 iteration: 399
-	f(x) = 0.330440
+	f(x) = 0.599679
 iteration: 400
-	f(x) = 0.343932
+	f(x) = 0.599679
 iteration: 401
-	f(x) = 0.330440
+	f(x) = 0.599679
 iteration: 402
-	f(x) = 0.322936
+	f(x) = 2293.628281
 iteration: 403
-	f(x) = 0.429679
+	f(x) = 0.691725
 iteration: 404
-	f(x) = 0.261029
+	f(x) = 0.998239
 iteration: 405
-	f(x) = 0.375613
+	f(x) = 0.813062
 iteration: 406
-	f(x) = 0.286273
+	f(x) = 0.558154
 iteration: 407
-	f(x) = 1083.262641
+	f(x) = 2293.628281
 iteration: 408
-	f(x) = 0.278427
+	f(x) = 0.653077
 iteration: 409
-	f(x) = 0.295411
+	f(x) = 0.520825
 iteration: 410
-	f(x) = 0.263344
+	f(x) = 0.896205
 iteration: 411
-	f(x) = 0.300369
+	f(x) = 0.555912
 iteration: 412
-	f(x) = 0.262184
+	f(x) = 0.567689
 iteration: 413
-	f(x) = 0.269264
+	f(x) = 0.544197
 iteration: 414
-	f(x) = 0.253921
+	f(x) = 0.545951
 iteration: 415
-	f(x) = 0.267789
+	f(x) = 0.531717
 iteration: 416
-	f(x) = 0.256676
+	f(x) = 0.941377
 iteration: 417
-	f(x) = 0.283443
+	f(x) = 70.689259
 iteration: 418
-	f(x) = 0.250290
+	f(x) = 2.853703
 iteration: 419
-	f(x) = 0.249902
+	f(x) = 2.583698
 iteration: 420
-	f(x) = 0.256965
+	f(x) = 1.233024
 iteration: 421
-	f(x) = 0.267716
+	f(x) = 0.846882
 iteration: 422
-	f(x) = 0.249292
+	f(x) = 6794.908179
 iteration: 423
-	f(x) = 0.248948
+	f(x) = 0.778399
 iteration: 424
-	f(x) = 0.250611
+	f(x) = 0.700694
 iteration: 425
-	f(x) = 0.253581
+	f(x) = 1911.774329
 iteration: 426
-	f(x) = 0.248611
+	f(x) = 0.671000
 iteration: 427
-	f(x) = 0.248525
+	f(x) = 15648071247732930511468.000000
 iteration: 428
-	f(x) = 0.249019
+	f(x) = 0.527655
 iteration: 429
-	f(x) = 0.249886
+	f(x) = 2974.822001
 iteration: 430
-	f(x) = 0.248541
+	f(x) = 2918.080818
 iteration: 431
-	f(x) = 0.248480
+	f(x) = 2.307560
 iteration: 432
-	f(x) = 0.248599
+	f(x) = 0.960816
 iteration: 433
-	f(x) = 0.248530
+	f(x) = 0.761028
 iteration: 434
-	f(x) = 0.248472
+	f(x) = 0.557684
 iteration: 435
-	f(x) = 0.248524
+	f(x) = 0.660841
 iteration: 436
-	f(x) = 0.248465
+	f(x) = 0.518605
 iteration: 437
-	f(x) = 0.248485
+	f(x) = 0.524084
 iteration: 438
-	f(x) = 0.248452
+	f(x) = 0.519178
 iteration: 439
-	f(x) = 0.248925
+	f(x) = 0.544360
 iteration: 440
-	f(x) = 0.248750
+	f(x) = 0.516324
 iteration: 441
-	f(x) = 0.248792
+	f(x) = 8.091876
 iteration: 442
-	f(x) = 0.248629
+	f(x) = 1.197508
 iteration: 443
-	f(x) = 0.248364
+	f(x) = 1.218982
 iteration: 444
-	f(x) = 0.248273
+	f(x) = 1.044004
 iteration: 445
-	f(x) = 0.248103
+	f(x) = 3784.912641
 iteration: 446
-	f(x) = 0.248002
+	f(x) = 0.988777
 iteration: 447
-	f(x) = 0.248118
+	f(x) = 0.577777
 iteration: 448
-	f(x) = 0.248243
+	f(x) = 3448.602581
 iteration: 449
-	f(x) = 0.248063
+	f(x) = 0.740103
 iteration: 450
-	f(x) = 0.248070
+	f(x) = 3500.818815
 iteration: 451
-	f(x) = 0.248008
+	f(x) = 0.617334
 iteration: 452
-	f(x) = 0.248145
+	f(x) = 3526.978101
 iteration: 453
-	f(x) = 0.248004
+	f(x) = 0.554804
 iteration: 454
-	f(x) = 0.248002
+	f(x) = 0.616680
 iteration: 455
-	f(x) = 0.248056
+	f(x) = 0.498368
 iteration: 456
-	f(x) = 0.247992
+	f(x) = 0.498426
 iteration: 457
-	f(x) = 0.248005
+	f(x) = 0.507249
 iteration: 458
-	f(x) = 0.247995
+	f(x) = 0.497986
 iteration: 459
-	f(x) = 0.248008
+	f(x) = 0.497986
 iteration: 460
-	f(x) = 0.247994
+	f(x) = 0.497986
 iteration: 461
-	f(x) = 0.247991
+	f(x) = 0.497985
 iteration: 462
-	f(x) = 0.247995
+	f(x) = 0.497985
 iteration: 463
-	f(x) = 0.247997
+	f(x) = 0.497985
 iteration: 464
-	f(x) = 0.247991
+	f(x) = 0.497984
 iteration: 465
-	f(x) = 0.247994
+	f(x) = 0.497981
 iteration: 466
-	f(x) = 0.247991
+	f(x) = 0.497983
 iteration: 467
-	f(x) = 0.283956
+	f(x) = 235.199972
 iteration: 468
-	f(x) = 0.274869
+	f(x) = 0.497985
 iteration: 469
-	f(x) = 0.308867
+	f(x) = 0.497940
 iteration: 470
-	f(x) = 0.253005
+	f(x) = 235.199972
 iteration: 471
-	f(x) = 0.276585
+	f(x) = 235.199972
 iteration: 472
-	f(x) = 0.254367
+	f(x) = 0.497982
 iteration: 473
-	f(x) = 0.255040
+	f(x) = 0.497861
 iteration: 474
-	f(x) = 0.248995
+	f(x) = 235.199972
 iteration: 475
-	f(x) = 0.255495
+	f(x) = 235.199972
 iteration: 476
-	f(x) = 0.248054
+	f(x) = 0.497977
 iteration: 477
-	f(x) = 0.247783
+	f(x) = 235.199972
 iteration: 478
-	f(x) = 0.251690
+	f(x) = 0.497969
 iteration: 479
-	f(x) = 0.253264
+	f(x) = 0.500778
 iteration: 480
-	f(x) = 0.246922
+	f(x) = 25123.562237
 iteration: 481
-	f(x) = 0.306334
+	f(x) = 0.539707
 iteration: 482
-	f(x) = 0.284454
+	f(x) = 0.495716
 iteration: 483
-	f(x) = 0.497664
+	f(x) = 0.597000
 iteration: 484
-	f(x) = 0.284798
+	f(x) = 0.475724
 iteration: 485
-	f(x) = 0.290612
+	f(x) = 0.553454
 iteration: 486
-	f(x) = 0.273882
+	f(x) = 0.470206
 iteration: 487
-	f(x) = 0.276366
+	f(x) = 0.483140
 iteration: 488
-	f(x) = 0.256656
+	f(x) = 0.469609
 iteration: 489
-	f(x) = 0.255550
+	f(x) = 0.485230
 iteration: 490
-	f(x) = 0.241566
+	f(x) = 0.469938
 iteration: 491
-	f(x) = 0.263553
+	f(x) = 0.478659
 iteration: 492
-	f(x) = 0.245459
+	f(x) = 0.468340
 iteration: 493
-	f(x) = 0.254192
+	f(x) = 0.470764
 iteration: 494
-	f(x) = 0.240598
+	f(x) = 0.468563
 iteration: 495
-	f(x) = 0.255176
+	f(x) = 1364.576047
 iteration: 496
-	f(x) = 0.239747
+	f(x) = 1.246743
 iteration: 497
-	f(x) = 0.254449
+	f(x) = 1.441190
 iteration: 498
-	f(x) = 0.237700
+	f(x) = 1.163375
 iteration: 499
-	f(x) = 0.241712
+	f(x) = 3512.246351
 iteration: 500
-	f(x) = 0.237625
+	f(x) = 1.040245
 iteration: 501
-	f(x) = 0.237625
+	f(x) = 0.696792
 iteration: 502
-	f(x) = 0.238831
+	f(x) = 3432.037186
 iteration: 503
-	f(x) = 0.237939
+	f(x) = 0.736122
 iteration: 504
-	f(x) = 0.237855
+	f(x) = 3378.736024
 iteration: 505
-	f(x) = 0.237622
+	f(x) = 0.582444
 iteration: 506
-	f(x) = 0.237563
+	f(x) = 0.701045
 iteration: 507
-	f(x) = 0.237360
+	f(x) = 0.441666
 iteration: 508
-	f(x) = 0.237220
+	f(x) = 3363.413809
 iteration: 509
-	f(x) = 0.237580
+	f(x) = 0.522906
 iteration: 510
-	f(x) = 0.237436
+	f(x) = 1.627540
 iteration: 511
-	f(x) = 0.237200
+	f(x) = 0.490458
 iteration: 512
-	f(x) = 0.237161
+	f(x) = 0.482569
 iteration: 513
-	f(x) = 0.236705
+	f(x) = 0.449281
 iteration: 514
-	f(x) = 0.236457
+	f(x) = 0.417641
 iteration: 515
-	f(x) = 0.239138
+	f(x) = 0.404259
 iteration: 516
-	f(x) = 0.236927
+	f(x) = 0.404337
 iteration: 517
-	f(x) = 0.236187
+	f(x) = 0.518750
 iteration: 518
-	f(x) = 0.248717
+	f(x) = 0.417340
 iteration: 519
-	f(x) = 269.977196
+	f(x) = 0.407046
 iteration: 520
-	f(x) = 0.236532
+	f(x) = 0.396510
 iteration: 521
-	f(x) = 0.241597
+	f(x) = 1369.401321
 iteration: 522
-	f(x) = 0.236352
+	f(x) = 23428439217483096064.000000
 iteration: 523
-	f(x) = 0.236159
+	f(x) = 2948.530848
 iteration: 524
-	f(x) = 0.236226
+	f(x) = 2499.162124
 iteration: 525
-	f(x) = 0.236046
+	f(x) = 56.259165
 iteration: 526
-	f(x) = 0.236334
+	f(x) = 3256.475529
 iteration: 527
-	f(x) = 0.236103
+	f(x) = 49.168613
 iteration: 528
-	f(x) = 0.236036
+	f(x) = 0.449788
 iteration: 529
-	f(x) = 0.236644
+	f(x) = 1.168737
 iteration: 530
-	f(x) = 0.237352
+	f(x) = 1.210611
 iteration: 531
-	f(x) = 0.236013
+	f(x) = 0.420356
 iteration: 532
-	f(x) = 0.236060
+	f(x) = 21.354636
 iteration: 533
-	f(x) = 0.236009
+	f(x) = 1.168737
 iteration: 534
-	f(x) = 0.236060
+	f(x) = 1.189815
 iteration: 535
-	f(x) = 0.236003
+	f(x) = 0.406278
 iteration: 536
-	f(x) = 0.236098
+	f(x) = 7.429213
 iteration: 537
-	f(x) = 0.236000
+	f(x) = 1.168737
 iteration: 538
-	f(x) = 0.236003
+	f(x) = 1.179315
 iteration: 539
-	f(x) = 0.235999
+	f(x) = 0.400401
 iteration: 540
-	f(x) = 0.262086
+	f(x) = 2.635624
 iteration: 541
-	f(x) = 0.438867
+	f(x) = 1.168737
 iteration: 542
-	f(x) = 0.303466
+	f(x) = 1.050232
 iteration: 543
-	f(x) = 0.269805
+	f(x) = 1.167445
 iteration: 544
-	f(x) = 0.277187
+	f(x) = 0.444981
 iteration: 545
-	f(x) = 0.253519
+	f(x) = 0.681883
 iteration: 546
-	f(x) = 0.245400
+	f(x) = 0.377474
 iteration: 547
-	f(x) = 0.252298
+	f(x) = 0.376850
 iteration: 548
-	f(x) = 0.243695
+	f(x) = 0.419056
 iteration: 549
-	f(x) = 0.245957
+	f(x) = 1.323224
 iteration: 550
-	f(x) = 0.240561
+	f(x) = 0.386004
 iteration: 551
-	f(x) = 0.238362
+	f(x) = 0.506312
 iteration: 552
-	f(x) = 0.248377
+	f(x) = 0.376648
 iteration: 553
-	f(x) = 0.236556
+	f(x) = 0.376621
 iteration: 554
-	f(x) = 0.239406
+	f(x) = 0.380513
 iteration: 555
-	f(x) = 0.236218
+	f(x) = 0.385995
 iteration: 556
-	f(x) = 0.270037
+	f(x) = 0.374994
 iteration: 557
-	f(x) = 0.302303
+	f(x) = 0.374979
 iteration: 558
-	f(x) = 0.292418
+	f(x) = 0.375356
 iteration: 559
-	f(x) = 0.263213
+	f(x) = 0.376838
 iteration: 560
-	f(x) = 0.243156
+	f(x) = 0.375460
 iteration: 561
-	f(x) = 0.250788
+	f(x) = 0.375367
 iteration: 562
-	f(x) = 0.241839
+	f(x) = 0.375055
 iteration: 563
-	f(x) = 0.245888
+	f(x) = 0.375127
 iteration: 564
-	f(x) = 0.238996
+	f(x) = 0.374991
 iteration: 565
-	f(x) = 0.240543
+	f(x) = 0.374983
 iteration: 566
-	f(x) = 0.236932
+	f(x) = 0.374973
 iteration: 567
-	f(x) = 0.242368
+	f(x) = 0.374988
 iteration: 568
-	f(x) = 0.236618
+	f(x) = 0.375022
 iteration: 569
-	f(x) = 0.236353
+	f(x) = 0.374972
 iteration: 570
-	f(x) = 0.237382
+	f(x) = 0.374969
 iteration: 571
-	f(x) = 0.236022
+	f(x) = 0.374970
 iteration: 572
-	f(x) = 0.236573
+	f(x) = 0.374981
 iteration: 573
-	f(x) = 0.235954
+	f(x) = 0.374970
 iteration: 574
-	f(x) = 0.236300
+	f(x) = 0.374967
 iteration: 575
-	f(x) = 0.241514
+	f(x) = 0.374967
 iteration: 576
-	f(x) = 0.271057
+	f(x) = 0.374965
 iteration: 577
-	f(x) = 0.233898
+	f(x) = 0.374964
 iteration: 578
-	f(x) = 0.233512
+	f(x) = 0.374965
 iteration: 579
-	f(x) = 0.235853
+	f(x) = 0.374963
 iteration: 580
-	f(x) = 0.241134
+	f(x) = 0.374964
 iteration: 581
-	f(x) = 0.233513
+	f(x) = 0.374967
 iteration: 582
-	f(x) = 0.233392
+	f(x) = 0.374963
 iteration: 583
-	f(x) = 0.234486
+	f(x) = 0.374964
 iteration: 584
-	f(x) = 0.233449
+	f(x) = 0.374963
 iteration: 585
-	f(x) = 0.233614
+	f(x) = 0.374964
 iteration: 586
-	f(x) = 0.233200
+	f(x) = 0.374962
 iteration: 587
-	f(x) = 0.233800
+	f(x) = 0.374963
 iteration: 588
-	f(x) = 0.233158
+	f(x) = 0.374962
 iteration: 589
-	f(x) = 0.234215
+	f(x) = 0.374964
 iteration: 590
-	f(x) = 0.233120
+	f(x) = 0.374963
 iteration: 591
-	f(x) = 0.230616
+	f(x) = 0.374963
 iteration: 592
-	f(x) = 0.243779
+	f(x) = 0.374962
 iteration: 593
-	f(x) = 0.233120
+	f(x) = 0.374963
 iteration: 594
-	f(x) = 0.232345
+	f(x) = 0.374963
 iteration: 595
-	f(x) = 0.232604
+	f(x) = 0.374962
 iteration: 596
-	f(x) = 0.230715
+	f(x) = 0.365390
 iteration: 597
-	f(x) = 0.230550
+	f(x) = 1.987299
 iteration: 598
-	f(x) = 0.230676
+	f(x) = 1152.216993
 iteration: 599
-	f(x) = 0.230503
+	f(x) = 1.265050
 iteration: 600
-	f(x) = 0.230549
+	f(x) = 1178.196778
 iteration: 601
-	f(x) = 0.230647
+	f(x) = 0.814778
 iteration: 602
-	f(x) = 0.230514
+	f(x) = 1191.187575
 iteration: 603
-	f(x) = 0.230477
+	f(x) = 0.580828
 iteration: 604
-	f(x) = 0.230487
+	f(x) = 1197.683215
 iteration: 605
-	f(x) = 0.230495
+	f(x) = 0.470315
 iteration: 606
-	f(x) = 0.230478
+	f(x) = 1200.931097
 iteration: 607
-	f(x) = 0.230537
+	f(x) = 0.417468
 iteration: 608
-	f(x) = 0.230478
+	f(x) = 0.407873
 iteration: 609
-	f(x) = 0.230489
+	f(x) = 0.360278
 iteration: 610
-	f(x) = 0.230473
+	f(x) = 0.362038
 iteration: 611
-	f(x) = 0.230486
+	f(x) = 0.411791
 iteration: 612
-	f(x) = 0.230473
+	f(x) = 0.358815
 iteration: 613
-	f(x) = 0.230485
+	f(x) = 0.365505
 iteration: 614
-	f(x) = 0.230473
+	f(x) = 0.358852
 iteration: 615
-	f(x) = 0.230661
+	f(x) = 0.359462
 iteration: 616
-	f(x) = 0.235266
+	f(x) = 0.358295
 iteration: 617
-	f(x) = 0.253237
+	f(x) = 0.361979
 iteration: 618
-	f(x) = 0.229680
+	f(x) = 0.357986
 iteration: 619
-	f(x) = 0.229825
+	f(x) = 0.358696
 iteration: 620
-	f(x) = 0.235460
+	f(x) = 0.358178
 iteration: 621
-	f(x) = 0.229253
+	f(x) = 0.358587
 iteration: 622
-	f(x) = 0.229333
+	f(x) = 0.358076
 iteration: 623
-	f(x) = 0.230541
+	f(x) = 0.358046
 iteration: 624
-	f(x) = 0.229267
+	f(x) = 0.358138
 iteration: 625
-	f(x) = 0.229348
+	f(x) = 0.357998
 iteration: 626
-	f(x) = 0.229237
+	f(x) = 0.451659
 iteration: 627
-	f(x) = 0.244749
+	f(x) = 48.140427
 iteration: 628
-	f(x) = 0.227228
+	f(x) = 0.933920
 iteration: 629
-	f(x) = 0.240719
+	f(x) = 0.940900
 iteration: 630
-	f(x) = 0.229185
+	f(x) = 0.404564
 iteration: 631
-	f(x) = 0.244048
+	f(x) = 20.147712
 iteration: 632
-	f(x) = 0.232775
+	f(x) = 0.948931
 iteration: 633
-	f(x) = 0.265669
+	f(x) = 0.953290
 iteration: 634
-	f(x) = 0.233667
+	f(x) = 0.380268
 iteration: 635
-	f(x) = 0.237645
+	f(x) = 6.789960
 iteration: 636
-	f(x) = 0.230396
+	f(x) = 0.957822
 iteration: 637
-	f(x) = 0.229219
+	f(x) = 0.960130
 iteration: 638
-	f(x) = 0.227228
+	f(x) = 0.368363
 iteration: 639
-	f(x) = 0.227208
+	f(x) = 2.314342
 iteration: 640
-	f(x) = 0.229791
+	f(x) = 1.226364
 iteration: 641
-	f(x) = 0.227703
+	f(x) = 0.896537
 iteration: 642
-	f(x) = 0.260697
+	f(x) = 3111.654849
 iteration: 643
-	f(x) = 0.240616
+	f(x) = 0.954893
 iteration: 644
-	f(x) = 0.328183
+	f(x) = 3093.404383
 iteration: 645
-	f(x) = 0.243643
+	f(x) = 0.808652
 iteration: 646
-	f(x) = 0.260253
+	f(x) = 2672.475561
 iteration: 647
-	f(x) = 0.235909
+	f(x) = 0.755329
 iteration: 648
-	f(x) = 0.237818
+	f(x) = 3065.329375
 iteration: 649
-	f(x) = 0.230441
+	f(x) = 0.693429
 iteration: 650
-	f(x) = 0.232545
+	f(x) = 2660.449249
 iteration: 651
-	f(x) = 0.228357
+	f(x) = 0.648731
 iteration: 652
-	f(x) = 0.230676
+	f(x) = 3059.939791
 iteration: 653
-	f(x) = 0.228105
+	f(x) = 0.605762
 iteration: 654
-	f(x) = 0.228895
+	f(x) = 2669.603752
 iteration: 655
-	f(x) = 0.227398
+	f(x) = 0.571025
 iteration: 656
-	f(x) = 0.227712
+	f(x) = 3805078946023754.500000
 iteration: 657
-	f(x) = 0.227114
+	f(x) = 0.478049
 iteration: 658
-	f(x) = 0.227112
+	f(x) = 3375.344566
 iteration: 659
-	f(x) = 0.227125
+	f(x) = 3291.139831
 iteration: 660
-	f(x) = 0.227130
+	f(x) = 0.357984
 iteration: 661
-	f(x) = 0.227116
+	f(x) = 0.363625
 iteration: 662
-	f(x) = 0.227117
+	f(x) = 0.363185
 iteration: 663
-	f(x) = 0.227113
+	f(x) = 0.359259
 iteration: 664
-	f(x) = 0.227114
+	f(x) = 0.359412
 iteration: 665
-	f(x) = 0.227113
+	f(x) = 0.358286
 iteration: 666
-	f(x) = 0.227112
+	f(x) = 0.358357
 iteration: 667
-	f(x) = 0.227111
+	f(x) = 0.358051
 iteration: 668
-	f(x) = 0.227112
+	f(x) = 0.462637
 iteration: 669
-	f(x) = 0.227112
+	f(x) = 2.158505
 iteration: 670
-	f(x) = 0.227112
+	f(x) = 1853.283091
 iteration: 671
-	f(x) = 0.227111
+	f(x) = 1.394672
 iteration: 672
-	f(x) = 0.227112
+	f(x) = 1690.724897
 iteration: 673
-	f(x) = 0.227111
+	f(x) = 0.912065
 iteration: 674
-	f(x) = 0.227143
+	f(x) = 1611.415448
 iteration: 675
-	f(x) = 0.225695
+	f(x) = 0.641360
 iteration: 676
-	f(x) = 0.225707
+	f(x) = 1572.443375
 iteration: 677
-	f(x) = 0.226506
+	f(x) = 0.503150
 iteration: 678
-	f(x) = 0.225831
+	f(x) = 1553.161994
 iteration: 679
-	f(x) = 0.226123
+	f(x) = 0.435925
 iteration: 680
-	f(x) = 0.225696
+	f(x) = 0.460975
 iteration: 681
-	f(x) = 0.225682
+	f(x) = 0.386925
 iteration: 682
-	f(x) = 0.225723
+	f(x) = 0.876037
 iteration: 683
-	f(x) = 0.225699
+	f(x) = 0.392468
 iteration: 684
-	f(x) = 0.225678
+	f(x) = 0.405760
 iteration: 685
-	f(x) = 0.227492
+	f(x) = 0.376842
 iteration: 686
-	f(x) = 0.225612
+	f(x) = 0.369455
 iteration: 687
-	f(x) = 0.227652
+	f(x) = 0.971974
 iteration: 688
-	f(x) = 0.225680
+	f(x) = 20486.551508
 iteration: 689
-	f(x) = 0.225937
+	f(x) = 1.001434
 iteration: 690
-	f(x) = 0.225293
+	f(x) = 0.846585
 iteration: 691
-	f(x) = 0.226497
+	f(x) = 2805.279952
 iteration: 692
-	f(x) = 0.225264
+	f(x) = 0.794662
 iteration: 693
-	f(x) = 0.226348
+	f(x) = 0.412500
 iteration: 694
-	f(x) = 0.225242
+	f(x) = 2539.309693
 iteration: 695
-	f(x) = 0.225309
+	f(x) = 0.574937
 iteration: 696
-	f(x) = 0.225224
+	f(x) = 2580.194217
 iteration: 697
-	f(x) = 0.224655
+	f(x) = 0.459909
 iteration: 698
-	f(x) = 0.232713
+	f(x) = 2600.733836
 iteration: 699
-	f(x) = 0.232437
+	f(x) = 0.397985
 iteration: 700
-	f(x) = 0.227544
+	f(x) = 0.459486
 iteration: 701
-	f(x) = 0.226749
+	f(x) = 0.343632
 iteration: 702
-	f(x) = 0.225224
+	f(x) = 93552557159234432.000000
 iteration: 703
-	f(x) = 0.223433
+	f(x) = 1.382176
 iteration: 704
-	f(x) = 0.224583
+	f(x) = 5304.057985
 iteration: 705
-	f(x) = 0.226991
+	f(x) = 4719.239083
 iteration: 706
-	f(x) = 0.223892
+	f(x) = 0.884654
 iteration: 707
-	f(x) = 0.223418
+	f(x) = 9116.925453
 iteration: 708
-	f(x) = 0.224184
+	f(x) = 0.861502
 iteration: 709
-	f(x) = 0.222720
+	f(x) = 61.584821
 iteration: 710
-	f(x) = 0.223503
+	f(x) = 1139.735299
 iteration: 711
-	f(x) = 0.223130
+	f(x) = 41.340280
 iteration: 712
-	f(x) = 0.222833
+	f(x) = 0.421716
 iteration: 713
-	f(x) = 0.223104
+	f(x) = 0.946348
 iteration: 714
-	f(x) = 0.222810
+	f(x) = 0.985437
 iteration: 715
-	f(x) = 0.222707
+	f(x) = 0.384506
 iteration: 716
-	f(x) = 0.223121
+	f(x) = 22.399328
 iteration: 717
-	f(x) = 0.222606
+	f(x) = 0.946348
 iteration: 718
-	f(x) = 0.222764
+	f(x) = 0.966122
 iteration: 719
-	f(x) = 0.223223
+	f(x) = 0.364743
 iteration: 720
-	f(x) = 0.222629
+	f(x) = 8.522674
 iteration: 721
-	f(x) = 0.222601
+	f(x) = 0.946348
 iteration: 722
-	f(x) = 0.222729
+	f(x) = 0.956296
 iteration: 723
-	f(x) = 0.222796
+	f(x) = 0.354377
 iteration: 724
-	f(x) = 0.222607
+	f(x) = 2.934760
 iteration: 725
-	f(x) = 0.222723
+	f(x) = 0.946348
 iteration: 726
-	f(x) = 0.222590
+	f(x) = 0.951338
 iteration: 727
-	f(x) = 0.222477
+	f(x) = 0.349049
 iteration: 728
-	f(x) = 0.222555
+	f(x) = 1.197266
 iteration: 729
-	f(x) = 0.223709
+	f(x) = 0.946348
 iteration: 730
-	f(x) = 0.222397
+	f(x) = 0.600434
 iteration: 731
-	f(x) = 0.222329
+	f(x) = 0.639678
 iteration: 732
-	f(x) = 0.222345
+	f(x) = 0.385992
 iteration: 733
-	f(x) = 0.222553
+	f(x) = 0.444265
 iteration: 734
-	f(x) = 0.222379
+	f(x) = 0.347607
 iteration: 735
-	f(x) = 0.222319
+	f(x) = 0.343776
 iteration: 736
-	f(x) = 0.222322
+	f(x) = 0.356425
 iteration: 737
-	f(x) = 0.222275
+	f(x) = 0.344291
 iteration: 738
-	f(x) = 0.222261
+	f(x) = 0.342582
 iteration: 739
-	f(x) = 0.222224
+	f(x) = 0.342501
 iteration: 740
-	f(x) = 0.222198
+	f(x) = 0.343064
 iteration: 741
-	f(x) = 0.222193
+	f(x) = 0.344271
 iteration: 742
-	f(x) = 0.222249
+	f(x) = 0.342675
 iteration: 743
-	f(x) = 0.222140
+	f(x) = 0.343115
 iteration: 744
-	f(x) = 0.222149
+	f(x) = 0.342512
 iteration: 745
-	f(x) = 0.222172
+	f(x) = 0.342479
 iteration: 746
-	f(x) = 0.222116
+	f(x) = 0.342540
 iteration: 747
-	f(x) = 0.222133
+	f(x) = 0.342501
 iteration: 748
-	f(x) = 0.222227
+	f(x) = 0.342478
 iteration: 749
-	f(x) = 0.222130
+	f(x) = 2629.475245
 iteration: 750
-	f(x) = 0.222127
+	f(x) = 3010.685419
 iteration: 751
-	f(x) = 0.222113
+	f(x) = 2618.080351
 iteration: 752
-	f(x) = 0.222121
+	f(x) = 0.413683
 iteration: 753
-	f(x) = 0.222135
+	f(x) = 0.402341
 iteration: 754
-	f(x) = 0.222115
+	f(x) = 3013.225189
 iteration: 755
-	f(x) = 0.222125
+	f(x) = 0.393549
 iteration: 756
-	f(x) = 0.222113
+	f(x) = 0.519106
 iteration: 757
-	f(x) = 0.222116
+	f(x) = 0.385420
 iteration: 758
-	f(x) = 0.222113
+	f(x) = 0.371658
 iteration: 759
-	f(x) = 0.222116
+	f(x) = 0.382687
 iteration: 760
-	f(x) = 0.222113
+	f(x) = 0.349147
 iteration: 761
-	f(x) = 0.222113
+	f(x) = 0.363945
 iteration: 762
-	f(x) = 0.222113
+	f(x) = 0.340228
 iteration: 763
-	f(x) = 0.222114
+	f(x) = 0.363536
 iteration: 764
-	f(x) = 0.222113
+	f(x) = 0.334839
 iteration: 765
-	f(x) = 0.222113
+	f(x) = 614.822283
 iteration: 766
-	f(x) = 0.222113
+	f(x) = 0.350812
 iteration: 767
-	f(x) = 0.222157
+	f(x) = 2993.329031
 iteration: 768
-	f(x) = 0.222677
+	f(x) = 15.402701
 iteration: 769
-	f(x) = 0.222969
+	f(x) = 2983.671490
 iteration: 770
-	f(x) = 0.222212
+	f(x) = 2.099509
 iteration: 771
-	f(x) = 0.222400
+	f(x) = 2978.842798
 iteration: 772
-	f(x) = 0.222127
+	f(x) = 0.760918
 iteration: 773
-	f(x) = 0.222084
+	f(x) = 0.338796
 iteration: 774
-	f(x) = 0.222085
+	f(x) = 0.332844
 iteration: 775
-	f(x) = 0.222073
+	f(x) = 0.335481
 iteration: 776
-	f(x) = 0.222085
+	f(x) = 0.333975
 iteration: 777
-	f(x) = 0.222047
+	f(x) = 0.332011
 iteration: 778
-	f(x) = 0.222051
+	f(x) = 0.331190
 iteration: 779
-	f(x) = 0.222040
+	f(x) = 0.329585
 iteration: 780
-	f(x) = 0.222056
+	f(x) = 0.327882
 iteration: 781
-	f(x) = 0.222015
+	f(x) = 0.327118
 iteration: 782
-	f(x) = 0.222022
+	f(x) = 0.326407
 iteration: 783
-	f(x) = 0.222012
+	f(x) = 0.323230
 iteration: 784
-	f(x) = 0.222033
+	f(x) = 0.322772
 iteration: 785
-	f(x) = 0.221988
+	f(x) = 0.327540
 iteration: 786
-	f(x) = 0.221999
+	f(x) = 0.325258
 iteration: 787
-	f(x) = 0.221990
+	f(x) = 0.322976
 iteration: 788
-	f(x) = 0.221968
+	f(x) = 0.322592
 iteration: 789
-	f(x) = 0.221984
+	f(x) = 0.325069
 iteration: 790
-	f(x) = 0.222057
+	f(x) = 0.322760
 iteration: 791
-	f(x) = 0.221973
+	f(x) = 0.325374
 iteration: 792
-	f(x) = 0.221956
+	f(x) = 0.322415
 iteration: 793
-	f(x) = 0.221953
+	f(x) = 0.978409
 iteration: 794
-	f(x) = 0.221942
+	f(x) = 0.533022
 iteration: 795
-	f(x) = 0.221939
+	f(x) = 0.615198
 iteration: 796
-	f(x) = 0.221956
+	f(x) = 0.491571
 iteration: 797
-	f(x) = 0.221943
+	f(x) = 0.676829
 iteration: 798
-	f(x) = 0.221950
+	f(x) = 0.450992
 iteration: 799
-	f(x) = 0.221941
+	f(x) = 0.375347
 iteration: 800
-	f(x) = 0.221639
+	f(x) = 900.004024
 iteration: 801
-	f(x) = 0.221923
+	f(x) = 0.384139
 iteration: 802
-	f(x) = 0.221670
+	f(x) = 969.120026
 iteration: 803
-	f(x) = 0.221360
+	f(x) = 0.354790
 iteration: 804
-	f(x) = 0.221229
+	f(x) = 0.378741
 iteration: 805
-	f(x) = 0.221497
+	f(x) = 0.343777
 iteration: 806
-	f(x) = 0.221103
+	f(x) = 0.334769
 iteration: 807
-	f(x) = 0.220867
+	f(x) = 0.323604
 iteration: 808
-	f(x) = 0.220653
+	f(x) = 0.331272
 iteration: 809
-	f(x) = 0.220329
+	f(x) = 0.337633
 iteration: 810
-	f(x) = 0.220104
+	f(x) = 0.325297
 iteration: 811
-	f(x) = 0.219811
+	f(x) = 0.326027
 iteration: 812
-	f(x) = 0.219698
+	f(x) = 0.323557
 iteration: 813
-	f(x) = 0.219912
+	f(x) = 0.323140
 iteration: 814
-	f(x) = 0.219860
+	f(x) = 0.322415
 iteration: 815
-	f(x) = 0.219707
+	f(x) = 0.322540
 iteration: 816
-	f(x) = 0.219850
+	f(x) = 0.323035
 iteration: 817
-	f(x) = 0.219720
+	f(x) = 0.322540
 iteration: 818
-	f(x) = 0.219740
+	f(x) = 0.345592
 iteration: 819
-	f(x) = 0.219700
+	f(x) = 2737.606493
 iteration: 820
-	f(x) = 0.219745
+	f(x) = 0.406356
 iteration: 821
-	f(x) = 0.219696
+	f(x) = 0.369554
 iteration: 822
-	f(x) = 0.219697
+	f(x) = 0.380094
 iteration: 823
-	f(x) = 0.219708
+	f(x) = 0.349789
 iteration: 824
-	f(x) = 0.219696
+	f(x) = 0.343170
 iteration: 825
-	f(x) = 0.219696
+	f(x) = 0.335560
 iteration: 826
-	f(x) = 0.219696
+	f(x) = 0.340754
 iteration: 827
-	f(x) = 0.219698
+	f(x) = 0.324760
 iteration: 828
-	f(x) = 0.219696
+	f(x) = 0.332760
 iteration: 829
-	f(x) = 0.222108
+	f(x) = 0.324440
 iteration: 830
-	f(x) = 0.223331
+	f(x) = 0.338993
 iteration: 831
-	f(x) = 0.220282
+	f(x) = 0.320432
 iteration: 832
-	f(x) = 0.220732
+	f(x) = 0.320216
 iteration: 833
-	f(x) = 0.219802
+	f(x) = 0.324996
 iteration: 834
-	f(x) = 0.220003
+	f(x) = 0.323091
 iteration: 835
-	f(x) = 0.219699
+	f(x) = 0.320243
 iteration: 836
-	f(x) = 0.219787
+	f(x) = 0.323502
 iteration: 837
-	f(x) = 0.219781
+	f(x) = 0.319557
 iteration: 838
-	f(x) = 0.219686
+	f(x) = 0.320225
 iteration: 839
-	f(x) = 0.219647
+	f(x) = 0.319693
 iteration: 840
-	f(x) = 0.219545
+	f(x) = 2361.003252
 iteration: 841
-	f(x) = 0.219437
+	f(x) = 0.292709
 iteration: 842
-	f(x) = 0.219484
+	f(x) = 0.355142
 iteration: 843
-	f(x) = 0.219412
+	f(x) = 0.323726
 iteration: 844
-	f(x) = 0.220559
+	f(x) = 0.348984
 iteration: 845
-	f(x) = 0.219306
+	f(x) = 0.310901
 iteration: 846
-	f(x) = 0.219340
+	f(x) = 1124.309553
 iteration: 847
-	f(x) = 0.219619
+	f(x) = 518039.912486
 iteration: 848
-	f(x) = 0.219349
+	f(x) = 2952.210676
 iteration: 849
-	f(x) = 0.219455
+	f(x) = 2373.232749
 iteration: 850
-	f(x) = 0.219317
+	f(x) = 7.099903
 iteration: 851
-	f(x) = 0.219275
+	f(x) = 0.292709
 iteration: 852
-	f(x) = 0.219280
+	f(x) = 0.901794
 iteration: 853
-	f(x) = 0.219301
+	f(x) = 0.901794
 iteration: 854
-	f(x) = 0.219269
+	f(x) = 0.292709
 iteration: 855
-	f(x) = 0.219293
+	f(x) = 0.292598
 iteration: 856
-	f(x) = 0.219333
+	f(x) = 0.292599
 iteration: 857
-	f(x) = 0.219276
+	f(x) = 0.293607
 iteration: 858
-	f(x) = 0.219282
+	f(x) = 0.292522
 iteration: 859
-	f(x) = 0.219269
+	f(x) = 0.292523
 iteration: 860
-	f(x) = 0.219287
+	f(x) = 0.292709
 iteration: 861
-	f(x) = 0.219268
+	f(x) = 0.292526
 iteration: 862
-	f(x) = 0.219278
+	f(x) = 0.292585
 iteration: 863
-	f(x) = 0.219268
+	f(x) = 0.292515
 iteration: 864
-	f(x) = 0.219268
+	f(x) = 0.292515
 iteration: 865
-	f(x) = 0.219269
+	f(x) = 0.292518
 iteration: 866
-	f(x) = 0.219267
+	f(x) = 0.292526
 iteration: 867
-	f(x) = 0.219250
+	f(x) = 0.292517
 iteration: 868
-	f(x) = 0.216576
+	f(x) = 0.292518
 iteration: 869
-	f(x) = 0.216510
+	f(x) = 0.292516
 iteration: 870
-	f(x) = 0.217174
+	f(x) = 0.292516
 iteration: 871
-	f(x) = 0.219371
+	f(x) = 0.292515
 iteration: 872
-	f(x) = 0.217201
+	f(x) = 0.292515
 iteration: 873
-	f(x) = 0.217274
+	f(x) = 0.292515
 iteration: 874
-	f(x) = 0.216697
+	f(x) = 0.292516
 iteration: 875
-	f(x) = 0.216736
+	f(x) = 0.292515
 iteration: 876
-	f(x) = 0.216576
+	f(x) = 0.292515
 iteration: 877
-	f(x) = 0.216596
+	f(x) = 0.292515
 iteration: 878
-	f(x) = 0.216548
+	f(x) = 0.292515
 iteration: 879
-	f(x) = 0.216488
+	f(x) = 0.292515
 iteration: 880
-	f(x) = 0.216460
+	f(x) = 0.292515
 iteration: 881
-	f(x) = 0.216412
+	f(x) = 0.292516
 iteration: 882
-	f(x) = 0.216354
+	f(x) = 0.292516
 iteration: 883
-	f(x) = 0.216346
+	f(x) = 0.292515
 iteration: 884
-	f(x) = 0.216343
+	f(x) = 0.292516
 iteration: 885
-	f(x) = 0.216240
+	f(x) = 0.292515
 iteration: 886
-	f(x) = 0.216227
+	f(x) = 0.292515
 iteration: 887
-	f(x) = 0.216527
+	f(x) = 0.292516
 iteration: 888
-	f(x) = 0.216270
+	f(x) = 0.292515
 iteration: 889
-	f(x) = 0.216161
+	f(x) = 0.297339
 iteration: 890
-	f(x) = 0.216152
+	f(x) = 0.370449
 iteration: 891
-	f(x) = 0.216288
+	f(x) = 0.333389
 iteration: 892
-	f(x) = 0.216191
+	f(x) = 0.312538
 iteration: 893
-	f(x) = 0.216164
+	f(x) = 0.313637
 iteration: 894
-	f(x) = 0.216255
+	f(x) = 0.302092
 iteration: 895
-	f(x) = 0.216152
+	f(x) = 0.298893
 iteration: 896
-	f(x) = 0.216179
+	f(x) = 0.294941
 iteration: 897
-	f(x) = 0.216149
+	f(x) = 0.292678
 iteration: 898
-	f(x) = 0.216169
+	f(x) = 2.248450
 iteration: 899
-	f(x) = 0.216147
+	f(x) = 2591.683956
 iteration: 900
-	f(x) = 0.216160
+	f(x) = 0.777661
 iteration: 901
-	f(x) = 0.216147
+	f(x) = 0.825097
 iteration: 902
-	f(x) = 0.215283
+	f(x) = 0.445080
 iteration: 903
-	f(x) = 0.218515
+	f(x) = 0.406010
 iteration: 904
-	f(x) = 0.220277
+	f(x) = 0.316678
 iteration: 905
-	f(x) = 0.216045
+	f(x) = 0.343289
 iteration: 906
-	f(x) = 0.218713
+	f(x) = 0.294895
 iteration: 907
-	f(x) = 0.221276
+	f(x) = 0.310094
 iteration: 908
-	f(x) = 0.222338
+	f(x) = 0.291112
 iteration: 909
-	f(x) = 0.216827
+	f(x) = 0.291895
 iteration: 910
-	f(x) = 0.218958
+	f(x) = 0.295499
 iteration: 911
-	f(x) = 0.216306
+	f(x) = 0.291341
 iteration: 912
-	f(x) = 0.215949
+	f(x) = 0.291119
 iteration: 913
-	f(x) = 0.216495
+	f(x) = 0.290769
 iteration: 914
-	f(x) = 0.215563
+	f(x) = 0.290979
 iteration: 915
-	f(x) = 0.215979
+	f(x) = 0.291977
 iteration: 916
-	f(x) = 0.215469
+	f(x) = 0.290835
 iteration: 917
-	f(x) = 0.215453
+	f(x) = 0.290919
 iteration: 918
-	f(x) = 0.215958
+	f(x) = 0.290778
 iteration: 919
-	f(x) = 0.215295
+	f(x) = 0.290809
 iteration: 920
-	f(x) = 0.215335
+	f(x) = 0.290757
 iteration: 921
-	f(x) = 0.215262
+	f(x) = 0.313505
 iteration: 922
-	f(x) = 0.229066
+	f(x) = 0.291139
 iteration: 923
-	f(x) = 0.216111
+	f(x) = 0.298719
 iteration: 924
-	f(x) = 0.229238
+	f(x) = 0.286830
 iteration: 925
-	f(x) = 0.218190
+	f(x) = 0.286406
 iteration: 926
-	f(x) = 0.221166
+	f(x) = 0.290094
 iteration: 927
-	f(x) = 0.215576
+	f(x) = 0.298534
 iteration: 928
-	f(x) = 0.215291
+	f(x) = 0.287153
 iteration: 929
-	f(x) = 0.215990
+	f(x) = 0.290470
 iteration: 930
-	f(x) = 0.215221
+	f(x) = 0.286392
 iteration: 931
-	f(x) = 0.215286
+	f(x) = 0.286251
 iteration: 932
-	f(x) = 0.215159
+	f(x) = 0.286550
 iteration: 933
-	f(x) = 0.215135
+	f(x) = 0.448052
 iteration: 934
-	f(x) = 0.215210
+	f(x) = 0.336575
 iteration: 935
-	f(x) = 0.215155
+	f(x) = 0.504273
 iteration: 936
-	f(x) = 0.215125
+	f(x) = 0.326205
 iteration: 937
-	f(x) = 0.215171
+	f(x) = 0.304357
 iteration: 938
-	f(x) = 0.215178
+	f(x) = 0.414757
 iteration: 939
-	f(x) = 0.215133
+	f(x) = 0.288052
 iteration: 940
-	f(x) = 0.215161
+	f(x) = 0.327765
 iteration: 941
-	f(x) = 0.215124
+	f(x) = 0.274632
 iteration: 942
-	f(x) = 0.215124
+	f(x) = 0.290185
 iteration: 943
-	f(x) = 0.215150
+	f(x) = 0.276833
 iteration: 944
-	f(x) = 0.215126
+	f(x) = 0.305761
 iteration: 945
-	f(x) = 0.215121
+	f(x) = 0.274498
 iteration: 946
-	f(x) = 0.215144
+	f(x) = 0.274498
 iteration: 947
-	f(x) = 0.215119
+	f(x) = 0.274091
 iteration: 948
-	f(x) = 0.215125
+	f(x) = 0.274091
 iteration: 949
-	f(x) = 0.215120
+	f(x) = 0.273974
 iteration: 950
-	f(x) = 0.215119
+	f(x) = 0.273923
 iteration: 951
-	f(x) = 0.215121
+	f(x) = 0.274231
 iteration: 952
-	f(x) = 0.215121
+	f(x) = 0.273995
 iteration: 953
-	f(x) = 0.215119
+	f(x) = 0.273923
 iteration: 954
-	f(x) = 0.215121
+	f(x) = 0.274135
 iteration: 955
-	f(x) = 0.215119
+	f(x) = 0.273917
 iteration: 956
-	f(x) = 0.227245
+	f(x) = 0.273917
 iteration: 957
-	f(x) = 0.215403
+	f(x) = 0.273938
 iteration: 958
-	f(x) = 0.234958
+	f(x) = 0.273974
 iteration: 959
-	f(x) = 0.217440
+	f(x) = 0.273912
 iteration: 960
-	f(x) = 0.221067
+	f(x) = 0.273912
 iteration: 961
-	f(x) = 0.215351
+	f(x) = 0.273916
 iteration: 962
-	f(x) = 0.215063
+	f(x) = 0.273923
 iteration: 963
-	f(x) = 0.215681
+	f(x) = 0.273913
 iteration: 964
-	f(x) = 0.215022
+	f(x) = 0.273916
 iteration: 965
-	f(x) = 0.215879
+	f(x) = 0.273912
 iteration: 966
-	f(x) = 0.214970
+	f(x) = 0.272735
 iteration: 967
-	f(x) = 0.215693
+	f(x) = 0.282036
 iteration: 968
-	f(x) = 0.215132
+	f(x) = 0.290964
 iteration: 969
-	f(x) = 0.214823
+	f(x) = 0.272012
 iteration: 970
-	f(x) = 0.235476
+	f(x) = 0.271049
 iteration: 971
-	f(x) = 0.212734
+	f(x) = 0.274419
 iteration: 972
-	f(x) = 0.225086
+	f(x) = 0.281492
 iteration: 973
-	f(x) = 0.217407
+	f(x) = 0.270803
 iteration: 974
-	f(x) = 0.219648
+	f(x) = 0.270160
 iteration: 975
-	f(x) = 0.214696
+	f(x) = 0.270829
 iteration: 976
-	f(x) = 0.228370
+	f(x) = 0.272343
 iteration: 977
-	f(x) = 0.214392
+	f(x) = 0.270354
 iteration: 978
-	f(x) = 0.252248
+	f(x) = 0.270032
 iteration: 979
-	f(x) = 0.217710
+	f(x) = 0.270523
 iteration: 980
-	f(x) = 0.222284
+	f(x) = 0.270202
 iteration: 981
-	f(x) = 0.214370
+	f(x) = 0.270019
 iteration: 982
-	f(x) = 0.214155
+	f(x) = 0.270303
 iteration: 983
-	f(x) = 0.212734
+	f(x) = 0.270005
 iteration: 984
-	f(x) = 0.214409
+	f(x) = 0.270324
 iteration: 985
-	f(x) = 0.213126
+	f(x) = 0.269969
 iteration: 986
-	f(x) = 0.249167
+	f(x) = 0.382198
 iteration: 987
-	f(x) = 0.225771
+	f(x) = 0.334363
 iteration: 988
-	f(x) = 0.303417
+	f(x) = 0.593390
 iteration: 989
-	f(x) = 0.231537
+	f(x) = 0.278120
 iteration: 990
-	f(x) = 0.240334
+	f(x) = 0.328490
 iteration: 991
-	f(x) = 0.223272
+	f(x) = 0.290653
 iteration: 992
-	f(x) = 0.227010
+	f(x) = 0.268971
 iteration: 993
-	f(x) = 0.220330
+	f(x) = 0.334363
 iteration: 994
-	f(x) = 0.215562
+	f(x) = 0.317377
 iteration: 995
-	f(x) = 0.218612
+	f(x) = 0.263090
 iteration: 996
-	f(x) = 0.213746
+	f(x) = 0.283936
 iteration: 997
-	f(x) = 0.214940
+	f(x) = 0.263240
 iteration: 998
-	f(x) = 0.212835
+	f(x) = 0.272765
 iteration: 999
-	f(x) = 0.216082
+	f(x) = 0.262338
 iteration: 1000
-	f(x) = 0.212377
+	f(x) = 2312.657738
 iteration: 1001
-	f(x) = 0.212418
+	f(x) = 0.262494
 iteration: 1002
-	f(x) = 0.212404
+	f(x) = 0.871251
 iteration: 1003
-	f(x) = 0.212375
+	f(x) = 0.428654
 iteration: 1004
-	f(x) = 0.212390
+	f(x) = 0.483324
 iteration: 1005
-	f(x) = 0.212346
+	f(x) = 0.300919
 iteration: 1006
-	f(x) = 0.212324
+	f(x) = 0.328740
 iteration: 1007
-	f(x) = 0.212363
+	f(x) = 0.267623
 iteration: 1008
-	f(x) = 0.212336
+	f(x) = 0.284047
 iteration: 1009
-	f(x) = 0.212292
+	f(x) = 0.261463
 iteration: 1010
-	f(x) = 0.212286
+	f(x) = 0.261285
 iteration: 1011
-	f(x) = 0.212335
+	f(x) = 0.263400
 iteration: 1012
-	f(x) = 0.212311
+	f(x) = 0.264001
 iteration: 1013
-	f(x) = 0.212318
+	f(x) = 0.294095
 iteration: 1014
-	f(x) = 0.212301
+	f(x) = 0.286133
 iteration: 1015
-	f(x) = 0.212287
+	f(x) = 0.258561
 iteration: 1016
-	f(x) = 0.212278
+	f(x) = 0.256136
 iteration: 1017
-	f(x) = 0.212291
+	f(x) = 0.266181
 iteration: 1018
-	f(x) = 0.212285
+	f(x) = 0.284615
 iteration: 1019
-	f(x) = 0.212289
+	f(x) = 0.255271
 iteration: 1020
-	f(x) = 0.212281
+	f(x) = 0.253945
 iteration: 1021
-	f(x) = 0.212282
+	f(x) = 0.257269
 iteration: 1022
-	f(x) = 0.212279
+	f(x) = 0.260489
 iteration: 1023
-	f(x) = 0.212284
+	f(x) = 0.253857
 iteration: 1024
-	f(x) = 0.212278
+	f(x) = 0.253857
 iteration: 1025
-	f(x) = 0.212278
+	f(x) = 0.254213
 iteration: 1026
-	f(x) = 0.212280
+	f(x) = 0.253872
 iteration: 1027
-	f(x) = 0.212278
+	f(x) = 0.253820
 iteration: 1028
-	f(x) = 0.212278
+	f(x) = 0.253820
 iteration: 1029
-	f(x) = 0.212278
+	f(x) = 0.253835
 iteration: 1030
-	f(x) = 0.212279
+	f(x) = 0.253872
 iteration: 1031
-	f(x) = 0.212278
+	f(x) = 0.253827
 iteration: 1032
-	f(x) = 0.212278
+	f(x) = 0.253835
 iteration: 1033
-	f(x) = 0.212278
+	f(x) = 0.253820
 iteration: 1034
-	f(x) = 0.212231
+	f(x) = 0.253824
 iteration: 1035
-	f(x) = 0.212578
+	f(x) = 0.253819
 iteration: 1036
-	f(x) = 0.220015
+	f(x) = 0.253819
 iteration: 1037
-	f(x) = 0.211362
+	f(x) = 0.253820
 iteration: 1038
-	f(x) = 0.211294
+	f(x) = 0.253819
 iteration: 1039
-	f(x) = 0.211576
+	f(x) = 0.253819
 iteration: 1040
-	f(x) = 0.212512
+	f(x) = 0.253819
 iteration: 1041
-	f(x) = 0.211516
+	f(x) = 0.253819
 iteration: 1042
-	f(x) = 0.211654
+	f(x) = 0.253819
 iteration: 1043
-	f(x) = 0.211353
+	f(x) = 0.253819
 iteration: 1044
-	f(x) = 0.211322
+	f(x) = 0.253819
 iteration: 1045
-	f(x) = 0.211276
+	f(x) = 0.253526
 iteration: 1046
-	f(x) = 0.211318
+	f(x) = 0.317315
 iteration: 1047
-	f(x) = 0.211366
+	f(x) = 0.281064
 iteration: 1048
-	f(x) = 0.211284
+	f(x) = 0.264437
 iteration: 1049
-	f(x) = 0.211299
+	f(x) = 0.273175
 iteration: 1050
-	f(x) = 0.211279
+	f(x) = 0.256798
 iteration: 1051
-	f(x) = 0.211291
+	f(x) = 0.260013
 iteration: 1052
-	f(x) = 0.211276
+	f(x) = 0.254192
 iteration: 1053
-	f(x) = 0.211279
+	f(x) = 0.255652
 iteration: 1054
-	f(x) = 0.211275
+	f(x) = 0.253572
 iteration: 1055
-	f(x) = 0.211287
+	f(x) = 0.253699
 iteration: 1056
-	f(x) = 0.211274
+	f(x) = 0.253492
 iteration: 1057
-	f(x) = 0.215652
+	f(x) = 0.253834
 iteration: 1058
-	f(x) = 0.233922
+	f(x) = 0.253456
 iteration: 1059
-	f(x) = 0.231561
+	f(x) = 0.515913
 iteration: 1060
-	f(x) = 0.219779
+	f(x) = 0.274233
 iteration: 1061
-	f(x) = 0.217674
+	f(x) = 0.299822
 iteration: 1062
-	f(x) = 0.213082
+	f(x) = 0.269842
 iteration: 1063
-	f(x) = 0.215111
+	f(x) = 0.258799
 iteration: 1064
-	f(x) = 0.212463
+	f(x) = 0.266990
 iteration: 1065
-	f(x) = 0.213681
+	f(x) = 0.257296
 iteration: 1066
-	f(x) = 0.211794
+	f(x) = 0.281168
 iteration: 1067
-	f(x) = 0.211636
+	f(x) = 0.253926
 iteration: 1068
-	f(x) = 0.212630
+	f(x) = 0.253037
 iteration: 1069
-	f(x) = 0.211278
+	f(x) = 0.262664
 iteration: 1070
-	f(x) = 0.211771
+	f(x) = 0.264819
 iteration: 1071
-	f(x) = 0.211282
+	f(x) = 0.251529
 iteration: 1072
-	f(x) = 0.210356
+	f(x) = 0.369833
 iteration: 1073
-	f(x) = 0.211348
+	f(x) = 1.153078
 iteration: 1074
-	f(x) = 0.211274
+	f(x) = 2346.718764
 iteration: 1075
-	f(x) = 0.215395
+	f(x) = 0.378423
 iteration: 1076
-	f(x) = 0.215894
+	f(x) = 0.606184
 iteration: 1077
-	f(x) = 0.221306
+	f(x) = 0.235425
 iteration: 1078
-	f(x) = 0.211784
+	f(x) = 0.614742
 iteration: 1079
-	f(x) = 0.213206
+	f(x) = 0.257034
 iteration: 1080
-	f(x) = 0.210738
+	f(x) = 0.379266
 iteration: 1081
-	f(x) = 0.211659
+	f(x) = 0.233671
 iteration: 1082
-	f(x) = 0.210541
+	f(x) = 0.230582
 iteration: 1083
-	f(x) = 0.211436
+	f(x) = 0.230678
 iteration: 1084
-	f(x) = 0.210275
+	f(x) = 0.229450
 iteration: 1085
-	f(x) = 0.210470
+	f(x) = 0.231035
 iteration: 1086
-	f(x) = 0.210248
+	f(x) = 0.229281
 iteration: 1087
-	f(x) = 0.210224
+	f(x) = 0.229615
 iteration: 1088
-	f(x) = 0.210331
+	f(x) = 0.230910
 iteration: 1089
-	f(x) = 0.210200
+	f(x) = 0.229670
 iteration: 1090
-	f(x) = 0.210196
+	f(x) = 0.229771
 iteration: 1091
-	f(x) = 0.210177
+	f(x) = 0.229433
 iteration: 1092
-	f(x) = 0.210179
+	f(x) = 0.229378
 iteration: 1093
-	f(x) = 0.210224
+	f(x) = 0.229281
 iteration: 1094
-	f(x) = 0.210199
+	f(x) = 0.229358
 iteration: 1095
-	f(x) = 0.210190
+	f(x) = 0.229297
 iteration: 1096
-	f(x) = 0.210175
+	f(x) = 0.229523
 iteration: 1097
-	f(x) = 0.210181
+	f(x) = 0.229114
 iteration: 1098
-	f(x) = 0.210166
+	f(x) = 0.228876
 iteration: 1099
-	f(x) = 0.210166
+	f(x) = 0.228569
 iteration: 1100
-	f(x) = 0.210169
+	f(x) = 0.228436
 iteration: 1101
-	f(x) = 0.210163
+	f(x) = 0.228077
 iteration: 1102
-	f(x) = 0.210169
+	f(x) = 0.227593
 iteration: 1103
-	f(x) = 0.210173
+	f(x) = 0.226977
 iteration: 1104
-	f(x) = 0.210164
+	f(x) = 0.226760
 iteration: 1105
-	f(x) = 0.210166
+	f(x) = 0.226376
 iteration: 1106
-	f(x) = 0.210164
+	f(x) = 0.225928
 iteration: 1107
-	f(x) = 0.210166
+	f(x) = 0.226263
 iteration: 1108
-	f(x) = 0.210163
+	f(x) = 0.226770
 iteration: 1109
-	f(x) = 0.210163
+	f(x) = 0.226250
 iteration: 1110
-	f(x) = 0.210163
+	f(x) = 0.226225
 iteration: 1111
-	f(x) = 0.210163
+	f(x) = 0.225746
 iteration: 1112
-	f(x) = 0.210163
+	f(x) = 0.225544
 iteration: 1113
-	f(x) = 0.210164
+	f(x) = 0.225511
 iteration: 1114
-	f(x) = 0.210163
+	f(x) = 0.225697
 iteration: 1115
-	f(x) = 0.210163
+	f(x) = 0.225070
 iteration: 1116
-	f(x) = 0.210192
+	f(x) = 0.224842
 iteration: 1117
-	f(x) = 0.212471
+	f(x) = 0.224932
 iteration: 1118
-	f(x) = 0.216819
+	f(x) = 0.224622
 iteration: 1119
-	f(x) = 0.210184
+	f(x) = 0.225054
 iteration: 1120
-	f(x) = 0.210257
+	f(x) = 0.225232
 iteration: 1121
-	f(x) = 0.209962
+	f(x) = 0.224706
 iteration: 1122
-	f(x) = 0.211622
+	f(x) = 0.224634
 iteration: 1123
-	f(x) = 0.209898
+	f(x) = 0.224863
 iteration: 1124
-	f(x) = 0.209997
+	f(x) = 0.224607
 iteration: 1125
-	f(x) = 0.209904
+	f(x) = 0.224725
 iteration: 1126
-	f(x) = 0.210098
+	f(x) = 0.224596
 iteration: 1127
-	f(x) = 0.209898
+	f(x) = 0.224667
 iteration: 1128
-	f(x) = 0.216803
+	f(x) = 0.224596
 iteration: 1129
-	f(x) = 0.208949
+	f(x) = 0.224625
 iteration: 1130
-	f(x) = 0.214002
+	f(x) = 0.224594
 iteration: 1131
-	f(x) = 0.210703
+	f(x) = 0.224609
 iteration: 1132
-	f(x) = 0.211058
+	f(x) = 0.224592
 iteration: 1133
-	f(x) = 0.209751
+	f(x) = 0.224601
 iteration: 1134
-	f(x) = 0.212819
+	f(x) = 0.224592
 iteration: 1135
-	f(x) = 0.209471
+	f(x) = 0.224595
 iteration: 1136
-	f(x) = 0.214158
+	f(x) = 0.224592
 iteration: 1137
-	f(x) = 0.209640
+	f(x) = 0.228331
 iteration: 1138
-	f(x) = 0.210915
+	f(x) = 0.252161
 iteration: 1139
-	f(x) = 0.209066
+	f(x) = 0.286299
 iteration: 1140
-	f(x) = 0.224789
+	f(x) = 0.223455
 iteration: 1141
-	f(x) = 0.213917
+	f(x) = 0.259844
 iteration: 1142
-	f(x) = 0.236877
+	f(x) = 0.221070
 iteration: 1143
-	f(x) = 0.215671
+	f(x) = 0.214585
 iteration: 1144
-	f(x) = 0.218594
+	f(x) = 0.209464
 iteration: 1145
-	f(x) = 0.212141
+	f(x) = 0.216146
 iteration: 1146
-	f(x) = 0.212595
+	f(x) = 0.202407
 iteration: 1147
-	f(x) = 0.210314
+	f(x) = 0.200265
 iteration: 1148
-	f(x) = 0.210241
+	f(x) = 0.189864
 iteration: 1149
-	f(x) = 0.210710
+	f(x) = 0.182475
 iteration: 1150
-	f(x) = 0.209376
+	f(x) = 0.270063
 iteration: 1151
-	f(x) = 0.210715
+	f(x) = 0.196848
 iteration: 1152
-	f(x) = 0.209248
+	f(x) = 0.205185
 iteration: 1153
-	f(x) = 0.208938
+	f(x) = 0.191623
 iteration: 1154
-	f(x) = 0.209489
+	f(x) = 0.194145
 iteration: 1155
-	f(x) = 0.209592
+	f(x) = 0.185691
 iteration: 1156
-	f(x) = 0.208910
+	f(x) = 0.185979
 iteration: 1157
-	f(x) = 0.208899
+	f(x) = 0.183051
 iteration: 1158
-	f(x) = 0.208899
+	f(x) = 0.187652
 iteration: 1159
-	f(x) = 0.208892
+	f(x) = 0.182362
 iteration: 1160
-	f(x) = 0.208890
+	f(x) = 0.180813
 iteration: 1161
-	f(x) = 0.208897
+	f(x) = 0.185288
 iteration: 1162
-	f(x) = 0.208902
+	f(x) = 0.180791
 iteration: 1163
-	f(x) = 0.208894
+	f(x) = 0.182189
 iteration: 1164
-	f(x) = 0.208891
+	f(x) = 0.185289
 iteration: 1165
-	f(x) = 0.208887
+	f(x) = 0.180986
 iteration: 1166
-	f(x) = 0.208886
+	f(x) = 0.182107
 iteration: 1167
-	f(x) = 0.208887
+	f(x) = 0.180720
 iteration: 1168
-	f(x) = 0.208886
+	f(x) = 0.180739
 iteration: 1169
-	f(x) = 0.208892
+	f(x) = 0.180977
 iteration: 1170
-	f(x) = 0.208885
+	f(x) = 0.180710
 iteration: 1171
-	f(x) = 0.208888
+	f(x) = 0.180710
 iteration: 1172
-	f(x) = 0.208885
+	f(x) = 0.186929
 iteration: 1173
-	f(x) = 0.208887
+	f(x) = 0.176956
 iteration: 1174
-	f(x) = 0.208885
+	f(x) = 0.179279
 iteration: 1175
-	f(x) = 0.208885
+	f(x) = 0.176956
 iteration: 1176
-	f(x) = 0.208885
+	f(x) = 0.177223
 iteration: 1177
-	f(x) = 0.208885
+	f(x) = 0.179279
 iteration: 1178
-	f(x) = 0.208885
+	f(x) = 0.177223
 iteration: 1179
-	f(x) = 0.209159
+	f(x) = 0.178302
 iteration: 1180
-	f(x) = 0.211356
+	f(x) = 0.176863
 iteration: 1181
-	f(x) = 0.211447
+	f(x) = 0.176863
 iteration: 1182
-	f(x) = 0.209272
+	f(x) = 0.176985
 iteration: 1183
-	f(x) = 0.209456
+	f(x) = 0.177223
 iteration: 1184
-	f(x) = 0.208765
+	f(x) = 0.176854
 iteration: 1185
-	f(x) = 0.210756
+	f(x) = 0.176854
 iteration: 1186
-	f(x) = 0.208668
+	f(x) = 0.176892
 iteration: 1187
-	f(x) = 0.209039
+	f(x) = 0.176956
 iteration: 1188
-	f(x) = 0.208702
+	f(x) = 0.176844
 iteration: 1189
-	f(x) = 0.208655
+	f(x) = 0.176844
 iteration: 1190
-	f(x) = 0.208819
+	f(x) = 0.176850
 iteration: 1191
-	f(x) = 0.208970
+	f(x) = 0.176863
 iteration: 1192
-	f(x) = 0.208629
+	f(x) = 0.176846
 iteration: 1193
-	f(x) = 0.208606
+	f(x) = 0.176850
 iteration: 1194
-	f(x) = 0.208100
+	f(x) = 0.176844
 iteration: 1195
-	f(x) = 0.208099
+	f(x) = 0.176844
 iteration: 1196
-	f(x) = 0.207886
+	f(x) = 0.176845
 iteration: 1197
-	f(x) = 0.207461
+	f(x) = 0.176846
 iteration: 1198
-	f(x) = 0.207045
+	f(x) = 0.176844
 iteration: 1199
-	f(x) = 0.207040
+	f(x) = 0.176844
 iteration: 1200
-	f(x) = 0.206931
+	f(x) = 0.176844
 iteration: 1201
-	f(x) = 0.206732
+	f(x) = 0.176844
 iteration: 1202
-	f(x) = 0.207356
+	f(x) = 0.176844
 iteration: 1203
-	f(x) = 0.207662
+	f(x) = 0.176844
 iteration: 1204
-	f(x) = 0.206781
+	f(x) = 0.176844
 iteration: 1205
-	f(x) = 0.206469
+	f(x) = 0.176844
 iteration: 1206
-	f(x) = 0.206292
+	f(x) = 0.176844
 iteration: 1207
-	f(x) = 0.206708
+	f(x) = 0.176844
 iteration: 1208
-	f(x) = 0.206265
+	f(x) = 0.176844
 iteration: 1209
-	f(x) = 0.206242
+	f(x) = 0.176844
 iteration: 1210
-	f(x) = 0.205775
+	f(x) = 0.176844
 iteration: 1211
-	f(x) = 0.205617
+	f(x) = 0.176844
 iteration: 1212
-	f(x) = 0.205866
+	f(x) = 0.176844
 iteration: 1213
-	f(x) = 0.205738
+	f(x) = 0.176844
 iteration: 1214
-	f(x) = 0.206247
+	f(x) = 0.176844
 iteration: 1215
-	f(x) = 0.205609
+	f(x) = 0.176844
 iteration: 1216
-	f(x) = 0.205925
+	f(x) = 0.176844
 iteration: 1217
-	f(x) = 0.205589
+	f(x) = 0.176844
 iteration: 1218
-	f(x) = 0.205840
+	f(x) = 0.176844
 iteration: 1219
-	f(x) = 0.205561
+	f(x) = 0.176844
 iteration: 1220
-	f(x) = 0.205639
+	f(x) = 0.176844
 iteration: 1221
-	f(x) = 0.205571
+	f(x) = 0.176844
 iteration: 1222
-	f(x) = 0.205594
+	f(x) = 0.176844
 iteration: 1223
-	f(x) = 0.205567
+	f(x) = 0.176844
 iteration: 1224
-	f(x) = 0.205572
+	f(x) = 0.176844
 iteration: 1225
-	f(x) = 0.205562
+	f(x) = 0.176844
 iteration: 1226
-	f(x) = 0.205567
+	f(x) = 0.176844
 iteration: 1227
-	f(x) = 0.205561
+	f(x) = 0.176844
 iteration: 1228
-	f(x) = 0.205563
+	f(x) = 0.176844
 iteration: 1229
-	f(x) = 0.205559
+	f(x) = 0.176844
 iteration: 1230
-	f(x) = 0.205563
+	f(x) = 0.176844
 iteration: 1231
-	f(x) = 0.205559
+	f(x) = 0.176844
 iteration: 1232
-	f(x) = 0.205567
+	f(x) = 0.176844
 iteration: 1233
-	f(x) = 0.205559
+	f(x) = 0.176844
 iteration: 1234
-	f(x) = 0.205559
+	f(x) = 0.176844
 iteration: 1235
-	f(x) = 0.205559
+	f(x) = 0.176844
 iteration: 1236
-	f(x) = 0.205560
+	f(x) = 0.176844
 iteration: 1237
-	f(x) = 0.205559
+	f(x) = 0.176843
 iteration: 1238
-	f(x) = 0.216752
+	f(x) = 0.176843
 iteration: 1239
-	f(x) = 0.206521
+	f(x) = 0.176843
 iteration: 1240
-	f(x) = 0.210410
+	f(x) = 0.176842
 iteration: 1241
-	f(x) = 0.206648
+	f(x) = 0.176841
 iteration: 1242
-	f(x) = 0.209745
+	f(x) = 0.176838
 iteration: 1243
-	f(x) = 0.205807
+	f(x) = 0.176822
 iteration: 1244
-	f(x) = 0.206204
+	f(x) = 232.634411
 iteration: 1245
-	f(x) = 0.206747
+	f(x) = 0.176841
 iteration: 1246
-	f(x) = 0.208132
+	f(x) = 0.176817
 iteration: 1247
-	f(x) = 0.205641
+	f(x) = 232.670358
 iteration: 1248
-	f(x) = 0.208126
+	f(x) = 232.660139
 iteration: 1249
-	f(x) = 0.205485
+	f(x) = 0.176837
 iteration: 1250
-	f(x) = 0.205674
+	f(x) = 232.657501
 iteration: 1251
-	f(x) = 0.205433
+	f(x) = 0.176832
 iteration: 1252
-	f(x) = 0.206009
+	f(x) = 0.176705
 iteration: 1253
-	f(x) = 0.205383
+	f(x) = 232.657501
 iteration: 1254
-	f(x) = 0.205739
+	f(x) = 232.666464
 iteration: 1255
-	f(x) = 0.205388
+	f(x) = 0.176814
 iteration: 1256
-	f(x) = 0.205409
+	f(x) = 0.176621
 iteration: 1257
-	f(x) = 0.205383
+	f(x) = 232.645141
 iteration: 1258
-	f(x) = 0.205358
+	f(x) = 232.652364
 iteration: 1259
-	f(x) = 0.205338
+	f(x) = 0.176791
 iteration: 1260
-	f(x) = 0.205334
+	f(x) = 232.652750
 iteration: 1261
-	f(x) = 0.205313
+	f(x) = 0.176762
 iteration: 1262
-	f(x) = 0.205280
+	f(x) = 232.652943
 iteration: 1263
-	f(x) = 0.205254
+	f(x) = 0.176733
 iteration: 1264
-	f(x) = 0.205228
+	f(x) = 0.176480
 iteration: 1265
-	f(x) = 0.205201
+	f(x) = 232.652943
 iteration: 1266
-	f(x) = 0.205221
+	f(x) = 232.646952
 iteration: 1267
-	f(x) = 0.205223
+	f(x) = 0.176659
 iteration: 1268
-	f(x) = 0.205203
+	f(x) = 0.176304
 iteration: 1269
-	f(x) = 0.205202
+	f(x) = 232.646952
 iteration: 1270
-	f(x) = 0.205259
+	f(x) = 232.652206
 iteration: 1271
-	f(x) = 0.205194
+	f(x) = 0.176548
 iteration: 1272
-	f(x) = 0.205206
+	f(x) = 0.176061
 iteration: 1273
-	f(x) = 0.205197
+	f(x) = 232.652206
 iteration: 1274
-	f(x) = 0.205195
+	f(x) = 0.180013
 iteration: 1275
-	f(x) = 0.205201
+	f(x) = 0.176376
 iteration: 1276
-	f(x) = 0.205194
+	f(x) = 0.175909
 iteration: 1277
-	f(x) = 0.205197
+	f(x) = 0.180013
 iteration: 1278
-	f(x) = 0.205193
+	f(x) = 0.182011
 iteration: 1279
-	f(x) = 0.205195
+	f(x) = 0.176171
 iteration: 1280
-	f(x) = 0.205193
+	f(x) = 0.175834
 iteration: 1281
-	f(x) = 0.205194
+	f(x) = 0.182011
 iteration: 1282
-	f(x) = 0.205193
+	f(x) = 0.177176
 iteration: 1283
-	f(x) = 0.205194
+	f(x) = 0.175954
 iteration: 1284
-	f(x) = 0.205193
+	f(x) = 0.175880
 iteration: 1285
-	f(x) = 0.205193
+	f(x) = 0.178099
 iteration: 1286
-	f(x) = 0.205193
+	f(x) = 0.175847
 iteration: 1287
-	f(x) = 0.205128
+	f(x) = 0.175881
 iteration: 1288
-	f(x) = 0.203061
+	f(x) = 0.175838
 iteration: 1289
-	f(x) = 0.202802
+	f(x) = 0.175922
 iteration: 1290
-	f(x) = 0.202051
+	f(x) = 0.175835
 iteration: 1291
-	f(x) = 0.202562
+	f(x) = 0.179165
 iteration: 1292
-	f(x) = 0.202358
+	f(x) = 0.236418
 iteration: 1293
-	f(x) = 0.201217
+	f(x) = 0.179165
 iteration: 1294
-	f(x) = 0.200938
+	f(x) = 0.178289
 iteration: 1295
-	f(x) = 0.204225
+	f(x) = 0.175089
 iteration: 1296
-	f(x) = 0.201461
+	f(x) = 0.173449
 iteration: 1297
-	f(x) = 0.200284
+	f(x) = 0.172033
 iteration: 1298
-	f(x) = 0.199702
+	f(x) = 0.171547
 iteration: 1299
-	f(x) = 0.198823
+	f(x) = 0.172922
 iteration: 1300
-	f(x) = 0.197691
+	f(x) = 0.181254
 iteration: 1301
-	f(x) = 0.196659
+	f(x) = 0.171570
 iteration: 1302
-	f(x) = 0.195703
+	f(x) = 0.172775
 iteration: 1303
-	f(x) = 0.192476
+	f(x) = 0.171798
 iteration: 1304
-	f(x) = 0.189201
+	f(x) = 0.171780
 iteration: 1305
-	f(x) = 0.191488
+	f(x) = 0.171509
 iteration: 1306
-	f(x) = 0.184017
+	f(x) = 236.602877
 iteration: 1307
-	f(x) = 0.180340
+	f(x) = 0.172142
 iteration: 1308
-	f(x) = 0.178968
+	f(x) = 0.172969
 iteration: 1309
-	f(x) = 0.178784
+	f(x) = 0.172257
 iteration: 1310
-	f(x) = 0.165633
+	f(x) = 0.171906
 iteration: 1311
-	f(x) = 0.163880
+	f(x) = 0.173552
 iteration: 1312
-	f(x) = 0.159062
+	f(x) = 0.171530
 iteration: 1313
-	f(x) = 0.159414
+	f(x) = 0.171783
 iteration: 1314
-	f(x) = 0.198684
+	f(x) = 0.171618
 iteration: 1315
-	f(x) = 0.166046
+	f(x) = 0.171410
 iteration: 1316
-	f(x) = 0.158128
+	f(x) = 0.171906
 iteration: 1317
-	f(x) = 0.198684
+	f(x) = 0.171662
 iteration: 1318
-	f(x) = 0.151753
+	f(x) = 0.171438
 iteration: 1319
-	f(x) = 0.167108
+	f(x) = 0.171483
 iteration: 1320
-	f(x) = 0.160698
+	f(x) = 0.171409
 iteration: 1321
-	f(x) = 0.151544
+	f(x) = 0.171633
 iteration: 1322
-	f(x) = 0.185894
+	f(x) = 0.171406
 iteration: 1323
-	f(x) = 0.148371
+	f(x) = 0.171444
 iteration: 1324
-	f(x) = 0.155998
+	f(x) = 0.171400
 iteration: 1325
-	f(x) = 0.149286
+	f(x) = 0.171412
 iteration: 1326
-	f(x) = 0.145583
+	f(x) = 0.171402
 iteration: 1327
-	f(x) = 0.145713
+	f(x) = 1.122362
 iteration: 1328
-	f(x) = 0.153020
+	f(x) = 0.171746
 iteration: 1329
-	f(x) = 0.147184
+	f(x) = 2051.139130
 iteration: 1330
-	f(x) = 0.144677
+	f(x) = 0.466796
 iteration: 1331
-	f(x) = 0.143965
+	f(x) = 0.416068
 iteration: 1332
-	f(x) = 0.141203
+	f(x) = 0.230134
 iteration: 1333
-	f(x) = 0.138813
+	f(x) = 0.274737
 iteration: 1334
-	f(x) = 0.138497
+	f(x) = 0.182111
 iteration: 1335
-	f(x) = 0.138112
+	f(x) = 0.206895
 iteration: 1336
-	f(x) = 0.132320
+	f(x) = 0.171166
 iteration: 1337
-	f(x) = 0.138380
+	f(x) = 0.943974
 iteration: 1338
-	f(x) = 0.135259
+	f(x) = 0.272744
 iteration: 1339
-	f(x) = 0.136049
+	f(x) = 0.927483
 iteration: 1340
-	f(x) = 0.132742
+	f(x) = 0.415747
 iteration: 1341
-	f(x) = 0.137710
+	f(x) = 0.358982
 iteration: 1342
-	f(x) = 0.132491
+	f(x) = 0.222686
 iteration: 1343
-	f(x) = 0.133015
+	f(x) = 0.265427
 iteration: 1344
-	f(x) = 0.132044
+	f(x) = 0.220369
 iteration: 1345
-	f(x) = 0.133543
+	f(x) = 0.190769
 iteration: 1346
-	f(x) = 0.131930
+	f(x) = 0.217566
 iteration: 1347
-	f(x) = 0.133368
+	f(x) = 0.189055
 iteration: 1348
-	f(x) = 0.131893
+	f(x) = 0.181917
 iteration: 1349
-	f(x) = 0.131978
+	f(x) = 0.201756
 iteration: 1350
-	f(x) = 0.131874
+	f(x) = 0.176476
 iteration: 1351
-	f(x) = 0.132168
+	f(x) = 0.182512
 iteration: 1352
-	f(x) = 0.131855
+	f(x) = 0.173782
 iteration: 1353
-	f(x) = 0.131951
+	f(x) = 0.173541
 iteration: 1354
-	f(x) = 0.131858
+	f(x) = 0.179582
 iteration: 1355
-	f(x) = 0.131861
+	f(x) = 0.171055
 iteration: 1356
-	f(x) = 0.131850
+	f(x) = 1986.370380
 iteration: 1357
-	f(x) = 0.131885
+	f(x) = 840.001891
 iteration: 1358
-	f(x) = 0.131849
+	f(x) = 854.511455
 iteration: 1359
-	f(x) = 0.132670
+	f(x) = 0.347675
 iteration: 1360
-	f(x) = 0.132609
+	f(x) = 0.214076
 iteration: 1361
-	f(x) = 0.134162
+	f(x) = 0.233015
 iteration: 1362
-	f(x) = 0.132034
+	f(x) = 0.207465
 iteration: 1363
-	f(x) = 0.132664
+	f(x) = 0.211805
 iteration: 1364
-	f(x) = 0.132059
+	f(x) = 0.186341
 iteration: 1365
-	f(x) = 0.132051
+	f(x) = 0.191211
 iteration: 1366
-	f(x) = 0.131904
+	f(x) = 0.174186
 iteration: 1367
-	f(x) = 0.132088
+	f(x) = 0.185557
 iteration: 1368
-	f(x) = 0.131889
+	f(x) = 0.171501
 iteration: 1369
-	f(x) = 0.131859
+	f(x) = 0.171538
 iteration: 1370
-	f(x) = 0.132043
+	f(x) = 1.369556
 iteration: 1371
-	f(x) = 0.131839
+	f(x) = 0.171538
 iteration: 1372
-	f(x) = 0.131859
+	f(x) = 0.170344
 iteration: 1373
-	f(x) = 0.131840
+	f(x) = 0.170152
 iteration: 1374
-	f(x) = 0.131869
+	f(x) = 0.170043
 iteration: 1375
-	f(x) = 0.131836
+	f(x) = 0.169864
 iteration: 1376
-	f(x) = 0.134714
+	f(x) = 0.169657
 iteration: 1377
-	f(x) = 0.131819
+	f(x) = 0.169597
 iteration: 1378
-	f(x) = 0.130856
+	f(x) = 0.169420
 iteration: 1379
-	f(x) = 0.131814
+	f(x) = 0.169165
 iteration: 1380
-	f(x) = 0.130829
+	f(x) = 0.169007
 iteration: 1381
-	f(x) = 0.131066
+	f(x) = 0.169208
 iteration: 1382
-	f(x) = 0.131795
+	f(x) = 0.169555
 iteration: 1383
-	f(x) = 0.131104
+	f(x) = 0.169153
 iteration: 1384
-	f(x) = 0.131073
+	f(x) = 0.169229
 iteration: 1385
-	f(x) = 0.130893
+	f(x) = 0.169101
 iteration: 1386
-	f(x) = 0.130915
+	f(x) = 0.169049
 iteration: 1387
-	f(x) = 0.130851
+	f(x) = 0.168944
 iteration: 1388
-	f(x) = 0.130828
+	f(x) = 0.168905
 iteration: 1389
-	f(x) = 0.130830
+	f(x) = 0.168895
 iteration: 1390
-	f(x) = 0.130805
+	f(x) = 0.168933
 iteration: 1391
-	f(x) = 0.130794
+	f(x) = 0.168861
 iteration: 1392
-	f(x) = 0.130783
+	f(x) = 0.168951
 iteration: 1393
-	f(x) = 0.130768
+	f(x) = 0.168879
 iteration: 1394
-	f(x) = 0.130749
+	f(x) = 0.168914
 iteration: 1395
-	f(x) = 0.130749
+	f(x) = 0.168860
 iteration: 1396
-	f(x) = 0.130725
+	f(x) = 0.168894
 iteration: 1397
-	f(x) = 0.130718
+	f(x) = 0.168855
 iteration: 1398
-	f(x) = 0.130686
+	f(x) = 0.168925
 iteration: 1399
-	f(x) = 0.130672
+	f(x) = 0.168849
 iteration: 1400
-	f(x) = 0.130659
+	f(x) = 0.168856
 iteration: 1401
-	f(x) = 0.130677
+	f(x) = 0.168851
 iteration: 1402
-	f(x) = 0.130640
+	f(x) = 0.168857
 iteration: 1403
-	f(x) = 0.130677
+	f(x) = 0.168851
 iteration: 1404
-	f(x) = 0.130627
+	f(x) = 0.177620
 iteration: 1405
-	f(x) = 0.130646
+	f(x) = 0.169550
 iteration: 1406
-	f(x) = 0.130628
+	f(x) = 0.195487
 iteration: 1407
-	f(x) = 0.130607
+	f(x) = 0.168767
 iteration: 1408
-	f(x) = 0.130623
+	f(x) = 0.168046
 iteration: 1409
-	f(x) = 0.130720
+	f(x) = 0.170862
 iteration: 1410
-	f(x) = 0.130608
+	f(x) = 0.176963
 iteration: 1411
-	f(x) = 0.130600
+	f(x) = 0.167387
 iteration: 1412
-	f(x) = 0.130612
+	f(x) = 0.167254
 iteration: 1413
-	f(x) = 0.130594
+	f(x) = 0.167948
 iteration: 1414
-	f(x) = 0.130593
+	f(x) = 0.168922
 iteration: 1415
-	f(x) = 0.130590
+	f(x) = 0.167363
 iteration: 1416
-	f(x) = 0.130601
+	f(x) = 0.167244
 iteration: 1417
-	f(x) = 0.130585
+	f(x) = 0.167432
 iteration: 1418
-	f(x) = 0.130593
+	f(x) = 0.167303
 iteration: 1419
-	f(x) = 0.130586
+	f(x) = 0.167209
 iteration: 1420
-	f(x) = 0.130580
+	f(x) = 0.167318
 iteration: 1421
-	f(x) = 0.130587
+	f(x) = 0.167192
 iteration: 1422
-	f(x) = 0.130616
+	f(x) = 0.168740
 iteration: 1423
-	f(x) = 0.130579
+	f(x) = 0.167288
 iteration: 1424
-	f(x) = 0.130577
+	f(x) = 0.168366
 iteration: 1425
-	f(x) = 0.130579
+	f(x) = 0.167502
 iteration: 1426
-	f(x) = 0.130585
+	f(x) = 0.167617
 iteration: 1427
-	f(x) = 0.130578
+	f(x) = 0.167282
 iteration: 1428
-	f(x) = 0.130575
+	f(x) = 0.221708
 iteration: 1429
-	f(x) = 0.130574
+	f(x) = 0.222967
 iteration: 1430
-	f(x) = 0.130574
+	f(x) = 0.221708
 iteration: 1431
-	f(x) = 0.130572
+	f(x) = 0.167192
 iteration: 1432
-	f(x) = 0.130571
+	f(x) = 0.206166
 iteration: 1433
-	f(x) = 0.130573
+	f(x) = 0.174933
 iteration: 1434
-	f(x) = 0.130571
+	f(x) = 0.173284
 iteration: 1435
-	f(x) = 0.130571
+	f(x) = 0.174484
 iteration: 1436
-	f(x) = 0.130570
+	f(x) = 0.170481
 iteration: 1437
-	f(x) = 0.130572
+	f(x) = 0.164189
 iteration: 1438
-	f(x) = 0.130570
+	f(x) = 0.164799
 iteration: 1439
-	f(x) = 0.130570
+	f(x) = 0.166640
 iteration: 1440
-	f(x) = 0.130570
+	f(x) = 0.163494
 iteration: 1441
-	f(x) = 0.130570
+	f(x) = 0.168380
 iteration: 1442
-	f(x) = 0.130570
+	f(x) = 0.170180
 iteration: 1443
-	f(x) = 0.130572
+	f(x) = 0.163556
 iteration: 1444
-	f(x) = 0.130570
+	f(x) = 0.169822
 iteration: 1445
-	f(x) = 0.130570
+	f(x) = 0.162900
 iteration: 1446
-	f(x) = 0.130570
+	f(x) = 0.164058
 iteration: 1447
-	f(x) = 0.130570
+	f(x) = 0.162979
 iteration: 1448
-	f(x) = 0.130569
+	f(x) = 0.163866
 iteration: 1449
-	f(x) = 0.130570
+	f(x) = 0.162920
 iteration: 1450
-	f(x) = 0.130570
+	f(x) = 0.162992
 iteration: 1451
-	f(x) = 0.130570
+	f(x) = 0.162832
 iteration: 1452
-	f(x) = 0.130570
+	f(x) = 0.162795
 iteration: 1453
-	f(x) = 0.130570
+	f(x) = 0.162572
 iteration: 1454
-	f(x) = 0.130570
+	f(x) = 0.162624
 iteration: 1455
-	f(x) = 0.130570
+	f(x) = 0.162566
 iteration: 1456
-	f(x) = 0.130569
+	f(x) = 0.162752
 iteration: 1457
-	f(x) = 0.130570
+	f(x) = 0.162535
 iteration: 1458
-	f(x) = 0.130570
+	f(x) = 0.162623
 iteration: 1459
-	f(x) = 0.130569
+	f(x) = 0.162706
 iteration: 1460
-	f(x) = 0.130570
+	f(x) = 0.162529
 iteration: 1461
-	f(x) = 0.130570
+	f(x) = 0.162569
 iteration: 1462
-	f(x) = 0.130570
+	f(x) = 0.162534
 iteration: 1463
-	f(x) = 0.130570
+	f(x) = 0.162563
 iteration: 1464
-	f(x) = 0.130569
+	f(x) = 0.162526
 iteration: 1465
-	f(x) = 0.130569
+	f(x) = 0.162533
 iteration: 1466
-	f(x) = 0.130570
+	f(x) = 0.162527
 iteration: 1467
-	f(x) = 0.130570
+	f(x) = 0.163019
 iteration: 1468
-	f(x) = 0.130570
+	f(x) = 0.179689
 iteration: 1469
-	f(x) = 0.130569
+	f(x) = 0.176135
 iteration: 1470
-	f(x) = 0.130569
+	f(x) = 0.167857
 iteration: 1471
-	f(x) = 0.130570
+	f(x) = 0.167247
 iteration: 1472
-	f(x) = 0.130570
+	f(x) = 0.163665
 iteration: 1473
-	f(x) = 0.130569
+	f(x) = 0.164533
 iteration: 1474
-	f(x) = 0.130570
+	f(x) = 0.162859
 iteration: 1475
-	f(x) = 0.130569
+	f(x) = 0.162310
 iteration: 1476
-	f(x) = 0.131799
+	f(x) = 0.166102
 iteration: 1477
-	f(x) = 0.130569
+	f(x) = 0.162658
 iteration: 1478
-	f(x) = 0.139009
+	f(x) = 0.162226
 iteration: 1479
-	f(x) = 0.129975
+	f(x) = 0.163803
 iteration: 1480
-	f(x) = 0.129979
+	f(x) = 0.162313
 iteration: 1481
-	f(x) = 0.131793
+	f(x) = 0.162411
 iteration: 1482
-	f(x) = 0.129927
+	f(x) = 0.162242
 iteration: 1483
-	f(x) = 0.129926
+	f(x) = 0.227677
 iteration: 1484
-	f(x) = 0.130159
+	f(x) = 0.188461
 iteration: 1485
-	f(x) = 0.130569
+	f(x) = 0.329272
 iteration: 1486
-	f(x) = 0.129867
+	f(x) = 0.172555
 iteration: 1487
-	f(x) = 0.129866
+	f(x) = 0.189596
 iteration: 1488
-	f(x) = 0.129550
+	f(x) = 0.165630
 iteration: 1489
-	f(x) = 0.129550
+	f(x) = 0.193056
 iteration: 1490
-	f(x) = 0.696799
+	f(x) = 0.162635
 iteration: 1491
-	f(x) = 0.129523
+	f(x) = 0.163548
 iteration: 1492
-	f(x) = 0.572326
+	f(x) = 0.161332
 iteration: 1493
-	f(x) = 0.289075
+	f(x) = 0.168338
 iteration: 1494
-	f(x) = 0.295602
+	f(x) = 0.420685
 iteration: 1495
-	f(x) = 0.182879
+	f(x) = 0.168338
 iteration: 1496
-	f(x) = 0.178469
+	f(x) = 0.166069
 iteration: 1497
-	f(x) = 0.142865
+	f(x) = 0.160962
 iteration: 1498
-	f(x) = 0.144512
+	f(x) = 0.163905
 iteration: 1499
-	f(x) = 0.132886
+	f(x) = 0.165159
 iteration: 1500
-	f(x) = 0.133493
+	f(x) = 0.161717
 iteration: 1501
-	f(x) = 0.130302
+	f(x) = 0.336379
 iteration: 1502
-	f(x) = 0.130585
+	f(x) = 0.162072
 iteration: 1503
-	f(x) = 0.129676
+	f(x) = 0.328936
 iteration: 1504
-	f(x) = 0.129815
+	f(x) = 0.217490
 iteration: 1505
-	f(x) = 0.129535
+	f(x) = 0.208573
 iteration: 1506
-	f(x) = 0.129644
+	f(x) = 0.172673
 iteration: 1507
-	f(x) = 0.129510
+	f(x) = 0.178770
 iteration: 1508
-	f(x) = 0.158921
+	f(x) = 0.163539
 iteration: 1509
-	f(x) = 0.129009
+	f(x) = 0.160808
 iteration: 1510
-	f(x) = 0.199208
+	f(x) = 0.160754
 iteration: 1511
-	f(x) = 0.141222
+	f(x) = 0.160609
 iteration: 1512
-	f(x) = 0.150139
+	f(x) = 0.160457
 iteration: 1513
-	f(x) = 0.132942
+	f(x) = 0.160440
 iteration: 1514
-	f(x) = 0.135936
+	f(x) = 0.160333
 iteration: 1515
-	f(x) = 0.129989
+	f(x) = 0.160130
 iteration: 1516
-	f(x) = 0.131266
+	f(x) = 0.160023
 iteration: 1517
-	f(x) = 0.129223
+	f(x) = 0.160226
 iteration: 1518
-	f(x) = 0.129075
+	f(x) = 0.160459
 iteration: 1519
-	f(x) = 0.200437
+	f(x) = 0.160148
 iteration: 1520
-	f(x) = 0.172218
+	f(x) = 0.160152
 iteration: 1521
-	f(x) = 448.925786
+	f(x) = 0.160088
 iteration: 1522
-	f(x) = 0.167927
+	f(x) = 0.159954
 iteration: 1523
-	f(x) = 0.290078
+	f(x) = 0.159884
 iteration: 1524
-	f(x) = 0.151724
+	f(x) = 0.159898
 iteration: 1525
-	f(x) = 0.190339
+	f(x) = 0.159807
 iteration: 1526
-	f(x) = 0.150855
+	f(x) = 0.159813
 iteration: 1527
-	f(x) = 0.151859
+	f(x) = 0.159817
 iteration: 1528
-	f(x) = 0.142101
+	f(x) = 0.159788
 iteration: 1529
-	f(x) = 0.140720
+	f(x) = 0.159855
 iteration: 1530
-	f(x) = 0.175354
+	f(x) = 0.159867
 iteration: 1531
-	f(x) = 0.131343
+	f(x) = 0.159790
 iteration: 1532
-	f(x) = 0.128998
+	f(x) = 0.159799
 iteration: 1533
-	f(x) = 0.158672
+	f(x) = 0.159786
 iteration: 1534
-	f(x) = 0.236675
+	f(x) = 0.159817
 iteration: 1535
-	f(x) = 0.139804
+	f(x) = 0.159783
 iteration: 1536
-	f(x) = 0.154971
+	f(x) = 0.159793
 iteration: 1537
-	f(x) = 0.131707
+	f(x) = 0.159784
 iteration: 1538
-	f(x) = 0.137006
+	f(x) = 0.159784
 iteration: 1539
-	f(x) = 0.129265
+	f(x) = 0.159782
 iteration: 1540
-	f(x) = 0.128997
+	f(x) = 0.159785
 iteration: 1541
-	f(x) = 0.129009
+	f(x) = 0.159782
 iteration: 1542
-	f(x) = 0.129048
+	f(x) = 0.159784
 iteration: 1543
-	f(x) = 0.128996
+	f(x) = 0.159782
 iteration: 1544
-	f(x) = 0.128996
+	f(x) = 0.160255
 iteration: 1545
-	f(x) = 0.129001
+	f(x) = 0.171767
 iteration: 1546
-	f(x) = 0.129009
+	f(x) = 0.176451
 iteration: 1547
-	f(x) = 0.128995
+	f(x) = 0.162528
 iteration: 1548
-	f(x) = 0.128995
+	f(x) = 0.164557
 iteration: 1549
-	f(x) = 0.128995
+	f(x) = 0.160340
 iteration: 1550
-	f(x) = 0.128997
+	f(x) = 0.161287
 iteration: 1551
-	f(x) = 0.128995
+	f(x) = 0.159894
 iteration: 1552
-	f(x) = 0.128996
+	f(x) = 0.159613
 iteration: 1553
-	f(x) = 0.128995
+	f(x) = 0.159642
 iteration: 1554
-	f(x) = 0.128994
+	f(x) = 0.159790
 iteration: 1555
-	f(x) = 0.128994
+	f(x) = 0.159682
 iteration: 1556
-	f(x) = 0.128995
+	f(x) = 0.159599
 iteration: 1557
-	f(x) = 0.128995
+	f(x) = 0.159742
 iteration: 1558
-	f(x) = 0.128994
+	f(x) = 0.159849
 iteration: 1559
-	f(x) = 0.128994
+	f(x) = 0.159599
 iteration: 1560
-	f(x) = 0.128994
+	f(x) = 0.160238
 iteration: 1561
-	f(x) = 0.128994
+	f(x) = 0.163864
 iteration: 1562
-	f(x) = 0.128994
+	f(x) = 0.160397
 iteration: 1563
-	f(x) = 0.128994
+	f(x) = 0.159260
 iteration: 1564
-	f(x) = 0.128994
+	f(x) = 0.159128
 iteration: 1565
-	f(x) = 0.128994
+	f(x) = 0.160117
 iteration: 1566
-	f(x) = 0.128994
+	f(x) = 0.159867
 iteration: 1567
-	f(x) = 0.128994
+	f(x) = 0.159109
 iteration: 1568
-	f(x) = 0.128994
+	f(x) = 0.160055
 iteration: 1569
-	f(x) = 0.128994
+	f(x) = 0.158986
 iteration: 1570
-	f(x) = 0.128994
+	f(x) = 0.159474
 iteration: 1571
-	f(x) = 0.128994
+	f(x) = 0.159002
 iteration: 1572
-	f(x) = 0.128994
+	f(x) = 0.159003
 iteration: 1573
-	f(x) = 0.128994
+	f(x) = 0.158960
 iteration: 1574
-	f(x) = 0.128994
+	f(x) = 0.159082
 iteration: 1575
-	f(x) = 0.128994
+	f(x) = 0.158963
 iteration: 1576
-	f(x) = 0.128994
+	f(x) = 0.158485
 iteration: 1577
-	f(x) = 0.128994
+	f(x) = 0.224851
 iteration: 1578
-	f(x) = 0.128994
+	f(x) = 0.158960
 iteration: 1579
-	f(x) = 0.128994
+	f(x) = 0.158215
 iteration: 1580
-	f(x) = 0.128994
+	f(x) = 0.205771
 iteration: 1581
-	f(x) = 0.128994
+	f(x) = 0.157847
 iteration: 1582
-	f(x) = 0.128994
+	f(x) = 0.179097
 iteration: 1583
-	f(x) = 0.128994
+	f(x) = 0.159904
 iteration: 1584
-	f(x) = 0.128994
+	f(x) = 0.174980
 iteration: 1585
-	f(x) = 0.128994
+	f(x) = 0.156519
 iteration: 1586
-	f(x) = 0.128994
+	f(x) = 0.155976
 iteration: 1587
-	f(x) = 0.128994
+	f(x) = 0.156566
 iteration: 1588
-	f(x) = 0.128994
+	f(x) = 0.159551
 iteration: 1589
-	f(x) = 0.128994
+	f(x) = 0.156413
 iteration: 1590
-	f(x) = 0.128994
+	f(x) = 0.155831
 iteration: 1591
-	f(x) = 0.128994
+	f(x) = 0.155669
 iteration: 1592
-	f(x) = 0.128994
+	f(x) = 0.155572
 iteration: 1593
-	f(x) = 0.128994
+	f(x) = 0.155493
 iteration: 1594
-	f(x) = 0.128994
+	f(x) = 0.155504
 iteration: 1595
-	f(x) = 0.128994
+	f(x) = 0.155645
 iteration: 1596
-	f(x) = 0.128994
+	f(x) = 0.155517
 iteration: 1597
-	f(x) = 0.128994
+	f(x) = 0.155534
 iteration: 1598
-	f(x) = 0.128994
+	f(x) = 0.155488
 iteration: 1599
-	f(x) = 0.128994
+	f(x) = 0.155518
 iteration: 1600
-	f(x) = 0.128994
+	f(x) = 0.155484
 iteration: 1601
-	f(x) = 0.128994
+	f(x) = 0.155549
 iteration: 1602
-	f(x) = 0.128994
+	f(x) = 0.155480
 iteration: 1603
-	f(x) = 0.128994
+	f(x) = 0.155486
 iteration: 1604
-	f(x) = 0.128994
+	f(x) = 0.155482
 iteration: 1605
-	f(x) = 0.128994
+	f(x) = 0.155341
 iteration: 1606
-	f(x) = 0.128994
+	f(x) = 0.169319
 iteration: 1607
-	f(x) = 0.128994
+	f(x) = 0.166387
 iteration: 1608
-	f(x) = 0.128994
+	f(x) = 0.159199
 iteration: 1609
-	f(x) = 0.128981
+	f(x) = 0.157611
 iteration: 1610
-	f(x) = 0.128983
+	f(x) = 0.155522
 iteration: 1611
-	f(x) = 0.128985
+	f(x) = 0.156729
 iteration: 1612
-	f(x) = 0.128982
+	f(x) = 0.155236
 iteration: 1613
-	f(x) = 0.128979
+	f(x) = 0.155229
 iteration: 1614
-	f(x) = 0.128979
+	f(x) = 0.155365
 iteration: 1615
-	f(x) = 0.128979
+	f(x) = 0.155534
 iteration: 1616
-	f(x) = 0.128981
+	f(x) = 0.155232
 iteration: 1617
-	f(x) = 0.128979
+	f(x) = 0.155237
 iteration: 1618
-	f(x) = 0.128982
+	f(x) = 0.155217
 iteration: 1619
-	f(x) = 0.128979
+	f(x) = 0.160851
 iteration: 1620
-	f(x) = 0.128979
+	f(x) = 0.211585
 iteration: 1621
-	f(x) = 0.128979
+	f(x) = 0.240898
 iteration: 1622
-	f(x) = 0.128978
+	f(x) = 0.166560
 iteration: 1623
-	f(x) = 0.128979
+	f(x) = 0.183459
 iteration: 1624
-	f(x) = 0.128978
+	f(x) = 0.155206
 iteration: 1625
-	f(x) = 0.128937
+	f(x) = 0.168225
 iteration: 1626
-	f(x) = 0.185242
+	f(x) = 0.153963
 iteration: 1627
-	f(x) = 0.188100
+	f(x) = 0.158513
 iteration: 1628
-	f(x) = 0.144405
+	f(x) = 0.153569
 iteration: 1629
-	f(x) = 0.145951
+	f(x) = 0.288607
 iteration: 1630
-	f(x) = 0.132871
+	f(x) = 0.154831
 iteration: 1631
-	f(x) = 0.133471
+	f(x) = 0.294892
 iteration: 1632
-	f(x) = 0.129876
+	f(x) = 0.189463
 iteration: 1633
-	f(x) = 0.137093
+	f(x) = 0.199928
 iteration: 1634
-	f(x) = 0.138245
+	f(x) = 0.161628
 iteration: 1635
-	f(x) = 0.140061
+	f(x) = 0.167425
 iteration: 1636
-	f(x) = 0.132943
+	f(x) = 0.154579
 iteration: 1637
-	f(x) = 0.133973
+	f(x) = 0.160088
 iteration: 1638
-	f(x) = 0.130946
+	f(x) = 0.152977
 iteration: 1639
-	f(x) = 0.129606
+	f(x) = 0.151734
 iteration: 1640
-	f(x) = 0.129088
+	f(x) = 0.239809
 iteration: 1641
-	f(x) = 0.130174
+	f(x) = 0.152977
 iteration: 1642
-	f(x) = 0.128760
+	f(x) = 0.151651
 iteration: 1643
-	f(x) = 0.130319
+	f(x) = 0.151522
 iteration: 1644
-	f(x) = 0.128587
+	f(x) = 0.151469
 iteration: 1645
-	f(x) = 0.129984
+	f(x) = 0.151407
 iteration: 1646
-	f(x) = 0.128556
+	f(x) = 0.151370
 iteration: 1647
-	f(x) = 0.128657
+	f(x) = 0.151430
 iteration: 1648
-	f(x) = 0.128535
+	f(x) = 0.151433
 iteration: 1649
-	f(x) = 0.159729
+	f(x) = 0.151381
 iteration: 1650
-	f(x) = 0.141792
+	f(x) = 0.151411
 iteration: 1651
-	f(x) = 0.157092
+	f(x) = 0.151379
 iteration: 1652
-	f(x) = 0.141334
+	f(x) = 0.151394
 iteration: 1653
-	f(x) = 0.133676
+	f(x) = 0.151373
 iteration: 1654
-	f(x) = 0.132828
+	f(x) = 0.151374
 iteration: 1655
-	f(x) = 0.141014
+	f(x) = 0.151370
 iteration: 1656
-	f(x) = 0.129885
+	f(x) = 0.151377
 iteration: 1657
-	f(x) = 0.135176
+	f(x) = 0.151370
 iteration: 1658
-	f(x) = 0.129599
+	f(x) = 0.151373
 iteration: 1659
-	f(x) = 0.130505
+	f(x) = 0.151369
 iteration: 1660
-	f(x) = 0.128764
+	f(x) = 0.151391
 iteration: 1661
-	f(x) = 0.129704
+	f(x) = 0.154881
 iteration: 1662
-	f(x) = 0.128637
+	f(x) = 0.152600
 iteration: 1663
-	f(x) = 0.128963
+	f(x) = 0.151477
 iteration: 1664
-	f(x) = 0.128379
+	f(x) = 0.152495
 iteration: 1665
-	f(x) = 0.128381
+	f(x) = 0.151284
 iteration: 1666
-	f(x) = 0.128596
+	f(x) = 0.151297
 iteration: 1667
-	f(x) = 0.128490
+	f(x) = 0.151485
 iteration: 1668
-	f(x) = 0.128391
+	f(x) = 0.151289
 iteration: 1669
-	f(x) = 0.128450
+	f(x) = 0.151304
 iteration: 1670
-	f(x) = 0.128375
+	f(x) = 0.151280
 iteration: 1671
-	f(x) = 0.128373
+	f(x) = 0.154853
 iteration: 1672
-	f(x) = 0.128377
+	f(x) = 0.180818
 iteration: 1673
-	f(x) = 0.128390
+	f(x) = 0.201851
 iteration: 1674
-	f(x) = 0.128374
+	f(x) = 0.156241
 iteration: 1675
-	f(x) = 0.128372
+	f(x) = 0.167934
 iteration: 1676
-	f(x) = 0.128372
+	f(x) = 0.150735
 iteration: 1677
-	f(x) = 0.128371
+	f(x) = 0.158785
 iteration: 1678
-	f(x) = 0.128371
+	f(x) = 0.150671
 iteration: 1679
-	f(x) = 0.128370
+	f(x) = 0.152625
 iteration: 1680
-	f(x) = 0.128370
+	f(x) = 0.150262
 iteration: 1681
-	f(x) = 0.128369
+	f(x) = 0.155612
 iteration: 1682
-	f(x) = 0.128369
+	f(x) = 0.149415
 iteration: 1683
-	f(x) = 0.128368
+	f(x) = 0.156865
 iteration: 1684
-	f(x) = 0.128368
+	f(x) = 0.150445
 iteration: 1685
-	f(x) = 0.128367
+	f(x) = 0.152329
 iteration: 1686
-	f(x) = 0.128367
+	f(x) = 0.149658
 iteration: 1687
-	f(x) = 0.128365
+	f(x) = 0.223000
 iteration: 1688
-	f(x) = 0.128365
+	f(x) = 0.203164
 iteration: 1689
-	f(x) = 0.128364
+	f(x) = 0.335907
 iteration: 1690
-	f(x) = 0.128364
+	f(x) = 0.159648
 iteration: 1691
-	f(x) = 0.128360
+	f(x) = 0.168973
 iteration: 1692
-	f(x) = 0.128357
+	f(x) = 0.160445
 iteration: 1693
-	f(x) = 0.128357
+	f(x) = 0.151622
 iteration: 1694
-	f(x) = 0.128357
+	f(x) = 0.164423
 iteration: 1695
-	f(x) = 0.128348
+	f(x) = 0.152101
 iteration: 1696
-	f(x) = 0.128340
+	f(x) = 0.154487
 iteration: 1697
-	f(x) = 0.128335
+	f(x) = 0.150410
 iteration: 1698
-	f(x) = 0.128321
+	f(x) = 0.149433
 iteration: 1699
-	f(x) = 0.128286
+	f(x) = 0.151502
 iteration: 1700
-	f(x) = 0.128203
+	f(x) = 0.149749
 iteration: 1701
-	f(x) = 0.128092
+	f(x) = 0.149886
 iteration: 1702
-	f(x) = 399.227658
+	f(x) = 0.149524
 iteration: 1703
-	f(x) = 400.823307
+	f(x) = 0.149377
 iteration: 1704
-	f(x) = 0.128261
+	f(x) = 0.149353
 iteration: 1705
-	f(x) = 400.494679
+	f(x) = 0.149327
 iteration: 1706
-	f(x) = 0.128213
+	f(x) = 0.149312
 iteration: 1707
-	f(x) = 0.128182
+	f(x) = 0.149326
 iteration: 1708
-	f(x) = 399.316954
+	f(x) = 0.149357
 iteration: 1709
-	f(x) = 0.128139
+	f(x) = 0.149324
 iteration: 1710
-	f(x) = 0.128156
+	f(x) = 0.149337
 iteration: 1711
-	f(x) = 0.128131
+	f(x) = 0.149317
 iteration: 1712
-	f(x) = 0.128086
+	f(x) = 0.149315
 iteration: 1713
-	f(x) = 0.128147
+	f(x) = 0.149315
 iteration: 1714
-	f(x) = 0.128757
+	f(x) = 0.149313
 iteration: 1715
-	f(x) = 0.128102
+	f(x) = 0.149315
 iteration: 1716
-	f(x) = 0.128152
+	f(x) = 0.149312
 iteration: 1717
-	f(x) = 0.128092
+	f(x) = 0.149313
 iteration: 1718
-	f(x) = 0.172050
+	f(x) = 0.149312
 iteration: 1719
-	f(x) = 0.128850
+	f(x) = 0.151281
 iteration: 1720
-	f(x) = 0.450305
+	f(x) = 0.160718
 iteration: 1721
-	f(x) = 0.147305
+	f(x) = 0.173136
 iteration: 1722
-	f(x) = 0.167461
+	f(x) = 0.150776
 iteration: 1723
-	f(x) = 0.135124
+	f(x) = 0.155785
 iteration: 1724
-	f(x) = 0.138756
+	f(x) = 0.148988
 iteration: 1725
-	f(x) = 0.130321
+	f(x) = 0.152937
 iteration: 1726
-	f(x) = 0.196165
+	f(x) = 0.149131
 iteration: 1727
-	f(x) = 0.128381
+	f(x) = 0.149709
 iteration: 1728
-	f(x) = 495.888338
+	f(x) = 0.148891
 iteration: 1729
-	f(x) = 0.154839
+	f(x) = 0.150409
 iteration: 1730
-	f(x) = 0.204872
+	f(x) = 0.148378
 iteration: 1731
-	f(x) = 0.137345
+	f(x) = 0.148590
 iteration: 1732
-	f(x) = 0.143061
+	f(x) = 0.148410
 iteration: 1733
-	f(x) = 0.130975
+	f(x) = 0.173289
 iteration: 1734
-	f(x) = 0.131102
+	f(x) = 0.148410
 iteration: 1735
-	f(x) = 0.128948
+	f(x) = 0.148398
 iteration: 1736
-	f(x) = 0.128638
+	f(x) = 0.148375
 iteration: 1737
-	f(x) = 0.128136
+	f(x) = 0.148375
 iteration: 1738
-	f(x) = 0.128520
+	f(x) = 0.148382
 iteration: 1739
-	f(x) = 0.128090
+	f(x) = 0.148376
 iteration: 1740
-	f(x) = 0.128248
+	f(x) = 0.148386
 iteration: 1741
-	f(x) = 0.128024
+	f(x) = 0.148375
 iteration: 1742
-	f(x) = 0.167677
+	f(x) = 0.148375
 iteration: 1743
-	f(x) = 0.223322
+	f(x) = 0.185243
 iteration: 1744
-	f(x) = 452.660911
+	f(x) = 0.152388
 iteration: 1745
-	f(x) = 0.181488
+	f(x) = 0.186060
 iteration: 1746
-	f(x) = 0.471437
+	f(x) = 0.159174
 iteration: 1747
-	f(x) = 0.161355
+	f(x) = 0.160179
 iteration: 1748
-	f(x) = 0.201300
+	f(x) = 0.152071
 iteration: 1749
-	f(x) = 0.152150
+	f(x) = 0.152470
 iteration: 1750
-	f(x) = 0.158381
+	f(x) = 0.150469
 iteration: 1751
-	f(x) = 0.139752
+	f(x) = 0.149916
 iteration: 1752
-	f(x) = 0.162370
+	f(x) = 0.149009
 iteration: 1753
-	f(x) = 0.138654
+	f(x) = 0.147803
 iteration: 1754
-	f(x) = 0.133910
+	f(x) = 0.149144
 iteration: 1755
-	f(x) = 0.144496
+	f(x) = 0.150268
 iteration: 1756
-	f(x) = 0.132487
+	f(x) = 0.148014
 iteration: 1757
-	f(x) = 0.128078
+	f(x) = 0.148583
 iteration: 1758
-	f(x) = 0.845369
+	f(x) = 0.147905
 iteration: 1759
-	f(x) = 1.011195
+	f(x) = 0.148193
 iteration: 1760
-	f(x) = 0.380782
+	f(x) = 0.147808
 iteration: 1761
-	f(x) = 0.408053
+	f(x) = 0.147923
 iteration: 1762
-	f(x) = 0.219945
+	f(x) = 0.147785
 iteration: 1763
-	f(x) = 0.212332
+	f(x) = 0.147763
 iteration: 1764
-	f(x) = 0.150720
+	f(x) = 0.147733
 iteration: 1765
-	f(x) = 399.164425
+	f(x) = 0.147717
 iteration: 1766
-	f(x) = 0.130743
+	f(x) = 0.147697
 iteration: 1767
-	f(x) = 0.131034
+	f(x) = 0.147685
 iteration: 1768
-	f(x) = 0.129698
+	f(x) = 0.147683
 iteration: 1769
-	f(x) = 0.128106
+	f(x) = 0.147699
 iteration: 1770
-	f(x) = 0.129732
+	f(x) = 0.147681
 iteration: 1771
-	f(x) = 0.128381
+	f(x) = 0.147733
 iteration: 1772
-	f(x) = 0.128523
+	f(x) = 0.147681
 iteration: 1773
-	f(x) = 0.128095
+	f(x) = 0.147684
 iteration: 1774
-	f(x) = 0.128354
+	f(x) = 0.147680
 iteration: 1775
-	f(x) = 0.128036
+	f(x) = 0.147684
 iteration: 1776
-	f(x) = 0.128063
+	f(x) = 0.147679
 iteration: 1777
-	f(x) = 0.128028
+	f(x) = 0.147687
 iteration: 1778
-	f(x) = 0.128067
+	f(x) = 0.147679
 iteration: 1779
-	f(x) = 0.128024
+	f(x) = 0.147672
 iteration: 1780
-	f(x) = 0.135252
+	f(x) = 0.148329
 iteration: 1781
-	f(x) = 494.775911
+	f(x) = 0.150055
 iteration: 1782
-	f(x) = 0.184037
+	f(x) = 0.147555
 iteration: 1783
-	f(x) = 0.150304
+	f(x) = 0.147569
 iteration: 1784
-	f(x) = 0.181566
+	f(x) = 0.148344
 iteration: 1785
-	f(x) = 0.136661
+	f(x) = 0.147509
 iteration: 1786
-	f(x) = 0.141470
+	f(x) = 0.147507
 iteration: 1787
-	f(x) = 0.132084
+	f(x) = 0.147574
 iteration: 1788
-	f(x) = 0.131549
+	f(x) = 0.147675
 iteration: 1789
-	f(x) = 0.138274
+	f(x) = 0.147503
 iteration: 1790
-	f(x) = 0.129182
+	f(x) = 0.147499
 iteration: 1791
-	f(x) = 0.131539
+	f(x) = 0.147516
 iteration: 1792
-	f(x) = 0.129244
+	f(x) = 0.147550
 iteration: 1793
-	f(x) = 0.128980
+	f(x) = 0.147497
 iteration: 1794
-	f(x) = 0.128975
+	f(x) = 0.147499
 iteration: 1795
-	f(x) = 0.129639
+	f(x) = 0.147508
 iteration: 1796
-	f(x) = 0.128342
+	f(x) = 0.147496
 iteration: 1797
-	f(x) = 0.128558
+	f(x) = 0.147499
 iteration: 1798
-	f(x) = 0.128137
+	f(x) = 0.147497
 iteration: 1799
-	f(x) = 0.128621
+	f(x) = 0.147497
 iteration: 1800
-	f(x) = 0.128072
+	f(x) = 0.147499
 iteration: 1801
-	f(x) = 1036.201771
+	f(x) = 0.147496
 iteration: 1802
-	f(x) = 451.991190
+	f(x) = 0.147497
 iteration: 1803
-	f(x) = 452.223660
+	f(x) = 0.147496
 iteration: 1804
-	f(x) = 0.306212
+	f(x) = 0.148553
 iteration: 1805
-	f(x) = 0.161474
+	f(x) = 0.152214
 iteration: 1806
-	f(x) = 0.183915
+	f(x) = 0.160556
 iteration: 1807
-	f(x) = 0.160647
+	f(x) = 0.147881
 iteration: 1808
-	f(x) = 0.173823
+	f(x) = 0.149880
 iteration: 1809
-	f(x) = 0.149705
+	f(x) = 0.147384
 iteration: 1810
-	f(x) = 0.153733
+	f(x) = 0.149608
 iteration: 1811
-	f(x) = 0.133426
+	f(x) = 0.147269
 iteration: 1812
-	f(x) = 0.161568
+	f(x) = 0.147620
 iteration: 1813
-	f(x) = 0.135491
+	f(x) = 0.147278
 iteration: 1814
-	f(x) = 1187.143878
+	f(x) = 0.146851
 iteration: 1815
-	f(x) = 0.151219
+	f(x) = 0.164115
 iteration: 1816
-	f(x) = 0.191353
+	f(x) = 0.162516
 iteration: 1817
-	f(x) = 0.157326
+	f(x) = 0.150685
 iteration: 1818
-	f(x) = 0.193272
+	f(x) = 0.151975
 iteration: 1819
-	f(x) = 0.140356
+	f(x) = 0.147760
 iteration: 1820
-	f(x) = 0.140242
+	f(x) = 0.148522
 iteration: 1821
-	f(x) = 0.128803
+	f(x) = 0.147130
 iteration: 1822
-	f(x) = 0.147301
+	f(x) = 0.146197
 iteration: 1823
-	f(x) = 0.132013
+	f(x) = 0.157165
 iteration: 1824
-	f(x) = 1.008293
+	f(x) = 0.146851
 iteration: 1825
-	f(x) = 0.136636
+	f(x) = 0.146611
 iteration: 1826
-	f(x) = 0.605987
+	f(x) = 0.146171
 iteration: 1827
-	f(x) = 0.295987
+	f(x) = 0.146374
 iteration: 1828
-	f(x) = 0.377617
+	f(x) = 0.146463
 iteration: 1829
-	f(x) = 0.180077
+	f(x) = 0.146224
 iteration: 1830
-	f(x) = 0.213027
+	f(x) = 0.146136
 iteration: 1831
-	f(x) = 0.140146
+	f(x) = 0.146098
 iteration: 1832
-	f(x) = 0.158201
+	f(x) = 0.146067
 iteration: 1833
-	f(x) = 0.130824
+	f(x) = 0.146026
 iteration: 1834
-	f(x) = 0.128039
+	f(x) = 0.146002
 iteration: 1835
-	f(x) = 0.142653
+	f(x) = 0.145965
 iteration: 1836
-	f(x) = 0.163968
+	f(x) = 0.145935
 iteration: 1837
-	f(x) = 0.132409
+	f(x) = 0.145939
 iteration: 1838
-	f(x) = 0.136118
+	f(x) = 0.145952
 iteration: 1839
-	f(x) = 0.129142
+	f(x) = 0.145965
 iteration: 1840
-	f(x) = 0.129975
+	f(x) = 0.145943
 iteration: 1841
-	f(x) = 0.128254
+	f(x) = 0.145980
 iteration: 1842
-	f(x) = 0.128535
+	f(x) = 0.145938
 iteration: 1843
-	f(x) = 0.128043
+	f(x) = 0.145931
 iteration: 1844
-	f(x) = 0.128166
+	f(x) = 0.145932
 iteration: 1845
-	f(x) = 0.128002
+	f(x) = 0.145931
 iteration: 1846
-	f(x) = 0.128074
+	f(x) = 0.145928
 iteration: 1847
-	f(x) = 0.128006
+	f(x) = 0.145933
 iteration: 1848
-	f(x) = 0.128059
+	f(x) = 0.145940
 iteration: 1849
-	f(x) = 0.128002
+	f(x) = 0.145928
 iteration: 1850
-	f(x) = 0.128007
+	f(x) = 0.146270
 iteration: 1851
-	f(x) = 0.128000
+	f(x) = 0.149669
 iteration: 1852
-	f(x) = 0.127883
+	f(x) = 0.154584
 iteration: 1853
-	f(x) = 0.137454
+	f(x) = 0.146328
 iteration: 1854
-	f(x) = 0.147732
+	f(x) = 0.148768
 iteration: 1855
-	f(x) = 0.130359
+	f(x) = 0.145782
 iteration: 1856
-	f(x) = 0.134701
+	f(x) = 0.146174
 iteration: 1857
-	f(x) = 0.128131
+	f(x) = 0.145869
 iteration: 1858
-	f(x) = 0.130261
+	f(x) = 0.146164
 iteration: 1859
-	f(x) = 0.127719
+	f(x) = 0.145800
 iteration: 1860
-	f(x) = 0.138512
+	f(x) = 0.145619
 iteration: 1861
-	f(x) = 0.127735
+	f(x) = 0.146020
 iteration: 1862
-	f(x) = 0.148765
+	f(x) = 0.147396
 iteration: 1863
-	f(x) = 0.130892
+	f(x) = 0.145291
 iteration: 1864
-	f(x) = 0.133729
+	f(x) = 0.147304
 iteration: 1865
-	f(x) = 0.128419
+	f(x) = 0.145287
 iteration: 1866
-	f(x) = 0.129453
+	f(x) = 0.145531
 iteration: 1867
-	f(x) = 0.127803
+	f(x) = 0.145284
 iteration: 1868
-	f(x) = 0.128264
+	f(x) = 0.145614
 iteration: 1869
-	f(x) = 0.127692
+	f(x) = 0.145219
 iteration: 1870
-	f(x) = 0.127667
+	f(x) = 0.145416
 iteration: 1871
-	f(x) = 0.127680
+	f(x) = 0.145235
 iteration: 1872
-	f(x) = 0.127785
+	f(x) = 0.145242
 iteration: 1873
-	f(x) = 0.127680
+	f(x) = 0.145218
 iteration: 1874
-	f(x) = 0.127663
+	f(x) = 0.145230
 iteration: 1875
-	f(x) = 0.127677
+	f(x) = 0.144817
 iteration: 1876
-	f(x) = 0.127648
+	f(x) = 0.144817
 iteration: 1877
-	f(x) = 0.127648
+	f(x) = 0.144629
 iteration: 1878
-	f(x) = 0.127652
+	f(x) = 0.144257
 iteration: 1879
-	f(x) = 0.127709
+	f(x) = 0.143833
 iteration: 1880
-	f(x) = 0.127646
+	f(x) = 0.143702
 iteration: 1881
-	f(x) = 0.127661
+	f(x) = 0.143261
 iteration: 1882
-	f(x) = 0.127643
+	f(x) = 0.142734
 iteration: 1883
-	f(x) = 0.127644
+	f(x) = 0.142310
 iteration: 1884
-	f(x) = 0.128128
+	f(x) = 0.142312
 iteration: 1885
-	f(x) = 0.128190
+	f(x) = 0.143102
 iteration: 1886
-	f(x) = 0.127750
+	f(x) = 0.142455
 iteration: 1887
-	f(x) = 0.127787
+	f(x) = 0.142578
 iteration: 1888
-	f(x) = 0.127662
+	f(x) = 0.142312
 iteration: 1889
-	f(x) = 0.127680
+	f(x) = 0.142380
 iteration: 1890
-	f(x) = 0.127642
+	f(x) = 0.142286
 iteration: 1891
-	f(x) = 0.127672
+	f(x) = 0.142300
 iteration: 1892
-	f(x) = 0.127638
+	f(x) = 0.142260
 iteration: 1893
-	f(x) = 0.127647
+	f(x) = 0.142278
 iteration: 1894
-	f(x) = 0.127639
+	f(x) = 0.142411
 iteration: 1895
-	f(x) = 0.127642
+	f(x) = 0.142266
 iteration: 1896
-	f(x) = 0.127639
+	f(x) = 0.142249
 iteration: 1897
-	f(x) = 0.127642
+	f(x) = 0.142255
 iteration: 1898
-	f(x) = 0.127638
+	f(x) = 0.142234
 iteration: 1899
-	f(x) = 0.127638
+	f(x) = 0.142225
 iteration: 1900
-	f(x) = 0.127639
+	f(x) = 0.142206
 iteration: 1901
-	f(x) = 0.127638
+	f(x) = 0.142189
 iteration: 1902
-	f(x) = 0.127638
+	f(x) = 0.142142
 iteration: 1903
-	f(x) = 0.127638
+	f(x) = 0.142092
 iteration: 1904
-	f(x) = 0.127638
+	f(x) = 0.142041
 iteration: 1905
-	f(x) = 0.127638
+	f(x) = 0.142064
 iteration: 1906
-	f(x) = 0.127638
+	f(x) = 0.141923
 iteration: 1907
-	f(x) = 0.127638
+	f(x) = 0.141819
 iteration: 1908
-	f(x) = 0.273893
+	f(x) = 0.142119
 iteration: 1909
-	f(x) = 0.160139
+	f(x) = 0.141997
 iteration: 1910
-	f(x) = 0.329017
+	f(x) = 0.141907
 iteration: 1911
-	f(x) = 0.170232
+	f(x) = 0.141878
 iteration: 1912
-	f(x) = 0.206509
+	f(x) = 0.141962
 iteration: 1913
-	f(x) = 0.142847
+	f(x) = 0.141844
 iteration: 1914
-	f(x) = 0.182257
+	f(x) = 0.141948
 iteration: 1915
-	f(x) = 0.143826
+	f(x) = 0.141816
 iteration: 1916
-	f(x) = 0.144346
+	f(x) = 0.141788
 iteration: 1917
-	f(x) = 0.136561
+	f(x) = 0.141803
 iteration: 1918
-	f(x) = 0.133312
+	f(x) = 0.141835
 iteration: 1919
-	f(x) = 0.148287
+	f(x) = 0.141799
 iteration: 1920
-	f(x) = 0.130587
+	f(x) = 0.161180
 iteration: 1921
-	f(x) = 0.127642
+	f(x) = 0.160397
 iteration: 1922
-	f(x) = 0.127641
+	f(x) = 0.146723
 iteration: 1923
-	f(x) = 0.127640
+	f(x) = 0.150311
 iteration: 1924
-	f(x) = 0.127638
+	f(x) = 0.143960
 iteration: 1925
-	f(x) = 0.127641
+	f(x) = 0.144077
 iteration: 1926
-	f(x) = 0.127638
+	f(x) = 0.141508
 iteration: 1927
-	f(x) = 0.127638
+	f(x) = 0.152394
 iteration: 1928
-	f(x) = 0.127638
+	f(x) = 0.141804
 iteration: 1929
-	f(x) = 0.127639
+	f(x) = 0.145173
 iteration: 1930
-	f(x) = 0.127637
+	f(x) = 0.141466
 iteration: 1931
-	f(x) = 0.127639
+	f(x) = 0.141479
 iteration: 1932
-	f(x) = 0.127637
+	f(x) = 0.141912
 iteration: 1933
-	f(x) = 0.127637
+	f(x) = 0.141420
 iteration: 1934
-	f(x) = 0.127638
+	f(x) = 0.141319
 iteration: 1935
-	f(x) = 0.127637
+	f(x) = 0.141455
 iteration: 1936
-	f(x) = 0.127637
+	f(x) = 0.141366
 iteration: 1937
-	f(x) = 0.127637
+	f(x) = 0.141271
 iteration: 1938
-	f(x) = 0.127690
+	f(x) = 0.141224
 iteration: 1939
-	f(x) = 0.130505
+	f(x) = 0.141173
 iteration: 1940
-	f(x) = 0.130788
+	f(x) = 0.141115
 iteration: 1941
-	f(x) = 0.128501
+	f(x) = 0.141081
 iteration: 1942
-	f(x) = 0.128415
+	f(x) = 0.141073
 iteration: 1943
-	f(x) = 0.127824
+	f(x) = 0.141107
 iteration: 1944
-	f(x) = 0.127902
+	f(x) = 0.141303
 iteration: 1945
-	f(x) = 0.127689
+	f(x) = 0.141058
 iteration: 1946
-	f(x) = 0.127655
+	f(x) = 0.141128
 iteration: 1947
-	f(x) = 0.127616
+	f(x) = 0.141070
 iteration: 1948
-	f(x) = 0.127640
+	f(x) = 0.141064
 iteration: 1949
-	f(x) = 0.127692
+	f(x) = 0.141106
 iteration: 1950
-	f(x) = 0.127626
+	f(x) = 0.141058
 iteration: 1951
-	f(x) = 0.127621
+	f(x) = 0.141065
 iteration: 1952
-	f(x) = 0.127624
+	f(x) = 0.141056
 iteration: 1953
-	f(x) = 0.127616
+	f(x) = 0.141064
 iteration: 1954
-	f(x) = 0.127629
+	f(x) = 0.141055
 iteration: 1955
-	f(x) = 0.127615
+	f(x) = 0.141063
 iteration: 1956
-	f(x) = 0.130093
+	f(x) = 0.141055
 iteration: 1957
-	f(x) = 0.127533
+	f(x) = 0.141056
 iteration: 1958
-	f(x) = 0.131005
+	f(x) = 0.141055
 iteration: 1959
-	f(x) = 0.128233
+	f(x) = 0.141055
 iteration: 1960
-	f(x) = 0.128451
+	f(x) = 0.141055
 iteration: 1961
-	f(x) = 0.127728
+	f(x) = 0.141056
 iteration: 1962
-	f(x) = 0.127804
+	f(x) = 0.141055
 iteration: 1963
-	f(x) = 0.127603
+	f(x) = 0.141056
 iteration: 1964
-	f(x) = 0.130257
+	f(x) = 0.141055
 iteration: 1965
-	f(x) = 0.127578
+	f(x) = 0.140948
 iteration: 1966
-	f(x) = 0.132640
+	f(x) = 0.140900
 iteration: 1967
-	f(x) = 0.128172
+	f(x) = 0.140819
 iteration: 1968
-	f(x) = 0.128843
+	f(x) = 0.140785
 iteration: 1969
-	f(x) = 0.127645
+	f(x) = 0.140910
 iteration: 1970
-	f(x) = 0.127913
+	f(x) = 0.140840
 iteration: 1971
-	f(x) = 0.127534
+	f(x) = 0.140864
 iteration: 1972
-	f(x) = 0.127553
+	f(x) = 0.140818
 iteration: 1973
-	f(x) = 0.127520
+	f(x) = 0.140776
 iteration: 1974
-	f(x) = 0.159205
+	f(x) = 0.140782
 iteration: 1975
-	f(x) = 0.144237
+	f(x) = 0.140757
 iteration: 1976
-	f(x) = 0.184935
+	f(x) = 0.140765
 iteration: 1977
-	f(x) = 0.135306
+	f(x) = 0.140763
 iteration: 1978
-	f(x) = 0.145681
+	f(x) = 0.140758
 iteration: 1979
-	f(x) = 0.133480
+	f(x) = 0.140783
 iteration: 1980
-	f(x) = 0.137007
+	f(x) = 0.140754
 iteration: 1981
-	f(x) = 0.130627
+	f(x) = 0.143848
 iteration: 1982
-	f(x) = 0.129968
+	f(x) = 0.150312
 iteration: 1983
-	f(x) = 0.130749
+	f(x) = 0.172851
 iteration: 1984
-	f(x) = 0.128524
+	f(x) = 0.140380
 iteration: 1985
-	f(x) = 0.130373
+	f(x) = 0.145615
 iteration: 1986
-	f(x) = 0.128328
+	f(x) = 0.140236
 iteration: 1987
-	f(x) = 0.127520
+	f(x) = 0.141060
 iteration: 1988
-	f(x) = 0.127519
+	f(x) = 0.139659
 iteration: 1989
-	f(x) = 0.127519
+	f(x) = 0.144717
 iteration: 1990
-	f(x) = 0.127518
+	f(x) = 0.139382
 iteration: 1991
-	f(x) = 0.127518
+	f(x) = 0.140326
 iteration: 1992
-	f(x) = 0.127517
+	f(x) = 0.139600
 iteration: 1993
-	f(x) = 0.127515
+	f(x) = 0.138953
 iteration: 1994
-	f(x) = 0.127516
+	f(x) = 0.139922
 iteration: 1995
-	f(x) = 0.127514
+	f(x) = 0.144182
 iteration: 1996
-	f(x) = 0.127513
+	f(x) = 0.138387
 iteration: 1997
-	f(x) = 0.127514
+	f(x) = 0.139788
 iteration: 1998
-	f(x) = 0.127514
+	f(x) = 0.138647
 iteration: 1999
-	f(x) = 0.127512
+	f(x) = 0.138861
 iteration: 2000
-	f(x) = 0.127513
+	f(x) = 0.138477
 iteration: 2001
-	f(x) = 0.127513
+	f(x) = 0.139142
 iteration: 2002
-	f(x) = 0.127512
+	f(x) = 0.138406
 iteration: 2003
-	f(x) = 0.127513
+	f(x) = 0.138380
 iteration: 2004
-	f(x) = 0.127512
+	f(x) = 0.138589
 iteration: 2005
-	f(x) = 0.127514
+	f(x) = 0.138619
 iteration: 2006
-	f(x) = 0.127512
+	f(x) = 0.138342
 iteration: 2007
-	f(x) = 0.127512
+	f(x) = 0.172860
 iteration: 2008
-	f(x) = 0.127512
+	f(x) = 0.165955
 iteration: 2009
-	f(x) = 0.127512
+	f(x) = 0.234712
 iteration: 2010
-	f(x) = 0.127512
+	f(x) = 0.143460
 iteration: 2011
-	f(x) = 0.127512
+	f(x) = 0.147569
 iteration: 2012
-	f(x) = 0.127512
+	f(x) = 0.143547
 iteration: 2013
-	f(x) = 0.127657
+	f(x) = 0.140119
 iteration: 2014
-	f(x) = 0.127497
+	f(x) = 0.145269
 iteration: 2015
-	f(x) = 0.127590
+	f(x) = 0.139995
 iteration: 2016
-	f(x) = 0.127516
+	f(x) = 0.139166
 iteration: 2017
-	f(x) = 0.127553
+	f(x) = 0.138960
 iteration: 2018
-	f(x) = 0.127503
+	f(x) = 0.138198
 iteration: 2019
-	f(x) = 0.127499
+	f(x) = 0.138091
 iteration: 2020
-	f(x) = 0.127646
+	f(x) = 0.137970
 iteration: 2021
-	f(x) = 0.127546
+	f(x) = 0.137842
 iteration: 2022
-	f(x) = 0.127498
+	f(x) = 0.137810
 iteration: 2023
-	f(x) = 0.127498
+	f(x) = 0.137780
 iteration: 2024
-	f(x) = 0.127739
+	f(x) = 0.137758
 iteration: 2025
-	f(x) = 0.128394
+	f(x) = 0.138071
 iteration: 2026
-	f(x) = 0.127483
+	f(x) = 0.138125
 iteration: 2027
-	f(x) = 0.127483
+	f(x) = 0.137741
 iteration: 2028
-	f(x) = 0.127578
+	f(x) = 0.137702
 iteration: 2029
-	f(x) = 0.127739
+	f(x) = 0.137723
 iteration: 2030
-	f(x) = 0.127455
+	f(x) = 0.137764
 iteration: 2031
-	f(x) = 0.127454
+	f(x) = 0.137717
 iteration: 2032
-	f(x) = 0.127466
+	f(x) = 0.137790
 iteration: 2033
-	f(x) = 0.127497
+	f(x) = 0.137710
 iteration: 2034
-	f(x) = 0.127460
+	f(x) = 0.137696
 iteration: 2035
-	f(x) = 0.127467
+	f(x) = 0.137704
 iteration: 2036
-	f(x) = 0.127455
+	f(x) = 0.137705
 iteration: 2037
-	f(x) = 0.127458
+	f(x) = 0.137698
 iteration: 2038
-	f(x) = 0.127454
+	f(x) = 0.137700
 iteration: 2039
-	f(x) = 0.127454
+	f(x) = 0.137696
 iteration: 2040
-	f(x) = 0.127454
+	f(x) = 0.137708
 iteration: 2041
-	f(x) = 0.127455
+	f(x) = 0.137695
 iteration: 2042
-	f(x) = 0.127454
+	f(x) = 0.137697
 iteration: 2043
-	f(x) = 0.127453
+	f(x) = 0.137695
 iteration: 2044
-	f(x) = 0.127453
+	f(x) = 0.137704
 iteration: 2045
-	f(x) = 0.127453
+	f(x) = 0.159975
 iteration: 2046
-	f(x) = 0.127453
+	f(x) = 0.174563
 iteration: 2047
-	f(x) = 0.127453
+	f(x) = 0.141409
 iteration: 2048
-	f(x) = 0.127454
+	f(x) = 0.149670
 iteration: 2049
-	f(x) = 0.127453
+	f(x) = 0.137592
 iteration: 2050
-	f(x) = 0.127453
+	f(x) = 0.137753
 iteration: 2051
-	f(x) = 0.127453
+	f(x) = 0.137293
 iteration: 2052
-	f(x) = 0.127453
+	f(x) = 0.138107
 iteration: 2053
-	f(x) = 0.128467
+	f(x) = 0.137242
 iteration: 2054
-	f(x) = 0.127591
+	f(x) = 0.138532
 iteration: 2055
-	f(x) = 0.128665
+	f(x) = 0.141894
 iteration: 2056
-	f(x) = 0.127712
+	f(x) = 0.145450
 iteration: 2057
-	f(x) = 0.127818
+	f(x) = 0.137702
 iteration: 2058
-	f(x) = 0.127537
+	f(x) = 0.139257
 iteration: 2059
-	f(x) = 0.127473
+	f(x) = 0.137226
 iteration: 2060
-	f(x) = 0.127507
+	f(x) = 0.138980
 iteration: 2061
-	f(x) = 0.127456
+	f(x) = 0.137005
 iteration: 2062
-	f(x) = 0.127519
+	f(x) = 0.138132
 iteration: 2063
-	f(x) = 0.127447
+	f(x) = 0.136973
 iteration: 2064
-	f(x) = 0.127463
+	f(x) = 0.143618
 iteration: 2065
-	f(x) = 0.127445
+	f(x) = 0.136554
 iteration: 2066
-	f(x) = 0.127481
+	f(x) = 0.141636
 iteration: 2067
-	f(x) = 0.127443
+	f(x) = 0.138187
 iteration: 2068
-	f(x) = 0.127454
+	f(x) = 0.138202
 iteration: 2069
-	f(x) = 0.127443
+	f(x) = 0.137163
 iteration: 2070
-	f(x) = 0.127443
+	f(x) = 0.137044
 iteration: 2071
-	f(x) = 0.127442
+	f(x) = 0.136794
 iteration: 2072
-	f(x) = 0.127442
+	f(x) = 0.199257
 iteration: 2073
-	f(x) = 0.127442
+	f(x) = 0.174549
 iteration: 2074
-	f(x) = 0.127443
+	f(x) = 0.155579
 iteration: 2075
-	f(x) = 0.127442
+	f(x) = 0.190775
 iteration: 2076
-	f(x) = 0.127442
+	f(x) = 0.148122
 iteration: 2077
-	f(x) = 0.127442
+	f(x) = 0.175004
 iteration: 2078
-	f(x) = 0.127442
+	f(x) = 0.143115
 iteration: 2079
-	f(x) = 0.127442
+	f(x) = 0.141599
 iteration: 2080
-	f(x) = 0.127442
+	f(x) = 0.141996
 iteration: 2081
-	f(x) = 0.127442
+	f(x) = 0.136832
 iteration: 2082
-	f(x) = 0.127442
+	f(x) = 0.147638
 iteration: 2083
-	f(x) = 0.127442
+	f(x) = 0.137246
 iteration: 2084
-	f(x) = 0.127442
+	f(x) = 0.136512
 iteration: 2085
-	f(x) = 0.127442
+	f(x) = 0.136485
 iteration: 2086
-	f(x) = 0.127442
+	f(x) = 0.136470
 iteration: 2087
-	f(x) = 0.127755
+	f(x) = 0.136493
 iteration: 2088
-	f(x) = 0.128925
+	f(x) = 0.136498
 iteration: 2089
-	f(x) = 0.129681
+	f(x) = 0.136478
 iteration: 2090
-	f(x) = 0.127844
+	f(x) = 0.136486
 iteration: 2091
-	f(x) = 0.128137
+	f(x) = 0.136475
 iteration: 2092
-	f(x) = 0.127579
+	f(x) = 0.136475
 iteration: 2093
-	f(x) = 0.127627
+	f(x) = 0.136472
 iteration: 2094
-	f(x) = 0.127493
+	f(x) = 0.136475
 iteration: 2095
-	f(x) = 0.127543
+	f(x) = 0.136471
 iteration: 2096
-	f(x) = 0.127467
+	f(x) = 0.136470
 iteration: 2097
-	f(x) = 0.127514
+	f(x) = 0.136472
 iteration: 2098
-	f(x) = 0.127454
+	f(x) = 0.136470
 iteration: 2099
-	f(x) = 0.127457
+	f(x) = 0.136487
 iteration: 2100
-	f(x) = 0.127444
+	f(x) = 0.159219
 iteration: 2101
-	f(x) = 0.127469
+	f(x) = 0.174317
 iteration: 2102
-	f(x) = 0.127442
+	f(x) = 0.140120
 iteration: 2103
-	f(x) = 0.131069
+	f(x) = 0.148925
 iteration: 2104
-	f(x) = 0.127413
+	f(x) = 0.136263
 iteration: 2105
-	f(x) = 0.130913
+	f(x) = 0.136401
 iteration: 2106
-	f(x) = 0.128295
+	f(x) = 0.140241
 iteration: 2107
-	f(x) = 0.128356
+	f(x) = 0.135880
 iteration: 2108
-	f(x) = 0.127637
+	f(x) = 0.135837
 iteration: 2109
-	f(x) = 0.127667
+	f(x) = 0.136036
 iteration: 2110
-	f(x) = 0.127476
+	f(x) = 0.136477
 iteration: 2111
-	f(x) = 0.127418
+	f(x) = 0.135930
 iteration: 2112
-	f(x) = 0.127416
+	f(x) = 0.136036
 iteration: 2113
-	f(x) = 0.127414
+	f(x) = 0.135860
 iteration: 2114
-	f(x) = 0.127410
+	f(x) = 0.135820
 iteration: 2115
-	f(x) = 0.127413
+	f(x) = 0.135823
 iteration: 2116
-	f(x) = 0.127422
+	f(x) = 0.135821
 iteration: 2117
-	f(x) = 0.127411
+	f(x) = 0.135802
 iteration: 2118
-	f(x) = 0.127411
+	f(x) = 0.135809
 iteration: 2119
-	f(x) = 0.127410
+	f(x) = 0.135862
 iteration: 2120
-	f(x) = 0.127411
+	f(x) = 0.135807
 iteration: 2121
-	f(x) = 0.127410
+	f(x) = 0.135799
 iteration: 2122
-	f(x) = 0.127797
+	f(x) = 0.135805
 iteration: 2123
-	f(x) = 0.127582
+	f(x) = 0.135794
 iteration: 2124
-	f(x) = 0.127932
+	f(x) = 0.135795
 iteration: 2125
-	f(x) = 0.127486
+	f(x) = 0.135797
 iteration: 2126
-	f(x) = 0.127799
+	f(x) = 0.135792
 iteration: 2127
-	f(x) = 0.127435
+	f(x) = 0.135794
 iteration: 2128
-	f(x) = 0.127449
+	f(x) = 0.135804
 iteration: 2129
-	f(x) = 0.127405
+	f(x) = 0.135793
 iteration: 2130
-	f(x) = 0.127506
+	f(x) = 0.135793
 iteration: 2131
-	f(x) = 0.127399
+	f(x) = 0.135792
 iteration: 2132
-	f(x) = 0.127458
+	f(x) = 0.135792
 iteration: 2133
-	f(x) = 0.127395
+	f(x) = 0.137169
 iteration: 2134
-	f(x) = 0.127401
+	f(x) = 0.140169
 iteration: 2135
-	f(x) = 0.127395
+	f(x) = 0.144419
 iteration: 2136
-	f(x) = 0.127394
+	f(x) = 0.136061
 iteration: 2137
-	f(x) = 0.127395
+	f(x) = 0.137670
 iteration: 2138
-	f(x) = 0.127394
+	f(x) = 0.135747
 iteration: 2139
-	f(x) = 0.127394
+	f(x) = 0.137683
 iteration: 2140
-	f(x) = 0.127394
+	f(x) = 0.135440
 iteration: 2141
-	f(x) = 0.127394
+	f(x) = 0.136576
 iteration: 2142
-	f(x) = 0.127394
+	f(x) = 0.135482
 iteration: 2143
-	f(x) = 0.127394
+	f(x) = 0.135564
 iteration: 2144
-	f(x) = 0.127394
+	f(x) = 0.135419
 iteration: 2145
-	f(x) = 0.127394
+	f(x) = 0.134976
 iteration: 2146
-	f(x) = 0.127394
+	f(x) = 0.149105
 iteration: 2147
-	f(x) = 0.127394
+	f(x) = 0.135385
 iteration: 2148
-	f(x) = 0.127394
+	f(x) = 0.191931
 iteration: 2149
-	f(x) = 0.127394
+	f(x) = 0.141109
 iteration: 2150
-	f(x) = 0.127394
+	f(x) = 0.188255
 iteration: 2151
-	f(x) = 0.127394
+	f(x) = 0.152798
 iteration: 2152
-	f(x) = 0.127394
+	f(x) = 0.151604
 iteration: 2153
-	f(x) = 0.127394
+	f(x) = 0.140688
 iteration: 2154
-	f(x) = 0.127394
+	f(x) = 0.137787
 iteration: 2155
-	f(x) = 0.127394
+	f(x) = 0.140115
 iteration: 2156
-	f(x) = 0.127394
+	f(x) = 0.136048
 iteration: 2157
-	f(x) = 0.127394
+	f(x) = 0.138154
 iteration: 2158
-	f(x) = 0.127394
+	f(x) = 0.135545
 iteration: 2159
-	f(x) = 0.127394
+	f(x) = 0.135788
 iteration: 2160
-	f(x) = 0.127394
+	f(x) = 0.135031
 iteration: 2161
-	f(x) = 0.127394
+	f(x) = 0.136990
 iteration: 2162
-	f(x) = 0.127394
+	f(x) = 0.134856
 iteration: 2163
-	f(x) = 0.127394
+	f(x) = 0.134852
 iteration: 2164
-	f(x) = 0.127443
+	f(x) = 0.134737
 iteration: 2165
-	f(x) = 0.127463
+	f(x) = 0.134734
 iteration: 2166
-	f(x) = 0.127480
+	f(x) = 0.134683
 iteration: 2167
-	f(x) = 0.127418
+	f(x) = 0.134600
 iteration: 2168
-	f(x) = 0.127438
+	f(x) = 0.134528
 iteration: 2169
-	f(x) = 0.127410
+	f(x) = 0.134507
 iteration: 2170
-	f(x) = 0.127406
+	f(x) = 0.134488
 iteration: 2171
-	f(x) = 0.127403
+	f(x) = 0.134578
 iteration: 2172
-	f(x) = 0.127401
+	f(x) = 0.134500
 iteration: 2173
-	f(x) = 0.127413
+	f(x) = 0.134611
 iteration: 2174
-	f(x) = 0.127395
+	f(x) = 0.134492
 iteration: 2175
-	f(x) = 0.127399
+	f(x) = 0.134503
 iteration: 2176
-	f(x) = 0.127394
+	f(x) = 0.134490
 iteration: 2177
-	f(x) = 0.127402
+	f(x) = 0.134509
 iteration: 2178
-	f(x) = 0.127393
+	f(x) = 0.134488
 iteration: 2179
-	f(x) = 0.127394
+	f(x) = 0.134486
 iteration: 2180
-	f(x) = 0.127393
+	f(x) = 0.134488
 iteration: 2181
-	f(x) = 0.127381
+	f(x) = 0.134492
 iteration: 2182
-	f(x) = 0.127383
+	f(x) = 0.134487
 iteration: 2183
-	f(x) = 0.127371
+	f(x) = 0.134485
 iteration: 2184
-	f(x) = 0.127360
+	f(x) = 0.134485
 iteration: 2185
-	f(x) = 0.127357
+	f(x) = 0.134485
 iteration: 2186
-	f(x) = 0.127346
+	f(x) = 0.134485
 iteration: 2187
-	f(x) = 0.127325
+	f(x) = 0.134483
 iteration: 2188
-	f(x) = 0.127299
+	f(x) = 0.134482
 iteration: 2189
-	f(x) = 0.127287
+	f(x) = 0.134483
 iteration: 2190
-	f(x) = 0.127256
+	f(x) = 0.134480
 iteration: 2191
-	f(x) = 0.127213
+	f(x) = 0.134479
 iteration: 2192
-	f(x) = 0.127159
+	f(x) = 0.134483
 iteration: 2193
-	f(x) = 0.127137
+	f(x) = 0.134481
 iteration: 2194
-	f(x) = 0.127095
+	f(x) = 0.134480
 iteration: 2195
-	f(x) = 0.127044
+	f(x) = 0.134479
 iteration: 2196
-	f(x) = 0.127037
+	f(x) = 0.134478
 iteration: 2197
-	f(x) = 0.127132
+	f(x) = 0.134479
 iteration: 2198
-	f(x) = 0.127063
+	f(x) = 0.134479
 iteration: 2199
-	f(x) = 0.127173
+	f(x) = 0.134478
 iteration: 2200
-	f(x) = 0.127051
+	f(x) = 0.134479
 iteration: 2201
-	f(x) = 0.127031
+	f(x) = 0.134479
 iteration: 2202
-	f(x) = 0.127041
+	f(x) = 0.134478
 iteration: 2203
-	f(x) = 0.127019
+	f(x) = 0.134479
 iteration: 2204
-	f(x) = 0.127025
+	f(x) = 0.134478
 iteration: 2205
-	f(x) = 0.127021
+	f(x) = 0.134478
 iteration: 2206
-	f(x) = 0.127011
+	f(x) = 0.134478
 iteration: 2207
-	f(x) = 0.127023
+	f(x) = 0.134478
 iteration: 2208
-	f(x) = 0.127051
+	f(x) = 0.134478
 iteration: 2209
-	f(x) = 0.127012
+	f(x) = 0.134479
 iteration: 2210
-	f(x) = 0.127010
+	f(x) = 0.134478
 iteration: 2211
-	f(x) = 0.127018
+	f(x) = 0.134478
 iteration: 2212
-	f(x) = 0.127013
+	f(x) = 0.134478
 iteration: 2213
-	f(x) = 0.127010
+	f(x) = 0.134478
 iteration: 2214
-	f(x) = 0.127016
+	f(x) = 0.134478
 iteration: 2215
-	f(x) = 0.127009
+	f(x) = 0.134478
 iteration: 2216
-	f(x) = 0.127013
+	f(x) = 0.134478
 iteration: 2217
-	f(x) = 0.127009
+	f(x) = 0.134478
 iteration: 2218
-	f(x) = 0.127009
+	f(x) = 0.134478
 iteration: 2219
-	f(x) = 0.127009
+	f(x) = 0.134478
 iteration: 2220
-	f(x) = 0.127009
+	f(x) = 0.134478
 iteration: 2221
-	f(x) = 0.127009
+	f(x) = 0.134478
 iteration: 2222
-	f(x) = 0.127009
+	f(x) = 0.134478
 iteration: 2223
-	f(x) = 0.127009
+	f(x) = 0.134478
 iteration: 2224
-	f(x) = 0.127009
+	f(x) = 0.134380
 iteration: 2225
-	f(x) = 0.127009
+	f(x) = 0.155876
 iteration: 2226
-	f(x) = 0.127009
+	f(x) = 0.162148
 iteration: 2227
-	f(x) = 0.127009
+	f(x) = 0.138962
 iteration: 2228
-	f(x) = 0.127009
+	f(x) = 0.142834
 iteration: 2229
-	f(x) = 0.127009
+	f(x) = 0.135058
 iteration: 2230
-	f(x) = 0.127009
+	f(x) = 0.137075
 iteration: 2231
-	f(x) = 0.127009
+	f(x) = 0.134328
 iteration: 2232
-	f(x) = 0.127009
+	f(x) = 0.134222
 iteration: 2233
-	f(x) = 0.127009
+	f(x) = 0.134406
 iteration: 2234
-	f(x) = 0.127009
+	f(x) = 0.134984
 iteration: 2235
-	f(x) = 0.127009
+	f(x) = 0.134222
 iteration: 2236
-	f(x) = 0.127009
+	f(x) = 0.138332
 iteration: 2237
-	f(x) = 0.127009
+	f(x) = 0.140105
 iteration: 2238
-	f(x) = 0.127009
+	f(x) = 0.142227
 iteration: 2239
-	f(x) = 0.127009
+	f(x) = 0.135480
 iteration: 2240
-	f(x) = 0.127466
+	f(x) = 0.139351
 iteration: 2241
-	f(x) = 0.127063
+	f(x) = 0.135189
 iteration: 2242
-	f(x) = 0.126974
+	f(x) = 0.134842
 iteration: 2243
-	f(x) = 0.126974
+	f(x) = 0.135987
 iteration: 2244
-	f(x) = 0.127063
+	f(x) = 0.134344
 iteration: 2245
-	f(x) = 0.126976
+	f(x) = 0.134782
 iteration: 2246
-	f(x) = 0.127004
+	f(x) = 0.134235
 iteration: 2247
-	f(x) = 0.126971
+	f(x) = 0.135188
 iteration: 2248
-	f(x) = 0.126971
+	f(x) = 0.134102
 iteration: 2249
-	f(x) = 0.126972
+	f(x) = 0.134181
 iteration: 2250
-	f(x) = 0.126976
+	f(x) = 0.134272
 iteration: 2251
-	f(x) = 0.126972
+	f(x) = 0.134119
 iteration: 2252
-	f(x) = 0.126972
+	f(x) = 0.134185
 iteration: 2253
-	f(x) = 0.126971
+	f(x) = 0.134107
 iteration: 2254
-	f(x) = 0.126971
+	f(x) = 0.134137
 iteration: 2255
-	f(x) = 0.126971
+	f(x) = 0.134089
 iteration: 2256
-	f(x) = 0.126971
+	f(x) = 0.184263
 iteration: 2257
-	f(x) = 0.126971
+	f(x) = 0.133657
 iteration: 2258
-	f(x) = 0.126971
+	f(x) = 0.180961
 iteration: 2259
-	f(x) = 0.126971
+	f(x) = 0.146874
 iteration: 2260
-	f(x) = 0.126970
+	f(x) = 0.148066
 iteration: 2261
-	f(x) = 0.126971
+	f(x) = 0.136938
 iteration: 2262
-	f(x) = 0.126970
+	f(x) = 0.137793
 iteration: 2263
-	f(x) = 0.126970
+	f(x) = 0.134493
 iteration: 2264
-	f(x) = 0.126970
+	f(x) = 0.133999
 iteration: 2265
-	f(x) = 0.126970
+	f(x) = 0.134031
 iteration: 2266
-	f(x) = 0.126970
+	f(x) = 0.133990
 iteration: 2267
-	f(x) = 0.126970
+	f(x) = 0.133656
 iteration: 2268
-	f(x) = 0.126970
+	f(x) = 0.134579
 iteration: 2269
-	f(x) = 0.126970
+	f(x) = 0.136033
 iteration: 2270
-	f(x) = 0.126970
+	f(x) = 0.133420
 iteration: 2271
-	f(x) = 0.126970
+	f(x) = 0.133423
 iteration: 2272
-	f(x) = 0.126970
+	f(x) = 0.133575
 iteration: 2273
-	f(x) = 0.126970
+	f(x) = 0.134107
 iteration: 2274
-	f(x) = 0.126970
+	f(x) = 0.133384
 iteration: 2275
-	f(x) = 0.126970
+	f(x) = 0.133382
 iteration: 2276
-	f(x) = 0.126970
+	f(x) = 0.133447
 iteration: 2277
-	f(x) = 0.126970
+	f(x) = 0.133575
 iteration: 2278
-	f(x) = 0.126970
+	f(x) = 0.133374
 iteration: 2279
-	f(x) = 0.126970
+	f(x) = 0.133372
 iteration: 2280
-	f(x) = 0.126970
+	f(x) = 0.133386
 iteration: 2281
-	f(x) = 0.126970
+	f(x) = 0.133419
 iteration: 2282
-	f(x) = 0.126970
+	f(x) = 0.133371
 iteration: 2283
-	f(x) = 0.126970
+	f(x) = 0.133368
 iteration: 2284
-	f(x) = 0.126970
+	f(x) = 0.133370
 iteration: 2285
-	f(x) = 0.126970
+	f(x) = 0.133381
 iteration: 2286
-	f(x) = 0.126969
+	f(x) = 0.133369
 iteration: 2287
-	f(x) = 0.126969
+	f(x) = 0.133366
 iteration: 2288
-	f(x) = 0.126969
+	f(x) = 0.133365
 iteration: 2289
-	f(x) = 0.126969
+	f(x) = 0.133362
 iteration: 2290
-	f(x) = 0.126969
+	f(x) = 0.133357
 iteration: 2291
-	f(x) = 0.126970
+	f(x) = 0.133351
 iteration: 2292
-	f(x) = 0.126969
+	f(x) = 0.133336
 iteration: 2293
-	f(x) = 0.126969
+	f(x) = 0.133587
 iteration: 2294
-	f(x) = 0.126969
+	f(x) = 0.133358
 iteration: 2295
-	f(x) = 0.126969
+	f(x) = 0.133333
 iteration: 2296
-	f(x) = 0.126969
+	f(x) = 0.133587
 iteration: 2297
-	f(x) = 0.126969
+	f(x) = 217.016710
 iteration: 2298
-	f(x) = 0.126969
+	f(x) = 0.133347
 iteration: 2299
-	f(x) = 0.126969
+	f(x) = 0.133575
 iteration: 2300
-	f(x) = 0.126968
+	f(x) = 0.133340
 iteration: 2301
-	f(x) = 0.126968
+	f(x) = 0.133344
 iteration: 2302
-	f(x) = 0.126968
+	f(x) = 0.133336
 iteration: 2303
-	f(x) = 0.126968
+	f(x) = 0.133333
 iteration: 2304
-	f(x) = 0.126968
+	f(x) = 0.133336
 iteration: 2305
-	f(x) = 0.126968
+	f(x) = 0.184107
 iteration: 2306
-	f(x) = 0.126968
+	f(x) = 0.156440
 iteration: 2307
-	f(x) = 0.126968
+	f(x) = 0.141814
 iteration: 2308
-	f(x) = 0.126968
+	f(x) = 0.146705
 iteration: 2309
-	f(x) = 0.126968
+	f(x) = 0.135801
 iteration: 2310
-	f(x) = 0.126968
+	f(x) = 0.136702
 iteration: 2311
-	f(x) = 0.126968
+	f(x) = 0.133851
 iteration: 2312
-	f(x) = 0.126968
+	f(x) = 0.134039
 iteration: 2313
-	f(x) = 0.126968
+	f(x) = 0.133312
 iteration: 2314
-	f(x) = 0.126968
+	f(x) = 0.133949
 iteration: 2315
-	f(x) = 0.126968
+	f(x) = 0.133158
 iteration: 2316
-	f(x) = 0.126968
+	f(x) = 0.133816
 iteration: 2317
-	f(x) = 0.126968
+	f(x) = 0.133183
 iteration: 2318
-	f(x) = 0.126968
+	f(x) = 0.301022
 iteration: 2319
-	f(x) = 0.126968
+	f(x) = 0.705042
 iteration: 2320
-	f(x) = 0.126968
+	f(x) = 0.963781
 iteration: 2321
-	f(x) = 0.126968
+	f(x) = 0.275657
 iteration: 2322
-	f(x) = 0.126968
+	f(x) = 0.336879
 iteration: 2323
-	f(x) = 0.127233
+	f(x) = 0.172859
 iteration: 2324
-	f(x) = 0.127054
+	f(x) = 0.259943
 iteration: 2325
-	f(x) = 0.128015
+	f(x) = 0.177863
 iteration: 2326
-	f(x) = 0.126962
+	f(x) = 0.179711
 iteration: 2327
-	f(x) = 0.126982
+	f(x) = 0.152146
 iteration: 2328
-	f(x) = 0.126935
+	f(x) = 0.160408
 iteration: 2329
-	f(x) = 0.127141
+	f(x) = 0.143248
 iteration: 2330
-	f(x) = 0.126928
+	f(x) = 0.133372
 iteration: 2331
-	f(x) = 0.126937
+	f(x) = 0.244596
 iteration: 2332
-	f(x) = 0.126926
+	f(x) = 0.133356
 iteration: 2333
-	f(x) = 0.126954
+	f(x) = 0.191277
 iteration: 2334
-	f(x) = 0.126926
+	f(x) = 0.876091
 iteration: 2335
-	f(x) = 0.126930
+	f(x) = 1.097026
 iteration: 2336
-	f(x) = 0.126925
+	f(x) = 0.349523
 iteration: 2337
-	f(x) = 0.126929
+	f(x) = 0.492094
 iteration: 2338
-	f(x) = 0.126925
+	f(x) = 0.207592
 iteration: 2339
-	f(x) = 0.126921
+	f(x) = 0.267528
 iteration: 2340
-	f(x) = 0.126896
+	f(x) = 0.164577
 iteration: 2341
-	f(x) = 0.126893
+	f(x) = 0.266789
 iteration: 2342
-	f(x) = 0.126879
+	f(x) = 0.161293
 iteration: 2343
-	f(x) = 0.126859
+	f(x) = 0.154819
 iteration: 2344
-	f(x) = 0.126837
+	f(x) = 0.182258
 iteration: 2345
-	f(x) = 0.126832
+	f(x) = 0.146718
 iteration: 2346
-	f(x) = 0.126832
+	f(x) = 0.133159
 iteration: 2347
-	f(x) = 0.126843
+	f(x) = 0.133435
 iteration: 2348
-	f(x) = 0.126823
+	f(x) = 0.133534
 iteration: 2349
-	f(x) = 0.126932
+	f(x) = 0.133205
 iteration: 2350
-	f(x) = 0.126824
+	f(x) = 0.133265
 iteration: 2351
-	f(x) = 0.126818
+	f(x) = 0.133158
 iteration: 2352
-	f(x) = 0.126818
+	f(x) = 0.133167
 iteration: 2353
-	f(x) = 0.126810
+	f(x) = 0.133150
 iteration: 2354
-	f(x) = 0.126806
+	f(x) = 0.133173
 iteration: 2355
-	f(x) = 0.126807
+	f(x) = 0.133151
 iteration: 2356
-	f(x) = 0.126799
+	f(x) = 0.133164
 iteration: 2357
-	f(x) = 0.126804
+	f(x) = 0.133151
 iteration: 2358
-	f(x) = 0.126821
+	f(x) = 0.133151
 iteration: 2359
-	f(x) = 0.126802
+	f(x) = 0.133150
 iteration: 2360
-	f(x) = 0.126798
+	f(x) = 0.133975
 iteration: 2361
-	f(x) = 0.126799
+	f(x) = 0.152933
 iteration: 2362
-	f(x) = 0.126800
+	f(x) = 0.170547
 iteration: 2363
-	f(x) = 0.126798
+	f(x) = 0.140689
 iteration: 2364
-	f(x) = 0.126799
+	f(x) = 0.142988
 iteration: 2365
-	f(x) = 0.126798
+	f(x) = 0.135753
 iteration: 2366
-	f(x) = 0.126800
+	f(x) = 0.135633
 iteration: 2367
-	f(x) = 0.126798
+	f(x) = 0.133846
 iteration: 2368
-	f(x) = 0.126798
+	f(x) = 0.133680
 iteration: 2369
-	f(x) = 0.126798
+	f(x) = 0.133562
 iteration: 2370
-	f(x) = 0.126798
+	f(x) = 0.133938
 iteration: 2371
-	f(x) = 0.126798
+	f(x) = 0.133289
 iteration: 2372
-	f(x) = 0.126798
+	f(x) = 0.133458
 iteration: 2373
-	f(x) = 0.126873
+	f(x) = 0.133201
 iteration: 2374
-	f(x) = 0.126756
+	f(x) = 0.133535
 iteration: 2375
-	f(x) = 0.126785
+	f(x) = 0.133157
 iteration: 2376
-	f(x) = 0.131928
+	f(x) = 0.172911
 iteration: 2377
-	f(x) = 0.127742
+	f(x) = 0.136601
 iteration: 2378
-	f(x) = 0.134257
+	f(x) = 0.245476
 iteration: 2379
-	f(x) = 0.128394
+	f(x) = 0.152069
 iteration: 2380
-	f(x) = 0.129024
+	f(x) = 0.162285
 iteration: 2381
-	f(x) = 0.127331
+	f(x) = 0.141504
 iteration: 2382
-	f(x) = 0.127731
+	f(x) = 0.142564
 iteration: 2383
-	f(x) = 0.127093
+	f(x) = 0.136985
 iteration: 2384
-	f(x) = 0.127248
+	f(x) = 0.891668
 iteration: 2385
-	f(x) = 0.126936
+	f(x) = 0.260600
 iteration: 2386
-	f(x) = 0.126972
+	f(x) = 0.276522
 iteration: 2387
-	f(x) = 0.126832
+	f(x) = 0.220205
 iteration: 2388
-	f(x) = 0.126839
+	f(x) = 0.151525
 iteration: 2389
-	f(x) = 0.126780
+	f(x) = 0.133149
 iteration: 2390
-	f(x) = 0.126795
+	f(x) = 0.141932
 iteration: 2391
-	f(x) = 0.126763
+	f(x) = 0.175786
 iteration: 2392
-	f(x) = 0.126745
+	f(x) = 0.139212
 iteration: 2393
-	f(x) = 0.140830
+	f(x) = 0.141945
 iteration: 2394
-	f(x) = 0.141537
+	f(x) = 0.134988
 iteration: 2395
-	f(x) = 0.130523
+	f(x) = 0.985088
 iteration: 2396
-	f(x) = 0.130532
+	f(x) = 0.503683
 iteration: 2397
-	f(x) = 0.127735
+	f(x) = 4.564724
 iteration: 2398
-	f(x) = 0.127676
+	f(x) = 0.314619
 iteration: 2399
-	f(x) = 0.126970
+	f(x) = 0.590737
 iteration: 2400
-	f(x) = 0.127008
+	f(x) = 0.206327
 iteration: 2401
-	f(x) = 0.126799
+	f(x) = 0.463260
 iteration: 2402
-	f(x) = 0.126819
+	f(x) = 0.171295
 iteration: 2403
-	f(x) = 0.126759
+	f(x) = 0.241079
 iteration: 2404
-	f(x) = 0.126769
+	f(x) = 0.156085
 iteration: 2405
-	f(x) = 0.126751
+	f(x) = 0.186607
 iteration: 2406
-	f(x) = 0.126745
+	f(x) = 0.145684
 iteration: 2407
-	f(x) = 0.126751
+	f(x) = 0.150049
 iteration: 2408
-	f(x) = 0.126746
+	f(x) = 0.139157
 iteration: 2409
-	f(x) = 0.126744
+	f(x) = 0.140138
 iteration: 2410
-	f(x) = 0.126748
+	f(x) = 0.134292
 iteration: 2411
-	f(x) = 0.126744
+	f(x) = 0.133150
 iteration: 2412
-	f(x) = 0.127819
+	f(x) = 0.133150
 iteration: 2413
-	f(x) = 0.127621
+	f(x) = 0.133155
 iteration: 2414
-	f(x) = 0.129603
+	f(x) = 0.133149
 iteration: 2415
-	f(x) = 0.126962
+	f(x) = 0.133149
 iteration: 2416
-	f(x) = 0.127950
+	f(x) = 0.133149
 iteration: 2417
-	f(x) = 0.126949
+	f(x) = 0.133149
 iteration: 2418
-	f(x) = 0.127096
+	f(x) = 0.133149
 iteration: 2419
-	f(x) = 0.126788
+	f(x) = 0.133150
 iteration: 2420
-	f(x) = 0.126948
+	f(x) = 0.133148
 iteration: 2421
-	f(x) = 0.126772
+	f(x) = 0.133149
 iteration: 2422
-	f(x) = 0.127072
+	f(x) = 0.133148
 iteration: 2423
-	f(x) = 0.126723
+	f(x) = 0.133149
 iteration: 2424
-	f(x) = 0.126724
+	f(x) = 0.133148
 iteration: 2425
-	f(x) = 0.126773
+	f(x) = 0.133148
 iteration: 2426
-	f(x) = 0.126717
+	f(x) = 0.133148
 iteration: 2427
-	f(x) = 0.126717
+	f(x) = 0.133149
 iteration: 2428
-	f(x) = 0.126718
+	f(x) = 0.133148
 iteration: 2429
-	f(x) = 0.126718
+	f(x) = 0.133149
 iteration: 2430
-	f(x) = 0.126717
+	f(x) = 0.133148
 iteration: 2431
-	f(x) = 0.126717
+	f(x) = 0.135388
 iteration: 2432
-	f(x) = 0.126716
+	f(x) = 0.134384
 iteration: 2433
-	f(x) = 0.126719
+	f(x) = 0.134384
 iteration: 2434
-	f(x) = 0.126716
+	f(x) = 0.133148
 iteration: 2435
-	f(x) = 0.126716
+	f(x) = 0.134253
 iteration: 2436
-	f(x) = 0.126717
+	f(x) = 0.133360
 iteration: 2437
-	f(x) = 0.126716
+	f(x) = 0.133402
 iteration: 2438
-	f(x) = 0.126716
+	f(x) = 0.133139
 iteration: 2439
-	f(x) = 0.126716
+	f(x) = 0.133639
 iteration: 2440
-	f(x) = 0.126716
+	f(x) = 0.133171
 iteration: 2441
-	f(x) = 0.126716
+	f(x) = 0.133303
 iteration: 2442
-	f(x) = 0.126716
+	f(x) = 0.133132
 iteration: 2443
-	f(x) = 0.126716
+	f(x) = 0.133128
 iteration: 2444
-	f(x) = 0.126726
+	f(x) = 0.133147
 iteration: 2445
-	f(x) = 0.128627
+	f(x) = 0.133168
 iteration: 2446
-	f(x) = 0.129306
+	f(x) = 0.133127
 iteration: 2447
-	f(x) = 0.127200
+	f(x) = 0.133130
 iteration: 2448
-	f(x) = 0.127422
+	f(x) = 0.133127
 iteration: 2449
-	f(x) = 0.126822
+	f(x) = 0.137098
 iteration: 2450
-	f(x) = 0.126916
+	f(x) = 0.134086
 iteration: 2451
-	f(x) = 0.126734
+	f(x) = 0.145519
 iteration: 2452
-	f(x) = 0.126779
+	f(x) = 0.133061
 iteration: 2453
-	f(x) = 0.126717
+	f(x) = 0.135368
 iteration: 2454
-	f(x) = 0.126720
+	f(x) = 0.132851
 iteration: 2455
-	f(x) = 0.126715
+	f(x) = 0.133250
 iteration: 2456
-	f(x) = 0.126724
-iteration: 2457
-	f(x) = 0.126714
-iteration: 2458
-	f(x) = 0.126653
-iteration: 2459
-	f(x) = 0.128787
-iteration: 2460
-	f(x) = 0.130073
-iteration: 2461
-	f(x) = 0.127202
-iteration: 2462
-	f(x) = 0.127528
-iteration: 2463
-	f(x) = 0.126791
-iteration: 2464
-	f(x) = 0.126913
-iteration: 2465
-	f(x) = 0.126696
-iteration: 2466
-	f(x) = 0.153080
-iteration: 2467
-	f(x) = 0.126707
-iteration: 2468
-	f(x) = 0.149830
-iteration: 2469
 	f(x) = 0.132718
+iteration: 2457
+	f(x) = 0.134454
+iteration: 2458
+	f(x) = 0.132633
+iteration: 2459
+	f(x) = 0.133051
+iteration: 2460
+	f(x) = 0.132663
+iteration: 2461
+	f(x) = 0.142345
+iteration: 2462
+	f(x) = 0.132349
+iteration: 2463
+	f(x) = 0.148421
+iteration: 2464
+	f(x) = 0.134121
+iteration: 2465
+	f(x) = 0.137457
+iteration: 2466
+	f(x) = 0.132453
+iteration: 2467
+	f(x) = 0.132346
+iteration: 2468
+	f(x) = 0.132358
+iteration: 2469
+	f(x) = 0.132339
 iteration: 2470
-	f(x) = 0.134067
+	f(x) = 0.132331
 iteration: 2471
-	f(x) = 0.128103
+	f(x) = 0.132328
 iteration: 2472
-	f(x) = 0.128663
+	f(x) = 0.132320
 iteration: 2473
-	f(x) = 0.126962
+	f(x) = 0.132313
 iteration: 2474
-	f(x) = 0.127225
+	f(x) = 0.132309
 iteration: 2475
-	f(x) = 0.126705
+	f(x) = 0.132308
 iteration: 2476
-	f(x) = 0.126882
+	f(x) = 0.132319
 iteration: 2477
-	f(x) = 0.126655
+	f(x) = 0.132333
 iteration: 2478
-	f(x) = 0.138328
+	f(x) = 0.132310
 iteration: 2479
-	f(x) = 0.129210
+	f(x) = 0.132316
 iteration: 2480
-	f(x) = 0.137430
+	f(x) = 0.132308
 iteration: 2481
-	f(x) = 0.130753
+	f(x) = 0.132305
 iteration: 2482
-	f(x) = 0.130186
+	f(x) = 0.132302
 iteration: 2483
-	f(x) = 0.127936
+	f(x) = 0.132305
 iteration: 2484
-	f(x) = 0.128185
+	f(x) = 0.132299
 iteration: 2485
-	f(x) = 0.127211
+	f(x) = 0.132296
 iteration: 2486
-	f(x) = 0.127271
+	f(x) = 0.132294
 iteration: 2487
-	f(x) = 0.126838
+	f(x) = 0.132292
 iteration: 2488
-	f(x) = 0.126994
+	f(x) = 0.132285
 iteration: 2489
-	f(x) = 0.126738
+	f(x) = 0.132280
 iteration: 2490
-	f(x) = 0.126890
+	f(x) = 0.132282
 iteration: 2491
-	f(x) = 0.126701
+	f(x) = 0.132272
 iteration: 2492
-	f(x) = 0.126724
+	f(x) = 0.132266
 iteration: 2493
-	f(x) = 0.126668
+	f(x) = 0.132270
 iteration: 2494
-	f(x) = 0.126653
+	f(x) = 0.132261
 iteration: 2495
-	f(x) = 0.126653
+	f(x) = 0.132257
 iteration: 2496
-	f(x) = 0.126652
+	f(x) = 0.132260
 iteration: 2497
-	f(x) = 0.126652
+	f(x) = 0.132253
 iteration: 2498
-	f(x) = 0.126652
+	f(x) = 0.132252
 iteration: 2499
-	f(x) = 0.126651
+	f(x) = 0.132254
 iteration: 2500
-	f(x) = 0.126651
+	f(x) = 0.132250
 iteration: 2501
-	f(x) = 0.126651
+	f(x) = 0.132250
 iteration: 2502
-	f(x) = 0.126651
+	f(x) = 0.132257
 iteration: 2503
-	f(x) = 0.126651
+	f(x) = 0.132251
 iteration: 2504
-	f(x) = 0.126651
+	f(x) = 0.132251
 iteration: 2505
-	f(x) = 0.126651
+	f(x) = 0.132251
 iteration: 2506
-	f(x) = 0.126651
+	f(x) = 0.132250
 iteration: 2507
-	f(x) = 0.126651
+	f(x) = 0.132251
 iteration: 2508
-	f(x) = 0.126651
+	f(x) = 0.132251
 iteration: 2509
-	f(x) = 0.126651
+	f(x) = 0.132250
 iteration: 2510
-	f(x) = 0.126651
+	f(x) = 0.132250
 iteration: 2511
-	f(x) = 0.126651
+	f(x) = 0.132250
 iteration: 2512
-	f(x) = 0.126651
+	f(x) = 0.132250
 iteration: 2513
-	f(x) = 0.126651
+	f(x) = 0.132250
 iteration: 2514
-	f(x) = 0.126650
+	f(x) = 0.132251
 iteration: 2515
-	f(x) = 0.126651
+	f(x) = 0.132250
 iteration: 2516
-	f(x) = 0.126651
+	f(x) = 0.132250
 iteration: 2517
-	f(x) = 0.126650
+	f(x) = 0.132250
 iteration: 2518
-	f(x) = 0.126651
+	f(x) = 0.132250
 iteration: 2519
-	f(x) = 0.126650
+	f(x) = 0.132250
 iteration: 2520
-	f(x) = 0.126650
+	f(x) = 0.132250
 iteration: 2521
-	f(x) = 0.126650
+	f(x) = 0.132250
 iteration: 2522
-	f(x) = 0.126650
+	f(x) = 0.132250
 iteration: 2523
-	f(x) = 0.126650
+	f(x) = 0.132250
 iteration: 2524
-	f(x) = 0.126650
+	f(x) = 0.132250
 iteration: 2525
-	f(x) = 0.126650
+	f(x) = 0.132250
 iteration: 2526
-	f(x) = 0.126650
+	f(x) = 0.132250
 iteration: 2527
-	f(x) = 0.126650
+	f(x) = 0.132250
 iteration: 2528
-	f(x) = 0.126651
+	f(x) = 0.132250
 iteration: 2529
-	f(x) = 0.126642
+	f(x) = 0.132250
 iteration: 2530
-	f(x) = 0.126642
+	f(x) = 0.132250
 iteration: 2531
-	f(x) = 0.126685
+	f(x) = 0.132250
 iteration: 2532
-	f(x) = 0.126893
+	f(x) = 0.132250
 iteration: 2533
-	f(x) = 0.127001
+	f(x) = 0.132250
 iteration: 2534
-	f(x) = 0.126701
+	f(x) = 0.132250
 iteration: 2535
-	f(x) = 0.126749
+	f(x) = 0.132250
 iteration: 2536
-	f(x) = 0.126658
+	f(x) = 0.132250
 iteration: 2537
-	f(x) = 0.126680
+	f(x) = 0.132250
 iteration: 2538
-	f(x) = 0.126652
+	f(x) = 0.132250
 iteration: 2539
-	f(x) = 0.126668
+	f(x) = 0.132250
 iteration: 2540
-	f(x) = 0.126646
+	f(x) = 0.132250
 iteration: 2541
-	f(x) = 0.126646
+	f(x) = 0.132250
 iteration: 2542
-	f(x) = 0.126657
+	f(x) = 0.132250
 iteration: 2543
-	f(x) = 0.126642
+	f(x) = 0.132250
 iteration: 2544
-	f(x) = 0.126646
+	f(x) = 0.132250
 iteration: 2545
-	f(x) = 0.126642
+	f(x) = 0.132250
 iteration: 2546
-	f(x) = 0.126734
+	f(x) = 0.132250
 iteration: 2547
-	f(x) = 0.126649
+	f(x) = 0.132250
 iteration: 2548
-	f(x) = 0.126681
+	f(x) = 0.132250
 iteration: 2549
-	f(x) = 0.126648
+	f(x) = 0.132250
 iteration: 2550
-	f(x) = 0.126640
+	f(x) = 0.132250
 iteration: 2551
-	f(x) = 0.126647
+	f(x) = 0.132250
 iteration: 2552
-	f(x) = 0.126637
+	f(x) = 0.132250
 iteration: 2553
-	f(x) = 0.126648
+	f(x) = 0.132250
 iteration: 2554
-	f(x) = 0.126635
+	f(x) = 0.132250
 iteration: 2555
-	f(x) = 0.126643
+	f(x) = 0.132250
 iteration: 2556
-	f(x) = 0.126636
+	f(x) = 0.132250
 iteration: 2557
-	f(x) = 0.126632
+	f(x) = 0.132250
 iteration: 2558
-	f(x) = 0.126641
+	f(x) = 0.132250
 iteration: 2559
-	f(x) = 0.126661
+	f(x) = 0.132939
 iteration: 2560
-	f(x) = 0.126631
+	f(x) = 0.132339
 iteration: 2561
-	f(x) = 0.126631
+	f(x) = 0.133608
 iteration: 2562
-	f(x) = 0.126636
+	f(x) = 0.132337
 iteration: 2563
-	f(x) = 0.126630
+	f(x) = 0.132672
 iteration: 2564
-	f(x) = 0.126632
+	f(x) = 0.132228
 iteration: 2565
-	f(x) = 0.126630
+	f(x) = 0.132441
 iteration: 2566
-	f(x) = 0.127275
+	f(x) = 0.132241
 iteration: 2567
-	f(x) = 0.126631
+	f(x) = 0.132271
 iteration: 2568
-	f(x) = 0.127148
+	f(x) = 0.132226
 iteration: 2569
-	f(x) = 0.126733
+	f(x) = 0.132206
 iteration: 2570
-	f(x) = 0.126802
+	f(x) = 0.132140
 iteration: 2571
-	f(x) = 0.126638
+	f(x) = 0.132120
 iteration: 2572
-	f(x) = 0.126674
+	f(x) = 0.132104
 iteration: 2573
-	f(x) = 0.126619
+	f(x) = 0.132186
 iteration: 2574
-	f(x) = 0.126672
+	f(x) = 0.132132
 iteration: 2575
-	f(x) = 0.126618
+	f(x) = 0.132141
 iteration: 2576
-	f(x) = 0.126636
+	f(x) = 0.132122
 iteration: 2577
-	f(x) = 0.126619
+	f(x) = 0.132113
 iteration: 2578
-	f(x) = 0.126623
+	f(x) = 0.132090
 iteration: 2579
-	f(x) = 0.126617
+	f(x) = 0.132076
 iteration: 2580
-	f(x) = 0.126617
+	f(x) = 0.132069
 iteration: 2581
-	f(x) = 0.126617
+	f(x) = 0.132062
 iteration: 2582
-	f(x) = 0.126617
+	f(x) = 0.132021
 iteration: 2583
-	f(x) = 0.126616
+	f(x) = 0.131987
 iteration: 2584
-	f(x) = 0.126616
+	f(x) = 0.131999
 iteration: 2585
-	f(x) = 0.126616
+	f(x) = 0.131926
 iteration: 2586
-	f(x) = 0.126615
+	f(x) = 0.131887
 iteration: 2587
-	f(x) = 0.126615
+	f(x) = 0.131922
 iteration: 2588
-	f(x) = 0.126615
+	f(x) = 0.131881
 iteration: 2589
-	f(x) = 0.126615
+	f(x) = 0.131944
 iteration: 2590
-	f(x) = 0.126615
+	f(x) = 0.131868
 iteration: 2591
-	f(x) = 0.126615
+	f(x) = 0.131915
 iteration: 2592
-	f(x) = 0.126615
+	f(x) = 0.131925
 iteration: 2593
-	f(x) = 0.126615
+	f(x) = 0.131867
 iteration: 2594
-	f(x) = 0.126615
+	f(x) = 0.131893
 iteration: 2595
-	f(x) = 0.126615
+	f(x) = 0.131867
 iteration: 2596
-	f(x) = 0.126615
+	f(x) = 0.131887
 iteration: 2597
-	f(x) = 0.126615
+	f(x) = 0.131864
 iteration: 2598
-	f(x) = 0.126615
+	f(x) = 0.131871
 iteration: 2599
-	f(x) = 0.126615
+	f(x) = 0.131864
 iteration: 2600
-	f(x) = 0.126615
+	f(x) = 0.131866
 iteration: 2601
-	f(x) = 0.126615
+	f(x) = 0.131864
 iteration: 2602
-	f(x) = 0.126615
+	f(x) = 0.131866
 iteration: 2603
-	f(x) = 0.126615
+	f(x) = 0.131864
 iteration: 2604
-	f(x) = 0.126615
+	f(x) = 0.131776
 iteration: 2605
-	f(x) = 0.126615
+	f(x) = 0.131778
 iteration: 2606
-	f(x) = 0.126617
+	f(x) = 0.131696
 iteration: 2607
-	f(x) = 0.126863
+	f(x) = 0.131625
 iteration: 2608
-	f(x) = 0.126927
+	f(x) = 0.131613
 iteration: 2609
-	f(x) = 0.126672
+	f(x) = 0.131536
 iteration: 2610
-	f(x) = 0.126697
+	f(x) = 0.131426
 iteration: 2611
-	f(x) = 0.126626
+	f(x) = 0.131317
 iteration: 2612
-	f(x) = 0.126637
+	f(x) = 0.131225
 iteration: 2613
-	f(x) = 0.126616
+	f(x) = 0.131096
 iteration: 2614
-	f(x) = 0.126916
+	f(x) = 0.131157
 iteration: 2615
-	f(x) = 0.126873
+	f(x) = 0.131094
 iteration: 2616
-	f(x) = 0.127259
+	f(x) = 0.131314
 iteration: 2617
-	f(x) = 0.126698
+	f(x) = 0.130949
 iteration: 2618
-	f(x) = 0.126877
+	f(x) = 0.130951
 iteration: 2619
-	f(x) = 0.126695
+	f(x) = 0.131114
 iteration: 2620
-	f(x) = 0.126693
+	f(x) = 0.131018
 iteration: 2621
-	f(x) = 0.126735
+	f(x) = 0.131099
 iteration: 2622
-	f(x) = 0.126645
+	f(x) = 0.131011
 iteration: 2623
-	f(x) = 0.126647
+	f(x) = 0.130946
 iteration: 2624
-	f(x) = 0.126621
+	f(x) = 0.130950
 iteration: 2625
-	f(x) = 0.126648
+	f(x) = 0.130938
 iteration: 2626
-	f(x) = 0.126622
+	f(x) = 0.130943
 iteration: 2627
-	f(x) = 0.126623
+	f(x) = 0.130952
 iteration: 2628
-	f(x) = 0.126617
+	f(x) = 0.130941
 iteration: 2629
-	f(x) = 0.126621
+	f(x) = 0.130965
 iteration: 2630
-	f(x) = 0.126616
+	f(x) = 0.130940
 iteration: 2631
-	f(x) = 0.128003
+	f(x) = 0.130937
 iteration: 2632
-	f(x) = 0.130118
+	f(x) = 0.130937
 iteration: 2633
-	f(x) = 0.132889
+	f(x) = 0.130935
 iteration: 2634
-	f(x) = 0.127346
+	f(x) = 0.130937
 iteration: 2635
-	f(x) = 0.129003
+	f(x) = 0.130937
 iteration: 2636
-	f(x) = 0.127004
+	f(x) = 0.130936
 iteration: 2637
-	f(x) = 0.127486
+	f(x) = 0.130935
 iteration: 2638
-	f(x) = 0.126847
+	f(x) = 0.130943
 iteration: 2639
-	f(x) = 0.126919
+	f(x) = 0.130935
 iteration: 2640
-	f(x) = 0.126713
+	f(x) = 0.130935
 iteration: 2641
-	f(x) = 0.126825
+	f(x) = 0.130936
 iteration: 2642
-	f(x) = 0.126680
+	f(x) = 0.130935
 iteration: 2643
-	f(x) = 0.126596
+	f(x) = 0.130935
 iteration: 2644
-	f(x) = 0.126599
+	f(x) = 0.130935
 iteration: 2645
-	f(x) = 0.126583
+	f(x) = 0.130935
 iteration: 2646
-	f(x) = 0.126571
+	f(x) = 0.130935
 iteration: 2647
-	f(x) = 0.126566
+	f(x) = 0.130935
 iteration: 2648
-	f(x) = 0.126552
+	f(x) = 0.130935
 iteration: 2649
-	f(x) = 0.126543
+	f(x) = 0.131866
 iteration: 2650
-	f(x) = 0.126542
+	f(x) = 0.130860
 iteration: 2651
-	f(x) = 0.126529
+	f(x) = 0.133738
 iteration: 2652
-	f(x) = 0.126542
+	f(x) = 0.130888
 iteration: 2653
-	f(x) = 0.126585
+	f(x) = 0.130727
 iteration: 2654
-	f(x) = 0.126535
+	f(x) = 0.130975
 iteration: 2655
-	f(x) = 0.126523
+	f(x) = 0.131090
 iteration: 2656
-	f(x) = 0.126523
+	f(x) = 0.130719
 iteration: 2657
-	f(x) = 0.126516
+	f(x) = 0.131236
 iteration: 2658
-	f(x) = 0.126521
+	f(x) = 0.130700
 iteration: 2659
-	f(x) = 0.126528
+	f(x) = 0.130797
 iteration: 2660
-	f(x) = 0.126519
+	f(x) = 0.130692
 iteration: 2661
-	f(x) = 0.126518
+	f(x) = 0.130692
 iteration: 2662
-	f(x) = 0.126530
+	f(x) = 0.130685
 iteration: 2663
-	f(x) = 0.126516
+	f(x) = 0.130685
 iteration: 2664
-	f(x) = 0.126518
+	f(x) = 0.130713
 iteration: 2665
-	f(x) = 0.126516
+	f(x) = 0.130765
 iteration: 2666
-	f(x) = 0.126518
+	f(x) = 0.130678
 iteration: 2667
-	f(x) = 0.126515
+	f(x) = 0.130678
 iteration: 2668
-	f(x) = 0.126516
+	f(x) = 0.130682
 iteration: 2669
-	f(x) = 0.126515
+	f(x) = 0.130692
 iteration: 2670
-	f(x) = 0.126517
+	f(x) = 0.130678
 iteration: 2671
-	f(x) = 0.126515
+	f(x) = 0.130682
 iteration: 2672
-	f(x) = 0.126515
+	f(x) = 0.130677
 iteration: 2673
-	f(x) = 0.126515
+	f(x) = 0.130677
 iteration: 2674
-	f(x) = 0.126516
+	f(x) = 0.130678
 iteration: 2675
-	f(x) = 0.126515
+	f(x) = 0.130678
 iteration: 2676
-	f(x) = 0.126515
+	f(x) = 0.130677
 iteration: 2677
-	f(x) = 0.126515
+	f(x) = 0.130677
 iteration: 2678
-	f(x) = 0.126515
+	f(x) = 0.130677
 iteration: 2679
-	f(x) = 0.126515
+	f(x) = 0.130677
 iteration: 2680
-	f(x) = 0.126515
+	f(x) = 0.130677
 iteration: 2681
-	f(x) = 0.126515
+	f(x) = 0.130677
 iteration: 2682
-	f(x) = 0.126515
+	f(x) = 0.130677
 iteration: 2683
-	f(x) = 0.126515
+	f(x) = 0.130677
 iteration: 2684
-	f(x) = 0.126513
+	f(x) = 0.130677
 iteration: 2685
-	f(x) = 0.126515
+	f(x) = 0.130677
 iteration: 2686
-	f(x) = 0.126513
+	f(x) = 0.130677
 iteration: 2687
-	f(x) = 0.126513
+	f(x) = 0.130677
 iteration: 2688
-	f(x) = 0.126511
+	f(x) = 0.130677
 iteration: 2689
-	f(x) = 0.126511
+	f(x) = 0.130677
 iteration: 2690
-	f(x) = 0.126509
+	f(x) = 0.130677
 iteration: 2691
-	f(x) = 0.126508
+	f(x) = 0.130677
 iteration: 2692
-	f(x) = 0.126507
+	f(x) = 0.130677
 iteration: 2693
-	f(x) = 0.126507
+	f(x) = 0.130677
 iteration: 2694
-	f(x) = 0.126503
+	f(x) = 0.130677
 iteration: 2695
-	f(x) = 0.126502
+	f(x) = 0.130677
 iteration: 2696
-	f(x) = 0.126500
+	f(x) = 0.130677
 iteration: 2697
-	f(x) = 0.126498
+	f(x) = 0.130677
 iteration: 2698
-	f(x) = 0.126494
+	f(x) = 0.130677
 iteration: 2699
-	f(x) = 0.126492
+	f(x) = 0.130677
 iteration: 2700
-	f(x) = 0.126488
+	f(x) = 0.130677
 iteration: 2701
-	f(x) = 0.126488
+	f(x) = 0.130677
 iteration: 2702
-	f(x) = 0.126485
+	f(x) = 0.130677
 iteration: 2703
-	f(x) = 0.126488
+	f(x) = 0.130677
 iteration: 2704
-	f(x) = 0.126487
+	f(x) = 0.130677
 iteration: 2705
-	f(x) = 0.126482
+	f(x) = 0.130677
 iteration: 2706
-	f(x) = 0.126486
+	f(x) = 0.130677
 iteration: 2707
-	f(x) = 0.126500
+	f(x) = 0.130677
 iteration: 2708
-	f(x) = 0.126483
+	f(x) = 0.130677
 iteration: 2709
-	f(x) = 0.126484
+	f(x) = 0.130677
 iteration: 2710
-	f(x) = 0.126482
+	f(x) = 0.130677
 iteration: 2711
-	f(x) = 0.126483
+	f(x) = 0.130677
 iteration: 2712
-	f(x) = 0.126482
+	f(x) = 0.130677
 iteration: 2713
-	f(x) = 0.126485
+	f(x) = 0.130677
 iteration: 2714
-	f(x) = 0.126482
+	f(x) = 0.130677
 iteration: 2715
-	f(x) = 0.126482
+	f(x) = 0.130677
 iteration: 2716
-	f(x) = 0.126482
+	f(x) = 0.130677
 iteration: 2717
-	f(x) = 0.126482
+	f(x) = 0.130677
 iteration: 2718
-	f(x) = 0.126482
+	f(x) = 0.130677
 iteration: 2719
-	f(x) = 0.126482
+	f(x) = 0.130677
 iteration: 2720
-	f(x) = 0.126482
+	f(x) = 0.130677
 iteration: 2721
-	f(x) = 0.126482
+	f(x) = 0.130677
 iteration: 2722
-	f(x) = 0.126482
+	f(x) = 0.130677
 iteration: 2723
-	f(x) = 0.126482
+	f(x) = 0.130677
 iteration: 2724
-	f(x) = 0.126482
+	f(x) = 0.130596
 iteration: 2725
-	f(x) = 0.126482
+	f(x) = 0.130607
 iteration: 2726
-	f(x) = 0.126482
+	f(x) = 0.130650
 iteration: 2727
-	f(x) = 0.126482
+	f(x) = 0.130558
 iteration: 2728
-	f(x) = 0.126482
+	f(x) = 0.130695
 iteration: 2729
-	f(x) = 0.126482
+	f(x) = 0.130542
 iteration: 2730
-	f(x) = 0.126482
+	f(x) = 0.134883
 iteration: 2731
-	f(x) = 0.126482
+	f(x) = 0.150364
 iteration: 2732
-	f(x) = 0.126482
+	f(x) = 0.146063
 iteration: 2733
-	f(x) = 0.126482
+	f(x) = 0.136270
 iteration: 2734
-	f(x) = 0.126482
+	f(x) = 0.134828
 iteration: 2735
-	f(x) = 0.126482
+	f(x) = 0.137509
 iteration: 2736
-	f(x) = 0.126482
+	f(x) = 0.131841
 iteration: 2737
-	f(x) = 0.126475
+	f(x) = 0.132779
 iteration: 2738
-	f(x) = 0.126482
+	f(x) = 0.131154
 iteration: 2739
-	f(x) = 0.126476
+	f(x) = 0.132262
 iteration: 2740
-	f(x) = 0.126836
+	f(x) = 0.130868
 iteration: 2741
-	f(x) = 0.128435
+	f(x) = 0.130936
 iteration: 2742
-	f(x) = 0.128131
+	f(x) = 0.130604
 iteration: 2743
-	f(x) = 0.126983
+	f(x) = 0.131038
 iteration: 2744
-	f(x) = 0.127064
+	f(x) = 0.130578
 iteration: 2745
-	f(x) = 0.126678
+	f(x) = 0.260395
 iteration: 2746
-	f(x) = 0.126533
+	f(x) = 0.144383
 iteration: 2747
-	f(x) = 0.126675
+	f(x) = 0.279269
 iteration: 2748
-	f(x) = 0.126522
+	f(x) = 0.165229
 iteration: 2749
-	f(x) = 0.126579
+	f(x) = 0.186192
 iteration: 2750
-	f(x) = 0.126483
+	f(x) = 0.138302
 iteration: 2751
-	f(x) = 0.126504
+	f(x) = 0.149715
 iteration: 2752
-	f(x) = 0.126471
+	f(x) = 0.134492
 iteration: 2753
-	f(x) = 0.126567
+	f(x) = 0.139182
 iteration: 2754
-	f(x) = 0.126463
+	f(x) = 0.132771
 iteration: 2755
-	f(x) = 0.126477
+	f(x) = 0.133790
 iteration: 2756
-	f(x) = 0.126467
+	f(x) = 0.131588
 iteration: 2757
-	f(x) = 0.126890
+	f(x) = 0.133797
 iteration: 2758
-	f(x) = 0.126469
+	f(x) = 0.131087
 iteration: 2759
-	f(x) = 0.126680
+	f(x) = 0.197169
 iteration: 2760
-	f(x) = 0.126497
+	f(x) = 0.130972
 iteration: 2761
-	f(x) = 0.126595
+	f(x) = 0.211334
 iteration: 2762
-	f(x) = 0.126461
+	f(x) = 0.145941
 iteration: 2763
-	f(x) = 0.126453
+	f(x) = 0.158144
 iteration: 2764
-	f(x) = 0.126458
+	f(x) = 0.132660
 iteration: 2765
-	f(x) = 0.126490
+	f(x) = 0.140006
 iteration: 2766
-	f(x) = 0.126455
+	f(x) = 0.130183
 iteration: 2767
-	f(x) = 0.130195
+	f(x) = 0.130436
 iteration: 2768
-	f(x) = 0.126980
+	f(x) = 0.132582
 iteration: 2769
-	f(x) = 0.131896
+	f(x) = 0.130103
 iteration: 2770
-	f(x) = 0.127372
+	f(x) = 0.130103
 iteration: 2771
-	f(x) = 0.128107
+	f(x) = 0.129986
 iteration: 2772
-	f(x) = 0.126722
+	f(x) = 0.129986
 iteration: 2773
-	f(x) = 0.126839
+	f(x) = 0.130014
 iteration: 2774
-	f(x) = 0.126595
+	f(x) = 0.130105
 iteration: 2775
-	f(x) = 0.126490
+	f(x) = 0.130016
 iteration: 2776
-	f(x) = 0.126652
+	f(x) = 0.130014
 iteration: 2777
-	f(x) = 0.126475
+	f(x) = 0.129993
 iteration: 2778
-	f(x) = 0.126577
+	f(x) = 0.129994
 iteration: 2779
-	f(x) = 0.126449
+	f(x) = 0.129987
 iteration: 2780
-	f(x) = 0.126451
+	f(x) = 0.129988
 iteration: 2781
-	f(x) = 0.141840
+	f(x) = 0.129986
 iteration: 2782
-	f(x) = 0.158877
+	f(x) = 0.130077
 iteration: 2783
-	f(x) = 0.131443
+	f(x) = 0.130327
 iteration: 2784
-	f(x) = 0.133210
+	f(x) = 0.130104
 iteration: 2785
-	f(x) = 0.127956
+	f(x) = 0.130043
 iteration: 2786
-	f(x) = 0.127846
+	f(x) = 0.130064
 iteration: 2787
-	f(x) = 0.126719
+	f(x) = 0.130005
 iteration: 2788
-	f(x) = 0.126903
+	f(x) = 0.130145
 iteration: 2789
-	f(x) = 0.126486
+	f(x) = 0.129993
 iteration: 2790
-	f(x) = 0.126594
+	f(x) = 0.302173
 iteration: 2791
-	f(x) = 0.126444
+	f(x) = 0.130551
 iteration: 2792
-	f(x) = 0.126443
+	f(x) = 0.294393
 iteration: 2793
-	f(x) = 0.126457
+	f(x) = 0.185508
 iteration: 2794
-	f(x) = 0.126485
+	f(x) = 0.180994
 iteration: 2795
-	f(x) = 0.126440
+	f(x) = 0.142772
 iteration: 2796
-	f(x) = 0.126439
+	f(x) = 0.147703
 iteration: 2797
-	f(x) = 0.126440
+	f(x) = 0.132507
 iteration: 2798
-	f(x) = 0.126448
+	f(x) = 0.153772
 iteration: 2799
-	f(x) = 0.126440
+	f(x) = 0.140286
 iteration: 2800
-	f(x) = 0.126438
+	f(x) = 0.199894
 iteration: 2801
-	f(x) = 0.126438
+	f(x) = 0.139651
 iteration: 2802
-	f(x) = 0.126437
+	f(x) = 0.144625
 iteration: 2803
-	f(x) = 0.126437
+	f(x) = 0.135385
 iteration: 2804
-	f(x) = 0.126435
+	f(x) = 0.137795
 iteration: 2805
-	f(x) = 0.126434
+	f(x) = 0.132392
 iteration: 2806
-	f(x) = 0.126434
+	f(x) = 0.133180
 iteration: 2807
-	f(x) = 0.126437
+	f(x) = 0.130853
 iteration: 2808
-	f(x) = 0.126435
+	f(x) = 0.130700
 iteration: 2809
-	f(x) = 0.126434
+	f(x) = 0.378367
 iteration: 2810
-	f(x) = 0.126437
+	f(x) = 0.153048
 iteration: 2811
-	f(x) = 0.126437
+	f(x) = 0.469269
 iteration: 2812
-	f(x) = 0.126433
+	f(x) = 0.209289
 iteration: 2813
-	f(x) = 0.126437
+	f(x) = 0.250054
 iteration: 2814
-	f(x) = 0.126433
+	f(x) = 0.154316
 iteration: 2815
-	f(x) = 0.126434
+	f(x) = 0.177113
 iteration: 2816
-	f(x) = 0.126433
+	f(x) = 0.140720
 iteration: 2817
-	f(x) = 0.126434
+	f(x) = 0.151738
 iteration: 2818
-	f(x) = 0.126433
+	f(x) = 0.135189
 iteration: 2819
-	f(x) = 0.126434
+	f(x) = 0.141733
 iteration: 2820
-	f(x) = 0.126433
+	f(x) = 0.133715
 iteration: 2821
-	f(x) = 0.137944
+	f(x) = 0.136562
 iteration: 2822
-	f(x) = 0.126563
+	f(x) = 0.131606
 iteration: 2823
-	f(x) = 0.143443
+	f(x) = 0.130587
 iteration: 2824
-	f(x) = 0.130434
+	f(x) = 0.129992
 iteration: 2825
-	f(x) = 0.131447
+	f(x) = 0.129986
 iteration: 2826
-	f(x) = 0.127633
+	f(x) = 0.129993
 iteration: 2827
-	f(x) = 0.127776
+	f(x) = 0.129987
 iteration: 2828
-	f(x) = 0.126785
+	f(x) = 0.129988
 iteration: 2829
-	f(x) = 0.126797
+	f(x) = 0.129986
 iteration: 2830
-	f(x) = 0.126555
+	f(x) = 0.129986
 iteration: 2831
-	f(x) = 0.126511
+	f(x) = 0.129986
 iteration: 2832
-	f(x) = 0.126490
+	f(x) = 0.129986
 iteration: 2833
-	f(x) = 0.126528
+	f(x) = 0.129986
 iteration: 2834
-	f(x) = 0.126455
+	f(x) = 0.129986
 iteration: 2835
-	f(x) = 0.126495
+	f(x) = 0.129986
 iteration: 2836
-	f(x) = 0.126448
+	f(x) = 0.129985
 iteration: 2837
-	f(x) = 0.126443
+	f(x) = 0.129985
 iteration: 2838
-	f(x) = 0.126493
+	f(x) = 0.129985
 iteration: 2839
-	f(x) = 0.126433
+	f(x) = 0.129985
 iteration: 2840
-	f(x) = 0.137748
+	f(x) = 0.129985
 iteration: 2841
-	f(x) = 0.159134
+	f(x) = 0.129985
 iteration: 2842
-	f(x) = 0.220228
+	f(x) = 0.129985
 iteration: 2843
-	f(x) = 0.141505
+	f(x) = 0.129984
 iteration: 2844
-	f(x) = 0.156171
+	f(x) = 0.129984
 iteration: 2845
-	f(x) = 0.133613
+	f(x) = 0.129983
 iteration: 2846
-	f(x) = 0.139431
+	f(x) = 0.129982
 iteration: 2847
-	f(x) = 0.131714
+	f(x) = 0.129981
 iteration: 2848
-	f(x) = 0.131231
+	f(x) = 0.129979
 iteration: 2849
-	f(x) = 0.136084
+	f(x) = 0.129975
 iteration: 2850
-	f(x) = 0.128380
+	f(x) = 0.129971
 iteration: 2851
-	f(x) = 0.129356
+	f(x) = 0.129960
 iteration: 2852
-	f(x) = 0.127470
+	f(x) = 0.129932
 iteration: 2853
-	f(x) = 0.128174
+	f(x) = 312.483872
 iteration: 2854
-	f(x) = 0.126987
+	f(x) = 312.995647
 iteration: 2855
-	f(x) = 0.127410
+	f(x) = 0.129966
 iteration: 2856
-	f(x) = 0.126758
+	f(x) = 0.129932
 iteration: 2857
-	f(x) = 0.126652
+	f(x) = 312.561289
 iteration: 2858
-	f(x) = 0.126413
+	f(x) = 0.129945
 iteration: 2859
-	f(x) = 0.126476
+	f(x) = 0.131158
 iteration: 2860
-	f(x) = 0.126398
+	f(x) = 0.129935
 iteration: 2861
-	f(x) = 0.126406
+	f(x) = 0.129939
 iteration: 2862
-	f(x) = 0.126435
+	f(x) = 0.129929
 iteration: 2863
-	f(x) = 0.126387
+	f(x) = 0.129945
 iteration: 2864
-	f(x) = 0.126433
+	f(x) = 0.129923
 iteration: 2865
-	f(x) = 0.126385
+	f(x) = 0.129925
 iteration: 2866
-	f(x) = 0.286709
+	f(x) = 0.129944
 iteration: 2867
-	f(x) = 0.126306
+	f(x) = 0.129926
 iteration: 2868
-	f(x) = 0.291162
+	f(x) = 0.129926
 iteration: 2869
-	f(x) = 0.182565
+	f(x) = 0.129924
 iteration: 2870
-	f(x) = 0.176389
+	f(x) = 0.129926
 iteration: 2871
-	f(x) = 0.140077
+	f(x) = 0.129924
 iteration: 2872
-	f(x) = 0.143995
-iteration: 2873
-	f(x) = 0.129666
-iteration: 2874
-	f(x) = 0.131395
-iteration: 2875
-	f(x) = 0.127008
-iteration: 2876
-	f(x) = 0.127806
-iteration: 2877
-	f(x) = 0.126414
-iteration: 2878
-	f(x) = 0.126802
-iteration: 2879
-	f(x) = 0.126310
-iteration: 2880
-	f(x) = 0.126278
-iteration: 2881
-	f(x) = 0.126334
-iteration: 2882
-	f(x) = 0.126273
-iteration: 2883
-	f(x) = 0.126316
-iteration: 2884
-	f(x) = 0.126288
-iteration: 2885
-	f(x) = 0.126265
-iteration: 2886
-	f(x) = 0.126291
-iteration: 2887
-	f(x) = 0.126262
-iteration: 2888
-	f(x) = 0.126262
-iteration: 2889
-	f(x) = 0.126273
-iteration: 2890
-	f(x) = 0.126282
-iteration: 2891
-	f(x) = 0.126264
-iteration: 2892
-	f(x) = 0.126268
-iteration: 2893
-	f(x) = 0.126262
-iteration: 2894
-	f(x) = 0.126262
-iteration: 2895
-	f(x) = 0.126263
-iteration: 2896
-	f(x) = 0.126262
-iteration: 2897
-	f(x) = 0.126262
-iteration: 2898
-	f(x) = 0.126262
-iteration: 2899
-	f(x) = 0.126263
-iteration: 2900
-	f(x) = 0.126262
-iteration: 2901
-	f(x) = 0.126262
-iteration: 2902
-	f(x) = 0.126262
-iteration: 2903
-	f(x) = 0.126262
-iteration: 2904
-	f(x) = 0.126262
-iteration: 2905
-	f(x) = 0.126262
-iteration: 2906
-	f(x) = 0.126262
-iteration: 2907
-	f(x) = 0.126262
-iteration: 2908
-	f(x) = 0.126262
-iteration: 2909
-	f(x) = 0.126262
-iteration: 2910
-	f(x) = 0.126262
-iteration: 2911
-	f(x) = 0.126329
-iteration: 2912
-	f(x) = 0.126396
-iteration: 2913
-	f(x) = 0.126388
-iteration: 2914
-	f(x) = 0.126306
-iteration: 2915
-	f(x) = 0.126278
-iteration: 2916
-	f(x) = 0.126324
-iteration: 2917
-	f(x) = 0.126271
-iteration: 2918
-	f(x) = 0.126291
-iteration: 2919
-	f(x) = 0.126264
-iteration: 2920
-	f(x) = 0.126269
-iteration: 2921
-	f(x) = 0.126262
-iteration: 2922
-	f(x) = 0.126278
-iteration: 2923
-	f(x) = 0.126260
-iteration: 2924
-	f(x) = 0.126261
-iteration: 2925
-	f(x) = 0.126263
-iteration: 2926
-	f(x) = 0.126260
-iteration: 2927
-	f(x) = 0.126261
-iteration: 2928
-	f(x) = 0.126260
-iteration: 2929
-	f(x) = 0.126235
-iteration: 2930
-	f(x) = 0.149649
-iteration: 2931
-	f(x) = 0.137640
-iteration: 2932
-	f(x) = 0.129651
-iteration: 2933
-	f(x) = 0.131446
-iteration: 2934
-	f(x) = 0.127158
-iteration: 2935
-	f(x) = 0.127451
-iteration: 2936
-	f(x) = 0.126467
-iteration: 2937
-	f(x) = 0.249136
-iteration: 2938
-	f(x) = 0.139512
-iteration: 2939
-	f(x) = 0.272405
-iteration: 2940
-	f(x) = 0.160053
-iteration: 2941
-	f(x) = 0.182354
-iteration: 2942
-	f(x) = 0.135060
-iteration: 2943
-	f(x) = 0.142935
-iteration: 2944
-	f(x) = 0.131040
-iteration: 2945
-	f(x) = 0.136101
-iteration: 2946
-	f(x) = 0.129491
-iteration: 2947
-	f(x) = 0.128264
-iteration: 2948
-	f(x) = 0.129705
-iteration: 2949
-	f(x) = 0.127216
-iteration: 2950
-	f(x) = 0.128350
-iteration: 2951
-	f(x) = 0.126898
-iteration: 2952
-	f(x) = 0.140626
-iteration: 2953
-	f(x) = 0.183997
-iteration: 2954
-	f(x) = 0.167346
-iteration: 2955
 	f(x) = 0.145428
+iteration: 2873
+	f(x) = 0.131221
+iteration: 2874
+	f(x) = 0.137895
+iteration: 2875
+	f(x) = 0.130685
+iteration: 2876
+	f(x) = 0.133113
+iteration: 2877
+	f(x) = 0.129614
+iteration: 2878
+	f(x) = 0.132892
+iteration: 2879
+	f(x) = 0.129475
+iteration: 2880
+	f(x) = 0.131147
+iteration: 2881
+	f(x) = 0.129400
+iteration: 2882
+	f(x) = 0.129412
+iteration: 2883
+	f(x) = 0.129452
+iteration: 2884
+	f(x) = 0.129369
+iteration: 2885
+	f(x) = 0.129952
+iteration: 2886
+	f(x) = 0.129370
+iteration: 2887
+	f(x) = 0.129349
+iteration: 2888
+	f(x) = 0.129949
+iteration: 2889
+	f(x) = 0.130982
+iteration: 2890
+	f(x) = 0.129170
+iteration: 2891
+	f(x) = 0.129163
+iteration: 2892
+	f(x) = 0.129228
+iteration: 2893
+	f(x) = 0.129364
+iteration: 2894
+	f(x) = 0.129205
+iteration: 2895
+	f(x) = 0.129218
+iteration: 2896
+	f(x) = 0.129172
+iteration: 2897
+	f(x) = 0.129179
+iteration: 2898
+	f(x) = 0.129165
+iteration: 2899
+	f(x) = 0.129169
+iteration: 2900
+	f(x) = 0.129164
+iteration: 2901
+	f(x) = 0.129171
+iteration: 2902
+	f(x) = 0.129162
+iteration: 2903
+	f(x) = 0.129163
+iteration: 2904
+	f(x) = 0.130724
+iteration: 2905
+	f(x) = 0.129288
+iteration: 2906
+	f(x) = 0.132311
+iteration: 2907
+	f(x) = 0.129225
+iteration: 2908
+	f(x) = 0.129571
+iteration: 2909
+	f(x) = 0.129075
+iteration: 2910
+	f(x) = 0.129825
+iteration: 2911
+	f(x) = 0.129043
+iteration: 2912
+	f(x) = 0.129133
+iteration: 2913
+	f(x) = 0.129056
+iteration: 2914
+	f(x) = 0.129167
+iteration: 2915
+	f(x) = 0.129040
+iteration: 2916
+	f(x) = 0.155124
+iteration: 2917
+	f(x) = 0.129206
+iteration: 2918
+	f(x) = 0.152285
+iteration: 2919
+	f(x) = 0.134801
+iteration: 2920
+	f(x) = 0.136566
+iteration: 2921
+	f(x) = 0.130288
+iteration: 2922
+	f(x) = 0.131276
+iteration: 2923
+	f(x) = 0.129278
+iteration: 2924
+	f(x) = 0.129068
+iteration: 2925
+	f(x) = 0.130188
+iteration: 2926
+	f(x) = 0.130247
+iteration: 2927
+	f(x) = 0.129277
+iteration: 2928
+	f(x) = 0.129398
+iteration: 2929
+	f(x) = 0.129081
+iteration: 2930
+	f(x) = 0.129153
+iteration: 2931
+	f(x) = 0.129043
+iteration: 2932
+	f(x) = 0.129040
+iteration: 2933
+	f(x) = 0.129054
+iteration: 2934
+	f(x) = 0.129040
+iteration: 2935
+	f(x) = 0.129037
+iteration: 2936
+	f(x) = 0.129046
+iteration: 2937
+	f(x) = 0.129036
+iteration: 2938
+	f(x) = 0.129051
+iteration: 2939
+	f(x) = 0.129036
+iteration: 2940
+	f(x) = 0.129036
+iteration: 2941
+	f(x) = 0.129036
+iteration: 2942
+	f(x) = 0.805800
+iteration: 2943
+	f(x) = 0.207807
+iteration: 2944
+	f(x) = 0.264955
+iteration: 2945
+	f(x) = 0.198674
+iteration: 2946
+	f(x) = 0.160473
+iteration: 2947
+	f(x) = 0.159107
+iteration: 2948
+	f(x) = 0.199674
+iteration: 2949
+	f(x) = 0.148708
+iteration: 2950
+	f(x) = 0.170293
+iteration: 2951
+	f(x) = 0.146022
+iteration: 2952
+	f(x) = 0.140620
+iteration: 2953
+	f(x) = 0.154132
+iteration: 2954
+	f(x) = 0.136124
+iteration: 2955
+	f(x) = 0.137411
 iteration: 2956
-	f(x) = 0.144643
+	f(x) = 0.133125
 iteration: 2957
-	f(x) = 0.133868
+	f(x) = 0.238674
 iteration: 2958
-	f(x) = 0.135202
+	f(x) = 0.129973
 iteration: 2959
-	f(x) = 0.129875
+	f(x) = 0.129963
 iteration: 2960
-	f(x) = 0.129659
+	f(x) = 0.129104
 iteration: 2961
-	f(x) = 0.130922
+	f(x) = 0.129434
 iteration: 2962
-	f(x) = 0.127517
+	f(x) = 0.129065
 iteration: 2963
-	f(x) = 0.130037
+	f(x) = 1.495299
 iteration: 2964
-	f(x) = 0.127437
+	f(x) = 555.076127
 iteration: 2965
-	f(x) = 0.126659
+	f(x) = 1.678567
 iteration: 2966
-	f(x) = 0.127664
+	f(x) = 0.660535
 iteration: 2967
-	f(x) = 0.126571
+	f(x) = 0.190929
 iteration: 2968
-	f(x) = 0.126236
+	f(x) = 0.774233
 iteration: 2969
-	f(x) = 0.126231
+	f(x) = 0.257437
 iteration: 2970
-	f(x) = 0.126231
+	f(x) = 0.363689
 iteration: 2971
-	f(x) = 0.126229
+	f(x) = 0.153817
 iteration: 2972
-	f(x) = 0.126228
+	f(x) = 0.242178
 iteration: 2973
-	f(x) = 0.126228
+	f(x) = 0.146995
 iteration: 2974
-	f(x) = 0.126226
+	f(x) = 0.176647
 iteration: 2975
-	f(x) = 0.126226
+	f(x) = 0.136401
 iteration: 2976
-	f(x) = 0.126228
+	f(x) = 0.145271
 iteration: 2977
-	f(x) = 0.126228
+	f(x) = 0.134180
 iteration: 2978
-	f(x) = 0.126227
+	f(x) = 0.135531
 iteration: 2979
-	f(x) = 0.126227
+	f(x) = 0.130601
 iteration: 2980
-	f(x) = 0.126227
+	f(x) = 0.134161
 iteration: 2981
-	f(x) = 0.126226
+	f(x) = 0.130305
 iteration: 2982
-	f(x) = 0.126226
+	f(x) = 0.132588
 iteration: 2983
-	f(x) = 0.126225
+	f(x) = 0.129368
 iteration: 2984
-	f(x) = 0.126225
+	f(x) = 1.115449
 iteration: 2985
-	f(x) = 0.126225
+	f(x) = 0.132068
 iteration: 2986
-	f(x) = 0.126225
+	f(x) = 0.994533
 iteration: 2987
-	f(x) = 0.126223
+	f(x) = 0.522920
 iteration: 2988
-	f(x) = 0.126222
+	f(x) = 0.454236
 iteration: 2989
-	f(x) = 0.126223
+	f(x) = 0.245959
 iteration: 2990
-	f(x) = 0.126220
+	f(x) = 0.250044
 iteration: 2991
-	f(x) = 0.126219
+	f(x) = 0.168199
 iteration: 2992
-	f(x) = 0.126218
+	f(x) = 0.129036
 iteration: 2993
-	f(x) = 0.126218
+	f(x) = 0.129051
 iteration: 2994
-	f(x) = 0.126215
+	f(x) = 0.129045
 iteration: 2995
-	f(x) = 0.126214
+	f(x) = 0.129037
 iteration: 2996
-	f(x) = 0.126221
+	f(x) = 0.129040
 iteration: 2997
-	f(x) = 0.126216
+	f(x) = 0.129036
 iteration: 2998
-	f(x) = 0.126213
+	f(x) = 0.129037
 iteration: 2999
-	f(x) = 0.126212
+	f(x) = 0.129035
 iteration: 3000
-	f(x) = 0.126210
+	f(x) = 0.129035
