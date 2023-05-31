@@ -301,3 +301,37 @@ dust_solution <- data.frame(ode(times = sample_time,  func = ode.func, y = inits
 end.time <- Sys.time()
 print(end.time-start.time)
 
+#----------
+# PLOTS
+#----------
+
+color_codes <- scales::hue_pal()(4)
+names(color_codes) <-  c("Total", "Water", "Food", "Dust")
+
+library(ggplot2)
+plot <- ggplot()+
+  geom_line(data = dietary_solution, aes(x = time/24/365, y = CL, color='Food'), size=1.3)+
+  geom_line(data = dwater_solution, aes(x = time/24/365, y = CL, color='Water'), size=1.3)+
+  geom_line(data = dust_solution, aes(x = time/24/365, y = CL, color='Dust'), size=1.3)+
+  geom_line(data = total_solution, aes(x = time/24/365, y = CL, color='Total'), size=1.3)+
+  
+  scale_y_log10()+
+  
+  labs(title = paste0('Concenrtation of PFOA in liver for different exposures'),
+       y = 'Liver Concentration (ng/g)' , x = "Time (years)")+
+  theme(plot.title = element_text(hjust = 0.5,size=30), 
+        axis.title.y =element_text(hjust = 0.5,size=25,face="bold"),
+        axis.text.y=element_text(size=22),
+        axis.title.x =element_text(hjust = 0.5,size=25,face="bold"),
+        axis.text.x=element_text(size=22),
+        legend.title=element_text(hjust = 0.5,size=25), 
+        legend.text=element_text(size=22),
+        panel.border = element_rect(colour = "black", fill=NA, size=1.0)) + 
+  
+  scale_x_continuous(limits=c(0, 40))+ 
+  scale_color_manual("Exposure", values=color_codes)+
+  theme(legend.key.size = unit(1.5, 'cm'),  
+        legend.title = element_text(size=14),
+        legend.text = element_text(size=14),
+        axis.text = element_text(size = 14))
+plot
