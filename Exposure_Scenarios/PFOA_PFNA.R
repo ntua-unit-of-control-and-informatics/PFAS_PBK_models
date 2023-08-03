@@ -304,6 +304,7 @@ PFNA_plot <- ggplot()+
   
   scale_y_log10(limits=c(5,350))+
   scale_x_continuous(limits=c(0, 40))+ 
+  
   scale_color_manual("Exposure", values=color_codes)+
   theme(legend.key.size = unit(1.5, 'cm'),  
         legend.title = element_text(size=14),

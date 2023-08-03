@@ -1,0 +1,20 @@
+Forward search begins... 
+Calculating PL for parameter  P_carcass  and iter =  1 .  step = 0.1561883 P_carcass  =  -0.8381964 => Likelihood =  0.4860859 
+Calculating PL for parameter  P_carcass  and iter =  2 .  step = 0.09218452 P_carcass  =  -0.7460119 => Likelihood =  0.9431979 
+Calculating PL for parameter  P_carcass  and iter =  3 .  step = 0.07703569 P_carcass  =  -0.6689762 => Likelihood =  1.394523 
+Calculating PL for parameter  P_carcass  and iter =  4 .  step = 0.0755208 P_carcass  =  -0.5934554 => Likelihood =  1.934621 
+Calculating PL for parameter  P_carcass  and iter =  5 .  step = 0.06794639 P_carcass  =  -0.525509 => Likelihood =  2.545522 
+Calculating PL for parameter  P_carcass  and iter =  6 .  step = 0.06112942 P_carcass  =  -0.4643796 => Likelihood =  3.049867 
+Calculating PL for parameter  P_carcass  and iter =  7 .  step = 0.04408698 P_carcass  =  -0.4202926 => Likelihood =  3.351594 
+Calculating PL for parameter  P_carcass  and iter =  8 .  step = 0.04901035 P_carcass  =  -0.3712823 => Likelihood =  2.441181 
+Calculating PL for parameter  P_carcass  and iter =  9 .  step = 0.09672917 P_carcass  =  -0.2745531 => Likelihood =  3.039601 
+Calculating PL for parameter  P_carcass  and iter =  10 .  step = 0.0755208 P_carcass  =  -0.1990323 => Likelihood =  3.725456 
+Calculating PL for parameter  P_carcass  and iter =  11 .  step = 0.06075069 P_carcass  =  -0.1382816 => Likelihood =  4.25896 
+Forward search ended after  11 iterations. 
+Backward search begins... 
+Calculating PL for parameter  P_carcass  and iter =  1 .  step = 0.2531408 P_carcass  =  -1.247526 => Likelihood =  0.5026558 
+Calculating PL for parameter  P_carcass  and iter =  2 .  step = 0.1698223 P_carcass  =  -1.417348 => Likelihood =  1.44896 
+Calculating PL for parameter  P_carcass  and iter =  3 .  step = 0.1622479 P_carcass  =  -1.579596 => Likelihood =  2.387064 
+Calculating PL for parameter  P_carcass  and iter =  4 .  step = 0.1955753 P_carcass  =  -1.775171 => Likelihood =  3.334861 
+Calculating PL for parameter  P_carcass  and iter =  5 .  step = 0.289498 P_carcass  =  -2.064669 => Likelihood =  4.271811 
+Backward search ended after  5 iterations. 

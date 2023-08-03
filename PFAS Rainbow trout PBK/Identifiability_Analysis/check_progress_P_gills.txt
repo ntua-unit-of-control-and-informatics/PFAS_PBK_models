@@ -1,0 +1,26 @@
+Forward search begins... 
+Calculating PL for parameter  P_gills  and iter =  1 .  step = 0.1661745 P_gills  =  -0.4295498 => Likelihood =  0.6861261 
+Calculating PL for parameter  P_gills  and iter =  2 .  step = 0.08199935 P_gills  =  -0.3475504 => Likelihood =  1.105078 
+Calculating PL for parameter  P_gills  and iter =  3 .  step = 0.08392789 P_gills  =  -0.2636225 => Likelihood =  1.688101 
+Calculating PL for parameter  P_gills  and iter =  4 .  step = 0.06384838 P_gills  =  -0.1997742 => Likelihood =  2.415416 
+Calculating PL for parameter  P_gills  and iter =  5 .  step = 0.04717217 P_gills  =  -0.152602 => Likelihood =  1.921348 
+Calculating PL for parameter  P_gills  and iter =  6 .  step = 0.08018426 P_gills  =  -0.07241773 => Likelihood =  2.171359 
+Calculating PL for parameter  P_gills  and iter =  7 .  step = 0.07360453 P_gills  =  0.001186794 => Likelihood =  3.125455 
+Calculating PL for parameter  P_gills  and iter =  8 .  step = 0.05919719 P_gills  =  0.06038399 => Likelihood =  3.723747 
+Calculating PL for parameter  P_gills  and iter =  9 .  step = 0.04910071 P_gills  =  0.1094847 => Likelihood =  3.84539 
+Calculating PL for parameter  P_gills  and iter =  10 .  step = 0.05329812 P_gills  =  0.1627828 => Likelihood =  3.331237 
+Calculating PL for parameter  P_gills  and iter =  11 .  step = 0.07995737 P_gills  =  0.2427402 => Likelihood =  3.489876 
+Calculating PL for parameter  P_gills  and iter =  12 .  step = 0.1117216 P_gills  =  0.3544618 => Likelihood =  3.661697 
+Calculating PL for parameter  P_gills  and iter =  13 .  step = 0.054546 P_gills  =  0.4090078 => Likelihood =  3.183888 
+Calculating PL for parameter  P_gills  and iter =  14 .  step = 0.1071838 P_gills  =  0.5161916 => Likelihood =  3.871628 
+Calculating PL for parameter  P_gills  and iter =  15 .  step = 0.07575996 P_gills  =  0.5919516 => Likelihood =  4.698862 
+Forward search ended after  15 iterations. 
+Backward search begins... 
+Calculating PL for parameter  P_gills  and iter =  1 .  step = 0.2382897 P_gills  =  -0.834014 => Likelihood =  0.4834845 
+Calculating PL for parameter  P_gills  and iter =  2 .  step = 0.2079217 P_gills  =  -1.041936 => Likelihood =  1.346112 
+Calculating PL for parameter  P_gills  and iter =  3 .  step = 0.2269454 P_gills  =  -1.268881 => Likelihood =  2.296246 
+Calculating PL for parameter  P_gills  and iter =  4 .  step = 0.2382897 P_gills  =  -1.507171 => Likelihood =  3.021796 
+Calculating PL for parameter  P_gills  and iter =  5 .  step = 0.2382897 P_gills  =  -1.745461 => Likelihood =  3.481924 
+Calculating PL for parameter  P_gills  and iter =  6 .  step = 0.2382897 P_gills  =  -1.98375 => Likelihood =  3.760108 
+Calculating PL for parameter  P_gills  and iter =  7 .  step = 0.2382897 P_gills  =  -2.22204 => Likelihood =  3.92263 
+Backward search ended after  7 iterations. 
