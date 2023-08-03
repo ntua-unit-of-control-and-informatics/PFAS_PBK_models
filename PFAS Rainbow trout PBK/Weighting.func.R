@@ -1,4 +1,4 @@
-setwd('C:/Users/vassi/Documents/GitHub/PFAS_PBK_models/PFAS Rainbow trout PBK')
+setwd('/Users/vassilis/Documents/GitHub/PFAS_PBK_models/PFAS Rainbow trout PBK')
 
 # Experimental data from Falk et al.2015
 #---------------------------------------
@@ -7,7 +7,7 @@ setwd('C:/Users/vassi/Documents/GitHub/PFAS_PBK_models/PFAS Rainbow trout PBK')
 # with the model
 
 # Directory of folder with saved data files
-data_dir <- 'C:/Users/vassi/Documents/GitHub/PFAS_PBK_models/PFAS Rainbow trout PBK/PFAS_Data/Falk et al.2015'
+data_dir <- '/Users/vassilis/Documents/GitHub/PFAS_PBK_models/PFAS Rainbow trout PBK/PFAS_Data/Falk et al.2015'
 
 # Load PFOS data
 #---------------
@@ -53,7 +53,7 @@ Weighting.func <- function(df, a_first=2, a_last=2, a_tp=2){
     # Estimate the weight of the Last point
     weights_list[[i]][N] <- a_last*(abs(sub_df[N,1] - sub_df[N-1,1]) + abs(sub_df[N,2] - sub_df[N-1,2]))/(abs(sub_df[N,1] - sub_df[1,1]) + abs(sub_df[N,2] - sub_df[1,2]))
     
-    # next_point indicates if j+1 point is a turning point
+    # next_point (binary variable) indicates if j+1 point is a turning point
     next_point <- 0
     prev_point<- 0
     for (j in 2:(N-2)) {
@@ -89,6 +89,7 @@ Weighting.func <- function(df, a_first=2, a_last=2, a_tp=2){
       }
     }
     
+    # Define a value and the weight value for the second from the end data point (j=N-1).
     a <- ifelse(next_point | prev_point, a_tp, 1)
     j <- N-1
     weights_list[[i]][j] <- (abs(sub_df[j,1] - sub_df[j-1,1]) + abs(sub_df[j,1] - sub_df[j+1,1]) +
