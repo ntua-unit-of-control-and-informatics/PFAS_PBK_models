@@ -1,9 +1,0 @@
-Forward search begins... 
-Calculating PL for parameter  Ku  and iter =  1 .  step = 0.2015503 Ku  =  0.604651 => Likelihood =  0.008226071 
-Calculating PL for parameter  Ku  and iter =  2 .  step = 0.2015503 Ku  =  0.8062013 => Likelihood =  0.006139097 
-Calculating PL for parameter  Ku  and iter =  3 .  step = 0.004031007 Ku  =  0.8102323 => Likelihood =  0.005904563 
-Forward search ended after  3 iterations. 
-Backward search begins... 
-Calculating PL for parameter  Ku  and iter =  1 .  step = 0.2015503 Ku  =  0.2015503 => Likelihood =  0.01406728 
-Calculating PL for parameter  Ku  and iter =  2 .  step = 0.1763565 Ku  =  0.02519379 => Likelihood =  0.1133857 
-Backward search ended after  3 iterations. 

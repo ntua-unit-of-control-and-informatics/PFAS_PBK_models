@@ -1,0 +1,31 @@
+Forward search begins... 
+Calculating PL for parameter  P_kidney  and iter =  1 .  step = 0.1469653 P_kidney  =  -0.220448 => Likelihood =  0.5232192 
+Calculating PL for parameter  P_kidney  and iter =  2 .  step = 0.09773049 P_kidney  =  -0.1227175 => Likelihood =  1.075556 
+Calculating PL for parameter  P_kidney  and iter =  3 .  step = 0.07198286 P_kidney  =  -0.05073461 => Likelihood =  1.628617 
+Calculating PL for parameter  P_kidney  and iter =  4 .  step = 0.06078824 P_kidney  =  0.01005363 => Likelihood =  2.109857 
+Calculating PL for parameter  P_kidney  and iter =  5 .  step = 0.05826945 P_kidney  =  0.06832308 => Likelihood =  2.697034 
+Calculating PL for parameter  P_kidney  and iter =  6 .  step = 0.05512096 P_kidney  =  0.123444 => Likelihood =  3.191344 
+Calculating PL for parameter  P_kidney  and iter =  7 .  step = 0.05505099 P_kidney  =  0.178495 => Likelihood =  3.760036 
+Calculating PL for parameter  P_kidney  and iter =  8 .  step = 0.05330183 P_kidney  =  0.2317969 => Likelihood =  3.619223 
+Calculating PL for parameter  P_kidney  and iter =  9 .  step = 0.07758017 P_kidney  =  0.309377 => Likelihood =  4.205713 
+Forward search ended after  9 iterations. 
+Backward search begins... 
+Calculating PL for parameter  P_kidney  and iter =  1 .  step = 0.1469653 P_kidney  =  -0.5143786 => Likelihood =  0.2953334 
+Calculating PL for parameter  P_kidney  and iter =  2 .  step = 0.1469653 P_kidney  =  -0.6613439 => Likelihood =  0.8946072 
+Calculating PL for parameter  P_kidney  and iter =  3 .  step = 0.1469653 P_kidney  =  -0.8083092 => Likelihood =  1.439109 
+Calculating PL for parameter  P_kidney  and iter =  4 .  step = 0.1469653 P_kidney  =  -0.9552745 => Likelihood =  1.976508 
+Calculating PL for parameter  P_kidney  and iter =  5 .  step = 0.1469653 P_kidney  =  -1.10224 => Likelihood =  2.487779 
+Calculating PL for parameter  P_kidney  and iter =  6 .  step = 0.1469653 P_kidney  =  -1.249205 => Likelihood =  2.874358 
+Calculating PL for parameter  P_kidney  and iter =  7 .  step = 0.1469653 P_kidney  =  -1.39617 => Likelihood =  3.152481 
+Calculating PL for parameter  P_kidney  and iter =  8 .  step = 0.1469653 P_kidney  =  -1.543136 => Likelihood =  3.363926 
+Calculating PL for parameter  P_kidney  and iter =  9 .  step = 0.1469653 P_kidney  =  -1.690101 => Likelihood =  3.555237 
+Calculating PL for parameter  P_kidney  and iter =  10 .  step = 0.1469653 P_kidney  =  -1.837066 => Likelihood =  3.641146 
+Calculating PL for parameter  P_kidney  and iter =  11 .  step = 0.1469653 P_kidney  =  -1.984032 => Likelihood =  3.699988 
+Calculating PL for parameter  P_kidney  and iter =  12 .  step = 0.1469653 P_kidney  =  -2.130997 => Likelihood =  3.777847 
+Calculating PL for parameter  P_kidney  and iter =  13 .  step = 0.1469653 P_kidney  =  -2.277962 => Likelihood =  3.80658 
+Calculating PL for parameter  P_kidney  and iter =  14 .  step = 0.1469653 P_kidney  =  -2.424928 => Likelihood =  3.834172 
+Calculating PL for parameter  P_kidney  and iter =  15 .  step = 0.1469653 P_kidney  =  -2.571893 => Likelihood =  3.85594 
+Calculating PL for parameter  P_kidney  and iter =  16 .  step = 0.1469653 P_kidney  =  -2.718858 => Likelihood =  3.872549 
+Calculating PL for parameter  P_kidney  and iter =  17 .  step = 0.1469653 P_kidney  =  -2.865824 => Likelihood =  3.880929 
+Calculating PL for parameter  P_kidney  and iter =  18 .  step = 0.1469653 P_kidney  =  -3.012789 => Likelihood =  3.887104 
+Backward search ended after  18 iterations. 

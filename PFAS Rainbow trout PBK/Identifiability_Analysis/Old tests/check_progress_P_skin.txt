@@ -1,0 +1,20 @@
+Forward search begins... 
+Calculating PL for parameter  P_skin  and iter =  1 .  step = 0.1704692 P_skin  =  -0.4259925 => Likelihood =  0.7305848 
+Calculating PL for parameter  P_skin  and iter =  2 .  step = 0.07880693 P_skin  =  -0.3471856 => Likelihood =  1.007379 
+Calculating PL for parameter  P_skin  and iter =  3 .  step = 0.08937025 P_skin  =  -0.2578154 => Likelihood =  1.547275 
+Calculating PL for parameter  P_skin  and iter =  4 .  step = 0.09777546 P_skin  =  -0.1600399 => Likelihood =  2.105296 
+Calculating PL for parameter  P_skin  and iter =  5 .  step = 0.05620371 P_skin  =  -0.1038362 => Likelihood =  2.337795 
+Calculating PL for parameter  P_skin  and iter =  6 .  step = 0.06790286 P_skin  =  -0.03593333 => Likelihood =  2.850363 
+Calculating PL for parameter  P_skin  and iter =  7 .  step = 0.06472251 P_skin  =  0.02878918 => Likelihood =  3.150616 
+Calculating PL for parameter  P_skin  and iter =  8 .  step = 0.07221906 P_skin  =  0.1010082 => Likelihood =  3.789102 
+Calculating PL for parameter  P_skin  and iter =  9 .  step = 0.07562658 P_skin  =  0.1766348 => Likelihood =  4.487306 
+Forward search ended after  9 iterations. 
+Backward search begins... 
+Calculating PL for parameter  P_skin  and iter =  1 .  step = 0.2385847 P_skin  =  -0.8350465 => Likelihood =  0.4126965 
+Calculating PL for parameter  P_skin  and iter =  2 .  step = 0.2127225 P_skin  =  -1.047769 => Likelihood =  1.291492 
+Calculating PL for parameter  P_skin  and iter =  3 .  step = 0.2140855 P_skin  =  -1.261855 => Likelihood =  2.251492 
+Calculating PL for parameter  P_skin  and iter =  4 .  step = 0.2385847 P_skin  =  -1.500439 => Likelihood =  3.039373 
+Calculating PL for parameter  P_skin  and iter =  5 .  step = 0.2385847 P_skin  =  -1.739024 => Likelihood =  3.558812 
+Calculating PL for parameter  P_skin  and iter =  6 .  step = 0.2385847 P_skin  =  -1.977609 => Likelihood =  3.853168 
+Calculating PL for parameter  P_skin  and iter =  7 .  step = 0.2385847 P_skin  =  -2.216193 => Likelihood =  4.005509 
+Backward search ended after  7 iterations. 

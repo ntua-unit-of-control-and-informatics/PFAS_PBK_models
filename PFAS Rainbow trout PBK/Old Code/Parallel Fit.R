@@ -77,25 +77,41 @@ main_func <- function(substance){
     fb_Kidney <- fb$Kidney
     fb_Viscera <- fb$Viscera
     
-    # Cl_bile <- 2.16e-06 # L/h 
-    # Cl_feces <- 2.62e-07 # L/h 
-    # Cl_urine <- 7e-05 # L/h 
-    Ku <- 0.13 # 1/h
-    # P_liver <- 2.05
-    # P_muscle <- 0.15
-    # P_kidney <- 0.58
-    # P_viscera <- 0.87
-    # P_brain <- 0.63
-    # P_skin <- 0.25
-    # P_gills <- 0.40
-    # P_carcass <- 0.00129             
-    Free = 3.2e-02
+    #Ku <- 0.13 # 1/h
+    #Free = 3.2e-02
     
-    a_skin <- 0.9 # 90% of venous blood of skinwas assumed to flow directly to kidney (Nischols et al.1996)
-    a_muscle <- 0.6 # 90% of venous blood of skinwas assumed to flow directly to kidney (Nischols et al.1996)
+    # Reabsorption coefficients from bile to intestine
+    # estimated by Cao et al., 2022
+    # K_urine = Cl_urine/f_reab_urine estimated by Ng et al., 2013 (unitless)
+    if(substance=='PFOA'){
+      f_reab_hep <- 0.30
+      K_urine <- 2.08 
+      Free <- 0.385
+    }else if(substance=='PFNA'){
+      f_reab_hep <- 0.34
+      K_urine <- 1.35
+      Free <- 0.622
+    }else if(substance=='PFBS'){
+      f_reab_hep <- 0.23
+      K_urine <- 10.41
+      Free <- 0.1 # assumed
+    }else if(substance=='PFHxS'){
+      f_reab_hep <- 0.30
+      K_urine <- 5.88
+      Free <- 0.217
+    }else if(substance=='PFOS'){
+      f_reab_hep <- 0.42
+      K_urine <- 1.35
+      Free <- 0.819
+    }
     
-    P_viscera = 0.87
-    P_brain = 0.63
+    # Bile flow coefficient
+    Q_bile_coef <- 7.5e-05 # ml/g BW/h Grosell et al., 2000
+    Q_urine_coef <- 2.755e-03 # ml/h/g of BW Urinary flow rate
+    V_urine_coef <- 2.2e-03 # ml/g of BW Urine volume inside gallbladder
+    
+    a_skin <- 0.9 # 90% of venous blood of skin was assumed to flow directly to kidney (Nichols et al.1996)
+    a_muscle <- 0.6 # 60% of venous blood of muscle was assumed to flow directly to kidney (Nichols et al.1996)
     
     plasma <- 0.7
     
@@ -110,21 +126,23 @@ main_func <- function(substance){
                 'fb_Liver'=fb_Liver, 'fb_Skin'=fb_Skin, 'fb_Muscle'=fb_Muscle,
                 'fb_Gills'=fb_Gills, 'fb_Kidney'=fb_Kidney, 'fb_Viscera'=fb_Viscera,
                 
-                #'Cl_bile'=Cl_bile, 'Cl_feces'=Cl_feces, 'Cl_urine'=Cl_urine,
-                'Ku'=Ku, 'Free'=Free, 'a_skin'=a_skin, 'a_muscle'=a_muscle,
-                'P_viscera'=P_viscera, 'P_brain'=P_brain,
-                'plasma'=plasma))
+                'a_skin'=a_skin, 'a_muscle'=a_muscle,
+                'Q_bile_coef'=Q_bile_coef,
+                'Q_urine_coef'=Q_urine_coef, 'V_urine_coef'=V_urine_coef,
+                'K_urine'=K_urine,
+                'f_reab_hep'=f_reab_hep, 'plasma'=plasma, "Free"=Free))
   }
   
   create.inits <- function(parameters){
     with(as.list(parameters),{
       M_art<-0; M_venous<-0;
-      M_gills<-0; M_lumen=0; M_bile<-0; M_viscera<-0; M_liver<-0; M_kidney<-0;
-      M_muscle<-0; M_skin<-0; M_carcass<-0; M_urine<-0; M_feces<-0; M_input<-0 
+      M_gills<-0; M_lumen=0; M_lumen_2=0; M_viscera<-0; M_liver<-0; M_kidney<-0;
+      M_muscle<-0; M_skin<-0; M_carcass<-0; M_storage<-0; M_urine<-0; M_feces<-0; M_input<-0 
       
       return(c('M_art'=M_art, 'M_venous'=M_venous, 'M_gills'=M_gills, 'M_lumen'=M_lumen,
-               'M_bile'=M_bile, 'M_viscera'=M_viscera, 'M_liver'=M_liver, 'M_kidney'=M_kidney, 
+               'M_lumen_2'=M_lumen_2, 'M_viscera'=M_viscera, 'M_liver'=M_liver, 'M_kidney'=M_kidney, 
                'M_muscle'=M_muscle, 'M_skin'=M_skin, 'M_carcass'=M_carcass,
+               'M_storage'=M_storage,
                'M_urine'=M_urine, 'M_feces'=M_feces, 'M_input'=M_input))
     })
   }
@@ -171,44 +189,56 @@ main_func <- function(substance){
       w_kidney <- fw_Kidney*BW   # Kidney weight - g
       w_viscera <- fw_Viscera*BW # Viscera weight - g
       w_lumen <- fw_lumen*BW
-      w_bile <- w_lumen
       w_art <- 1/3*w_blood
       w_venous <- 2/3*w_blood
-      w_carcass <- BW - (w_blood + w_liver + w_skin + w_muscle +
-                           w_gills + w_kidney + w_viscera + w_lumen + w_bile)
-      
+      w_carcass <- BW - (w_blood/plasma + w_liver + w_skin + w_muscle +
+                           w_gills + w_kidney + w_viscera + w_lumen)
+
       # Calculate the regional blood flows - ml/h
-      Q_liver <- fb_Liver*BW     # Liver blood flow - ml/h
-      Q_skin <- fb_Skin*BW       # Skin blood flow - ml/h
-      Q_muscle <- fb_Muscle*BW   # Muscle blood flow - ml/h
+      Q_liver <- fb_Liver*BW*plasma     # Liver blood flow - ml/h
+      Q_skin <- fb_Skin*BW*plasma      # Skin blood flow - ml/h
+      Q_muscle <- fb_Muscle*BW*plasma   # Muscle blood flow - ml/h
       Q_gills <- Q_total #fb_Gills*BW     # Gills blood flow - ml/h
-      Q_kidney <- fb_Kidney*BW   # Kidney blood flow - ml/h
-      Q_viscera <- fb_Viscera*BW # Viscera blood flow - ml/h
-      Q_carcass <- Q_total -(Q_liver + Q_skin + Q_muscle + #Q_gills + 
+      Q_kidney <- fb_Kidney*BW*plasma   # Kidney blood flow - ml/h
+      Q_viscera <- fb_Viscera*BW*plasma # Viscera blood flow - ml/h
+      Q_carcass <- Q_total - (Q_liver + Q_skin + Q_muscle + 
                                Q_kidney + Q_viscera)
+
+      # Calculate the absolute bile flow rate - ml/h
+      Q_bile <- Q_bile_coef*BW
+      # Calculate Urinary flow rate - ml/h
+      Q_urine <- Q_urine_coef*BW
+      
+      # Calculate urine volume  - ml 
+      v_urine <- V_urine_coef*BW
+      
+      # Calculate f_reab_urine based on Cl_urine and K_urine - 1/h
+      f_reab_urine <- Cl_urine/K_urine
       
       # Tissue concentrations ug PFAS/g tissue
       C_gills <- M_gills/w_gills
-      C_bile <- M_bile/w_bile
       C_viscera <- M_viscera/w_viscera
       C_liver <- M_liver/w_liver
       C_kidney <- M_kidney/w_kidney
       C_muscle <- M_muscle/w_muscle 
       C_skin <- M_skin/w_skin
       C_carcass <- M_carcass/w_carcass
-      C_lumen <- M_lumen/w_lumen
+      C_lumen <- (M_lumen+M_lumen_2)/w_lumen
       C_art <- M_art/w_art
       C_venous <- M_venous/w_venous
       C_blood <- (M_art + M_venous)/w_blood
+      C_storage <- M_storage/v_urine
       
       # Arterial Blood
       dM_art <- Free*Q_gills*C_gills/P_gills - 
         (Q_viscera + Q_liver + Q_kidney +
            Q_muscle + Q_skin + Q_carcass)*Free*C_art
       
-      dM_venous <- - Free*Q_total*C_venous + ((Q_liver + Q_viscera)*C_liver/P_liver + 
-                                                Q_kidney*C_kidney/P_kidney + (1-a_muscle)*Q_muscle*C_muscle/P_muscle +
-                                                (1-a_skin)*Q_skin*C_skin/P_skin + Q_carcass*C_carcass/P_carcass)*Free
+      dM_venous <- - Free*Q_total*C_venous + 
+        ((Q_liver + Q_viscera)*C_liver/P_liver +
+           (Q_kidney + a_muscle*Q_muscle + a_skin*Q_skin)*C_kidney/P_kidney +
+           (1-a_muscle)*Q_muscle*C_muscle/P_muscle +
+           (1-a_skin)*Q_skin*C_skin/P_skin + Q_carcass*C_carcass/P_carcass)*Free
       
       # Gills
       dM_gills <- Q_gills*Free*(C_venous - C_gills/P_gills)
@@ -216,22 +246,23 @@ main_func <- function(substance){
       dM_input=0
       
       # Viscera lumen - Available PFAS for absorption and elimination
-      dM_lumen = - Ku*M_lumen - Cl_feces*C_lumen 
+      dM_lumen = f_reab_hep*Q_bile*C_liver - Ku*M_lumen - Cl_feces*M_lumen 
       
-      # Bile - Billiary eliminated PFAS (Considering no reabsoprtion)
-      dM_bile = Free*Cl_bile*C_liver - Cl_feces*C_bile
+      # Viscera lumen_2- Unavailable PFAS for absorption. Can be only eliminated.
+      dM_lumen_2 = (1-f_reab_hep)*Q_bile*C_liver - Cl_feces*M_lumen_2 
       
       # Viscera tissue
       dM_viscera <- Q_viscera*Free*(C_art - C_viscera/P_viscera) + Ku*M_lumen 
       
       # Liver
       dM_Liver <- Q_liver*Free*C_art + Q_viscera*Free*C_viscera/P_viscera - 
-        (Q_liver + Q_viscera)*Free*C_liver/P_liver - Free*Cl_bile*C_liver
+        (Q_liver + Q_viscera)*Free*C_liver/P_liver - Q_bile*C_liver
       
       # Kidney
-      dM_kidney <- Q_kidney*Free*(C_art - C_kidney/P_kidney) + 
+      dM_kidney <- Q_kidney*Free*C_art - 
+        (Q_kidney + a_muscle*Q_muscle + a_skin*Q_skin)*Free*C_kidney/P_kidney + 
         a_muscle*Q_muscle*Free*C_muscle/P_muscle + 
-        a_skin*Q_skin*Free*C_skin/P_skin - Cl_urine*C_kidney
+        a_skin*Q_skin*Free*C_skin/P_skin - Cl_urine*M_kidney + f_reab_urine*M_storage
       
       # Muscle
       dM_muscle <- Q_muscle*Free*(C_art - C_muscle/P_muscle)
@@ -242,23 +273,26 @@ main_func <- function(substance){
       # Carcass 
       dM_carcass <- Q_carcass*Free*(C_art - C_carcass/P_carcass)
       
+      # Urine storage
+      dM_storage <- Cl_urine*M_kidney - f_reab_urine*M_storage - Q_urine*C_storage
+      
       # Urine
-      dM_urine <- Cl_urine*C_kidney
+      dM_urine <- Q_urine*C_storage
       
       # Feces
-      dM_feces <- Cl_feces*C_lumen + Cl_feces*C_bile
+      dM_feces <- Cl_feces*(M_lumen + M_lumen_2)
       
-      Mass_balance <- M_input - (M_art + M_venous + M_gills + M_lumen + M_bile + 
+      Mass_balance <- M_input - (M_art + M_venous + M_gills + M_lumen + M_lumen_2 + 
                                    M_viscera + M_liver + M_kidney + M_muscle + 
-                                   M_skin + M_carcass + M_urine + M_feces)
+                                   M_skin + M_carcass + M_storage + M_urine + M_feces)
       
       return(list(c('dM_art'=dM_art, 'dM_venous'=dM_venous, 
-                    'dM_gills'=dM_gills, 'dM_lumen'=dM_lumen, 'dM_bile'=dM_bile,
+                    'dM_gills'=dM_gills, 'dM_lumen'=dM_lumen, 'dM_lumen_2'=dM_lumen_2,
                     'dM_viscera'=dM_viscera, 'dM_Liver'=dM_Liver, 
                     'dM_kidney'=dM_kidney, 'dM_muscle'=dM_muscle,
-                    'dM_skin'=dM_skin, 'dM_carcass'=dM_carcass,
+                    'dM_skin'=dM_skin, 'dM_carcass'=dM_carcass, 'dM_storage'=dM_storage,
                     'dM_urine'=dM_urine, 'dM_feces'=dM_feces, 'dM_input'=dM_input),
-                  'C_Gills'=C_gills, 'C_Bile'=C_bile, 'C_Viscera'=C_viscera,
+                  'C_Gills'=C_gills, 'C_Viscera'=C_viscera,
                   'C_Liver'=C_liver, 'C_Kidney'=C_kidney, 'C_Muscle'=C_muscle,
                   'C_Skin'=C_skin, 'C_Carcass'=C_carcass, 'C_Lumen'=C_lumen,
                   'C_Blood'=C_blood*plasma,
@@ -311,7 +345,7 @@ main_func <- function(substance){
     y_obs <- unlist(observations)
     y_pred <- unlist(predictions)
     # Total number of observations
-    N<- length(y_obs)
+    N <- length(y_obs)
     log_ratio <- rep(NA, N) 
     for ( i in 1:N){
       log_ratio[i] <- abs(log((y_pred[i]/y_obs[i]), base = 10))
@@ -326,7 +360,7 @@ main_func <- function(substance){
     return(sqrt(mean((y_obs-y_pred)^2)) )
   }
   
-  fitness.metric <- function(observed, predicted, comp.names =NULL){
+  PBKOF <- function(observed, predicted, comp.names =NULL){
     # Check if the user provided the correct input format
     if (!is.list(observed) || !is.list(predicted)){
       stop(" The observations and predictions must be lists")
@@ -386,10 +420,10 @@ main_func <- function(substance){
   
   obj.func <- function(x, user.input, substance){
     names(x) <- c('P_liver', 'P_muscle', 'P_kidney', 
-                  'P_skin', 'P_gills', 'P_carcass',
-                  'Cl_bile', 'Cl_feces', 'Cl_urine')
+                  'P_skin', 'P_gills', 'P_carcass', 'P_viscera',
+                  'Cl_feces', 'Cl_urine', 'Ku')
     
-    # lets try just for pfos
+    # Keep the experimental data of current subsstance
     exp_data <- data_list[[substance]]
     
     params <- create.params(user.input)
@@ -414,18 +448,17 @@ main_func <- function(substance){
       names(predictions)[i-1] <- colnames(predictions_df)[i]
     }
     
-    #score <- fitness.metric(observations,predictions)
-    score <- AAFE(predictions,observations)
+    score <- PBKOF(observations,predictions)
     
     return(score)
   }
   
   
   ################################################################
-  x0 <- c(1.17613431, 0.08398678, 0.07102088, 0.33793084, 0.39039634, 0.23137421, 0.78637215, 0.63154606, 0.70663080)
+  x0 <- runif(10)
   names(x0) <- c('P_liver', 'P_muscle', 'P_kidney', 
-                 'P_skin', 'P_gills', 'P_carcass',
-                 'Cl_bile', 'Cl_feces', 'Cl_urine')
+                 'P_skin', 'P_gills', 'P_carcass', 'P_viscera',
+                 'Cl_feces', 'Cl_urine', 'Ku')
   # Total body weight of fish
   Texp <- 15 # C
   
@@ -460,7 +493,8 @@ main_func <- function(substance){
   # Multiply fish_weights * g daily_food_intake/g of BW * Concentration (ug/g of food)
   admin.dose_dietary <- fish_weights*2.6/100*500/1000
   
-  user.input <- list('Texp'=Texp,
+  user.input <- list('substance'=substance,
+                     'Texp'=Texp,
                      'admin.dose_dietary'=admin.dose_dietary,
                      'admin.time_dietary'=admin.time_dietary)
   
@@ -469,7 +503,7 @@ main_func <- function(substance){
   events <- create.events(params)
   sample_time <- seq(0,56*24,1)
   
-  N_iter <- 1000
+  N_iter <- 3000
   opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA",  #"NLOPT_LN_SBPLX" ,
                 "xtol_rel" = 0.0,
                 "ftol_rel" = 0.0,
@@ -478,17 +512,17 @@ main_func <- function(substance){
                 "maxeval" = N_iter,
                 "print_level" = 1 )
   
+  sink(file= paste0(substance, '.txt'), append = F)
+  
   optimization <- nloptr::nloptr( x0 = x0,
                                   eval_f = obj.func,
-                                  lb	= rep(1e-08, length(x0)),
-                                  ub = rep(20, length(x0)),
+                                  lb	= rep(1e-05, length(x0)),
+                                  ub = rep(1e03, length(x0)),
                                   opts = opts,
                                   user.input=user.input,
                                   substance = substance)
   
-  
-  
-  
+  sink()
   # Plot Concentration - Time profiles
   #------------------------------------
   
@@ -497,7 +531,8 @@ main_func <- function(substance){
   x_opt <- optimization$solution
   names(x_opt) <- names(x0)
   
-  user.input <- list('Texp'=Texp,
+  user.input <- list('substance'=substance,
+                     'Texp'=Texp,
                      'admin.dose_dietary'=admin.dose_dietary,
                      'admin.time_dietary'=admin.time_dietary)
   
@@ -569,19 +604,19 @@ main_func <- function(substance){
 #===============================================================================
 substances <- c("PFOS",  "PFOA",  "PFBS",  "PFHxS", "PFNA" )
 library(parallel)
-cores <- detectCores()-2
+cores <- detectCores()-3
 
 start.time <- Sys.time()
 cl = makeCluster(cores)
 #clusterExport(cl=cl)
+
 output <- parLapply(cl, substances, main_func)
 stopCluster(cl)
 total.duration <- Sys.time() - start.time
-print(total.duration)
 
 params_names <- c('P_liver', 'P_muscle', 'P_kidney', 
-                  'P_skin', 'P_gills', 'P_carcass',
-                  'Cl_bile', 'Cl_feces', 'Cl_urine')
+                  'P_skin', 'P_gills', 'P_carcass', 'P_viscera',
+                  'Cl_feces', 'Cl_urine', 'Ku')
 scores <- c(rep(NA, 5))
 names(scores) <- substances
 optimized_params <- data.frame(matrix(NA, nrow = 5, ncol = length(params_names)))
@@ -591,3 +626,4 @@ for (i in 1:5) {
   optimized_params[i,] <- output[[i]]$optimizations$solution
   scores[i] <- output[[i]]$optimizations$objective
 }
+print(total.duration)
