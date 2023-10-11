@@ -494,8 +494,8 @@ names(errors_list) <- names(data_list)
 
 setwd('/Users/vassilis/Documents/GitHub/PFAS_PBK_models/PFAS Rainbow trout PBK/Identifiability_Analysis')
 # Those are the PFOS parameters
-x_opt <- c(1.4242889930, 0.0005210038, 1.3583221351, 1.5955778, 0.11324562, 0.4714780,
-           0.2749829, 0.2311812, 0.10879549, 3.652317)
+x_opt <- c(1.4668919575, 0.0005719031, 1.3064647362, 1.5685318, 0.11316576, 
+           0.4398762, 0.2715996, 0.2291869, 0.1074253, 3.699111)
 names(x_opt) <- c('Ku', 'CLU_coef', 'Cl_feces', 'P_liver', 'P_muscle', 'P_kidney', 
                   'P_skin', 'P_gills', 'P_carcass', 'P_viscera')
 
@@ -595,3 +595,8 @@ test <- Identifiability_analysis(obj_f = obj_f,
 
 profile_likelihood_plots(analysis_results = test, 10^thetas, global_optimum, alpha = 0.95,
                          df = 1)
+
+results <- test$Identiafiability_Analysis[]
+results[,c('Optimal', 'Lower_Bound', "Upper_Bound")] <- 10^results[,c('Optimal', 'Lower_Bound', "Upper_Bound")]
+results[,c('Lower_Bound', "Upper_Bound")] <- round(results[,c('Lower_Bound', "Upper_Bound")], 5)
+write.csv(results, '/Users/vassilis/Documents/GitHub/PFAS_PBK_models/PFAS Rainbow trout PBK/Identifiability_Analysis/results.csv', row.names = T)

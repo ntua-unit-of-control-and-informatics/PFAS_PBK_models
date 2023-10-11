@@ -1,0 +1,8 @@
+,Non-Identifiability,Optimal,Lower_Bound,Upper_Bound,Exit_code_B,Exit_code_F
+P_liver,Identifiable,1.5685,0.00312,558.183,2,2
+P_muscle,Identifiable,0.1132,0.00028,31.506,2,2
+P_kidney,Identifiable,0.4399,0.0013,25.727,2,2
+P_skin,Identifiable,0.2716,0.00057,162.598,2,2
+P_gills,Identifiable,0.2292,0.00048,159.814,2,2
+P_carcass,Identifiable,0.1074,0.00023,57.641,2,2
+P_viscera,Practical,3.6991,0,412.162,3,2

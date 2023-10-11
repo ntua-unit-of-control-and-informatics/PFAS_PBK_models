@@ -1,24 +1,24 @@
 Forward search begins... 
-Calculating PL for parameter  P_muscle  and iter =  1 .  step = 0.3310925 P_muscle  =  -0.6148861 => Likelihood =  0.2678229 
-Calculating PL for parameter  P_muscle  and iter =  2 .  step = 0.3310925 P_muscle  =  -0.2837936 => Likelihood =  0.4460094 
-Calculating PL for parameter  P_muscle  and iter =  3 .  step = 0.3310925 P_muscle  =  0.04729893 => Likelihood =  0.5854021 
-Calculating PL for parameter  P_muscle  and iter =  4 .  step = 0.3310925 P_muscle  =  0.3783914 => Likelihood =  0.8002497 
-Calculating PL for parameter  P_muscle  and iter =  5 .  step = 0.3310925 P_muscle  =  0.7094839 => Likelihood =  1.1951 
-Calculating PL for parameter  P_muscle  and iter =  6 .  step = 0.2766202 P_muscle  =  0.9861042 => Likelihood =  1.78462 
-Calculating PL for parameter  P_muscle  and iter =  7 .  step = 0.2007664 P_muscle  =  1.186871 => Likelihood =  2.429063 
-Calculating PL for parameter  P_muscle  and iter =  8 .  step = 0.1582066 P_muscle  =  1.345077 => Likelihood =  3.144144 
-Calculating PL for parameter  P_muscle  and iter =  9 .  step = 0.1259334 P_muscle  =  1.471011 => Likelihood =  3.871454 
-Calculating PL for parameter  P_muscle  and iter =  10 .  step = 0.1046535 P_muscle  =  1.575664 => Likelihood =  4.618291 
+Calculating PL for parameter  P_muscle  and iter =  1 .  step = 0.3311997 P_muscle  =  -0.6150852 => Likelihood =  0.2762862 
+Calculating PL for parameter  P_muscle  and iter =  2 .  step = 0.3311997 P_muscle  =  -0.2838855 => Likelihood =  0.4530418 
+Calculating PL for parameter  P_muscle  and iter =  3 .  step = 0.3311997 P_muscle  =  0.04731425 => Likelihood =  0.5895376 
+Calculating PL for parameter  P_muscle  and iter =  4 .  step = 0.3311997 P_muscle  =  0.378514 => Likelihood =  0.8035738 
+Calculating PL for parameter  P_muscle  and iter =  5 .  step = 0.3311997 P_muscle  =  0.7097137 => Likelihood =  1.194046 
+Calculating PL for parameter  P_muscle  and iter =  6 .  step = 0.2788306 P_muscle  =  0.9885443 => Likelihood =  1.780285 
+Calculating PL for parameter  P_muscle  and iter =  7 .  step = 0.2016955 P_muscle  =  1.19024 => Likelihood =  2.422177 
+Calculating PL for parameter  P_muscle  and iter =  8 .  step = 0.1613998 P_muscle  =  1.35164 => Likelihood =  3.14857 
+Calculating PL for parameter  P_muscle  and iter =  9 .  step = 0.1264455 P_muscle  =  1.478085 => Likelihood =  3.887047 
+Calculating PL for parameter  P_muscle  and iter =  10 .  step = 0.1044125 P_muscle  =  1.582498 => Likelihood =  4.636717 
 Forward search ended after  10 iterations. 
 Backward search begins... 
-Calculating PL for parameter  P_muscle  and iter =  1 .  step = 0.3310925 P_muscle  =  -1.277071 => Likelihood =  0.2688742 
-Calculating PL for parameter  P_muscle  and iter =  2 .  step = 0.3310925 P_muscle  =  -1.608164 => Likelihood =  0.4436512 
-Calculating PL for parameter  P_muscle  and iter =  3 .  step = 0.3310925 P_muscle  =  -1.939256 => Likelihood =  0.7246853 
-Calculating PL for parameter  P_muscle  and iter =  4 .  step = 0.3310925 P_muscle  =  -2.270349 => Likelihood =  1.022152 
-Calculating PL for parameter  P_muscle  and iter =  5 .  step = 0.3046924 P_muscle  =  -2.575041 => Likelihood =  1.252436 
-Calculating PL for parameter  P_muscle  and iter =  6 .  step = 0.3126487 P_muscle  =  -2.88769 => Likelihood =  1.586668 
-Calculating PL for parameter  P_muscle  and iter =  7 .  step = 0.2660195 P_muscle  =  -3.153709 => Likelihood =  2.205966 
-Calculating PL for parameter  P_muscle  and iter =  8 .  step = 0.1914221 P_muscle  =  -3.345131 => Likelihood =  2.92643 
-Calculating PL for parameter  P_muscle  and iter =  9 .  step = 0.1414026 P_muscle  =  -3.486534 => Likelihood =  3.653157 
-Calculating PL for parameter  P_muscle  and iter =  10 .  step = 0.1118777 P_muscle  =  -3.598412 => Likelihood =  4.386182 
+Calculating PL for parameter  P_muscle  and iter =  1 .  step = 0.3311997 P_muscle  =  -1.277485 => Likelihood =  0.27543 
+Calculating PL for parameter  P_muscle  and iter =  2 .  step = 0.3311997 P_muscle  =  -1.608684 => Likelihood =  0.4592031 
+Calculating PL for parameter  P_muscle  and iter =  3 .  step = 0.3311997 P_muscle  =  -1.939884 => Likelihood =  0.6399737 
+Calculating PL for parameter  P_muscle  and iter =  4 .  step = 0.3311997 P_muscle  =  -2.271084 => Likelihood =  0.9732988 
+Calculating PL for parameter  P_muscle  and iter =  5 .  step = 0.3311997 P_muscle  =  -2.602284 => Likelihood =  1.246266 
+Calculating PL for parameter  P_muscle  and iter =  6 .  step = 0.2997639 P_muscle  =  -2.902048 => Likelihood =  1.5799 
+Calculating PL for parameter  P_muscle  and iter =  7 .  step = 0.2846433 P_muscle  =  -3.186691 => Likelihood =  2.301324 
+Calculating PL for parameter  P_muscle  and iter =  8 .  step = 0.1830793 P_muscle  =  -3.36977 => Likelihood =  3.021782 
+Calculating PL for parameter  P_muscle  and iter =  9 .  step = 0.13811 P_muscle  =  -3.50788 => Likelihood =  3.742007 
+Calculating PL for parameter  P_muscle  and iter =  10 .  step = 0.1108535 P_muscle  =  -3.618734 => Likelihood =  4.47818 
 Backward search ended after  10 iterations. 

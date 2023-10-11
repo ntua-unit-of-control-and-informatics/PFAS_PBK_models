@@ -1,34 +1,33 @@
 Forward search begins... 
-Calculating PL for parameter  P_skin  and iter =  1 .  step = 0.196243 P_skin  =  -0.3644513 => Likelihood =  0.2387879 
-Calculating PL for parameter  P_skin  and iter =  2 .  step = 0.196243 P_skin  =  -0.1682083 => Likelihood =  0.3115779 
-Calculating PL for parameter  P_skin  and iter =  3 .  step = 0.196243 P_skin  =  0.02803472 => Likelihood =  0.3997162 
-Calculating PL for parameter  P_skin  and iter =  4 .  step = 0.196243 P_skin  =  0.2242777 => Likelihood =  0.5011883 
-Calculating PL for parameter  P_skin  and iter =  5 .  step = 0.196243 P_skin  =  0.4205207 => Likelihood =  0.617172 
-Calculating PL for parameter  P_skin  and iter =  6 .  step = 0.196243 P_skin  =  0.6167637 => Likelihood =  0.7396658 
-Calculating PL for parameter  P_skin  and iter =  7 .  step = 0.196243 P_skin  =  0.8130068 => Likelihood =  0.9034777 
-Calculating PL for parameter  P_skin  and iter =  8 .  step = 0.196243 P_skin  =  1.00925 => Likelihood =  1.091689 
-Calculating PL for parameter  P_skin  and iter =  9 .  step = 0.196243 P_skin  =  1.205493 => Likelihood =  1.320297 
-Calculating PL for parameter  P_skin  and iter =  10 .  step = 0.196243 P_skin  =  1.401736 => Likelihood =  1.586163 
-Calculating PL for parameter  P_skin  and iter =  11 .  step = 0.196243 P_skin  =  1.597979 => Likelihood =  1.942356 
-Calculating PL for parameter  P_skin  and iter =  12 .  step = 0.196243 P_skin  =  1.794222 => Likelihood =  2.404742 
-Calculating PL for parameter  P_skin  and iter =  13 .  step = 0.196243 P_skin  =  1.990465 => Likelihood =  3.05025 
-Calculating PL for parameter  P_skin  and iter =  14 .  step = 0.1620949 P_skin  =  2.15256 => Likelihood =  3.722731 
-Calculating PL for parameter  P_skin  and iter =  15 .  step = 0.1439668 P_skin  =  2.296526 => Likelihood =  4.453196 
+Calculating PL for parameter  P_skin  and iter =  1 .  step = 0.1981248 P_skin  =  -0.3679461 => Likelihood =  0.2418291 
+Calculating PL for parameter  P_skin  and iter =  2 .  step = 0.1981248 P_skin  =  -0.1698213 => Likelihood =  0.3165611 
+Calculating PL for parameter  P_skin  and iter =  3 .  step = 0.1981248 P_skin  =  0.02830354 => Likelihood =  0.4100675 
+Calculating PL for parameter  P_skin  and iter =  4 .  step = 0.1981248 P_skin  =  0.2264283 => Likelihood =  0.5252461 
+Calculating PL for parameter  P_skin  and iter =  5 .  step = 0.1981248 P_skin  =  0.4245532 => Likelihood =  0.6256618 
+Calculating PL for parameter  P_skin  and iter =  6 .  step = 0.1981248 P_skin  =  0.622678 => Likelihood =  0.7586917 
+Calculating PL for parameter  P_skin  and iter =  7 .  step = 0.1981248 P_skin  =  0.8208028 => Likelihood =  0.891232 
+Calculating PL for parameter  P_skin  and iter =  8 .  step = 0.1981248 P_skin  =  1.018928 => Likelihood =  1.086666 
+Calculating PL for parameter  P_skin  and iter =  9 .  step = 0.1981248 P_skin  =  1.217052 => Likelihood =  1.291684 
+Calculating PL for parameter  P_skin  and iter =  10 .  step = 0.1981248 P_skin  =  1.415177 => Likelihood =  1.598729 
+Calculating PL for parameter  P_skin  and iter =  11 .  step = 0.1981248 P_skin  =  1.613302 => Likelihood =  1.975224 
+Calculating PL for parameter  P_skin  and iter =  12 .  step = 0.1981248 P_skin  =  1.811427 => Likelihood =  2.459926 
+Calculating PL for parameter  P_skin  and iter =  13 .  step = 0.1931717 P_skin  =  2.004598 => Likelihood =  3.10095 
+Calculating PL for parameter  P_skin  and iter =  14 .  step = 0.160501 P_skin  =  2.165099 => Likelihood =  3.790514 
+Calculating PL for parameter  P_skin  and iter =  15 .  step = 0.1384165 P_skin  =  2.303516 => Likelihood =  4.519364 
 Forward search ended after  15 iterations. 
 Backward search begins... 
-Calculating PL for parameter  P_skin  and iter =  1 .  step = 0.196243 P_skin  =  -0.7569373 => Likelihood =  0.2359511 
-Calculating PL for parameter  P_skin  and iter =  2 .  step = 0.196243 P_skin  =  -0.9531803 => Likelihood =  0.3092007 
-Calculating PL for parameter  P_skin  and iter =  3 .  step = 0.196243 P_skin  =  -1.149423 => Likelihood =  0.3952762 
-Calculating PL for parameter  P_skin  and iter =  4 .  step = 0.196243 P_skin  =  -1.345666 => Likelihood =  0.5084378 
-Calculating PL for parameter  P_skin  and iter =  5 .  step = 0.196243 P_skin  =  -1.541909 => Likelihood =  0.6109191 
-Calculating PL for parameter  P_skin  and iter =  6 .  step = 0.196243 P_skin  =  -1.738152 => Likelihood =  0.7254543 
-Calculating PL for parameter  P_skin  and iter =  7 .  step = 0.196243 P_skin  =  -1.934395 => Likelihood =  0.8638069 
-Calculating PL for parameter  P_skin  and iter =  8 .  step = 0.196243 P_skin  =  -2.130638 => Likelihood =  1.036677 
-Calculating PL for parameter  P_skin  and iter =  9 .  step = 0.196243 P_skin  =  -2.326881 => Likelihood =  1.26002 
-Calculating PL for parameter  P_skin  and iter =  10 .  step = 0.196243 P_skin  =  -2.523124 => Likelihood =  1.556399 
-Calculating PL for parameter  P_skin  and iter =  11 .  step = 0.196243 P_skin  =  -2.719367 => Likelihood =  1.97246 
-Calculating PL for parameter  P_skin  and iter =  12 .  step = 0.196243 P_skin  =  -2.91561 => Likelihood =  2.542335 
-Calculating PL for parameter  P_skin  and iter =  13 .  step = 0.1738235 P_skin  =  -3.089434 => Likelihood =  3.235984 
-Calculating PL for parameter  P_skin  and iter =  14 .  step = 0.1394056 P_skin  =  -3.22884 => Likelihood =  3.964243 
-Calculating PL for parameter  P_skin  and iter =  15 .  step = 0.1143893 P_skin  =  -3.343229 => Likelihood =  4.706971 
-Backward search ended after  15 iterations. 
+Calculating PL for parameter  P_skin  and iter =  1 .  step = 0.1981248 P_skin  =  -0.7641957 => Likelihood =  0.2420941 
+Calculating PL for parameter  P_skin  and iter =  2 .  step = 0.1981248 P_skin  =  -0.9623205 => Likelihood =  0.3163567 
+Calculating PL for parameter  P_skin  and iter =  3 .  step = 0.1981248 P_skin  =  -1.160445 => Likelihood =  0.4057643 
+Calculating PL for parameter  P_skin  and iter =  4 .  step = 0.1981248 P_skin  =  -1.35857 => Likelihood =  0.5209679 
+Calculating PL for parameter  P_skin  and iter =  5 .  step = 0.1981248 P_skin  =  -1.556695 => Likelihood =  0.6202971 
+Calculating PL for parameter  P_skin  and iter =  6 .  step = 0.1981248 P_skin  =  -1.75482 => Likelihood =  0.7379805 
+Calculating PL for parameter  P_skin  and iter =  7 .  step = 0.1981248 P_skin  =  -1.952945 => Likelihood =  0.8816792 
+Calculating PL for parameter  P_skin  and iter =  8 .  step = 0.1981248 P_skin  =  -2.151069 => Likelihood =  1.064887 
+Calculating PL for parameter  P_skin  and iter =  9 .  step = 0.1981248 P_skin  =  -2.349194 => Likelihood =  1.29389 
+Calculating PL for parameter  P_skin  and iter =  10 .  step = 0.1981248 P_skin  =  -2.547319 => Likelihood =  1.591179 
+Calculating PL for parameter  P_skin  and iter =  11 .  step = 0.1981248 P_skin  =  -2.745444 => Likelihood =  2.025125 
+Calculating PL for parameter  P_skin  and iter =  12 .  step = 0.1981248 P_skin  =  -2.943569 => Likelihood =  2.626479 
+Calculating PL for parameter  P_skin  and iter =  13 .  step = 0.1731174 P_skin  =  -3.116686 => Likelihood =  3.354216 
+Calculating PL for parameter  P_skin  and iter =  14 .  step = 0.1315797 P_skin  =  -3.248266 => Likelihood =  4.057738 
+Backward search ended after  14 iterations. 
