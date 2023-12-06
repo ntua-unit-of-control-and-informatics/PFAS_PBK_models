@@ -34,3 +34,4 @@ substance_spcific_params
 load("/Users/vassilis/Documents/GitHub/PFAS_PBK_models/PFAS Rainbow trout PBK/Common Ku CLU_coef Cl_feces PBKOF.RData")
 common_params
 substance_specific_params
+load("/Users/vassilis/Documents/GitHub/PFAS_PBK_models/PFAS Rainbow trout PBK/Common Ku CLU_coef Cl_feces PBKOF.RData")
