@@ -187,7 +187,7 @@ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func, y = i
 compartments <- c('Mx', 'My', 'M_eliminated')
 color_codes <- scales::hue_pal()(length(compartments))
 
-plot <- ggplot(data = solution)+
+plot <- ggplot()+
   geom_line(data = solution, aes(x = time, y = Mx, color='Mx'), size=1.3)+
   geom_line(data = solution, aes(x = time, y = My, color='My'), size=1.3)+
   geom_line(data = solution, aes(x = time, y = M_eliminated, color='M_eliminated'), size=1.3)+
