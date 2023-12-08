@@ -3,7 +3,7 @@ library(ggplot2) # Creating plots
 library(nloptr)  # Optimization algorithms
 
 # Change the working directory
-wd = '/Users/vassilis/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/R_examples' 
+wd = '/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/R_examples' 
 setwd(wd)
 
 #-----------------------------------------------#
@@ -121,7 +121,7 @@ obj.func <- function(x){
   # We need to keep only the predictions for x and y for the time points 
   # at which we have available data. 
 
-  preds <- solution[solution$time==exp_data$time, ]
+  preds <- solution[solution$time %in% exp_data$time, ]
   
   # Initiate a variable to save the score of goodness of fit for each variable
   score_x <- mse_custom(exp_data$Mx, preds$Mx)
@@ -162,7 +162,7 @@ optimization <- nloptr::nloptr(x0 = x0,
 # as well as the final values of the optimized parameters
 
 # The minimized value of the objective function
-#optimization$objective
+optimization$objective
 
 # The values of the optimized params 
 x_opt <- optimization$solution
@@ -172,6 +172,12 @@ x_opt <- optimization$solution
 #---------------------------------------------#
 
 # Step 1: Solve the ODEs using the optimized values of parameters k12 and k21
+user_input <- list('k12_value'=x_opt[1], 
+                   'k21_value'=x_opt[2], 
+                   'Mx_initial'= 1,
+                   'My_initial'= 0.1,
+                   'IV_intakes'=NULL,
+                   'IV_times'=NULL)
 params <- create.params(user_input)
 inits <- create.inits(params)
 # events <- create.events(params)

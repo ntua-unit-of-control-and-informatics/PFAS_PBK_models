@@ -6,8 +6,9 @@ getwd()
 
 # Change the working directory
 # add whatever working directory you want
-wd = '/Users/vassilis/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/R_examples' 
+wd = '/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/R_examples' 
 setwd(wd)
+getwd()
 
 #-----------------------------------------------#
 # Custom functions for the solution of the ODEs #
@@ -99,7 +100,7 @@ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func, y = i
 
 # Check the mass balance: the sum of each row of the solution dataframe should be
 # equal to the sum of initial amounts.
-#rowSums(solution[,-1])
+#rowSums(solution[ ,-1])
 
 # Basic Plot of Mx vs time
 # plot(x = solution$time, y = solution$Mx)
@@ -134,7 +135,7 @@ plot <- ggplot(data = solution)+
 # Save the generated data
 
 # Define the directory at which you want to save the data
-wd_data <- '/Users/vassilis/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/R_examples'
+wd_data <- '/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/R_examples'
 setwd(wd_data)
 
 # Select which time points you want to save
