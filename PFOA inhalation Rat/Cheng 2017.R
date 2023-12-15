@@ -473,7 +473,7 @@ ode.func <- function(time, inits, params){
     
     #Gut tissue subcompartment
     
-    dMGTf = bGFGT*MGFf - bGTGF*MGTf + bGLGT*MGLf - bGTGL*MGTf-
+    dMGTf = bGFGT*MGFf - bGTGF*MGTf + bGLGT*MGLf - bGTGL*MGTf
     dMGLf = bGTGL*MGTf - bGLGT*MGLf + (Qbile/Vbile)*Mbilef - (Qfeces/VGL)*MGLf
     dMfeces = (Qfeces/VGL)*MGLf
     
