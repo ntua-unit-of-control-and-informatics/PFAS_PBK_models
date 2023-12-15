@@ -470,7 +470,6 @@ ode.func <- function(time, inits, params){
     dMLTb3 = bLFon3*MLTf - bLFoff*MLTb3 #PFOA in liver tissue bound to LFABP3
     
     dMbilef = bLTbile*MLTf - bbileLT*Mbilef - (Qbile/Vbile)*Mbilef
-    dMbile = (Qbile/Vbile)*Mbilef
     
     #Gut tissue subcompartment
     
@@ -480,7 +479,7 @@ ode.func <- function(time, inits, params){
     
     return(list(c('dMBf'=dMBf, 'dMBb'=dMBb, 'dMKFf'=dMKFf, 'dMKFb'=dMKFb,'dMLFf'=dMKFf, 'dMLFb'=dMKFb, 'dMGFf'=dMGFf, 'dMGFb'=dMGFb, 'dMMFf'=dMMFf, 'dMMFb'=dMMFb, 'dMAFf'=dMAFf, 'dMAFb'=dMAFb,
                   'dMRFf'=dMRFf, 'dMRFb'=dMRFb, 'dMATf'=dMATf, 'dMMTf'=dMMTf, 'dMRTf'=dMRTf, 'dMKTf'=dMKTf, 'dMKTb1'=dMKTb1, 'dMKTb2'=dMKTb2, 'dMKTb3'=dMKTb3, 'dMKTa2b'=dMKTa2b, 'dMFilf'=dMFilf, 'dMurine'=dMurine,
-                  'dMLTf'=dMLTf, 'dMLTb1'=dMLTb1, 'dMLTb2'=dMLTb2, 'dMLTb3'=dMLTb3, 'dMbilef'=dMbilef, 'dMbile'=dMbile, 'dMGTf'=dMGTf, 'dMGLf'=dMGLf, 'dMfeces'=dMfeces, 'dMalbB'=dMalbB, 'dMalbKF'=dMalbKF, 'dMK_fabpKT1'=dMK_fabpKT1,
+                  'dMLTf'=dMLTf, 'dMLTb1'=dMLTb1, 'dMLTb2'=dMLTb2, 'dMLTb3'=dMLTb3, 'dMbilef'=dMbilef, 'dMGTf'=dMGTf, 'dMGLf'=dMGLf, 'dMfeces'=dMfeces, 'dMalbB'=dMalbB, 'dMalbKF'=dMalbKF, 'dMK_fabpKT1'=dMK_fabpKT1,
                   'dMK_fabpKT2'=dMK_fabpKT2, 'dMK_fabpKT3'=dMK_fabpKT3, 'dMK_fabpKT'=dMK_fabpKT, 'dMalbLF'=dMalbLF, 'dML_fabpLT1'=dML_fabpLT1,
                   'dML_fabpLT2'=dML_fabpLT2, 'dML_fabpLT3'=dML_fabpLT3, 'dMalbGF'=dMalbGF, 'dMalbMF'=dMalbMF, 'dMalbAF'=dMalbAF, 'dMalbRF'=dMalbRF  
                   )))
@@ -495,7 +494,7 @@ create.inits <- function(parameters){
     MBf <- admin.dose *BW
     MBb <- 0; MKFf <- 0; MKFb <- 0; MLFf <- 0; MLFb <- 0; MGFf <- 0; MGFb <- 0; MMFf <- 0; MMFb <- 0; MAFf <- 0; MAFb <- 0; MRFf <- 0; MRFb <- 0;
     MATf <- 0; MMTf <- 0; MRTf <- 0; MKTf <- 0; MKTb1 <- 0; MKTb2 <- 0; MKTb3 <- 0; MKTa2b <-0; 
-    MFilf <- 0; Murine <- 0; MLTf <- 0; MLTb1 <- 0; MLTb2 <- 0; MLTb3 <- 0; Mbilef <- 0; Mbile <- 0; MGTf <- 0;  MGLf <- 0; Mfeces <-0
+    MFilf <- 0; Murine <- 0; MLTf <- 0; MLTb1 <- 0; MLTb2 <- 0; MLTb3 <- 0; Mbilef <- 0; MGTf <- 0; MGLf <- 0; Mfeces <-0
     MalbB <- MalbB; MalbKF <- MalbKF; MK_fabpKT1 <- MK_fabpKT1; MK_fabpKT2 <- MK_fabpKT2; MK_fabpKT3 <- MK_fabpKT3; MK_fabpKT <- MK_fabpKT;
     MalbLF <- MalbLF; ML_fabpLT1 <- ML_fabpLT1; ML_fabpLT2 <- ML_fabpLT2; ML_fabpLT3 <- ML_fabpLT3; MalbGF <- MalbGF; MalbMF <- MalbMF; MalbAF <- MalbAF; MalbRF <- MalbRF
       
@@ -505,7 +504,7 @@ create.inits <- function(parameters){
     
       return(c('MBf'=MBf, 'MBb'=MBb, 'MKFf'=MKFf, 'MKFb'=MKFb,'MLFf'=MKFf, 'MLFb'=MKFb, 'MGFf'=MGFf, 'MGFb'=MGFb, 'MMFf'=MMFf, 'MMFb'=MMFb, 'MAFf'=MAFf, 'MAFb'=MAFb,
                'MRFf'=MRFf, 'MRFb'=MRFb, 'MATf'=MATf, 'MMTf'=MMTf, 'MRTf'=MRTf, 'MKTf'=MKTf, 'MKTb1'=MKTb1, 'MKTb2'=MKTb2, 'MKTb3'=MKTb3, 'MKTa2b'=MKTa2b, 'MFilf'=MFilf, 'Murine'=Murine,
-               'MLTf'=MLTf, 'MLTb1'=MLTb1, 'MLTb2'=MLTb2, 'MLTb3'=MLTb3, 'Mbilef'=Mbilef, 'Mbile'=Mbile, 'MGTf'=MGTf, 'MGLf'=MGLf, 'Mfeces'=Mfeces, 'MalbB'=MalbB, 'MalbKF'=MalbKF, 'MK_fabpKT1'=MK_fabpKT1,
+               'MLTf'=MLTf, 'MLTb1'=MLTb1, 'MLTb2'=MLTb2, 'MLTb3'=MLTb3, 'Mbilef'=Mbilef, 'MGTf'=MGTf, 'MGLf'=MGLf, 'Mfeces'=Mfeces, 'MalbB'=MalbB, 'MalbKF'=MalbKF, 'MK_fabpKT1'=MK_fabpKT1,
                'MK_fabpKT2'=MK_fabpKT2, 'MK_fabpKT3'=MK_fabpKT3, 'MK_fabpKT'=MK_fabpKT, 'MalbLF'=MalbLF, 'ML_fabpLT1'=ML_fabpLT1,
                'ML_fabpLT2'=ML_fabpLT2, 'ML_fabpLT3'=ML_fabpLT3, 'MalbGF'=MalbGF, 'MalbMF'=MalbMF, 'MalbAF'=MalbAF, 'MalbRF'=MalbRF
                 ))
