@@ -83,7 +83,7 @@ create.params <- function(user.input){
     
     #Effective permeability (Peff, in m/s) for blood (B), liver(L), kidney(K),
     #gut(G),adipose(A), muscle(M), rest of body(R)
-  
+    
     PeffB <- 4.98e-8
     PeffK <- 4.38e-8
     PeffL <- 5.15e-8
@@ -126,8 +126,8 @@ create.params <- function(user.input){
     Qurine <- PQurine * BW * 1e-6/(24*3600) #mL per day/kg -> m^3/s
     PQGFR <- 10.74
     QGFR <- PQGFR * BW * 1e-6/60 #mL per min/kg -> m^3/s
-   
-#======Table S2=======#  
+    
+    #======Table S2=======#  
     #Albumin concentration in blood and interstitial fluid compartments(mol/m^3)
     
     CalbB <- 281e-3*7.8 #486 μmol/L in 13.7 mL blood, C1*v1=C2*V2, v2=7.8 mL plasma, n=7.8 binding sites (Table S3)
@@ -153,7 +153,7 @@ create.params <- function(user.input){
     CL_fabpLT2 <- CL_fabpLT/3
     CL_fabpLT3 <- CL_fabpLT/3
     
-#======Table S2=======#    
+    #======Table S2=======#    
     #Equilibrium association constant (m^3/mol= 10^-3*M-1) for albumin(Ka), LFABP(KL_fabp),
     #and alpha2mu-globulin(Ka2u). See SI section S2-2 for details
     
@@ -260,7 +260,7 @@ create.params <- function(user.input){
     MalbRF <- CalbRF * VRF
     
     
-   
+    
     
     return(list('admin.dose'=admin.dose,'PVB'=PVB, 'VB'=VB, 'PVplsma'=PVplasma, 'Vplasma'=Vplasma, 'PVK'=PVK, 'VK'=VK, 'PVKB'=PVKB, 'VKB'=VKB, 'PVKF'=PVKF, 'VKF'=VKF, 'VKT'=VKT, 'VFil'=VFil,
                 'PVL'=PVL, 'VL'=VL, 'PVLB'=PVLB, 'VLB'=VLB, 'PVLF'=PVLF, 'VLF'=VLF, 'VLT'=VLT, 'PVbile'=PVbile, 'Vbile'=Vbile, 'PVG'=PVG, 'VG'=VG, 'PVGB'=PVGB, 'VGB'=VGB,
@@ -284,8 +284,8 @@ create.params <- function(user.input){
                 'ML_fabpLT2'=ML_fabpLT2, 'ML_fabpLT3'=ML_fabpLT3, 'MalbGF'=MalbGF, 'MalbMF'=MalbMF, 'MalbAF'=MalbAF, 'MalbRF'=MalbRF
                 
                 
-              
-                ))
+                
+    ))
     
     
   })
@@ -294,7 +294,7 @@ create.params <- function(user.input){
 ode.func <- function(time, inits, params){
   with(as.list(c(inits, params)),{
     
-#==========================Protein binding=============================    
+    #==========================Protein binding=============================    
     
     #MBb: Mass of PFOA in blood bound to albumin, MBf: Mass of PFOA in blood not bound to proteins
     dMalbB = koff * MBb - kon * MalbB * MBf / (VB + VLB + VKB + VGB + VMB + VAB + VRB)
@@ -389,7 +389,7 @@ ode.func <- function(time, inits, params){
     bRFon <- CalbRF * kon
     bRFoff <- koff
     
-#====================PFOA mass balance at each tissue or fluid compartment==============================     
+    #====================PFOA mass balance at each tissue or fluid compartment==============================     
     
     #Blood subcompartment
     
@@ -397,14 +397,14 @@ ode.func <- function(time, inits, params){
     
     dMBb = bBon*MBf - bBoff*MBb #PFOA in blood bound to albumin
     
-#==================================================  Interstitial fluid
+    #==================================================  Interstitial fluid
     
     #Kidney interstitial fluid subcompartment (bclear = bKoat1 + bKoat3)
     
     dMKFf = bBKF*MBf - bKFB*MKFf + bKTKF*MKTf - bKFKT*MKFf + befflux*MKTf - bclear*MKFf + bKFoff*MKFb - bKFon*MKFf
     
     dMKFb = bKFon*MKFf - bKFoff*MKFb #Mass of PFOA in interstitial fluid of kidney bound to albumin
-     
+    
     #Liver interstitial fluid subcompartment 
     
     dMLFf = bBLF*MBf - bLFB*MLFf + bLTLF*MLTf - bLFLT*MLFf - babs*MLFf + bLFoff*MLFb - bLFon*MLFf
@@ -435,7 +435,7 @@ ode.func <- function(time, inits, params){
     
     dMRFb = bRFon*MRFf - bRFoff*MRFb #Mass of PFOA in interstitial fluid of rest of body bound to albumin
     
-#==================================================  Tissue
+    #==================================================  Tissue
     
     #Adipose tissue subcompartment 
     
@@ -473,7 +473,7 @@ ode.func <- function(time, inits, params){
     
     #Gut tissue subcompartment
     
-    dMGTf = bGFGT*MGFf - bGTGF*MGTf + bGLGT*MGLf - bGTGL*MGTf
+    dMGTf = bGFGT*MGFf - bGTGF*MGTf + bGLGT*MGLf - bGTGL*MGTf-
     dMGLf = bGTGL*MGTf - bGLGT*MGLf + (Qbile/Vbile)*Mbilef - (Qfeces/VGL)*MGLf
     dMfeces = (Qfeces/VGL)*MGLf
     
@@ -482,7 +482,7 @@ ode.func <- function(time, inits, params){
                   'dMLTf'=dMLTf, 'dMLTb1'=dMLTb1, 'dMLTb2'=dMLTb2, 'dMLTb3'=dMLTb3, 'dMbilef'=dMbilef, 'dMGTf'=dMGTf, 'dMGLf'=dMGLf, 'dMfeces'=dMfeces, 'dMalbB'=dMalbB, 'dMalbKF'=dMalbKF, 'dMK_fabpKT1'=dMK_fabpKT1,
                   'dMK_fabpKT2'=dMK_fabpKT2, 'dMK_fabpKT3'=dMK_fabpKT3, 'dMK_fabpKT'=dMK_fabpKT, 'dMalbLF'=dMalbLF, 'dML_fabpLT1'=dML_fabpLT1,
                   'dML_fabpLT2'=dML_fabpLT2, 'dML_fabpLT3'=dML_fabpLT3, 'dMalbGF'=dMalbGF, 'dMalbMF'=dMalbMF, 'dMalbAF'=dMalbAF, 'dMalbRF'=dMalbRF  
-                  )))
+    )))
   })
 }
 
@@ -497,19 +497,19 @@ create.inits <- function(parameters){
     MFilf <- 0; Murine <- 0; MLTf <- 0; MLTb1 <- 0; MLTb2 <- 0; MLTb3 <- 0; Mbilef <- 0; MGTf <- 0; MGLf <- 0; Mfeces <-0
     MalbB <- MalbB; MalbKF <- MalbKF; MK_fabpKT1 <- MK_fabpKT1; MK_fabpKT2 <- MK_fabpKT2; MK_fabpKT3 <- MK_fabpKT3; MK_fabpKT <- MK_fabpKT;
     MalbLF <- MalbLF; ML_fabpLT1 <- ML_fabpLT1; ML_fabpLT2 <- ML_fabpLT2; ML_fabpLT3 <- ML_fabpLT3; MalbGF <- MalbGF; MalbMF <- MalbMF; MalbAF <- MalbAF; MalbRF <- MalbRF
-      
-  
-   
-   
     
-      return(c('MBf'=MBf, 'MBb'=MBb, 'MKFf'=MKFf, 'MKFb'=MKFb,'MLFf'=MKFf, 'MLFb'=MKFb, 'MGFf'=MGFf, 'MGFb'=MGFb, 'MMFf'=MMFf, 'MMFb'=MMFb, 'MAFf'=MAFf, 'MAFb'=MAFb,
-               'MRFf'=MRFf, 'MRFb'=MRFb, 'MATf'=MATf, 'MMTf'=MMTf, 'MRTf'=MRTf, 'MKTf'=MKTf, 'MKTb1'=MKTb1, 'MKTb2'=MKTb2, 'MKTb3'=MKTb3, 'MKTa2b'=MKTa2b, 'MFilf'=MFilf, 'Murine'=Murine,
-               'MLTf'=MLTf, 'MLTb1'=MLTb1, 'MLTb2'=MLTb2, 'MLTb3'=MLTb3, 'Mbilef'=Mbilef, 'MGTf'=MGTf, 'MGLf'=MGLf, 'Mfeces'=Mfeces, 'MalbB'=MalbB, 'MalbKF'=MalbKF, 'MK_fabpKT1'=MK_fabpKT1,
-               'MK_fabpKT2'=MK_fabpKT2, 'MK_fabpKT3'=MK_fabpKT3, 'MK_fabpKT'=MK_fabpKT, 'MalbLF'=MalbLF, 'ML_fabpLT1'=ML_fabpLT1,
-               'ML_fabpLT2'=ML_fabpLT2, 'ML_fabpLT3'=ML_fabpLT3, 'MalbGF'=MalbGF, 'MalbMF'=MalbMF, 'MalbAF'=MalbAF, 'MalbRF'=MalbRF
-                ))
-      
-      
+    
+    
+    
+    
+    return(c('MBf'=MBf, 'MBb'=MBb, 'MKFf'=MKFf, 'MKFb'=MKFb,'MLFf'=MKFf, 'MLFb'=MKFb, 'MGFf'=MGFf, 'MGFb'=MGFb, 'MMFf'=MMFf, 'MMFb'=MMFb, 'MAFf'=MAFf, 'MAFb'=MAFb,
+             'MRFf'=MRFf, 'MRFb'=MRFb, 'MATf'=MATf, 'MMTf'=MMTf, 'MRTf'=MRTf, 'MKTf'=MKTf, 'MKTb1'=MKTb1, 'MKTb2'=MKTb2, 'MKTb3'=MKTb3, 'MKTa2b'=MKTa2b, 'MFilf'=MFilf, 'Murine'=Murine,
+             'MLTf'=MLTf, 'MLTb1'=MLTb1, 'MLTb2'=MLTb2, 'MLTb3'=MLTb3, 'Mbilef'=Mbilef, 'MGTf'=MGTf, 'MGLf'=MGLf, 'Mfeces'=Mfeces, 'MalbB'=MalbB, 'MalbKF'=MalbKF, 'MK_fabpKT1'=MK_fabpKT1,
+             'MK_fabpKT2'=MK_fabpKT2, 'MK_fabpKT3'=MK_fabpKT3, 'MK_fabpKT'=MK_fabpKT, 'MalbLF'=MalbLF, 'ML_fabpLT1'=ML_fabpLT1,
+             'ML_fabpLT2'=ML_fabpLT2, 'ML_fabpLT3'=ML_fabpLT3, 'MalbGF'=MalbGF, 'MalbMF'=MalbMF, 'MalbAF'=MalbAF, 'MalbRF'=MalbRF
+    ))
+    
+    
   })
 }
 
@@ -528,13 +528,12 @@ inits <- create.inits(params)
 
 sample_time=seq(0,10,1)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func, y = inits, parms = params,
-                                                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
 rowSums(solution[,2:33])
 ######################################################################################
-                    
+
 
 seconds <- 22*24*3600 #simulation time, 22 days
 h <- 0.07 #step size
 tspan <- seq (1, seconds, by = h)
 steps <- seconds/h
-      
