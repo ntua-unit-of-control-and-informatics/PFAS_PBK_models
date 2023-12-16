@@ -321,7 +321,7 @@ ode.func <- function(time, inits, params){
     Ca2uKT <- MK_fabpKT / VKT
     
     #MLFb: Mass of PFOA in interstitial fluid of liver bound to albumin, MLFf: Mass of PFOA in interstitial fluid of liver not bound to proteins
-    dMalbLF =koff * MLFb - kon * MalbLF * MLFf / VLF
+    dMalbLF = koff * MLFb - kon * MalbLF * MLFf / VLF
     CalbLF <- MalbLF / VLF
     
     #MLTb1: Mass of PFOA in liver tissue bound to LFABP1, MLTf: Mass of PFOA in liver tissue not bound to proteins
@@ -439,15 +439,15 @@ ode.func <- function(time, inits, params){
     
     #Adipose tissue subcompartment 
     
-    dMATf = bAFAT*MAFf - bATAF*MAFf
+    dMATf = bAFAT*MAFf - bATAF*MATf
     
     #Muscle tissue subcompartment 
     
-    dMMTf = bMFMT*MMFf - bMTMF*MMFf
+    dMMTf = bMFMT*MMFf - bMTMF*MMTf
     
     #Rest of body tissue subcompartment 
     
-    dMRTf = bRFRT*MRFf - bRTRF*MRFf
+    dMRTf = bRFRT*MRFf - bRTRF*MRTf
     
     #Kidney tissue subcompartment
     
