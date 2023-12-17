@@ -494,7 +494,7 @@ create.inits <- function(parameters){
     MBf <- admin.dose *BW
     MBb <- 0; MKFf <- 0; MKFb <- 0; MLFf <- 0; MLFb <- 0; MGFf <- 0; MGFb <- 0; MMFf <- 0; MMFb <- 0; MAFf <- 0; MAFb <- 0; MRFf <- 0; MRFb <- 0;
     MATf <- 0; MMTf <- 0; MRTf <- 0; MKTf <- 0; MKTb1 <- 0; MKTb2 <- 0; MKTb3 <- 0; MKTa2b <-0; 
-    MFilf <- 0; Murine <- 0; MLTf <- 0; MLTb1 <- 0; MLTb2 <- 0; MLTb3 <- 0; Mbilef <- 0; MGTf <- 0; MGLf <- 0; Mfeces <-0
+    MFilf <- 0; Murine <- 0; MLTf <- 0; MLTb1 <- 0; MLTb2 <- 0; MLTb3 <- 0; Mbilef <- 0; MGTf <- 0; MGLf <- 0; Mfeces <-0;
     MalbB <- MalbB; MalbKF <- MalbKF; MK_fabpKT1 <- MK_fabpKT1; MK_fabpKT2 <- MK_fabpKT2; MK_fabpKT3 <- MK_fabpKT3; MK_fabpKT <- MK_fabpKT;
     MalbLF <- MalbLF; ML_fabpLT1 <- ML_fabpLT1; ML_fabpLT2 <- ML_fabpLT2; ML_fabpLT3 <- ML_fabpLT3; MalbGF <- MalbGF; MalbMF <- MalbMF; MalbAF <- MalbAF; MalbRF <- MalbRF
     
