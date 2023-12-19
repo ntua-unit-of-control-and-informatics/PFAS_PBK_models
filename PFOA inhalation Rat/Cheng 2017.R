@@ -246,9 +246,9 @@ create.params <- function(user.input){
     
     MalbB <- CalbB * (VB+VLB+VKB+VGB+VMB+VAB+VRB)
     MalbKF <- CalbKF * VKF
-    MK_fabpKT1 <- CL_fabpKT1 * VKT
-    MK_fabpKT2 <- CL_fabpKT2 * VKT
-    MK_fabpKT3 <- CL_fabpKT3 * VKT
+    ML_fabpKT1 <- CL_fabpKT1 * VKT
+    ML_fabpKT2 <- CL_fabpKT2 * VKT
+    ML_fabpKT3 <- CL_fabpKT3 * VKT
     MK_fabpKT <- Ca2uKT * VKT
     MalbLF <- CalbLF * VLF
     ML_fabpLT1 <- CL_fabpLT1 * VLT
@@ -270,8 +270,8 @@ create.params <- function(user.input){
                 'PeffB'=PeffB, 'PeffK'=PeffK, 'PeffL'=PeffL, 'PeffG'=PeffG, 'PeffA'=PeffA, 'PeffM'=PeffM, 'PeffR'=PeffR, 'CRssG'=CRssG, 'CRssL'=CRssL, 'CRssK'=CRssK, 
                 'Qcardiac'=Qcardiac, 'PQBK'=QBK, 'QBK'=QBK, 'PQBG'=PQBG, 'QBG'=QBG, 'PQBL'=PQBL, 'QBL'=QBL, 'PQBM'=PQBM, 'QBM'=QBM, 'PQBA'=PQBA, 'QBA'=QBA, 'PQBR'=PQBR, 'QBR'=QBR,
                 'Qfeces'=Qfeces, 'PQbile'=PQbile, 'Qbile'=Qbile, 'PQurine'=Qurine, 'PQGFR'=PQGFR, 'QGFR'=QGFR,'Qbile'=Qbile, 'Qurine'=Qurine, 'QGFR'=QGFR,
-                'CalbB'=CalbB, 'CalbKF'=CalbKF, 'CalbGF'=CalbGF, 'CalbMF'=CalbMF, 'CalbAF'=CalbAF, 'CalbRF'=CalbRF,'Ca2uKT'=Ca2uKT,
-                'CL_fabpKT'=CL_fabpKT, 'CL_fabpKT1'=CL_fabpKT1, 'CL_fabpKT2'=CL_fabpKT2, 'CL_fabpKT3'=CL_fabpKT3, 'CL_fabpLT'=CL_fabpLT, 'CL_fabpLT1'=CL_fabpLT1, 'CL_fabpLT2'=CL_fabpLT2, 'CL_fabpLT3'=CL_fabpLT3,
+                #'CalbB'=CalbB, 'CalbKF'=CalbKF, 'CalbGF'=CalbGF, 'CalbMF'=CalbMF, 'CalbAF'=CalbAF, 'CalbRF'=CalbRF,'Ca2uKT'=Ca2uKT,
+                #'CL_fabpKT'=CL_fabpKT, 'CL_fabpKT1'=CL_fabpKT1, 'CL_fabpKT2'=CL_fabpKT2, 'CL_fabpKT3'=CL_fabpKT3, 'CL_fabpLT'=CL_fabpLT, 'CL_fabpLT1'=CL_fabpLT1, 'CL_fabpLT2'=CL_fabpLT2, 'CL_fabpLT3'=CL_fabpLT3,
                 'Ka'=Ka, 'KL_fabp1'=KL_fabp1, 'KL_fabp2'=KL_fabp2, 'KL_fabp3'=KL_fabp3, 'Ka2u'=Ka2u, 'koff'=koff, 'kon'=kon, 'kL_fabpon1'=kL_fabpon1, 'kL_fabpon2'=kL_fabpon2, 'kL_fabpon3'=kL_fabpon3, 'kK_fabpon'=kK_fabpon,
                 'kBKF'=kBKF, 'kBF'=kBF, 'kKFKT'=kKFKT, 'kFKT'=kFKT, 'kBLF'=kBLF, 'kLFLT'=kLFLT, 'kBGF'=kBGF, 'kGFGT'=kGFGT, 'kGFGT'=kGFGT, 'kBMF'=kBMF,
                 'kMFMT'=kMFMT, 'kBAF'=kBAF, 'kAFAT'=kAFAT, 'kBRF'=kBRF, 'kRFRT'=kRFRT,'kbileLT'=kbileLT,
@@ -280,7 +280,7 @@ create.params <- function(user.input){
                 'bAFAT'=bAFAT, 'bATAF'=bATAF, 'bBRF'=bBRF, 'bRFB'=bRFB, 'bRFRT'=bRFRT, 'bRTRF'=bRTRF, 'bLTbile'=bLTbile, 'bBGF'=bBGF, 'bGFB'=bGFB, 'bGFGT'=bGFGT,
                 'bGTGF'=bGTGF, 'bGLGT'=bGLGT, 'bGTGL'=bGTGL, 'bBMF'=bBMF, 'bMFB'=bMFB, 'bMFMT'=bMFMT, 'bMTMF'=bMTMF, 
                 'Pbclear'=Pbclear, 'bclear'=bclear, 'Pbreab'=Pbreab, 'breab'=breab, 'Pbabs'=Pbabs, 'babs'=babs, 'Pbefflux'=Pbefflux, 'befflux'=befflux,
-                'MalbB'=MalbB, 'MalbKF'=MalbKF, 'MK_fabpKT1'=MK_fabpKT1, 'MK_fabpKT2'=MK_fabpKT2, 'MK_fabpKT3'=MK_fabpKT3, 'MK_fabpKT'=MK_fabpKT, 'MalbLF'=MalbLF, 'ML_fabpLT1'=ML_fabpLT1,
+                'MalbB'=MalbB, 'MalbKF'=MalbKF, 'ML_fabpKT1'=ML_fabpKT1, 'ML_fabpKT2'=ML_fabpKT2, 'ML_fabpKT3'=ML_fabpKT3, 'MK_fabpKT'=MK_fabpKT, 'MalbLF'=MalbLF, 'ML_fabpLT1'=ML_fabpLT1,
                 'ML_fabpLT2'=ML_fabpLT2, 'ML_fabpLT3'=ML_fabpLT3, 'MalbGF'=MalbGF, 'MalbMF'=MalbMF, 'MalbAF'=MalbAF, 'MalbRF'=MalbRF
                 
                 
@@ -305,16 +305,16 @@ ode.func <- function(time, inits, params){
     CalbKF <- MalbKF / VKF
     
     #MKTb1: Mass of PFOA in kidney tissue bound to LFABP1, MKTf: Mass of PFOA in kidney tissue not bound to proteins
-    dMK_fabpKT1 = koff * MKTb1 - kL_fabpon1 * MK_fabpKT1 * MKTf / VKT
-    CK_fabpKT1 <- MK_fabpKT1 / VKT
+    dML_fabpKT1 = koff * MKTb1 - kL_fabpon1 * ML_fabpKT1 * MKTf / VKT
+    CL_fabpKT1 <- ML_fabpKT1 / VKT
     
     #MKTb2: Mass of PFOA in kidney tissue bound to LFABP2, MKTf: Mass of PFOA in kidney tissue not bound to proteins
-    dMK_fabpKT2 = koff * MKTb2 - kL_fabpon2 * MK_fabpKT2 * MKTf / VKT
-    CK_fabpKT2 <- MK_fabpKT2 / VKT
+    dML_fabpKT2 = koff * MKTb2 - kL_fabpon2 * ML_fabpKT2 * MKTf / VKT
+    CL_fabpKT2 <- ML_fabpKT2 / VKT
     
     #MKTb3: Mass of PFOA in kidney tissue bound to LFABP3, MKTf: Mass of PFOA in kidney tissue not bound to proteins
-    dMK_fabpKT3 = koff * MKTb3 - kL_fabpon3 * MK_fabpKT3 * MKTf / VKT
-    CK_fabpKT3 <- MK_fabpKT3 / VKT
+    dML_fabpKT3 = koff * MKTb3 - kL_fabpon3 * ML_fabpKT3 * MKTf / VKT
+    CL_fabpKT3 <- ML_fabpKT3 / VKT
     
     #MKTa2b: Mass of PFOA in kidney tissue bound to alpha2mu-globulin, MKTf: Mass of PFOA in kidney tissue not bound to proteins
     dMK_fabpKT = koff * MKTa2b - kK_fabpon * MK_fabpKT * MKTf / VKT
@@ -470,6 +470,7 @@ ode.func <- function(time, inits, params){
     dMLTb3 = bLFon3*MLTf - bLFoff*MLTb3 #PFOA in liver tissue bound to LFABP3
     
     dMbilef = bLTbile*MLTf - bbileLT*Mbilef - (Qbile/Vbile)*Mbilef
+    #dMbile = (Qbile/Vbile)*Mbilef 
     
     #Gut tissue subcompartment
     
@@ -477,11 +478,12 @@ ode.func <- function(time, inits, params){
     dMGLf = bGTGL*MGTf - bGLGT*MGLf + (Qbile/Vbile)*Mbilef - (Qfeces/VGL)*MGLf
     dMfeces = (Qfeces/VGL)*MGLf
     
-    return(list(c('dMBf'=dMBf, 'dMBb'=dMBb, 'dMKFf'=dMKFf, 'dMKFb'=dMKFb,'dMLFf'=dMKFf, 'dMLFb'=dMKFb, 'dMGFf'=dMGFf, 'dMGFb'=dMGFb, 'dMMFf'=dMMFf, 'dMMFb'=dMMFb, 'dMAFf'=dMAFf, 'dMAFb'=dMAFb,
+    return(list(c('dMBf'=dMBf, 'dMBb'=dMBb, 'dMKFf'=dMKFf, 'dMKFb'=dMKFb,'dMLFf'=dMLFf, 'dMLFb'=dMLFb, 'dMGFf'=dMGFf, 'dMGFb'=dMGFb, 'dMMFf'=dMMFf, 'dMMFb'=dMMFb, 'dMAFf'=dMAFf, 'dMAFb'=dMAFb,
                   'dMRFf'=dMRFf, 'dMRFb'=dMRFb, 'dMATf'=dMATf, 'dMMTf'=dMMTf, 'dMRTf'=dMRTf, 'dMKTf'=dMKTf, 'dMKTb1'=dMKTb1, 'dMKTb2'=dMKTb2, 'dMKTb3'=dMKTb3, 'dMKTa2b'=dMKTa2b, 'dMFilf'=dMFilf, 'dMurine'=dMurine,
-                  'dMLTf'=dMLTf, 'dMLTb1'=dMLTb1, 'dMLTb2'=dMLTb2, 'dMLTb3'=dMLTb3, 'dMbilef'=dMbilef, 'dMGTf'=dMGTf, 'dMGLf'=dMGLf, 'dMfeces'=dMfeces, 'dMalbB'=dMalbB, 'dMalbKF'=dMalbKF, 'dMK_fabpKT1'=dMK_fabpKT1,
-                  'dMK_fabpKT2'=dMK_fabpKT2, 'dMK_fabpKT3'=dMK_fabpKT3, 'dMK_fabpKT'=dMK_fabpKT, 'dMalbLF'=dMalbLF, 'dML_fabpLT1'=dML_fabpLT1,
-                  'dML_fabpLT2'=dML_fabpLT2, 'dML_fabpLT3'=dML_fabpLT3, 'dMalbGF'=dMalbGF, 'dMalbMF'=dMalbMF, 'dMalbAF'=dMalbAF, 'dMalbRF'=dMalbRF  
+                  'dMLTf'=dMLTf, 'dMLTb1'=dMLTb1, 'dMLTb2'=dMLTb2, 'dMLTb3'=dMLTb3, 'dMbilef'=dMbilef, #'dMbile'=dMbile, 
+                  'dMGTf'=dMGTf, 'dMGLf'=dMGLf, 'dMfeces'=dMfeces, 'dMalbB'=dMalbB, 'dMalbKF'=dMalbKF, 'dML_fabpKT1'=dML_fabpKT1,
+                  'dML_fabpKT2'=dML_fabpKT2, 'dML_fabpKT3'=dML_fabpKT3, 'dMK_fabpKT'=dMK_fabpKT, 'dMalbLF'=dMalbLF, 'dML_fabpLT1'=dML_fabpLT1,
+                  'dML_fabpLT2'=dML_fabpLT2, 'dML_fabpLT3'=dML_fabpLT3, 'dMalbGF'=dMalbGF, 'dMalbMF'=dMalbMF, 'dMalbAF'=dMalbAF, 'dMalbRF'=dMalbRF   
     )))
   })
 }
@@ -494,18 +496,19 @@ create.inits <- function(parameters){
     MBf <- admin.dose *BW
     MBb <- 0; MKFf <- 0; MKFb <- 0; MLFf <- 0; MLFb <- 0; MGFf <- 0; MGFb <- 0; MMFf <- 0; MMFb <- 0; MAFf <- 0; MAFb <- 0; MRFf <- 0; MRFb <- 0;
     MATf <- 0; MMTf <- 0; MRTf <- 0; MKTf <- 0; MKTb1 <- 0; MKTb2 <- 0; MKTb3 <- 0; MKTa2b <-0; 
-    MFilf <- 0; Murine <- 0; MLTf <- 0; MLTb1 <- 0; MLTb2 <- 0; MLTb3 <- 0; Mbilef <- 0; MGTf <- 0; MGLf <- 0; Mfeces <-0;
-    MalbB <- MalbB; MalbKF <- MalbKF; MK_fabpKT1 <- MK_fabpKT1; MK_fabpKT2 <- MK_fabpKT2; MK_fabpKT3 <- MK_fabpKT3; MK_fabpKT <- MK_fabpKT;
+    MFilf <- 0; Murine <- 0; MLTf <- 0; MLTb1 <- 0; MLTb2 <- 0; MLTb3 <- 0; Mbilef <- 0; Mbile <- 0; MGTf <- 0;  MGLf <- 0; Mfeces <-0
+    MalbB <- MalbB; MalbKF <- MalbKF; ML_fabpKT1 <- ML_fabpKT1; ML_fabpKT2 <- ML_fabpKT2; ML_fabpKT3 <- ML_fabpKT3; MK_fabpKT <- MK_fabpKT;
     MalbLF <- MalbLF; ML_fabpLT1 <- ML_fabpLT1; ML_fabpLT2 <- ML_fabpLT2; ML_fabpLT3 <- ML_fabpLT3; MalbGF <- MalbGF; MalbMF <- MalbMF; MalbAF <- MalbAF; MalbRF <- MalbRF
     
     
     
     
     
-    return(c('MBf'=MBf, 'MBb'=MBb, 'MKFf'=MKFf, 'MKFb'=MKFb,'MLFf'=MKFf, 'MLFb'=MKFb, 'MGFf'=MGFf, 'MGFb'=MGFb, 'MMFf'=MMFf, 'MMFb'=MMFb, 'MAFf'=MAFf, 'MAFb'=MAFb,
+    return(c('MBf'=MBf, 'MBb'=MBb, 'MKFf'=MKFf, 'MKFb'=MKFb,'MLFf'=MLFf, 'MLFb'=MLFb, 'MGFf'=MGFf, 'MGFb'=MGFb, 'MMFf'=MMFf, 'MMFb'=MMFb, 'MAFf'=MAFf, 'MAFb'=MAFb,
              'MRFf'=MRFf, 'MRFb'=MRFb, 'MATf'=MATf, 'MMTf'=MMTf, 'MRTf'=MRTf, 'MKTf'=MKTf, 'MKTb1'=MKTb1, 'MKTb2'=MKTb2, 'MKTb3'=MKTb3, 'MKTa2b'=MKTa2b, 'MFilf'=MFilf, 'Murine'=Murine,
-             'MLTf'=MLTf, 'MLTb1'=MLTb1, 'MLTb2'=MLTb2, 'MLTb3'=MLTb3, 'Mbilef'=Mbilef, 'MGTf'=MGTf, 'MGLf'=MGLf, 'Mfeces'=Mfeces, 'MalbB'=MalbB, 'MalbKF'=MalbKF, 'MK_fabpKT1'=MK_fabpKT1,
-             'MK_fabpKT2'=MK_fabpKT2, 'MK_fabpKT3'=MK_fabpKT3, 'MK_fabpKT'=MK_fabpKT, 'MalbLF'=MalbLF, 'ML_fabpLT1'=ML_fabpLT1,
+             'MLTf'=MLTf, 'MLTb1'=MLTb1, 'MLTb2'=MLTb2, 'MLTb3'=MLTb3, 'Mbilef'=Mbilef, #'Mbile'=Mbile, 
+             'MGTf'=MGTf, 'MGLf'=MGLf, 'Mfeces'=Mfeces, 'MalbB'=MalbB, 'MalbKF'=MalbKF, 'ML_fabpKT1'=ML_fabpKT1,
+             'ML_fabpKT2'=ML_fabpKT2, 'ML_fabpKT3'=ML_fabpKT3, 'MK_fabpKT'=MK_fabpKT, 'MalbLF'=MalbLF, 'ML_fabpLT1'=ML_fabpLT1,
              'ML_fabpLT2'=ML_fabpLT2, 'ML_fabpLT3'=ML_fabpLT3, 'MalbGF'=MalbGF, 'MalbMF'=MalbMF, 'MalbAF'=MalbAF, 'MalbRF'=MalbRF
     ))
     
@@ -525,15 +528,37 @@ user_input <- list('BW'=BW,
 params <- create.params(user_input)
 inits <- create.inits(params)
 
+# 1 mg/kg IV
 
-sample_time=seq(0,10,1)
+
+sample_time=seq(0,20,1)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func, y = inits, parms = params,
                                     method="lsodes",rtol = 1e-05, atol = 1e-05))
 rowSums(solution[,2:33])
 ######################################################################################
 
 
-seconds <- 22*24*3600 #simulation time, 22 days
-h <- 0.07 #step size
-tspan <- seq (1, seconds, by = h)
-steps <- seconds/h
+# Plot with ggplot2
+
+compartment <- c('MBf')
+color_codes <- scales::hue_pal()(length(compartment))
+
+plot <- ggplot2 (data = solution)+
+  geom_line( aes(x = time, y = MBf, color='MBf'), size=1.3)+
+  
+  labs(title = 'Predicted values',
+       y = 'Concentration (ug/g)' , x = "Time (days)")+
+  theme(plot.title = element_text(hjust = 0.5,size=30),
+        axis.title.y =element_text(hjust = 0.5,size=25,face="bold"),
+        axis.text.y=element_text(size=22),
+        axis.title.x =element_text(hjust = 0.5,size=25,face="bold"),
+        axis.text.x=element_text(size=22),
+        legend.title=element_text(hjust = 0.5,size=25),
+        legend.text=element_text(size=22),
+        panel.border = element_rect(colour = "black", fill=NA, size=1.0)) +
+  
+  scale_color_manual("Compartment", values=color_codes)+
+  theme(legend.key.size = unit(1.5, 'cm'),
+        legend.title = element_text(size=14),
+        legend.text = element_text(size=14),
+        axis.text = element_text(size = 14))
