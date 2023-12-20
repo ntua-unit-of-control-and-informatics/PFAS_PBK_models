@@ -13,14 +13,14 @@ create.params <- function(user.input){
     VB <- PVB * BW #blood volume (kg=L)
     PVplasma <- 31.2e-6 #Brown et al. 1997-Table 5
     Vplasma <- PVplasma * BW #plasma volume (kg=L)
-    PVK <- 73e-6 #Brown et al. 1997-Table 5
+    PVK <- 7.3e-6 #Brown et al. 1997-Table 5
     VK <- PVK * BW #kidney volume (kg=L)
     PVKB <- 0.16 #volume of residual blood in the organ relative to the volume of the organ (Brown et al. 1997)
     VKB <- PVKB * PVK * BW #kidney blood volume (kg=L)
-    PVKF <- 0.13 #0.0683 mL/0.539 g (Larson et al. 1984~interstitial volume/kidney weight)
+    PVKF <- 0.13 #0.0683 mL/0.539 g = 0.1267 L/kg (Larson et al. 1984~interstitial volume/kidney weight)
     VKF <- PVKF * PVK * BW #kidney interstitial fluid volume (kg=L)
     VKT <- VK - VKF #kidney tissue volume (kg=L)
-    VFil <- 0.25e-3 #renal filtrate volume (L)
+    VFil <- 2.5e-7 #renal filtrate volume (L)
     PVL <- 3.66e-5 #Brown et al. 1997-Table 5
     VL <- PVL * BW #liver volume (kg=L)
     PVLB <- 0.21 #volume of residual blood in the organ relative to the volume of the organ (Brown et al. 1997)
@@ -62,24 +62,24 @@ create.params <- function(user.input){
     VRT <- VR - VRF #tissue volume of the rest of body (kg=L)
     
     #Capillary surface area for each tissue (Ai) as percentage of body weight
-    #or weight of corresponding tissue (PAi, unitless) and surface area (m^2)
+    #or weight of corresponding tissue (PAi, m^2/g) and surface area (m^2)
     
-    PAK <- 350e-4 #m^-1
-    AK <- PAK * VK * 10^6 #kidney surface area (m^2 10^3)
-    PAKG <- 68.90e-4 #m^-1
-    AKG <- PAKG * VK * 10^6 #the surface area of glomerular capillary (m^2 10^3)
-    PAL <- 250e-4 #m^-1
-    AL <- PAL * VL * 10^6 #liver surface area (m^2 10^3)
-    PAG <- 100e-4 #m^-1
-    AG <- PAG * VG * 10^6 #gut surface area (m^2 10^3)
+    PAK <- 350e-4 
+    AK <- PAK * VK * 10^6 #kidney surface area (m^2)
+    PAKG <- 68.90e-4 
+    AKG <- PAKG * VK * 10^6 #the surface area of glomerular capillary (m^2)
+    PAL <- 250e-4 
+    AL <- PAL * VL * 10^6 #liver surface area (m^2)
+    PAG <- 100e-4 
+    AG <- PAG * VG * 10^6 #gut surface area (m^2)
     PAGL <- 4.14 #"The surface area of gut lumen would be 4.14 m2/kg" !!!!???
-    AGL <- PAGL * BW #gut lumen surface area (m^2 10^3)
-    PAM <- 70e-4 #m^-1
-    AM <- PAM * VM * 10^6 #muscle surface area (m^2 10^3)
+    AGL <- PAGL * BW #gut lumen surface area (m^2)
+    PAM <- 70e-4 
+    AM <- PAM * VM * 10^6 #muscle surface area (m^2)
     PAA <- 70e-4
-    AA <- PAA * VA * 10^6 #adipose surface area (m^2 10^3)
+    AA <- PAA * VA * 10^6 #adipose surface area (m^2)
     PAR <- 100e-4
-    AR <- PAR * VR * 10^6 #surface area of rest of body (m^2 10^3)
+    AR <- PAR * VR * 10^6 #surface area of rest of body (m^2)
     
     #Effective permeability (Peff, in m/s) for blood (B), liver(L), kidney(K),
     #gut(G),adipose(A), muscle(M), rest of body(R)
@@ -268,12 +268,12 @@ create.params <- function(user.input){
                 'PVA'=PVA, 'VA'=VA, 'PVAB'=PVAB, 'VAB'=VAB, 'PVAF'=PVAF, 'VAF'=VAF, 'VAT'=VAT, 'PVR'=PVR, 'VR'=VR, 'PVRB'=PVRB, 'VRB'=VRB, 'PVRF'=PVRF, 'VRF'=VRF, 'VRT'=VRT,
                 'PAK'=PAK, 'AK'=AK, 'PAKG'=PAKG, 'AKG'=AKG, 'PAL'=PAL, 'AL'=AL, 'PAG'=PAG, 'AG'=AG, 'PAGL'=PAGL, 'AGL'=AGL, 'PAM'=PAM, 'AM'=AM, 'PAA'=PAA, 'AA'=AA, 'PAR'=PAR, 'AR'=AR,
                 'PeffB'=PeffB, 'PeffK'=PeffK, 'PeffL'=PeffL, 'PeffG'=PeffG, 'PeffA'=PeffA, 'PeffM'=PeffM, 'PeffR'=PeffR, 'CRssG'=CRssG, 'CRssL'=CRssL, 'CRssK'=CRssK, 
-                'Qcardiac'=Qcardiac, 'PQBK'=QBK, 'QBK'=QBK, 'PQBG'=PQBG, 'QBG'=QBG, 'PQBL'=PQBL, 'QBL'=QBL, 'PQBM'=PQBM, 'QBM'=QBM, 'PQBA'=PQBA, 'QBA'=QBA, 'PQBR'=PQBR, 'QBR'=QBR,
-                'Qfeces'=Qfeces, 'PQbile'=PQbile, 'Qbile'=Qbile, 'PQurine'=Qurine, 'PQGFR'=PQGFR, 'QGFR'=QGFR,'Qbile'=Qbile, 'Qurine'=Qurine, 'QGFR'=QGFR,
-                #'CalbB'=CalbB, 'CalbKF'=CalbKF, 'CalbGF'=CalbGF, 'CalbMF'=CalbMF, 'CalbAF'=CalbAF, 'CalbRF'=CalbRF,'Ca2uKT'=Ca2uKT,
-                #'CL_fabpKT'=CL_fabpKT, 'CL_fabpKT1'=CL_fabpKT1, 'CL_fabpKT2'=CL_fabpKT2, 'CL_fabpKT3'=CL_fabpKT3, 'CL_fabpLT'=CL_fabpLT, 'CL_fabpLT1'=CL_fabpLT1, 'CL_fabpLT2'=CL_fabpLT2, 'CL_fabpLT3'=CL_fabpLT3,
+                'Qcardiac'=Qcardiac, 'PQBK'=PQBK, 'QBK'=QBK, 'PQBG'=PQBG, 'QBG'=QBG, 'PQBL'=PQBL, 'QBL'=QBL, 'PQBM'=PQBM, 'QBM'=QBM, 'PQBA'=PQBA, 'QBA'=QBA, 'PQBR'=PQBR, 'QBR'=QBR,
+                'Qfeces'=Qfeces, 'PQbile'=PQbile, 'Qbile'=Qbile, 'PQurine'=PQurine, 'PQGFR'=PQGFR, 'QGFR'=QGFR,'Qurine'=Qurine, 'QGFR'=QGFR,
+                'CalbB'=CalbB, 'CalbKF'=CalbKF, 'CalbGF'=CalbGF, 'CalbMF'=CalbMF, 'CalbAF'=CalbAF, 'CalbRF'=CalbRF,'Ca2uKT'=Ca2uKT,
+                'CL_fabpKT'=CL_fabpKT, 'CL_fabpKT1'=CL_fabpKT1, 'CL_fabpKT2'=CL_fabpKT2, 'CL_fabpKT3'=CL_fabpKT3, 'CL_fabpLT'=CL_fabpLT, 'CL_fabpLT1'=CL_fabpLT1, 'CL_fabpLT2'=CL_fabpLT2, 'CL_fabpLT3'=CL_fabpLT3,
                 'Ka'=Ka, 'KL_fabp1'=KL_fabp1, 'KL_fabp2'=KL_fabp2, 'KL_fabp3'=KL_fabp3, 'Ka2u'=Ka2u, 'koff'=koff, 'kon'=kon, 'kL_fabpon1'=kL_fabpon1, 'kL_fabpon2'=kL_fabpon2, 'kL_fabpon3'=kL_fabpon3, 'kK_fabpon'=kK_fabpon,
-                'kBKF'=kBKF, 'kBF'=kBF, 'kKFKT'=kKFKT, 'kFKT'=kFKT, 'kBLF'=kBLF, 'kLFLT'=kLFLT, 'kBGF'=kBGF, 'kGFGT'=kGFGT, 'kGFGT'=kGFGT, 'kBMF'=kBMF,
+                'kBKF'=kBKF, 'kBF'=kBF, 'kKFKT'=kKFKT, 'kFKT'=kFKT, 'kBLF'=kBLF, 'kLFLT'=kLFLT, 'kBGF'=kBGF, 'kGFGT'=kGFGT, 'kGLGT'=kGLGT, 'kBMF'=kBMF,
                 'kMFMT'=kMFMT, 'kBAF'=kBAF, 'kAFAT'=kAFAT, 'kBRF'=kBRF, 'kRFRT'=kRFRT,'kbileLT'=kbileLT,
                 'bBKF'=bBKF, 'bKFB'=bKFB, 'bKFKT'=bKFKT, 'bKTKF'=bKTKF, 'bFKT'=bFKT, 'bKTF'=bKTF, 'bBF'=bBF, 'bFB'=bFB, 'bBLF'=bBLF, 'bLFB'=bLFB,
                 'bLFLT'=bLFLT, 'bLTLF'=bLTLF, 'bbileLT'=bbileLT, 'bBAF'=bBAF, 'bAFB'=bAFB,
@@ -478,13 +478,29 @@ ode.func <- function(time, inits, params){
     dMGLf = bGTGL*MGTf - bGLGT*MGLf + (Qbile/Vbile)*Mbilef - (Qfeces/VGL)*MGLf
     dMfeces = (Qfeces/VGL)*MGLf
     
+    Cblood <- (MBf + MBb) /(VB+VLB+VKB+VGB+VMB+VAB+VRB) * VB /Vplasma * 10^6
+    Ckidney <- ((MBf + MBb) /(VB+VLB+VKB+VGB+VMB+VAB+VRB) * VKB+MKFf+MKFb+MKFf+MKTb1+MKTb2+MKTb3+MKTa2b) / (VKB+VKT+VKF) * 10^6
+    Cliver <- ((MBf + MBb) /(VB+VLB+VKB+VGB+VMB+VAB+VRB) * VLB+MLFf+MLFb+MLTf+MLTb1+MLTb2+MLTb3) / (VLB+VLT+VLF) * 10^6
+    Cgut <- ((MBf + MBb) /(VB+VLB+VKB+VGB+VMB+VAB+VRB) * VGB+MGFf+MGFb+MGTf) / (VGB+VGT+VGF) * 10^6
+    Cmuscle <- ((MBf + MBb) /(VB+VLB+VKB+VGB+VMB+VAB+VRB) * VMB+MMFf+MMFb+MMTf) / (VMB+VMT+VMF) * 10^6
+    Cadipose <- ((MBf + MBb) /(VB+VLB+VKB+VGB+VMB+VAB+VRB) * VAB+MAFf+MAFb+MATf) / (VAB+VAT+VAF) * 10^6
+    Crest <- ((MBf + MBb) /(VB+VLB+VKB+VGB+VMB+VAB+VRB) * VRB+MRFf+MRFb+MRTf) / (VRB+VRT+VRF) * 10^6
+    Cfeces <- MGLf / VGL * 10^6
+    Cbile <- Mbilef / Vbile * 10^6
+    Curine <- MFilf / VFil * 10^6
+    
     return(list(c('dMBf'=dMBf, 'dMBb'=dMBb, 'dMKFf'=dMKFf, 'dMKFb'=dMKFb,'dMLFf'=dMLFf, 'dMLFb'=dMLFb, 'dMGFf'=dMGFf, 'dMGFb'=dMGFb, 'dMMFf'=dMMFf, 'dMMFb'=dMMFb, 'dMAFf'=dMAFf, 'dMAFb'=dMAFb,
                   'dMRFf'=dMRFf, 'dMRFb'=dMRFb, 'dMATf'=dMATf, 'dMMTf'=dMMTf, 'dMRTf'=dMRTf, 'dMKTf'=dMKTf, 'dMKTb1'=dMKTb1, 'dMKTb2'=dMKTb2, 'dMKTb3'=dMKTb3, 'dMKTa2b'=dMKTa2b, 'dMFilf'=dMFilf, 'dMurine'=dMurine,
                   'dMLTf'=dMLTf, 'dMLTb1'=dMLTb1, 'dMLTb2'=dMLTb2, 'dMLTb3'=dMLTb3, 'dMbilef'=dMbilef, #'dMbile'=dMbile, 
                   'dMGTf'=dMGTf, 'dMGLf'=dMGLf, 'dMfeces'=dMfeces, 'dMalbB'=dMalbB, 'dMalbKF'=dMalbKF, 'dML_fabpKT1'=dML_fabpKT1,
                   'dML_fabpKT2'=dML_fabpKT2, 'dML_fabpKT3'=dML_fabpKT3, 'dMK_fabpKT'=dMK_fabpKT, 'dMalbLF'=dMalbLF, 'dML_fabpLT1'=dML_fabpLT1,
-                  'dML_fabpLT2'=dML_fabpLT2, 'dML_fabpLT3'=dML_fabpLT3, 'dMalbGF'=dMalbGF, 'dMalbMF'=dMalbMF, 'dMalbAF'=dMalbAF, 'dMalbRF'=dMalbRF   
-    )))
+                  'dML_fabpLT2'=dML_fabpLT2, 'dML_fabpLT3'=dML_fabpLT3, 'dMalbGF'=dMalbGF, 'dMalbMF'=dMalbMF, 'dMalbAF'=dMalbAF, 'dMalbRF'=dMalbRF),   
+                  'Cblood'=Cblood, 'Ckidney'=Ckidney, 'Cliver'=Cliver, 'Cgut'=Cgut, 'Cmuscle'=Cmuscle, 'Cadipose'=Cadipose, 'Crest'=Crest,
+                  'Cfeces'=Cfeces, 'Cbile'=Cbile,
+                  'Curine'=Curine
+                
+                ))
+    
   })
 }
 
@@ -530,24 +546,27 @@ inits <- create.inits(params)
 
 # 1 mg/kg IV
 
-
-sample_time=seq(0,20,1)
+sample_time=seq(0,24*3600,1)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func, y = inits, parms = params,
                                     method="lsodes",rtol = 1e-05, atol = 1e-05))
+
+
 rowSums(solution[,2:33])
 ######################################################################################
 
 
 # Plot with ggplot2
 
-compartment <- c('MBf')
+compartment <- c('Cblood')
 color_codes <- scales::hue_pal()(length(compartment))
 
-plot <- ggplot2 (data = solution)+
-  geom_line( aes(x = time, y = MBf, color='MBf'), size=1.3)+
-  
+plot <- ggplot(data = solution)+
+  geom_line( aes(x = time, y = Cblood, color='Cblood'), size=1.3)+
+  scale_y_log10()+       
+  scale_x_continuous()+
+ 
   labs(title = 'Predicted values',
-       y = 'Concentration (ug/g)' , x = "Time (days)")+
+       y = 'Concentration (ng/g)', x = "Time (days)")+
   theme(plot.title = element_text(hjust = 0.5,size=30),
         axis.title.y =element_text(hjust = 0.5,size=25,face="bold"),
         axis.text.y=element_text(size=22),
@@ -562,3 +581,4 @@ plot <- ggplot2 (data = solution)+
         legend.title = element_text(size=14),
         legend.text = element_text(size=14),
         axis.text = element_text(size = 14))
+print(plot)
