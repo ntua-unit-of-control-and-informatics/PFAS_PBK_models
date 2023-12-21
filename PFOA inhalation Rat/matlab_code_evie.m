@@ -258,7 +258,7 @@ MalbRF = CalbRF.*VRF;
 
 % Below is the numerical method used to solve mass balance equations.
 seconds = 22*24*3600; % simulation time, 22 days
-h = 0.07; % step size
+h = 0.5; % step size
 tspan = (1:h:seconds);
 steps = seconds./h;
 
@@ -452,6 +452,7 @@ y25_new = y25 + h.*(bRFRT.*y23-bRTRF.*y25);
 y25 = max(y25_new,0);   
 y26_new = y26 + h.*(bGTGL.*y16-bGLGT.*y26+Qbile.*y13./Vbile-Qfeces.*y26./VGL);
 y26 = max(y26_new,0);
+
 yBfree = y1;
 yBbound = y2;
 yKFfree = y3;
@@ -482,21 +483,55 @@ yRFfree = y23;
 yRFbound = y24;
 yRTfree = y25;
 yGLfree = y26;
+
 i = round(1 + j./3600)
 t(i,:) = j*h./(24*3600);
 % Unit conversion from kg/m^3 to ng/g.
-Blood(i,:) = (yBfree+yBbound)./(VB+VLB+VKB+VGB+VMB+VAB+VRB).*VB./Vplasma.*10^6; 
-Kidney(i,:)=((yBfree+yBbound)./(VB+VLB+VKB+VGB+VMB+VAB+VRB).*VKB+yKFfree-yKFbound+yKTfree+yKTLbound1+yKTLbound2+yKTLbound3+yKTKbound)./(VKB+VKT+VKF).*10^6;
-Liver(i,:)=((yBfree+yBbound)./(VB+VLB+VKB+VGB+VMB+VAB+VRB).*VLB+yLFfree+yLFbound+yLTfree+yLTbound1+yLTbound2+yLTbound3)./(VLB+VLT+VLF).*10^6; 
-Gut(i,:)=((yBfree+yBbound)./(VB+VLB+VKB+VGB+VMB+VAB+VRB).*VGB+yGFfree+yGFbound+ yGTfree)./(VGB+VGT+VGF).*10^6;
-Muscle(i,:)=((yBfree+yBbound)./(VB+VLB+VKB+VGB+VMB+VAB+VRB).*VMB+yMFfree+yMFbound+yMTfree)./(VMB+VMT+VMF).*10^6; 
-Adipose(i,:) = ((yBfree+yBbound)./(VB+VLB+VKB+VGB+VMB+VAB+VRB).*VAB+yAFfree+yAFbound+yATfree)./(VAB+VAT+VAF).*10^6; 
-Rest(i,:) = ((yBfree+yBbound)./(VB+VLB+VKB+VGB+VMB+VAB+VRB).*VRB+yRFfree+yRFbound+yRTfree)./(VRB+VRT+VRF).*10^6;
-Feces(i,:) = yGLfree./VGL.*10^6;
-Bile(i,:) = yBile./Vbile.*10^6;
-Urine(i,:) = yFfree./VFil.*10^6;
+
+Blood_f(i,:) = yBfree;
+Blood_b(i,:) = yBbound;
+Kidney_Tf(i,:)= yKTfree;
+Kidney_Tb1(i,:)= yKTLbound1;
+Kidney_Tb2(i,:)=yKTLbound2;
+Kidney_Tb3(i,:)=yKTLbound3;
+Kidney_Tb(i,:)=yKTKbound;
+Liver_Tf(i,:)= yLTfree;
+Liver_Tb1(i,:)= yLTbound1;
+Liver_Tb2(i,:)=yLTbound2;
+Liver_Tb3(i,:)=yLTbound3;
+Gut_Tf(i,:)= yGTfree;
+Muscle_Tf(i,:)= yMTfree;
+Adipose_Tf(i,:)= yATfree;
+Rest_Tf(i,:) = yRTfree;
+Bile(i,:) = yBile;
+Kidney_Ff(i,:)= yKFfree;
+Kidney_Fb(i,:)= yKFbound;
+Liver_Ff(i,:)= yLFfree;
+Liver_Fb(i,:)= yLFbound;
+Gut_Ff(i,:)= yGFfree;
+Gut_Fb(i,:)= yGFbound;
+Gut_Lf(i,:)= yGLfree;
+Muscle_Ff(i,:)= yMFfree;
+Muscle_Fb(i,:)= yMFbound;
+Adipose_Ff(i,:)= yAFfree;
+Adipose_Fb(i,:)= yAFbound;
+Rest_Ff(i,:)= yRFfree;
+Rest_Fb(i,:)= yRFbound;
+Ff(i,:)= yFfree;
+
+C_Blood(i,:) = (yBfree+yBbound)./(VB+VLB+VKB+VGB+VMB+VAB+VRB).*VB./Vplasma.*10^6; 
+C_Kidney(i,:)=((yBfree+yBbound)./(VB+VLB+VKB+VGB+VMB+VAB+VRB).*VKB+yKFfree-yKFbound+yKTfree+yKTLbound1+yKTLbound2+yKTLbound3+yKTKbound)./(VKB+VKT+VKF).*10^6;
+C_Liver(i,:)=((yBfree+yBbound)./(VB+VLB+VKB+VGB+VMB+VAB+VRB).*VLB+yLFfree+yLFbound+yLTfree+yLTbound1+yLTbound2+yLTbound3)./(VLB+VLT+VLF).*10^6; 
+C_Gut(i,:)=((yBfree+yBbound)./(VB+VLB+VKB+VGB+VMB+VAB+VRB).*VGB+yGFfree+yGFbound+ yGTfree)./(VGB+VGT+VGF).*10^6;
+C_Muscle(i,:)=((yBfree+yBbound)./(VB+VLB+VKB+VGB+VMB+VAB+VRB).*VMB+yMFfree+yMFbound+yMTfree)./(VMB+VMT+VMF).*10^6; 
+C_Adipose(i,:) = ((yBfree+yBbound)./(VB+VLB+VKB+VGB+VMB+VAB+VRB).*VAB+yAFfree+yAFbound+yATfree)./(VAB+VAT+VAF).*10^6; 
+C_Rest(i,:) = ((yBfree+yBbound)./(VB+VLB+VKB+VGB+VMB+VAB+VRB).*VRB+yRFfree+yRFbound+yRTfree)./(VRB+VRT+VRF).*10^6;
+C_Feces(i,:) = yGLfree./VGL.*10^6;
+C_Bile(i,:) = yBile./Vbile.*10^6;
+C_Urine(i,:) = yFfree./VFil.*10^6;
    
 end
+
 % Sensitivity analysis using Pearson ranked correlation between sampled
 % parameters and predicted PFOA concentrations, shown here for blood, 
 % sampled on Day 12.
