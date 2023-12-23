@@ -145,7 +145,7 @@ create.params <- function(user.input){
     #LFABP concentration in kidney and liver tissue (mol/m^3)
     
     CL_fabpKT <- (2.65e-3)*3 #n=3 binding sites (Table S3)
-    CL_fabpKT1 <- CL_fabpKT/3 #why /3???
+    CL_fabpKT1 <- CL_fabpKT/3 
     CL_fabpKT2 <- CL_fabpKT/3
     CL_fabpKT3 <- CL_fabpKT/3
     CL_fabpLT <- (133e-3)*3 #n=3 binding sites (Table S3)
@@ -282,6 +282,7 @@ create.params <- function(user.input){
                 'Pbclear'=Pbclear, 'bclear'=bclear, 'Pbreab'=Pbreab, 'breab'=breab, 'Pbabs'=Pbabs, 'babs'=babs, 'Pbefflux'=Pbefflux, 'befflux'=befflux,
                 'MalbB'=MalbB, 'MalbKF'=MalbKF, 'ML_fabpKT1'=ML_fabpKT1, 'ML_fabpKT2'=ML_fabpKT2, 'ML_fabpKT3'=ML_fabpKT3, 'MK_fabpKT'=MK_fabpKT, 'MalbLF'=MalbLF, 'ML_fabpLT1'=ML_fabpLT1,
                 'ML_fabpLT2'=ML_fabpLT2, 'ML_fabpLT3'=ML_fabpLT3, 'MalbGF'=MalbGF, 'MalbMF'=MalbMF, 'MalbAF'=MalbAF, 'MalbRF'=MalbRF
+                
                 
                 
                 
@@ -496,8 +497,8 @@ ode.func <- function(time, inits, params){
                   'dML_fabpKT2'=dML_fabpKT2, 'dML_fabpKT3'=dML_fabpKT3, 'dMK_fabpKT'=dMK_fabpKT, 'dMalbLF'=dMalbLF, 'dML_fabpLT1'=dML_fabpLT1,
                   'dML_fabpLT2'=dML_fabpLT2, 'dML_fabpLT3'=dML_fabpLT3, 'dMalbGF'=dMalbGF, 'dMalbMF'=dMalbMF, 'dMalbAF'=dMalbAF, 'dMalbRF'=dMalbRF),   
                   'Cblood'=Cblood, 'Ckidney'=Ckidney, 'Cliver'=Cliver, 'Cgut'=Cgut, 'Cmuscle'=Cmuscle, 'Cadipose'=Cadipose, 'Crest'=Crest,
-                  'Cfeces'=Cfeces, 'Cbile'=Cbile,
-                  'Curine'=Curine
+                  'Cfeces'=Cfeces, 'Cbile'=Cbile, 'Curine'=Curine 
+               
                 
                 ))
     
