@@ -547,7 +547,7 @@ inits <- create.inits(params)
 
 # 1 mg/kg IV
 
-sample_time=seq(0,24*3600,1)
+sample_time=seq(0,22*24*3600,10)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func, y = inits, parms = params,
                                     method="lsodes",rtol = 1e-05, atol = 1e-05))
 
@@ -557,7 +557,7 @@ rowSums(solution[,2:33])
 
 
 # Plot with ggplot2
-
+library (ggplot2)
 compartment <- c('Cblood')
 color_codes <- scales::hue_pal()(length(compartment))
 
