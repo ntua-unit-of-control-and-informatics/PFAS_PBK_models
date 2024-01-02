@@ -537,7 +537,7 @@ create.inits <- function(parameters){
 ################################################################################
 
 BW <- 0.244  # body weight (kg)
-admin.dose <- c(1e-6) # administered dose in kg PFOA/kg BW
+admin.dose <- c(1 * 1e-6) # administered dose in kg PFOA/kg BW
 admin.time <- c(0) # time when doses are administered, in days
 user_input <- list('BW'=BW,
                    "admin.dose"=admin.dose)
@@ -546,13 +546,25 @@ params <- create.params(user_input)
 inits <- create.inits(params)
 
 # 1 mg/kg IV
+time_points <- unlist(as.vector( read.delim('time_points2.txt', header = FALSE))) * (24*3600)
+extra_time_points <- seq(0, 1*24*3600, 5)
 
-sample_time=seq(0,24*3600,1)
+sample_time <- sort(unique(c(time_points,extra_time_points)))
+
+#sample_time=seq(0,22*24*3600, length.out= 19008000) # / (24*3600)
+# sample_time=seq(0,22*24*3600,10)
+
+#sample_time = seq(0, 300*60, 60)
+
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func, y = inits, parms = params,
                                     method="lsodes",rtol = 1e-05, atol = 1e-05))
-
+solution$time = solution$time/ (24*3600)
 
 rowSums(solution[,2:33])
+
+
+predictions <- solution[solution$time %in% (time_points / (24*3600)),]
+#write.csv(predictions, file='predictions_05.csv')
 ######################################################################################
 
 
