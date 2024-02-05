@@ -24,6 +24,8 @@ This repository contains R code for developing PBK model for describing PFAS bio
 *  PFAS Rainbow trout PBK --> This folder contains the code of an under development PBK model. The purpose of the model is to predict the concentration of PFAAs substances in Rainbow trout after being dietary exposed.
 *  Vidal et al.2019 --> The file "PFOS_Rainbow_trout_PBTK.R" contains the model written in R and the code to easily upload the model on Jaqpot.
 *  Vidal et al.2020 --> The file "Jaqpot_final.R" contains the model written in R and the code to easily upload the model on Jaqpot.
+*  Worley and Fisher.2015 --> The file "Worley_rat.R" contains the rat model written in R and the code to easily upload the model on Jaqpot.
+
 ## Necessary R packages
 * `deSolve`  --> A library containing functions for solving ODE systems
 * `jaqpotr` --> A library containing functions for uploading models on the Jaqpot server. Installation instructions can be found in https://www.jaqpot.org/docs/r
