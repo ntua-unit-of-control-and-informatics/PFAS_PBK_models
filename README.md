@@ -7,7 +7,7 @@ This repository contains R code for developing PBK model for describing PFAS bio
     * PFAAs (Fabrega et al., 2015)
     * PFOS/PFOA (Fabrega et al., 2016)
 - Rats:
-    * PFOA [male, female] (Loccisano et al., 2012)
+    * PFOA [male, female] (Loccisano et al., 2012; Worley and Fisher, 2015)
     * PFOS [male, female] (Loccisano et al., 2012)
     * PFHxS [male, female] (Kim et al., 2018)
     * PFNA [male, female] (Kim et al., 2019)
@@ -30,10 +30,12 @@ This repository contains R code for developing PBK model for describing PFAS bio
 
 ## References
 * Bernstein, A.S., Kapraun, D.F. and Schlosser, P.M. (2021). A Model Template Approach for Rapid Evaluation and Application of Physiologically Based Pharmacokinetic Models for Use in Human Health Risk Assessments: A Case Study on Per- and Polyfluoroalkyl Substances. Toxicological Sciences, 182(2), pp.215–228. doi:https://doi.org/10.1093/toxsci/kfab063.Francesc Fàbrega, Kumar, V., Benfenati, E., Schuhmacher, M., Domingo, J.L. and Nadal, M. (2015). Physiologically based pharmacokinetic modeling of perfluoroalkyl substances in the human body. 97(6), pp.814–827. doi:https://doi.org/10.1080/02772248.2015.1060976.
-* Francesc Fàbrega, Nadal, M., Schuhmacher, M., Domingo, J.L. and Kumar, V. (2016). Influence of the uncertainty in the validation of PBPK models: A case-study for PFOS and PFOA. 77, pp.230–239. doi:https://doi.org/10.1016/j.yrtph.2016.03.009.
-* Kim, S.-J., Choi, E.-J., Choi, G.-W., Lee, Y.-B. and Cho, H.-Y. (2018a). Exploring sex differences in human health risk assessment for PFNA and PFDA using a PBPK model. Archives of Toxicology, 93(2), pp.311–330. doi:https://doi.org/10.1007/s00204-018-2365-y.
-* Kim, S.-J., Shin, H., Lee, Y.-B. and Cho, H.-Y. (2018b). Sex-specific risk assessment of PFHxS using a physiologically based pharmacokinetic model. Archives of Toxicology, 92(3), pp.1113–1131. doi:https://doi.org/10.1007/s00204-017-2116-5.
-* Loccisano, A.E., Campbell, J.L., Andersen, M.E. and Clewell, H.J. (2011). Evaluation and prediction of pharmacokinetics of PFOA and PFOS in the monkey and human using a PBPK model. Regulatory Toxicology and Pharmacology, 59(1), pp.157–175. doi:https://doi.org/10.1016/j.yrtph.2010.12.004.
-* Loccisano, A.E., Campbell, J.L., Butenhoff, J.L., Andersen, M.E. and Clewell, H.J. (2012). Comparison and evaluation of pharmacokinetics of PFOA and PFOS in the adult rat using a physiologically based pharmacokinetic model. 33(4), pp.452–467. doi:https://doi.org/10.1016/j.reprotox.2011.04.006.
-* Ng, C.A. and Konrad Hungerbühler (2013). Bioconcentration of Perfluorinated Alkyl Acids: How Important Is Specific Binding? 47(13), pp.7214–7223. doi:https://doi.org/10.1021/es400981a.
-* Vidal, A., Garric, J., Garric, J. and Rémy Beaudouin (2020). Temperature effect on perfluorooctane sulfonate toxicokinetics in rainbow trout (Oncorhynchus mykiss): Exploration via a physiologically based toxicokinetic model. 225, pp.105545–105545. doi:https://doi.org/10.1016/j.aquatox.2020.105545.
+*	Fàbrega, F., Kumar, V., Benfenati, E., Schuhmacher, M., Domingo, J.L. and Nadal, M. (2016). Physiologically based pharmacokinetic modeling of perfluoroalkyl substances in the human body. Toxicological & Environmental Chemistry, 97, pp.814-827. doi: https://doi.org/10.1080/02772248.2015.1060976
+* Fàbrega, F., Nadal, M., Schuhmacher, M., Domingo, J.L. and Kumar, V. (2016). Influence of the uncertainty in the validation of PBPK models: A case-study for PFOS and PFOA. Regulatory Toxicology and Pharmacology, 77, pp.230–239. doi:https://doi.org/10.1016/j.yrtph.2016.03.009
+*	Kim, S.-J., Choi, E.-J., Choi, G.-W., Lee, Y.-B. and Cho, H.-Y. (2018a). Exploring sex differences in human health risk assessment for PFNA and PFDA using a PBPK model. Archives of Toxicology, 93(2), pp.311–330. doi:https://doi.org/10.1007/s00204-018-2365-y
+*	Kim, S.-J., Shin, H., Lee, Y.-B. and Cho, H.-Y. (2018b). Sex-specific risk assessment of PFHxS using a physiologically based pharmacokinetic model. Archives of Toxicology, 92(3), pp.1113–1131. doi:https://doi.org/10.1007/s00204-017-2116-5
+*	Loccisano, A.E., Campbell, J.L., Andersen, M.E. and Clewell, H.J. (2011). Evaluation and prediction of pharmacokinetics of PFOA and PFOS in the monkey and human using a PBPK model. Regulatory Toxicology and Pharmacology, 59(1), pp.157–175. doi:https://doi.org/10.1016/j.yrtph.2010.12.004
+*	Loccisano, A.E., Campbell, J.L., Butenhoff, J.L., Andersen, M.E. and Clewell, H.J. (2012). Comparison and evaluation of pharmacokinetics of PFOA and PFOS in the adult rat using a physiologically based pharmacokinetic model.  Reproductive Toxicology, 33(4), pp.452–467. doi:https://doi.org/10.1016/j.reprotox.2011.04.006
+*	Ng, C.A. and Konrad Hungerbühler. (2013). Bioconcentration of Perfluorinated Alkyl Acids: How Important Is Specific Binding? Environmental Science & Technology, 47(13), pp.7214–7223. doi:https://doi.org/10.1021/es400981a
+*	Vidal, A., Garric, J., Garric, J. and Rémy Beaudouin. (2020). Temperature effect on perfluorooctane sulfonate toxicokinetics in rainbow trout (Oncorhynchus mykiss): Exploration via a physiologically based toxicokinetic model. Aquatic Toxicology, 225, pp.105545–105545. doi:https://doi.org/10.1016/j.aquatox.2020.105545
+*	Worley, R.R. and Fisher, J. (2015). Application of physiologically-based pharmacokinetic modeling to explore the role of kidney transporters in renal reabsorption of perfluorooctanoic acid in the rat. Toxicology and Applied Pharmacology, 289, pp.428–441. doi: https://doi.org/10.1016/j.taap.2015.10.017
