@@ -1,0 +1,212 @@
+! Physiological Parameters
+CONSTANT BW = 0.3	!bodyweight (kg)
+CONSTANT MKC = 0.0084	!fraction mass of kidney (percent of BW); Brown 1997
+CONSTANT MLC = 0.034	!fraction mass of liver (percent of BW); Brown 1997
+
+! Cardiac Output and Bloodflow (as fraction of cardiac output)
+CONSTANT QCC = 14.0 !cardiac output in L/h/kg^0.75; Brown 1997		 
+CONSTANT QLC = 0.183 !fraction blood flow to liver; Brown 1997	
+CONSTANT QKC = 0.141 !fraction blood flow to kidney; Brown 1997.
+CONSTANT Htc = 0.46 !hematocrit for the rat; Davies 1993
+
+! Tissue Volumes 
+CONSTANT VplasC = 0.0312 !fraction vol. of plasma (L/kg BW); Davies 1993
+CONSTANT VLC = 0.035 !fraction vol. of liver (L/kg BW); Brown 1997
+CONSTANT VKC = 0.0084 !fraction vol. of kidney (L/kg BW); Brown 1997
+CONSTANT VfilC = 8.4e-4	!fraction vol. of filtrate (L/kg BW)
+CONSTANT VPTCC = 1.35e-4 !vol. of proximal tubule cells (L/g kidney) (60 million PTC cells/gram kidney, 1 PTC = 2250 um3)
+
+! Chemical Specific Parameters
+CONSTANT MW = 414.07	!PFOA molecular mass (g/mol)
+CONSTANT Free = 0.006 !free fraction in plasma (male)
+!CONSTANT Free = 0.09 !free fraction in plasma (female)
+
+!Kidney Transport Parameters
+CONSTANT Vmax_baso_invitro = 393.45 !Vmax of basolateral transporter (pmol/mg protein/min); averaged in vitro value of rOAT1 and rOAT3 from Nakagawa, 2007
+CONSTANT Km_baso = 27.2 !Km of basolateral transporter (mg/L) Average of rOAT1 and rOAT3 from Nakagawa et. al, 2007
+CONSTANT Vmax_apical_invitro = 9300 !Vmax of apical transporter (pmol/mg protein/min); invitro value for Oatp1a1 from Weaver, 2010
+CONSTANT Km_apical = 52.3 !Km of apical transporter (mg/L), in vitro value for Oatp1a1 from Weaver, 2010.
+CONSTANT RAFbaso = 3.99	!relative activity factor, basolateral transporters (male) (fit to data)	
+CONSTANT RAFapi = 4.07	!relative activity factor, apical transporters (male) (fit to data)	
+!CONSTANT RAFapi = 0.001356	!relative activity factor, apical transporters (female) (fit to data)
+!CONSTANT RAFbaso = 0.01356	!relative activity factor, basolateral transporters (female) (fit to data)
+CONSTANT protein = 2.0e-6	!amount of protein in proximal tubule cells (mg protein/proximal tubule cell)
+
+CONSTANT GFRC = 62.1	!glomerular filtration rate (L/hr/kg kidney) (male); Corley, 2005
+!CONSTANT GFRC = 41.04	!glomerular filtration rate (L/hr/kg kidney) (female); Corley, 2005
+
+!Partition Coefficients (from rat tissue data, Kudo et al, 2007)
+CONSTANT PL = 2.2 !liver:blood
+CONSTANT PK = 1.05 !kidney:blood
+CONSTANT PR = 0.11 !rest of body:blood
+
+!rate constants
+CONSTANT kdif = 0.001	!diffusion rate from proximal tubule cells (L/h)
+CONSTANT kabsc = 2.12	!rate of absorption of chemical from small intestine to liver (1/(h*BW^0.25))(fit to data)
+CONSTANT kunabsc = 7.06e-5	!rate of unabsorbed dose to appear in feces (1/(h*BW^0.25))(fit to data)
+CONSTANT GEC = 0.54 !gastric emptying time (1/(h*BW^0.25)); from Yang, 2013
+CONSTANT k0C = 1.0	!rate of uptake from the stomach into the liver (1/(h*BW^0.25)) (fit to data)
+
+CONSTANT keffluxc = 2.49	!rate of clearance of PFOA from proximal tubule cells into blood (1/(h*BW^0.25))
+CONSTANT kbilec = 0.004 !biliary elimination rate ((male); liver to feces storage (1/(h*BW^0.25)) (fit to data)
+CONSTANT kurinec = 1.6 !rate of urine elimination from urine storage (male) (1/(h*BW^0.25))(fit to data)
+
+!Simulation (dosing) Parameters
+!Simulation parameters designed to replicate IV exposure data (male only) from Kudo et.al, 2007 and IV and oral exposure data (male and female) from Kemper et.al,2003.  
+!Oral Gavage Dosing
+CONSTANT OdoseC = 25.0	!oral dose concentration(mg/kg BW)
+CONSTANT OGtime = 0.01	!length of oral gavage (hrs)
+
+!IV Dosing
+CONSTANT IVdoseC = 0	!IV dose concentration (mg/kg)
+CONSTANT IVTime = 0.01	!length of IV infusion (hrs)
+
+END ! INITIAL
+
+DYNAMIC
+
+ALGORITHM IALG = 2
+NSTEPS    NSTP = 10
+MAXTERVAL MAXT = 1.0e9
+MINTERVAL MINT = 1.0e-9
+CINTERVAL CINT = 0.1
+
+DERIVATIVE
+!Scaled Parameters
+!Cardiac output and blood flows
+QC = QCC*(BW**0.75)*(1-Htc)	!cardiac output in L/h; adjusted for plasma
+QK = (QKC*QC)	!plasma flow to kidney (L/h)
+QL = (QLC*QC)	!plasma flow to liver (L/h)
+QR = QC - QK - QL 	!plasma flow to rest of body (L/h)
+QBal = QC - (QK + QL + QR) !Balance check of blood flows; should equal zero
+
+!Tissue Volumes
+VPlas = VplasC*BW 	!volume of plasma (L) 
+VK = VKC*BW 	!volume of kidney (L)
+VKb = VK*0.16	!volume of blood in the kidney (L); fraction blood volume of kidney (0.16) from Brown, 1997
+Vfil = VfilC*BW	!volume of filtrate (L)
+VL = VLC*BW	!volume of liver (L)
+VR = (0.93*BW) - VPlas - VPTC - Vfil - VL	!volume of remaining tissue (L); 
+VBal = (0.93*BW) - (VR + VL + VPTC + VFil + VPlas)	!Balance check of tissue volumes; should equal zero 
+ML = MLC*BW*1000	!mass of the liver (g)
+
+!Kidney Parameters
+MK = MKC*BW*1000	!mass of the kidney (g)
+PTC = MKC*6e7	!number of PTC (cells/kg BW) (based on 60 million PTC/gram kidney)
+VPTC = MK*VPTCC	!volume of proximal tubule cells (L)	
+MPTC = VPTC*1000 !mass of the proximal tubule cells (g) (assuming density 1 kg/L)	
+Vmax_basoC = (Vmax_baso_invitro*RAFbaso*PTC*protein*60*(MW/1e12)*1000)!Vmax of basolateral transporters (mg/h/kg BW)
+Vmax_apicalC = (Vmax_apical_invitro*RAFapi*PTC*protein*60*(MW/1e12)*1000) !Vmax of basolateral transporters (mg/h/kg BW)
+Vmax_baso = Vmax_basoC*BW**0.75	!(mg/h)
+VMax_apical = Vmax_apicalC*BW**0.75	!(mg/h)
+kbile = kbilec*BW**(-0.25)	!biliary elimination; liver to feces storage (/h)
+kurine = kurinec*BW**(-0.25)	! urinary elimination, from filtrate (/h)
+kefflux = keffluxc*BW**(-0.25)	!efflux clearance rate, from PTC to blood (/h)
+GFR = GFRC*(MK/1000)	!glomerular filtration rate, scaled to mass of kidney(in kg)(L/h)
+
+!GI Tract Parameters
+kabs = kabsc*BW**(-0.25)	!rate of absorption of chemical from small intestine to liver (/h)
+kunabs = kunabsc*BW**(-0.25)	!rate of unabsorbed dose to appear in feces (/h)
+GE = GEC/BW**0.25	!gastric emptying time (/h)
+k0 = K0C/BW**0.25 	!rate of uptake from the stomach into the liver (/h)
+
+!Dosing Equations
+!IV Dosing
+IVdose = IVdoseC*BW	!mg
+IVR = IVon*IVdose/IVTime	!IV dose rate (mg/hr)
+AIV = integ(IVR, 0.0)	!amount administered in IV (?) (mg)
+IVon = RSW(T.GE.IVTime, 0.,1.)	!RSW switch to turn IV dose on. As written, will only work with a single, non-repeating IV dose. 
+
+!Oral Gavage Dosing
+Odose = OdoseC*BW	!oral dose (mg)
+OGR = OGon*Odose/OGtime	!Oral gavage rate (mg/hr)
+AOG = integ(OGR, 0.0)	!amount administered in oral gavage (mg)
+OGon = RSW(T.GE.OGTime,0.,1.)	!RSW switch to turn on oral gavage. As written will only work with a single, non-repeating oral dose. 
+
+!Model Equations
+!Rest of Body (Tis)
+RR = QR*(CA-CVR)*Free	!rate of change in rest of body (mg/h)
+AR = integ(RR, 0.0)	!amount in rest of body (mg)
+CR = AR/VR !concentration in rest of body (mg/L)
+CVR = CR/PR	!concentration in venous blood leaving the rest of the body (mg/L)
+
+!Kidney 
+!Kidney Blood (Kb)
+RKb = QK*(CA-CVK)*Free - CA*GFR*Free - Rdif - RA_baso   !rate of change in kidney blood (mg/h).
+AKb = integ(RKb, 0.0) !amount in kidney blood (mg)
+CKb = AKb/VKb	!concentration in kidney blodd (mg/L) 
+CVK = CKb !/PK	!concentration in venous blood leaving kidney (mg/L)
+
+RCl = CA*GFR*Free	!rate of clearance via glormerular filtration (mg/h)
+ACl = integ(RCl, 0.0)		!amount moved via glomarular filtration (mg)
+
+Rdif = Kdif*(CKb - CPTC)	!rate of diffusion from into the PTC (mg/hr)
+Adif = integ(Rdif, 0.)	!amount diffused into the PTC (mg)
+
+RA_baso = (Vmax_baso*CKb)/(Km_baso + CKb)	
+A_baso = integ(RA_baso, 0.)
+
+!Proximal Tubule Cells (PTC)
+RPTC =  Rdif + RA_apical + RA_baso - RAefflux !rate of change in PTC(mg/h)
+APTC = integ(RPTC, 0.0)	!amount in proximal tubule cells (mg)
+CPTC = APTC/VPTC	!concentration in PTC (mg/L)
+
+RA_apical = (Vmax_apical*Cfil)/(Km_apical + Cfil)
+A_apical = integ(RA_apical, 0.)
+
+RAefflux = kefflux*APTC
+Aefflux = integ(RAefflux, 0.)
+
+!Filtrate (Fil)
+Rfil = CA*GFR*Free - RA_apical - Afil*kurine	!rate of change in filtrate (mg/h)
+Afil = integ(Rfil, 0.0)	!amount in filtrate (mg)
+Cfil = Afil/Vfil	!concentration in filtrate (mg/L)
+
+!Urinary elimination 
+Rurine = kurine*Afil	!rate of change in urine (mg/h)
+Aurine = integ(Rurine, 0.0)	!amount in urine (mg)
+
+percentOD_in_urine = (Aurine/Odose)*100
+
+!GI Tract (Absorption site of oral dose)
+!Stomach
+RST= OGR - k0*AST - GE*AST	!rate of change in the stomach (mg/h)
+AST = integ(RST, 0.)	!amount in the stomach (mg)
+
+RabsST = k0*AST	!rate of absorption in the stomach (mg/h)
+AabsST = integ(RabsST, 0.)	!amount absorbed in the stomach (mg)
+
+!Small Intestine
+RSI = GE*AST - kabs*ASI - kunabs*ASI	!rate of change in the small intestine (mg/hr)
+ASI = integ(RSI, 0.)	!amount in the small intestine (mg)
+
+RabsSI = kabs*ASI	!rate of absorption inthe small intestine (mg/hr)
+AabsSI = integ(RabsSI, 0.)	!amount absorbed in the small intestine (mg)
+
+total_oral_uptake = AabsSI + AabsST	!total oral uptake in the GI tract (mg) 
+
+!Feces compartment
+Rfeces = kbile*AL + kunabs*ASI !rate of change in the feces compartment (mg/h)
+Afeces = integ(Rfeces, 0.0)	!amount in the feces compartment (mg)
+percentOD_in_feces = (Afeces/Odose)*100	!percent of the oral dose in the feces (%)
+
+!Liver
+RL = QL*(CA-CVL)*Free - kbile*AL + kabs*ASI + k0*AST !rate of change in the liver (mg/h)
+AL = integ(RL, 0.0) !amount in liver (mg)
+CL = AL/VL	!concentration in the liver (mg/L)
+CVL = CL/PL	!concentration in the venous blood leaving the liver (mg/L)
+
+Abile = kbile*AL
+amount_per_gram_liver = (AL/ML)*1000	!amount of PFOA in liver per gram liver (ug/g)
+
+!Plasma compartment
+RPlas_free = (QR*CVR*Free) + (QK*CVK*Free) + (QL*CVL*Free) - (QC*CA*Free) + IVR + RAefflux  !rate of change in the plasma (mg/h) 
+Aplas_free = integ(RPlas_free, 0.0)	!amount in the plasma (mg)
+CA_free = APlas_free/VPlas		!concentration in plasma (mg)
+CA = CA_free/Free	!concentration of total PFOA in plasma (mg/L)
+
+!Mass Balance Check
+Atissue = APlas_free + AR + AKb + AFil + APTC + AL + AST + ASI 	!sum of mass in all compartments (mg)
+Aloss = Aurine + Afeces 	!sum of mass lost through urinary and fecal excretion (mg)
+Atotal = Atissue + Aloss 	!total mass; should equal total dose
+
