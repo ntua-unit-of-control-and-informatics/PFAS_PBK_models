@@ -5,6 +5,8 @@ Cheng 2017: literature code
 Cheng 2017_2: with the protein binding expression of Cheng 2021
 
 Cheng 2017_3:
-
 with the protein binding expression of Cheng 2021 and linear passive diffusion/saturable process for transporters
 deletion of cell-water concentration ratios, change of bGTGL <- kGLGT/(VGT * CRssG) to bGTGL <- kGLGT/VGT (likewise: bKTF,     bLTbile)
+
+Cheng 2017_single_optimisation: file for optimising Cheng model based on a single dataset. In the future this code will
+be extended to allow optimisation of parameters by fitting on multiple datasets 

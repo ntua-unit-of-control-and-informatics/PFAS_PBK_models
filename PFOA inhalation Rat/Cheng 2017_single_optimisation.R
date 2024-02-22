@@ -65,33 +65,33 @@ create.params <- function(user.input){
     #Capillary surface area for each tissue (Ai) as percentage of body weight
     #or weight of corresponding tissue (PAi, m^2/g) and surface area (m^2)
     
-    PAK <- 350e-4 
-    AK <- PAK * VK * 1e-3 #kidney surface area (m^2)
+    PAK <- 350e-4 #cm2/g   cm2*L/g-> 1e4 m2*1000
+    AK <- PAK * VK * 1e7 #kidney surface area (m^2)
     PAKG <- 68.90e-4 
-    AKG <- PAKG * VK * 1e-3 #the surface area of glomerular capillary (m^2)
+    AKG <- PAKG * VK * 1e7 #the surface area of glomerular capillary (m^2)
     PAL <- 250e-4 
-    AL <- PAL * VL * 1e-3 #liver surface area (m^2)
+    AL <- PAL * VL * 1e7 #liver surface area (m^2)
     PAG <- 100e-4 
-    AG <- PAG * VG * 1e-3 #gut surface area (m^2)
+    AG <- PAG * VG * 1e7 #gut surface area (m^2)
     PAGL <- 4.14 #"The surface area of gut lumen would be 4.14 m2/kg" !!!!???
     AGL <- PAGL * BW #gut lumen surface area (m^2)
     PAM <- 70e-4 
-    AM <- PAM * VM * 1e-3 #muscle surface area (m^2)
+    AM <- PAM * VM * 1e7 #muscle surface area (m^2)
     PAA <- 70e-4
-    AA <- PAA * VA * 1e-3 #adipose surface area (m^2)
+    AA <- PAA * VA * 1e7 #adipose surface area (m^2)
     PAR <- 100e-4
-    AR <- PAR * VR * 1e-3 #surface area of rest of body (m^2)
+    AR <- PAR * VR * 1e7 #surface area of rest of body (m^2)
     
     #Effective permeability (Peff, in m/h) for blood (B), liver(L), kidney(K),
     #gut(G),adipose(A), muscle(M), rest of body(R)
-    
-    PeffB <- 4.98e-8/3600
-    PeffK <- 4.38e-8/3600
-    PeffL <- 5.15e-8/3600
-    PeffG <- 2.65e-8/3600
-    PeffA <- 2.65e-8/3600
-    PeffM <- 2.65e-8/3600
-    PeffR <- 2.65e-8/3600
+
+    PeffB <- 4.98e-8*3600
+    PeffK <- 4.38e-8*3600
+    PeffL <- 5.15e-8*3600
+    PeffG <- 2.65e-8*3600
+    PeffA <- 2.65e-8*3600
+    PeffM <- 2.65e-8*3600
+    PeffR <- 2.65e-8*3600
     
     
     #Blood flow rates (QBi, in mL/h) to different tissues (i=L, K, G, A, M, R)
@@ -114,35 +114,34 @@ create.params <- function(user.input){
     
     #Flow rate of fluids including feces, bile, urine and glomerular filtration rate (GFR), in L/h
     
-    Qfeces <- 5.63/24 #L per day -> L/h
-    PQbile <- 90/24 #L/h/kg BW
+    Qfeces <- 5.63/1000/24 #mL water/d --> L/h
+    PQbile <- 90/1000/24 #mL/d/kg BW --> L/d/kg BW
     Qbile <- PQbile * BW #L/h
-    PQurine <- 200/24 #L/h/kg BW
+    PQurine <- 200/1000/24 #mL/d/kg BW --> L/h/kg
     Qurine <- PQurine * BW #L/h
-    PQGFR <- 10.74*60 #L/h/kg BW
+    PQGFR <- 10.74*60/1000 #mL/min/kg  -->L/h/kg    
     QGFR <- PQGFR * BW #L/h
-    
     
     #======Table S2=======#
     #Albumin concentration in blood and interstitial fluid compartments(mol/m^3 = 1e-6* nmol/g)
 
-    CalbB <- 281e-9*7.8 #n=7.8 binding sites (nmol/g)
-    CalbKF <- 243e-9*7.8 #n=7.8 binding sites (nmol/g)
-    CalbLF <- 243e-9*7.8 #n=7.8 binding sites (nmol/g)
-    CalbGF <- 146e-9*7.8 #n=7.8 binding sites (nmol/g)
-    CalbMF <- 146e-9*7.8 #n=7.8 binding sites (nmol/g)
-    CalbAF <- 73e-9*7.8 #n=7.8 binding sites (nmol/g)
-    CalbRF <- 73e-9*7.8 #n=7.8 binding sites (nmol/g)
+    CalbB <- 281e-3*7.8 #n=7.8 binding sites (mol/m3)
+    CalbKF <- 243e-3*7.8 #n=7.8 binding sites (mol/m3)
+    CalbLF <- 243e-3*7.8 #n=7.8 binding sites (mol/m3)
+    CalbGF <- 146e-3*7.8 #n=7.8 binding sites (mol/m3)
+    CalbMF <- 146e-3*7.8 #n=7.8 binding sites (mol/m3)
+    CalbAF <- 73e-3*7.8 #n=7.8 binding sites (mol/m3)
+    CalbRF <- 73e-3*7.8 #n=7.8 binding sites (mol/m3)
     
     
-    #Alpha2mu-globulin concentration in kidney tissue (nmol/g)
+    #Alpha2mu-globulin concentration in kidney tissue (mol/m3)
 
-    Ca2uKT <- 110
+    Ca2uKT <- 110e-3
 
     #LFABP concentration in kidney and liver tissue (mol/m^3)
 
-    CLfabpKT <- 2.65 * 3 #n=3 binding sites (nmol/g)
-    CLfabpLT <- 133e-3 * 3 #n=3 binding sites (nmol/g)
+    CLfabpKT <- 2.65e-3 * 3 #n=3 binding sites (mol/m3)
+    CLfabpLT <- 133e-3 * 3 #n=3 binding sites (mol/m3)
   
 
     #======Table S2=======#
@@ -151,7 +150,7 @@ create.params <- function(user.input){
 
     Ka <-  24.18    # 3.1*7.8 m3/mol (M-1) multiplying by number of binding sites (Cheng et al. 2021)
     KLfabp <- 135  # 45.0*3 geo_mean of 3 binding affinity, may try normal mean (Cheng et al. 2021)
-    Ka2u <- 0.5
+    Ka2u <- 0.5 #m3/mol
 
     
     #Overall mass transfer coefficients between subcompartments and passive
@@ -168,41 +167,70 @@ create.params <- function(user.input){
     
       
     #Kidney
-    kidney_protein <- 3.02e-06	#amount of protein in proximal tubule cells (mg protein/proximal tubule cell) (Addis 1936)
-    kidney_cells <- 2.14e07
+    kidney_protein_per_rat <- 1000*(0.218+0.225+0.212)/3#mg of protein per rat  (Addis 1936)
+    rat_weight_addis <- 200 #g, average rat weight in Addis, 1936
+    rat_kidney_weight_addis <- rat_weight_addis*0.0073 # kidney fraction to BW, Brown (1997)
+    kidney_protein_per_gram <- kidney_protein_per_rat/rat_kidney_weight_addis #mg or protein/g kidney
+    
     RAFOatp_k <- estimated_params[1]
     RAFOat1 <- estimated_params[2]
     RAFOat3 <-  estimated_params[3]
     
-    kBKF <- ((1/QBK) + 1/(PeffB * AK))^(-1)
+    kBKF <- (((1/QBK) + 1/(1000*PeffB * AK))^(-1)) #multiplication is to convert m3 -> L
+    
     kKFKT <- ClKFT*(kidney_protein*kidney_cells)*VKT/60
     n <- 5 #enlargement factor of apical membrane of proximal tubule
     kFKT <- PeffK * AK * n
     kBF <- PeffB * AKG
+    
+    MW <- 414.07 #ug/umol, PFOA molecular weight
    
-    VmK_Oatp= 9.3*kidney_protein*kidney_cells*RAFOatp_k #nmol/min (Weaver et al. 2010)
-    KmK_Oatp= 5.2e-2 #g/mL (Weaver et al. 2010)
+    #Oatp kidney
+    VmK_Oatp_in_vitro <- 9.3 #nmol/mg protein/min (Weaver et al. 2010)
+    VmK_Oatp_scaled <- 60*VmK_Oatp_in_vitro*MW*kidney_protein_per_gram/1000  #physiologically scaled to in vivo, ug/L/h
+    VmK_Oatp <- VmK_Oatp_scaled*RAFOatp_k #in vivo value, in  ug/L/h
+    KmK_Oatp=  126.4*MW#umol/L (Weaver et al. 2010) --> ug/L
+    
     #VmK_Osta= 9.3*2.0e-6*75960 #nmol/min (Weaver et al. 2010 - same as Oatp1)
     #KmK_Osta= 52.3 #mg/mL (Weaver et al. 2010 - mean of Oat1,3,Oatp)
-    VmK_Oat1= 2.6*kidney_protein*kidney_cells*RAFOat1 #nmol/min (Weaver et al. 2010)
-    KmK_Oat1= 1.8e-2 #g/mL (Weaver et al. 2010)
-    VmK_Oat3= 3.8*kidney_protein*kidney_cells*RAFOat3 #nmol/min (Weaver et al. 2010)
-    KmK_Oat3= 2.7e-2 #g/mL (Weaver et al. 2010)
+    
+    #oat1 kidney
+    VmK_Oat1_in_vitro= 2.6 #nmol/mg protein/min (Weaver et al. 2010)
+    VmK_Oat1_scaled = 60*VmK_Oat1_scaled*MW*kidney_protein_per_gram/1000  #physiologically scaled to in vivo, ug/L/h
+    VmK_Oat1= VmK_Oat1_scaled*RAFOat1 #in vivo value, in  ug/L/h
+    KmK_Oat1= 43.2 * MW #umol/L (Weaver et al. 2010) --> ug/L
+    
+    #oat3 kidney
+    VmK_Oat3_in_vitro= 3.8 #nmol/mg protein/min  (Weaver et al. 2010)
+    VmK_Oat3_scaled = 60*VmK_Oat3_in_vitro*MW*kidney_protein_per_gram/1000  #physiologically scaled to in vivo, ug/L/h
+    VmK_Oat3_scaled = VmK_Oat3_scaled*RAFOat3 #in vivo value, in  ug/L/h
+    KmK_Oat3= 65.7 * MW #umol/L (Weaver et al. 2010) --> ug/L
 
     #Liver
-    liver_protein <- 2.89e-06 #mount of protein in hepatocytes (mg protein/hepatocyte)(Addis 1936)
-    liver_cells <- 5.27e08   
-    RAFOatp_l <- estimated_params[4]
-    RAFNtcp <- estimated_params[5]
+    liver_protein_per_rat <- 1000*(1.52+1.53+1.52)/3#mg of protein per rat  (Addis 1936)
+    rat_weight_addis <- 200 #g, average rat weight in Addis, 1936
+    rat_liver_weight_addis <- rat_weight_addis*0.0366 # liver fraction to BW, Brown (1997)
+    liver_protein_per_gram <- liver_protein_per_rat/rat_liver_weight_addis #mg or protein/g liver
     
+    # rates
     kBLF <- ((1/QBL) + 1/(PeffB * AL))^(-1)
     kLFLT <- ClLFT*(liver_protein*liver_cells)*VLT/60
     kbileLT <- PeffL * AL
     
-    VmL_Oatp= 9.3*4.0e-5*liver_protein*liver_cells*RAFOatp_l #nmol/min, Weaver et al. 2010 - same as kidney
-    KmL_Oatp= 5.2e-2 #g/mL, Weaver et al. 2010 - same as kidney
-    VmL_Ntcp= 3*4.0e-5*liver_protein*liver_cells*RAFNtcp #nmol/min, Ruggiero et al. 2021
-    KmL_Ntcp= 8.3e-3 #g/mL, Ruggiero et al. 2021
+    RAFOatp_l <- estimated_params[4]
+    RAFNtcp <- estimated_params[5]
+    
+    # oatp-liver
+    VmL_Oatp_in_vitro= 9.3 #nmol/mg protein/min  (Weaver et al. 2010)
+    VmK_Oat3_scaled = 60*VmL_Oatp_in_vitro*MW*liver_protein_per_gram/1000  #physiologically scaled to in vivo, ug/L/h
+    VmK_Oat3 = VmK_Oat3_scaled*RAFOatp_l #in vivo value, in  ug/L/h
+    KmL_Oatp = KmK_Oatp #same as kidney
+    
+    #Ntcp liver
+    VmL_Ntcp_in_vitro= 3#nmol/mg protein/min  (Weaver et al. 2010)
+    VmL_Ntcp_scaled = 60*VmL_Oatp_in_vitro*MW*liver_protein_per_gram/1000  #physiologically scaled to in vivo, ug/L/h
+    VmL_Ntcp = VmL_Ntcp_in_vitro*RAFNtcp #in vivo value, in  ug/L/h
+    KmL_Ntcp= 20 * MW #umol/L, Ruggiero et al. 2021 --> ug/L
     
     
     #Muscle
@@ -225,8 +253,6 @@ create.params <- function(user.input){
     kBRF <- ((1/QBR) + 1/(PeffB *AR))^(-1)
     RoB_protein <- muscle_protein#18456
     kRFRT <- ClRFT*RoB_protein*VRT/60
-    
-    
     
     return(list('PVB'=PVB, 'VB'=VB, 'PVplsma'=PVplasma, 
                 'Vplasma'=Vplasma, 'PVK'=PVK, 'VK'=VK, 'PVKB'=PVKB, 'VKB'=VKB, 
@@ -285,19 +311,20 @@ ode.func <- function(time, inits, params){
   with(as.list(c(inits, params)),{
 
     #====================PFOA mass balance at each tissue or fluid compartment==============================     
-
+      
+    # Concentrations in ug/L
+    # k in 1/h
     #Blood subcompartment
     
-    dCB = kBKF*(CKFf-CBf) + kBLF*(CLFf-CBf) + kBGF*(CGFf-CBf) + kBMF*(CMFf-CBf) + kBAF*(CAFf-CBf) + kBRF*(CRFf-CBf) + kBF*(CFil-CBf) 
+    dCB = kBKF*(CKFf-CBf) + kBLF*(CLFf-CBf) + kBGF*(CGFf-CBf) + kBMF*(CMFf-CBf) + 
+          kBAF*(CAFf-CBf) + kBRF*(CRFf-CBf) + kBF*(CFil-CBf) 
     
     #Kidney
     
     #interstitial fluid subcompartment
-    #dCKF = kBKF*(CBf-CKFf) + kKFKT*(CKTf-CKFf) + (VmK_Osta*CKTf/KmK_Osta+CKTf) - (VmK_Oat1*CKFf/KmK_Oat1+CKFf) - (VmK_Oat3*CKFf/KmK_Oat3+CKFf)
-    dCKF = kBKF*(CBf-CKFf) + kKFKT*(CKTf-CKFf) - (VmK_Oat1*CKFf/KmK_Oat1+CKFf) - (VmK_Oat3*CKFf/KmK_Oat3+CKFf)
+    dCKF = kBKF*(CBf-CKFf) + kKFKT*(CKTf-CKFf) - (VmK_Oat1*CKFf/KmK_Oat1+CKFf) - (VmK_Oat3*CKFf/KmK_Oat3+CKFf) #+ (VmK_Osta*CKTf/KmK_Osta+CKTf)
     #Kidney proximal tubule cells subcompartment
-    #dCKT = kKFKT*(CKFf-CKTf) + kFKT*(CFil-CKTf) + (VmK_Oatp*CFil/KmK_Oatp+CFil) - (VmK_Osta*CKTf/KmK_Osta+CKTf) + (VmK_Oat1*CKFf/KmK_Oat1+CKFf) + (VmK_Oat3*CKFf/KmK_Oat3+CKFf)
-    dCKT = kKFKT*(CKFf-CKTf) + kFKT*(CFil-CKTf) + (VmK_Oatp*CFil/KmK_Oatp+CFil) + (VmK_Oat1*CKFf/KmK_Oat1+CKFf) + (VmK_Oat3*CKFf/KmK_Oat3+CKFf)
+    dCKT = kKFKT*(CKFf-CKTf) + kFKT*(CFil-CKTf) + (VmK_Oatp*CFil/KmK_Oatp+CFil) + (VmK_Oat1*CKFf/KmK_Oat1+CKFf) + (VmK_Oat3*CKFf/KmK_Oat3+CKFf)# + (VmK_Osta*CKTf/KmK_Osta+CKTf)
     dCFil = kBF*(CBf-CFil) + kFKT*(CKTf-CFil) - (VmK_Oatp*CFil/KmK_Oatp+CFil) - (Qurine/VFil)*CFil
     dCurine = (Qurine/VFil)*CFil
     
@@ -362,7 +389,7 @@ ode.func <- function(time, inits, params){
     
     
     
-    Cblood <- CB * VB /Vplasma
+    Cplasma <- CB * VB /Vplasma
     Ckidney <- ((CB*VKB) + (CKF*VKF) + (CKT*VKT) + (CFil*VFil))/(VKB+VKF+VKT+VFil)
     Cliver <- ((CB*VLB) + (CLF*VLF) + (CLT*VLT))/(VLB+VLF+VLT)
     Cgut <- ((CB*VGB) + (CGF*VGF) + (CGT*VGT))/(VGB+VGF+VGT)
@@ -433,10 +460,10 @@ create.events <- function(parameters){
     }else{
       if (admin.type == "iv"){
         events <- list(data = rbind(data.frame(var = c("CB"),  time = admin.time, 
-                                               value = admin.dose, method = c("add")) ))
+                                               value = admin.dose/VB, method = c("add")) ))
       }else if (admin.type == "oral"){
         events <- list(data = rbind(data.frame(var = c("CGL"),  time = admin.time, 
-                                               value = c( admin.dose), method = c("add")) ))
+                                               value = admin.dose/VGL, method = c("add")) ))
       }
     }
     return(events)
@@ -486,6 +513,7 @@ obj.func <- function(x, dataset){
   admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
   admin.time <- 0.5/60 # time when doses are administered, in hours
   admin.type <- "iv"
+  x <- log(c(1,1,1,1,1))
   estimated_params <- exp(x)
   user_input <- list('BW'=BW,
                      "admin.dose"= admin.dose,
@@ -498,7 +526,7 @@ obj.func <- function(x, dataset){
   events <- create.events(params)
   
   # sample_time: a vector of time points to solve the ODEs
-  sample_time=seq(0,2,0.01)
+  sample_time=seq(0,100,0.01)
   
   # ode(): The solver of the ODEs
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -529,8 +557,8 @@ obj.func <- function(x, dataset){
  
   # Initiate a variable to save the score of goodness of fit for each variable
   score <-AAFE(predictions = preds, observations = obs)
-  
-
+  print(score)
+ 
   return(score)
 }
 
@@ -561,7 +589,8 @@ opts <- list( "algorithm" = "NLOPT_LN_NEWUOA",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0 ,
-              "maxeval" = 500)
+              "maxeval" = 500, 
+              "print_level" = 1)
 # Create initial conditions (zero initialisation)
 N_pars <- 5# Number of parameters to be fitted
 fit <- log(rep(1,N_pars))
