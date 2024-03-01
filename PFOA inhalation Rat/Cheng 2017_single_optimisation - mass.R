@@ -112,6 +112,7 @@ create.params <- function(user.input){
     PQBR = 1 - PQBK - PQBG - PQBL - PQBM - PQBA
     QBR = PQBR * Qcardiac #L/h
     
+    
     #Flow rate of fluids including feces, bile, urine and glomerular filtration rate (GFR), in L/h
     
     Qfeces <- 5.63/1000/24 #mL water/d --> L/h
@@ -161,30 +162,35 @@ create.params <- function(user.input){
     ClLFT= 3.71e+04 #uL/min/mg protein, Han et al. 2008
     ClKFT= 17.5 #uL/min/mg protein, Yang et al. 2010
     ClGFT= 18.1 #uL/min/mg protein, Kimura et al. 2017
-    ClMFT= 17.8 #mean of ClKFT and ClGFT
-    ClAFT= 17.8 #mean of ClKFT and ClGFT
-    ClRFT= 17.8 #mean of ClKFT and ClGFT
+    ClMFT= 18.1 #same as ClGFT
+    ClAFT= 18.1 #same as ClGFT
+    ClRFT= 18.1 #same as ClGFT
     
-      
+    #For all CMTs
+    MW <- 414.07 #ug/umol, PFOA molecular weight
+    Acell = 4000 #m^2/cell
+    
     #Kidney
     kidney_protein_per_rat <- 1000*(0.218+0.225+0.212)/3#mg of protein per rat  (Addis 1936)
     rat_weight_addis <- 200 #g, average rat weight in Addis, 1936
     rat_kidney_weight_addis <- rat_weight_addis*0.0073 # kidney fraction to BW, Brown (1997)
-    kidney_protein_per_gram <- kidney_protein_per_rat/rat_kidney_weight_addis #mg or protein/g kidney
+    kidney_protein_per_gram <- kidney_protein_per_rat/rat_kidney_weight_addis #mg of protein/g kidney
+    
+    kidney_cells = 2.14e07 #Bertram et al. 1992
+    Cmedium_K = 4*MW# Yang et al. 2010 4uM umol/L -->  ug/L
+    PeffKT = 1000*60*ClKFT*kidney_protein_per_rat/(Acell*Cmedium_K) #m/h
+    kKFKT <- PeffKT*Acell*kidney_cells/1000 #L/h
     
     RAFOatp_k <- estimated_params[1]
     RAFOat1 <- estimated_params[2]
     RAFOat3 <-  estimated_params[3]
     
     kBKF <- (((1/QBK) + 1/(1000*PeffB * AK))^(-1)) #multiplication is to convert m3 -> L
-    
-    kKFKT <- ClKFT*(kidney_protein*kidney_cells)*VKT/60
     n <- 5 #enlargement factor of apical membrane of proximal tubule
     kFKT <- PeffK * AK * n
     kBF <- PeffB * AKG
     
-    MW <- 414.07 #ug/umol, PFOA molecular weight
-   
+    
     #Oatp kidney
     VmK_Oatp_in_vitro <- 9.3 #nmol/mg protein/min (Weaver et al. 2010)
     VmK_Oatp_scaled <- 60*VmK_Oatp_in_vitro*MW*kidney_protein_per_gram/1000  #physiologically scaled to in vivo, ug/L/h
@@ -212,9 +218,11 @@ create.params <- function(user.input){
     rat_liver_weight_addis <- rat_weight_addis*0.0366 # liver fraction to BW, Brown (1997)
     liver_protein_per_gram <- liver_protein_per_rat/rat_liver_weight_addis #mg or protein/g liver
     
-    # rates
+    liver_cells = 5.27e08 #Sohlenius-Sternbeck et al. 2006 (2e09 cells: https://bionumbers.hms.harvard.edu/bionumber.aspx?s=n&v=4&id=110895)
+    Cmedium_L = 1*MW# Han et al. 2008 1uM umol/L -->  ug/L
+    PeffLT = 1000*60*ClLFT*liver_protein_per_rat/(Acell*Cmedium_L) #m/h
+    kLFLT <- PeffLT*Acell*liver_cells/1000 #L/h
     kBLF <- ((1/QBL) + 1/(PeffB * AL))^(-1)
-    kLFLT <- ClLFT*(liver_protein*liver_cells)*VLT/60
     kbileLT <- PeffL * AL
     
     RAFOatp_l <- estimated_params[4]
@@ -234,25 +242,41 @@ create.params <- function(user.input){
     
     
     #Muscle
-    kBMF <- ((1/QBM) + 1/(PeffB * AM))^(-1)
+    muscle_cells= NA
+    Cmedium_M = 1*MW# Kimura et al. 2017 1uM umol/L -->  ug/L
     muscle_protein <- 24368 #mg (protein data from Cheek et al.,1971 and muscle mass from Caster et al.,1956)
+    PeffMT = 1000*60*ClMFT*muscle_protein/(Acell*Cmedium_M) #m/h
+    
+    kBMF <- ((1/QBM) + 1/(PeffB * AM))^(-1)
     kMFMT <- ClMFT*muscle_protein*VMT/60
-   
+    
+    
     #Gut
-    kBGF <- ((1/QBG) + 1/(PeffB * AG))^(-1)
+    gut_cells = NA
+    Cmedium_G = 1*MW# Kimura et al. 2017 1uM umol/L -->  ug/L
     gut_protein <- muscle_protein#NA#5034
-    kGFGT <- ClGFT*gut_protein*VGT/60
+    PeffGT = 1000*60*ClGFT*gut_protein/(Acell*Cmedium_G) #m/h
+    kGFGT <- PeffGT*Acell*gut_cells/1000 #L/h
+    
+    kBGF <- ((1/QBG) + 1/(PeffB * AG))^(-1)
     kGLGT <- PeffG * AGL
    
     #Adipose
+    adipose_cells = NA
+    Cmedium_A = 1*MW# Kimura et al. 2017 1uM umol/L -->  ug/L
+    adipose_protein <- muscle_protein#NA#5034
+    PeffAT = 1000*60*ClAFT*adipose_protein/(Acell*Cmedium_A) #m/h
+    kAFAT <- PeffAT*Acell*adipose_cells/1000 #L/h
     kBAF <- ((1/QBA) + 1/(PeffB * AA))^(-1)
-    adipose_protein <- muscle_protein#10507
-    kAFAT <- ClAFT*adipose_protein*VAT/60
     
     #Rest of body
-    kBRF <- ((1/QBR) + 1/(PeffB *AR))^(-1)
+    RoB_cells = NA
+    Cmedium_R = 1*MW# Kimura et al. 2017 1uM umol/L -->  ug/L
     RoB_protein <- muscle_protein#18456
-    kRFRT <- ClRFT*RoB_protein*VRT/60
+    PeffRT = 1000*60*ClRFT*RoB_protein/(Acell*Cmedium_R) #m/h
+    kRFRT <- PeffRT*Acell*RoB_cells/1000 #L/h
+    kBRF <- ((1/QBR) + 1/(PeffB *AR))^(-1)
+    
     
     return(list('PVB'=PVB, 'VB'=VB, 'PVplsma'=PVplasma, 
                 'Vplasma'=Vplasma, 'PVK'=PVK, 'VK'=VK, 'PVKB'=PVKB, 'VKB'=VKB, 
@@ -287,6 +311,9 @@ create.params <- function(user.input){
                 'ClLFT'=ClLFT, 'ClKFT'=ClKFT, 'ClGFT'=ClGFT, 'ClMFT'=ClMFT,
                 'ClAFT'=ClAFT, 'ClRFT'=ClRFT,
                 
+                'PeffKT'=PeffKT, 'PeffLT'=PeffLT, 'PeffGT'=PeffGT, 'PeffMT'=PeffMT,
+                'PeffAT'=PeffAT, 'PeffRT'=PeffRT,
+                
                 'VmL_Oatp'=VmL_Oatp, 'KmL_Oatp'= KmL_Oatp, 'VmL_Ntcp'= VmL_Ntcp,
                 'KmL_Ntcp'= KmL_Ntcp,'VmK_Oatp'= VmK_Oatp, 
                 'KmK_Oatp'=KmK_Oatp,
@@ -312,72 +339,111 @@ ode.func <- function(time, inits, params){
 
     #====================PFOA mass balance at each tissue or fluid compartment==============================     
       
+    CBf = MBf/VB
+    CKFf = MKFf/VKF
+    CKTf = MKTf/VKT
+    CFil = MFil/VFil
+    CLFf = MLFf/VLF
+    CLTf = MLTf/VLT
+    Cbile = Mbile/Vbile
+    CLFf = MLFf/VLF
+    CLTf = MLTf/VLT
+    CGFf = MGFf/VGF
+    CGT = MGT/VGT
+    CGLf = MGLf/VGL
+    CMFf = MMFf/VMF
+    CMT = MMT/VMT
+    CAFf = MAFf/VAF
+    CAT = MAT/VAT
+    CRFf = MRFf/VRF
+    CRT = MRT/VRT
+    
     # Concentrations in ug/L
     # k in 1/h
-    #Blood subcompartment
+   
     
-    dCB = kBKF*(CKFf-CBf) + kBLF*(CLFf-CBf) + kBGF*(CGFf-CBf) + kBMF*(CMFf-CBf) + 
-          kBAF*(CAFf-CBf) + kBRF*(CRFf-CBf) + kBF*(CFil-CBf) 
+    #Arterial Blood
+    dMBart = - QBK*CBfart - QBL*CBfart - QBG*CBfart - QBM*CBfart - QBA*CBfart - QBR*CBfart
+    
+    #Venous Blood
+    dMBven = QBK*CKBf + (QBK+QBK/500)*CLNf + QBL*CLBf + (QBL+QBL/500)*CLNf + 
+             QBG*CGBf + (QBG+QBG/500)*CLNf + QBM*CMBf + (QBM+QBM/500)*CLNf +
+             QBA*CABf + (QBA+QBA/500)*CLNf + QBR*CRBf + (QBR+QBR/500)*CLNf 
+    
+    #Lymph nodes
+    dMLN = QBK/500*CKFf - (QBK+QBK/500)*CLNf + QBL/500*CLFf - (QBL+QBL/500)*CLNf +
+      QBG/500*CGFf - (QBG+QBG/500)*CLNf + QBM/500*CMFf - (QBM+QBM/500)*CLNf +
+      QBA/500*CAFf - (QBA+QBA/500)*CLNf + QBR/500*CRFf - (QBR+QBR/500)*CLNf
     
     #Kidney
     
+    #blood subcompartment
+    dMBK = QBK*CBfart - QBK*CKBf - PeffKT*AK*(CBf-CKFf) - QBK/500*CKBf
     #interstitial fluid subcompartment
-    dCKF = kBKF*(CBf-CKFf) + kKFKT*(CKTf-CKFf) - (VmK_Oat1*CKFf/KmK_Oat1+CKFf) - (VmK_Oat3*CKFf/KmK_Oat3+CKFf) #+ (VmK_Osta*CKTf/KmK_Osta+CKTf)
+    dMKF = QBK/500*CKBf - QBK/500*CKFf + PeffK*AK*(CBf-CKFf) - kKFKT*(CKTf-CKFf) - (VmK_Oat1*CKFf/KmK_Oat1+CKFf)*VKF - (VmK_Oat3*CKFf/KmK_Oat3+CKFf)*VKF #+ (VmK_Osta*CKTf/KmK_Osta+CKTf)
     #Kidney proximal tubule cells subcompartment
-    dCKT = kKFKT*(CKFf-CKTf) + kFKT*(CFil-CKTf) + (VmK_Oatp*CFil/KmK_Oatp+CFil) + (VmK_Oat1*CKFf/KmK_Oat1+CKFf) + (VmK_Oat3*CKFf/KmK_Oat3+CKFf)# + (VmK_Osta*CKTf/KmK_Osta+CKTf)
-    dCFil = kBF*(CBf-CFil) + kFKT*(CKTf-CFil) - (VmK_Oatp*CFil/KmK_Oatp+CFil) - (Qurine/VFil)*CFil
-    dCurine = (Qurine/VFil)*CFil
+    dMKT = kKFKT*(CKTf-CKFf) + kFKT*(CFil-CKTf) + (VmK_Oatp*CFil/KmK_Oatp+CFil)*VFil + (VmK_Oat1*CKFf/KmK_Oat1+CKFf)*VKF + (VmK_Oat3*CKFf/KmK_Oat3+CKFf)*VKF # + (VmK_Osta*CKTf/KmK_Osta+CKTf)
+    dMFil = kBF*(CBfart-CFil) - kFKT*(CFil-CKTf) - (VmK_Oatp*CFil/KmK_Oatp+CFil) - (Qurine/VFil)*CFil
+    dMurine = (Qurine/VFil)*CFil
     
     #Liver
     
+    #blood subcompartment
+    dMBL = QBL*CBfart - QBL*CLBf - PeffLT*AL*(CBf-CLFf) - QBL/500*CLBf
     #interstitial fluid subcompartment 
-    dCLF = kBLF*(CBf-CLFf) + kLFLT*(CLTf-CLFf) - (VmL_Oatp*CLFf/KmL_Oatp+CLFf) - (VmL_Ntcp*CLFf/KmL_Ntcp+CLFf)
+    dMLF = QBL/500*CLBf - QBL/500*CLFf + PeffL*AL*(CBf-CLFf) - kLFLT*(CLTf-CLFf) - (VmL_Oatp*CLFf/KmL_Oatp+CLFf) - (VmL_Ntcp*CLFf/KmL_Ntcp+CLFf)
     #Liver tissue subcompartment
-    dCLT = kLFLT*(CLFf-CLTf) + (VmL_Oatp*CLFf/KmL_Oatp+CLFf) + (VmL_Ntcp*CLFf/KmL_Ntcp+CLFf) + kbileLT*(Cbile-CLTf)
-    dCbile = kbileLT*(CLTf-Cbile) - (Qbile/Vbile)*Cbile
+    dMLT = kLFLT*(CLTf-CLFf) + (VmL_Oatp*CLFf/KmL_Oatp+CLFf) + (VmL_Ntcp*CLFf/KmL_Ntcp+CLFf) + kbileLT*(Cbile-CLTf)
+    dMbile = - kbileLT*(Cbile-CLTf) - (Qbile/Vbile)*Cbile
     
     
     #Gut
-    
+    #blood subcompartment
+    dMBG = QBG*CBfart - QBG*CGBf - PeffGT*AG*(CBf-CGFf) - QBG/500*CGBf
     #interstitial fluid subcompartment 
-    dCGF = kBGF*(CBf-CGFf) + kGFGT*(CGT-CGFf) 
+    dMGF = QBG/500*CGBf - QBG/500*CGFf + PeffG*AG*(CBf-CGFf) - kGFGT*(CGT-CGFf) 
     #Gut tissue subcompartment
-    dCGT = kGFGT*(CGFf-CGT) + kGLGT*(CGL-CGT)
+    dMGT = kGFGT*(CGT-CGFf) - kGLGT*(CGT-CGL)
     # Gut lumen
-    dCGL =  - kGLGT*(CGL-CGT) + (Qbile/Vbile)*Cbile - (Qfeces/VGL)*CGL
+    dMGL = kGLGT*(CGT-CGL) + (Qbile/Vbile)*Cbile - (Qfeces/VGL)*CGL
     # Feces
-    dCfeces = (Qfeces/VGL)*CGL
+    dMfeces = (Qfeces/VGL)*CGL
     
     #Muscle
     
+    #blood subcompartment
+    dMBM = QBM*CBfart - QBM*CMBf - PeffMT*AM*(CBf-CMFf) - QBM/500*CMBf
     #interstitial fluid subcompartment 
-    dCMF = kBMF*(CBf-CMFf) + kMFMT*(CMT-CMFf) 
+    dMMF = QBM/500*CMBf - QBM/500*CMFf + PeffM*AM*(CBf-CMFf) - kMFMT*(CMT-CMFf)
     #Muscle tissue subcompartment 
-    dCMT = kMFMT*(CMFf-CMT)
+    dMMT = kMFMT*(CMT-CMFf)
     
     #Adipose
     
+    #blood subcompartment
+    dMBA = QBA*CBfart - QBA*CABf - PeffAT*AA*(CBf-CAFf) - QBA/500*CABf
     #interstitial fluid subcompartment 
-    dCAF = kBAF*(CBf-CAFf) + kAFAT*(CAT-CAFf) 
+    dMAF = QBA/500*CABf - QBA/500*CAFf + PeffA*AA*(CBf-CMFf) - kAFAT*(CAT-CAFf) 
     #Adipose tissue subcompartment 
-    dCAT = kAFAT*(CAFf-CAT)
+    dMAT = kAFAT*(CAT-CAFf)
     
     #Rest of body
     
+    #blood subcompartment
+    dMBR = QBR*CBfart - QBR*CRBf - PeffRT*AR*(CBf-CRFf) - QBR/500*CRBf
     #interstitial fluid subcompartment 
-    dCRF = kBRF*(CBf-CRFf) + kRFRT*(CRT-CRFf) 
+    dMRF = QBR/500*CRBf - QBR/500*CRFf + PeffR*AR*(CBf-CRFf) - kRFRT*(CRT-CRFf) 
     #Rest of body tissue subcompartment 
-    dCRT = kRFRT*(CRFf-CRT)
+    dMRT = kRFRT*(CRT-CRFf)
     
     
     #Lung Tissue subcompartment
     
-    #dLNf = bALFLN*MALFf - bLNALF*MLNf + bBLN*MBf - bLNB*MLNf
     
     
     #Cfree calculation using the expression of free fraction ff
-    
-    CBf = CB * 1.0 / (1.0 + CalbB * Ka)
+    CBfart = CBart * 1.0 / (1.0 + CalbB * Ka)
+    CBf = CBf * 1.0 / (1.0 + CalbB * Ka)
     CKFf = CKF * 1.0 / (1.0 + CalbKF * Ka)
     CLFf = CLF * 1.0 / (1.0 + CalbLF * Ka)
     CGFf = CGF * 1.0 / (1.0 + CalbGF * Ka)
@@ -389,7 +455,7 @@ ode.func <- function(time, inits, params){
     
     
     
-    Cplasma <- CB * VB /Vplasma
+    Cblood <- CB * VB /Vplasma
     Ckidney <- ((CB*VKB) + (CKF*VKF) + (CKT*VKT) + (CFil*VFil))/(VKB+VKF+VKT+VFil)
     Cliver <- ((CB*VLB) + (CLF*VLF) + (CLT*VLT))/(VLB+VLF+VLT)
     Cgut <- ((CB*VGB) + (CGF*VGF) + (CGT*VGT))/(VGB+VGF+VGT)
@@ -402,18 +468,17 @@ ode.func <- function(time, inits, params){
     Cbile <- Cbile
     Curine <- CFil
     
-    return(list(c('dCB'=dCB,'dCKF'=dCKF,'dCLF'=dCLF,'dCGF'=dCGF,'dCMF'=dCMF,
-                  'dCAF'=dCAF, 'dCRF'=dCRF,  
-                  'dCAT'=dCAT, 'dCMT'=dCMT, 'dCRT'=dCRT, 'dCKT'=dCKT, 'dCFil'=dCFil,
-                  'dCurine'=dCurine,
-                  'dCLT'=dCLT, 'dCbile'=dCbile, 'dCGT'=dCGT, 'dCGL'=dCGL, 
-                  'dCfeces'=dCfeces,
-                  'CBf'=CBf, 'CKFf'=CKFf, 'CLFf'=CLFf, 'CGFf'=CGFf, 'CMFf'=CMFf, 
-                  'CAFf'=CAFf, 'CRFf'=CRFf, 'CKTf'=CKTf, 'CLTf'=CLTf,
-                  'CLT'=CLT, 'CGT'=CGT,'CMT'=CMT, 'CAT'=CAT, 'CRT'=CRT, 'CGL'=CGL, 
-                  'Cbile'=Cbile, 'CFil'=CFil, 'Cfeces'=Cfeces),
+    return(list(c('dMBart'=dMBart, 'dMBven'=dMBven, 'dMLN'=dMLN, 'dMBK'=dMBK, 'dMKF'=dMKF, 'dMKT'=dMKT,
+                  'dMFil'=dMFil, 'dMurine'=dMurine, 'dMBL'=dMBL, 'dMLF'=dMLF, 'dMLT'=dMLT, 'dMbile'=dMbile,
+                  'dMBG'=dMBG, 'dMGF'=dMGF, 'dMGT'=dMGT, 'dMGL'=dMGL, 'dMfeces'=dMfeces, 'dMBM'=dMBM, 
+                  'dMMF'=dMMF, 'dMMT'=dMMT, 'dMBA'=dMBA, 'dMAF'=dMAF, 'dMAT'=dMAT, 'dMBR'=dMBR, 'dMRF'=dMRF,'dMRT'=dMRT,
+                  
+                  'CKFf'=CKFf, 'CLNf'=CLNf, 'CLFf'=CLFf, 'CGFf'=CGFf, 'CMFf'=CMFf, 'CAFf'=CAFf, 'CRFf'=CRFf, 'CBfart'=CBfart, 
+                  'CKBf'=CKBf, 'CLBf'=CLBf, 'CGBf'=CGBf, 'CMBf'=CMBf, 'CABf'=CABf, 'CRBf'=CRBf, 'CFil'=CFil, 'Cbile'=Cbile, 
+                  'Cfeces'=Cfeces, 'CKTf'=CKTf, 'CLTf'=CLTf, 'CGT'=CGT, 'CGL'=CGL, 'CMT'=CMT, 'CAT'=CAT, 'CRT'=CRT), 
+                  
                   'Cblood'=Cblood, 'Ckidney'=Ckidney, 'Cliver'=Cliver, 'Cgut'=Cgut,
-                'Cmuscle'=Cmuscle, 'Cadipose'=Cadipose, 'Crest'=Crest,"Ccarcass" = Ccarcass,
+                  'Cmuscle'=Cmuscle, 'Cadipose'=Cadipose, 'Crest'=Crest,'Ccarcass' = Ccarcass,
                   'Cfeces'=Cfeces, 'Cbile'=Cbile, 'Curine'=Curine
                
                 
@@ -427,17 +492,21 @@ ode.func <- function(time, inits, params){
 create.inits <- function(parameters){
   with(as.list(parameters),{
     
-    CB <- 0; CKF <-0;  CLF <-0; CGF <-0; CMF <-0; CAF <-0; CRF <-0; CKT <-0; CLT <-0
-    CKT <-0; CFil <-0; CLT <-0; CLT <-0; CGT <-0; CMT <-0
-    CAT <-0; CRT <-0; CGL <-0; Cbile <-0; CFil <-0; Cfeces <-0; Curine <-0
-    CBf <-0; CKFf <-0; CLFf <-0; CGFf <-0; CMFf <-0; CAFf <-0; CRFf <-0; CKTf <-0; CLTf <-0;
-    CLT <-0; CGT <-0; CMT <-0; CAT <-0; CRT <-0; CGL <-0; Cbile <-0; CFil <-0; Cfeces <-0 
+    MBart <- 0; MBven <-0;  MLN <-0; MBK <-0; MKF <-0; MKT <-0; MFil <-0; Murine <-0; MBL <-0
+    MLF <-0; MLT <-0; Mbile <-0; MBG <-0; MGF <-0; MGT <-0
+    MGL <-0; Mfeces <-0; MBM <-0; MMF <-0; MMT <-0; MBA <-0; MAF <-0
+    MAT <-0; MBR <-0; MRF <-0; MRT <-0; CKFf <-0; CLNf <-0; CLFf <-0; CGFf <-0; CMFf <-0;
+    CAFf <-0; CRFf <-0; CBfart <-0; CKBf <-0; CLBf <-0; CGBf <-0; CMBf <-0; CABf <-0; CRBf <-0; 
+    CFil <-0; Cbile <-0; Cfeces <-0; CKTf <-0; CLTf <-0; CGT <-0; CGL <-0; CMT <-0; CAT <-0; CRT <-0
     
-    return(c('CB'=CB,'CKF'=CKF,'CLF'=CLF,'CGF'=CGF,'CMF'=CMF,'CAF'=CAF, 'CRF'=CRF,  
-             'CAT'=CAT, 'CMT'=CMT, 'CRT'=CRT, 'CKT'=CKT, 'CFil'=CFil, 'Curine'=Curine,
-             'CLT'=CLT, 'Cbile'=Cbile, 'CGT'=CGT, 'CGL'=CGL, 'Cfeces'=Cfeces,
-             'CBf'=CBf, 'CKFf'=CKFf, 'CLFf'=CLFf, 'CGFf'=CGFf, 'CMFf'=CMFf, 'CAFf'=CAFf, 'CRFf'=CRFf, 'CKTf'=CKTf, 'CLTf'=CLTf,
-             'CLT'=CLT, 'CGT'=CGT,'CMT'=CMT, 'CAT'=CAT, 'CRT'=CRT, 'CGL'=CGL, 'Cbile'=Cbile, 'CFil'=CFil, 'Cfeces'=Cfeces
+    return(c('MBart'=MBart, 'MBven'=MBven, 'MLN'=MLN, 'MBK'=MBK, 'MKF'=MKF, 'MKT'=MKT,
+             'MFil'=MFil, 'Murine'=Murine, 'MBL'=MBL, 'MLF'=MLF, 'MLT'=MLT, 'Mbile'=Mbile,
+             'MBG'=MBG, 'MGF'=MGF, 'MGT'=MGT, 'MGL'=MGL, 'Mfeces'=Mfeces, 'MBM'=MBM, 
+             'MMF'=MMF, 'MMT'=MMT, 'MBA'=MBA, 'MAF'=MAF, 'MAT'=MAT, 'MBR'=MBR, 'MRF'=MRF,'MRT'=MRT,
+             
+             'CKFf'=CKFf, 'CLNf'=CLNf, 'CLFf'=CLFf, 'CGFf'=CGFf, 'CMFf'=CMFf, 'CAFf'=CAFf, 'CRFf'=CRFf, 'CBfart'=CBfart, 
+             'CKBf'=CKBf, 'CLBf'=CLBf, 'CGBf'=CGBf, 'CMBf'=CMBf, 'CABf'=CABf, 'CRBf'=CRBf, 'CFil'=CFil, 'Cbile'=Cbile, 
+             'Cfeces'=Cfeces, 'CKTf'=CKTf, 'CLTf'=CLTf, 'CGT'=CGT, 'CGL'=CGL, 'CMT'=CMT, 'CAT'=CAT, 'CRT'=CRT
               
                 
              
@@ -563,7 +632,7 @@ obj.func <- function(x, dataset){
 }
 
 ################################################################################
-setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
+setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
 install.packages("openxlsx") # Run once then delete
 # Read data
 kudo_high_dose <- openxlsx::read.xlsx("Data/IV_male_rats_tissues_high_kudo_2007.xlsx")
