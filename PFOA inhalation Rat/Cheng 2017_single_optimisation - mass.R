@@ -2,6 +2,7 @@ library(deSolve)
 
 create.params <- function(user.input){
   with(as.list(user.input),{
+    # BW in kg
     # Cheng and Ng 2017 Table S1
     # Volume of tissue i as percentage of body weight (PVi, unitless) and % volume (Vi, m^3),
     #assuming the density of tissue is 1 g/mL.
@@ -159,16 +160,16 @@ create.params <- function(user.input){
     
     #passive diffusion rates
     
-    ClLFT= 3.71e+04 #uL/min/mg protein, Han et al. 2008
-    ClKFT= 17.5 #uL/min/mg protein, Yang et al. 2010
-    ClGFT= 18.1 #uL/min/mg protein, Kimura et al. 2017
-    ClMFT= 18.1 #same as ClGFT
-    ClAFT= 18.1 #same as ClGFT
-    ClRFT= 18.1 #same as ClGFT
+    ClLFT_unscaled= 67.8#uL/min/10^6 cells, Han et al. 2008
+    ClKFT_unscaled= 17.5 #uL/min/mg protein, Yang et al. 2010
+    ClGFT_unscaled= 18.1 #uL/min/mg protein, Kimura et al. 2017
+    ClMFT_unscaled= 18.1 #same as ClGFT
+    ClAFT_unscaled= 18.1 #same as ClGFT
+    ClRFT_unscaled= 18.1 #same as ClGFT
     
     #For all CMTs
     MW <- 414.07 #ug/umol, PFOA molecular weight
-    Acell = 4000 #m^2/cell
+    Acell = 4000 #um^2/cell
     
     #Kidney
     kidney_protein_per_rat <- 1000*(0.218+0.225+0.212)/3#mg of protein per rat  (Addis 1936)
@@ -176,10 +177,13 @@ create.params <- function(user.input){
     rat_kidney_weight_addis <- rat_weight_addis*0.0073 # kidney fraction to BW, Brown (1997)
     kidney_protein_per_gram <- kidney_protein_per_rat/rat_kidney_weight_addis #mg of protein/g kidney
     
-    kidney_cells = 2.14e07 #Bertram et al. 1992
-    Cmedium_K = 4*MW# Yang et al. 2010 4uM umol/L -->  ug/L
-    PeffKT = 1000*60*ClKFT*kidney_protein_per_rat/(Acell*Cmedium_K) #m/h
-    kKFKT <- PeffKT*Acell*kidney_cells/1000 #L/h
+    kidney_cells = 1.47e07 #cells/g https://doi.org/10.1038/s41598-024-53270-2
+    kidney_cells_total <- kidney_cells* (1000*VKT)
+    kidney_protein_total <- kidney_protein_per_gram* (1000*VKT)
+    ClKFT <- ClKFT_unscaled * kidney_protein_total #uL/min
+    #Cmedium_K = 4*MW# Yang et al. 2010 4uM umol/L -->  ug/L
+    PeffKT = (60*ClKFT/1000) /Acell #m/hour
+    kKFKT <- PeffKT*(Acell/10^6)*kidney_cells_total*1000 #L/h
     
     RAFOatp_k <- estimated_params[1]
     RAFOat1 <- estimated_params[2]
@@ -202,7 +206,7 @@ create.params <- function(user.input){
     
     #oat1 kidney
     VmK_Oat1_in_vitro= 2.6 #nmol/mg protein/min (Weaver et al. 2010)
-    VmK_Oat1_scaled = 60*VmK_Oat1_scaled*MW*kidney_protein_per_gram/1000  #physiologically scaled to in vivo, ug/L/h
+    VmK_Oat1_scaled = 60*VmK_Oat1_in_vitro*MW*kidney_protein_per_gram/1000  #physiologically scaled to in vivo, ug/L/h
     VmK_Oat1= VmK_Oat1_scaled*RAFOat1 #in vivo value, in  ug/L/h
     KmK_Oat1= 43.2 * MW #umol/L (Weaver et al. 2010) --> ug/L
     
@@ -217,8 +221,10 @@ create.params <- function(user.input){
     rat_weight_addis <- 200 #g, average rat weight in Addis, 1936
     rat_liver_weight_addis <- rat_weight_addis*0.0366 # liver fraction to BW, Brown (1997)
     liver_protein_per_gram <- liver_protein_per_rat/rat_liver_weight_addis #mg or protein/g liver
+    liver_cells = 117*10^6 #hepatocytes per g of liver (Sohlenius-Sternbeck et al. 2006) (2e09 cells: https://bionumbers.hms.harvard.edu/bionumber.aspx?s=n&v=4&id=110895)
     
-    liver_cells = 5.27e08 #Sohlenius-Sternbeck et al. 2006 (2e09 cells: https://bionumbers.hms.harvard.edu/bionumber.aspx?s=n&v=4&id=110895)
+    ClLFT <- ClLFT_unscaled*(liver_cells/(10^6))*(VLT*1000) #uL/min
+      
     Cmedium_L = 1*MW# Han et al. 2008 1uM umol/L -->  ug/L
     PeffLT = 1000*60*ClLFT*liver_protein_per_rat/(Acell*Cmedium_L) #m/h
     kLFLT <- PeffLT*Acell*liver_cells/1000 #L/h
@@ -240,11 +246,12 @@ create.params <- function(user.input){
     VmL_Ntcp = VmL_Ntcp_in_vitro*RAFNtcp #in vivo value, in  ug/L/h
     KmL_Ntcp= 20 * MW #umol/L, Ruggiero et al. 2021 --> ug/L
     
-    
     #Muscle
     muscle_cells= NA
     Cmedium_M = 1*MW# Kimura et al. 2017 1uM umol/L -->  ug/L
-    muscle_protein <- 24368 #mg (protein data from Cheek et al.,1971 and muscle mass from Caster et al.,1956)
+    muscle_protein <- 158.45 #mg/g muscle (protein data from Cheek et al.,1971 and muscle mass from Caster et al.,1956)
+    muscle_protein_tot <- muscle_protein * (VMT*1000)
+    ClMFT <- ClMFT_unscaled * muscle_protein_tot#uL/min
     PeffMT = 1000*60*ClMFT*muscle_protein/(Acell*Cmedium_M) #m/h
     
     kBMF <- ((1/QBM) + 1/(PeffB * AM))^(-1)
@@ -255,6 +262,8 @@ create.params <- function(user.input){
     gut_cells = NA
     Cmedium_G = 1*MW# Kimura et al. 2017 1uM umol/L -->  ug/L
     gut_protein <- muscle_protein#NA#5034
+    gut_protein_total <- gut_protein*(1000*VGT)
+    ClGFT <- ClGFT_unscaled *gut_protein_total#uL/min
     PeffGT = 1000*60*ClGFT*gut_protein/(Acell*Cmedium_G) #m/h
     kGFGT <- PeffGT*Acell*gut_cells/1000 #L/h
     
@@ -265,6 +274,8 @@ create.params <- function(user.input){
     adipose_cells = NA
     Cmedium_A = 1*MW# Kimura et al. 2017 1uM umol/L -->  ug/L
     adipose_protein <- muscle_protein#NA#5034
+    adipose_protein_total <- adipose_protein * (1000*VAT)
+    ClAFT <- ClAFT_unscaled * adipose_protein_total#uL/min
     PeffAT = 1000*60*ClAFT*adipose_protein/(Acell*Cmedium_A) #m/h
     kAFAT <- PeffAT*Acell*adipose_cells/1000 #L/h
     kBAF <- ((1/QBA) + 1/(PeffB * AA))^(-1)
@@ -273,10 +284,11 @@ create.params <- function(user.input){
     RoB_cells = NA
     Cmedium_R = 1*MW# Kimura et al. 2017 1uM umol/L -->  ug/L
     RoB_protein <- muscle_protein#18456
+    RoB_protein_total <- RoB_protein * (1000* VRT)
+    ClRFT <- ClRFT_unscaled * RoB_protein_total#uL/min
     PeffRT = 1000*60*ClRFT*RoB_protein/(Acell*Cmedium_R) #m/h
     kRFRT <- PeffRT*Acell*RoB_cells/1000 #L/h
     kBRF <- ((1/QBR) + 1/(PeffB *AR))^(-1)
-    
     
     return(list('PVB'=PVB, 'VB'=VB, 'PVplsma'=PVplasma, 
                 'Vplasma'=Vplasma, 'PVK'=PVK, 'VK'=VK, 'PVKB'=PVKB, 'VKB'=VKB, 
