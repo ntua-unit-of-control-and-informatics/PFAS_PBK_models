@@ -11,10 +11,14 @@ create.params <- function(user.input){
     
     #======Table S1=======#    
     
+    #Blood
     PVB <- 54e-3 #13.5 mL/244 g=0.055 mL/g~55e-3 mL/g (kg=L)
     VB <- PVB * BW #blood volume kg=L
     PVplasma <- 31.2e-3 
     Vplasma <- PVplasma * BW #plasma volume kg=L
+    Vven <- BW*11.3/250 	#volume of venous plasma (L); from doi:10.1007/bf02353860
+    Vart <- BW*5.6/250	#volume of arterial plasma (L); from doi:10.1007/bf02353860
+    #Kidney
     PVK <- 7.3e-3 
     VK <- PVK * BW #kidney volume kg=L
     PVKB <- 0.16 
@@ -23,6 +27,7 @@ create.params <- function(user.input){
     VKF <- PVKF * PVK * BW #kidney interstitial fluid volume kg=L
     VKT <- VK - VKF #kidney tissue volume kg=L
     VFil <- 0.25 #renal filtrate volume kg=L
+    #Liver
     PVL <- 3.66e-2 
     VL <- PVL * BW #liver volume kg=L
     PVLB <- 0.21 
@@ -32,6 +37,7 @@ create.params <- function(user.input){
     VLT <- VL - VLF #liver tissue volume kg=L
     PVbile <- 0.004 
     Vbile <- PVbile * PVL * BW #bile volume kg=L
+    #Gut
     PVG <- 2.69e-2 
     VG <- PVG * BW #gut volume kg=L
     PVGB <- 0.034
@@ -41,6 +47,7 @@ create.params <- function(user.input){
     VGT <- VG - VGF #gut tissue volume kg=L
     PVGL <- 4.5e-2 
     VGL <- PVGL * BW #gut lumen volume kg=L
+    #Muscle
     PVM <- 40.43e-2 
     VM <- PVM * BW #muscle volume kg=L
     PVMB <- 0.04 
@@ -48,6 +55,7 @@ create.params <- function(user.input){
     PVMF <- 0.054
     VMF <- PVMF * PVM * BW #muscle interstitial fluid volume kg=L
     VMT <- VM - VMF #muscle tissue volume kg=L
+    #Adipose
     PVA <- 7e-2 
     VA <- PVA * BW #adipose volume kg=L
     PVAB <- 0.02 
@@ -55,6 +63,7 @@ create.params <- function(user.input){
     PVAF <- 0.174
     VAF <- PVAF * PVA * BW #adipose interstitial fluid volume kg=L
     VAT <- VA - VAF #adipose tissue volume kg=L
+    #RoB
     PVR <- 1 - PVB - PVK - PVL - PVG - PVM - PVA
     VR <- PVR * BW #volume of the rest of the body kg=LL
     PVRB <- 0.036 
@@ -62,12 +71,20 @@ create.params <- function(user.input){
     PVRF <- 0.18  
     VRF <- PVRF * PVR * BW #interstitial fluid volume of the rest of body kg=L
     VRT <- VR - VRF #tissue volume of the rest of body kg=L
-    
-    PVLN <- 1.15/280#Shah & Betts, 2012. https://doi.org/10.1007/s10928-011-9232-2
+    #Lymph nodes
+    PVLN <- 1.15/280 #Shah & Betts, 2012. https://doi.org/10.1007/s10928-011-9232-2
     VLN <- PVLN*BW#lymph fluid volume
-    
-    Vven<- BW*11.3/250 	#volume of venous plasma (L); from doi:10.1007/bf02353860
-    Vart <- BW*5.6/250	#volume of arterial plasma (L); from doi:10.1007/bf02353860
+    #Lung
+    PVLu < - 0.48 #Brown et al. 1997, p 418-19 mean of values for male rat
+    VLu <- PVLu * BW
+    PVLuB <- 0.09*0.55 #Brown et al. 1997, p 459 --> capillary blood occupied 9% of the lung volume
+    VLuB <-PVLuB*BW #volume of the blood of lung kg=L
+    PVLuF <- 0.263/280 #Shah & Betts, 2012. https://doi.org/10.1007/s10928-011-9232-2
+    VLuF <- PVLuF*BW #lung interstitial fluid volume
+    PVLuAF <- 0.4/1000/275 #0.4 mL Leslie et al, 1989 https://doi.org/10.1164/ajrccm/139.2.360 --> Watkins & Rannels 1979 https://doi.org/10.1152/jappl.1979.47.2.325  
+    VLuAF <- PVLuAF*BW #lung alveolar lining fluid volume kg=LL
+    PVLuT <- VLu - VLuF - VLuAF # einai ok ???
+    VLuT <- PVLuT * BW #lung tissue volume kg=L
       
     #Capillary surface area for each tissue (Ai) as percentage of body weight
     #or weight of corresponding tissue (PAi, m^2/g) and surface area (m^2)
@@ -88,6 +105,8 @@ create.params <- function(user.input){
     AA <- PAA * VA * 1e7 #adipose surface area (m^2)
     PAR <- 100e-4
     AR <- PAR * VR * 1e7 #surface area of rest of body (m^2)
+    PLu <- 250e-4
+    ALu <- PLu* VLu * 1e7 #surface area of rest of body (m^2)
     
     #Effective permeability (Peff, in m/h) for blood (B), liver(L), kidney(K),
     #gut(G),adipose(A), muscle(M), rest of body(R)
@@ -118,7 +137,8 @@ create.params <- function(user.input){
     QBA <- PQBA * Qcardiac #L/h
     PQBR = 1 - PQBK - PQBG - PQBL - PQBM - PQBA
     QBR = PQBR * Qcardiac #L/h
-    
+    PQBLu <- 2.1/100
+    QBLu <- PQBLu * Qcardiac #L/h
     
     #Flow rate of fluids including feces, bile, urine and glomerular filtration rate (GFR), in L/h
     
@@ -142,6 +162,8 @@ create.params <- function(user.input){
     CalbRF <- 73e-3*7.8 #n=7.8 binding sites (mol/m3)
     CalbLN <- CalbGF #assumption based on https://doi.org/10.1016/j.jconrel.2020.07.046
     
+    CalbLuAF <- 10/100 * CalbB #based on Woods et al. 2015 statement https://doi.org/10.1016/j.jconrel.2015.05.269
+      
     #Alpha2mu-globulin concentration in kidney tissue (mol/m3)
 
     Ca2uKT <- 110e-3
@@ -237,7 +259,7 @@ create.params <- function(user.input){
     #Cmedium_L = 1*MW# Han et al. 2008 1uM umol/L -->  ug/L
     #PeffLT = 1000*60*ClLFT*liver_protein_per_rat/(Acell*Cmedium_L) #m/h
     #kLFLT <- PeffLT*Acell*liver_cells/1000 #L/h
-    kBLF <- ((1/QBL) + 1/(1000*PeffB * AL))^(-1) #multiplication is to convert m3 -> L
+    #kBLF <- ((1/QBL) + 1/(1000*PeffB * AL))^(-1) #multiplication is to convert m3 -> L
     kbileLT <- PeffL * AL
     
     RAFOatp_l <- estimated_params[4]
@@ -264,7 +286,7 @@ create.params <- function(user.input){
     kMFMT <-  (60*ClMFT)/1e06 #L/h
     
     #PeffMT = 1000*60*ClMFT*muscle_protein/(Acell*Cmedium_M) #m/h
-    kBMF <- ((1/QBM) + 1/(1000*PeffB * AM))^(-1) #multiplication is to convert m3 -> L
+    #kBMF <- ((1/QBM) + 1/(1000*PeffB * AM))^(-1) #multiplication is to convert m3 -> L
     #kMFMT <- ClMFT*muscle_protein*VMT/60
     
     
@@ -278,7 +300,7 @@ create.params <- function(user.input){
     
     #PeffGT = 1000*60*ClGFT*gut_protein/(Acell*Cmedium_G) #m/h
     #kGFGT <- PeffGT*Acell*gut_cells/1000 #L/h
-    kBGF <- ((1/QBG) + 1/(1000*PeffB * AG))^(-1) #multiplication is to convert m3 -> L
+    #kBGF <- ((1/QBG) + 1/(1000*PeffB * AG))^(-1) #multiplication is to convert m3 -> L
     kGLGT <- PeffG * AGL
    
     #Adipose
@@ -291,7 +313,7 @@ create.params <- function(user.input){
     
     #PeffAT = 1000*60*ClAFT*adipose_protein/(Acell*Cmedium_A) #m/h
     #kAFAT <- PeffAT*Acell*adipose_cells/1000 #L/h
-    kBAF <- ((1/QBA) + 1/(1000*PeffB * AA))^(-1) #multiplication is to convert m3 -> L
+    #kBAF <- ((1/QBA) + 1/(1000*PeffB * AA))^(-1) #multiplication is to convert m3 -> L
     
     #Rest of body
     RoB_cells = NA
@@ -303,7 +325,7 @@ create.params <- function(user.input){
     
     #PeffRT = 1000*60*ClRFT*RoB_protein/(Acell*Cmedium_R) #m/h
     #kRFRT <- PeffRT*Acell*RoB_cells/1000 #L/h
-    kBRF <- ((1/QBR) + 1/(1000*PeffB *AR))^(-1) #multiplication is to convert m3 -> L
+    #kBRF <- ((1/QBR) + 1/(1000*PeffB *AR))^(-1) #multiplication is to convert m3 -> L
     
     return(list('PVB'=PVB, 'VB'=VB, 'PVplsma'=PVplasma, 
                 'Vplasma'=Vplasma, 'PVK'=PVK, 'VK'=VK, 'PVKB'=PVKB, 'VKB'=VKB, 
@@ -316,7 +338,8 @@ create.params <- function(user.input){
                 'VMT'=VMT,'PVA'=PVA, 'VA'=VA, 'PVAB'=PVAB, 'VAB'=VAB, 'PVAF'=PVAF, 
                 'VAF'=VAF, 'VAT'=VAT, 'PVR'=PVR, 'VR'=VR, 'PVRB'=PVRB, 'VRB'=VRB, 
                 'PVRF'=PVRF, 'VRF'=VRF, 'VRT'=VRT, 'VLN' = VLN, 'Vven' = Vven,
-                'Vart' = Vart
+                'Vart' = Vart, 'PVLu'=PVLu, 'PVLuB'=PVLuB, 'VLuB'=VLuB, 'PVLuF'=PVLuF, 'VLuF'=VLuF,
+                'PVLuAF'=PVLuAF, 'VLuAF'=VLuAF, 'PVLuT'=PVLuT, 'VLuT'=VLuT,
                 
                 'AKG'=AKG, 'PAL'=PAL, 'AL'=AL, 'PAG'=PAG, 'AG'=AG, 'PAGL'=PAGL,
                 'AGL'=AGL, 'PAM'=PAM, 'AM'=AM, 'PAA'=PAA, 'AA'=AA, 'PAR'=PAR, 'AR'=AR,
@@ -326,7 +349,7 @@ create.params <- function(user.input){
                 
                 'Qcardiac'=Qcardiac, 'PQBK'=PQBK, 'QBK'=QBK, 'PQBG'=PQBG, 'QBG'=QBG, 
                 'PQBL'=PQBL, 'QBL'=QBL, 'PQBM'=PQBM, 'QBM'=QBM, 'PQBA'=PQBA, 'QBA'=QBA,
-                'PQBR'=PQBR, 'QBR'=QBR,
+                'PQBR'=PQBR, 'QBR'=QBR, 'PQBLu'=PQBLu, 'QBLu'=QBLu,
                 'Qfeces'=Qfeces, 'PQbile'=PQbile, 'Qbile'=Qbile, 'PQurine'=PQurine,
                 'PQGFR'=PQGFR, 'QGFR'=QGFR,'Qurine'=Qurine, 'QGFR'=QGFR,
                 
@@ -411,6 +434,12 @@ ode.func <- function(time, inits, params){
     CRFf = MRFf/VRF
     CRT = MRT/VRT
     
+    #Lung
+    CLuBf = MLuBf/VLuB
+    CLuFf = MLuFf/VLuF
+    CLuT = MLuT/VLuT
+    CLuAFf = MLuAFf/VLuAF
+    
     
     # Concentrations in ug/L
     # k in 1/h
@@ -445,13 +474,13 @@ ode.func <- function(time, inits, params){
     dMBart = CLuBf *QBLu - CBfart*(QBK+QBL+ QBG+ QBM+ QBA+ QBR)-QGFR*CBfart
     
     #Venous Blood
-    dMBven = - CBfven *QBLu +  CLNf*(QBK/500+QBL/500+QBG/500+QBM/500+QBA/500+QBR/500)+
+    dMBven = - CBfven *QBLu +  CLNf*(QBK/500+QBL/500+QBG/500+QBM/500+QBA/500+QBR/500+QBLu/500)+
               (QBK-QBK/500)*CKBf+(QBL-QBL/500)*CLBf+(QBG-QBG/500)*CGBf +
-               (QBM-QBM/500)*CMBf+ (QBA/500)*CABf+(QBR-QBR/500)*CRBf
+               (QBM-QBM/500)*CMBf+ (QBA/500)*CABf+(QBR-QBR/500)*CRBf- (QBLu-QBLu/500)*CLuBf
       
     #Lymph nodes
     dMLN = CKFf*QBK/500 + CLFf*QBL/500 +  CGFf*QBG/500 + CMFf*QBM/500 + CAFf*QBA/500+
-      CRFf*QBR/500 - CLNf*(QBK/500+QBL/500+QBG/500+QBM/500+QBA/500+QBR/500)
+      CRFf*QBR/500 + CLuBf*QBLu/500 - CLNf*(QBK/500+QBL/500+QBG/500+QBM/500+QBA/500+QBR/500+QBLu/500)
     
     
     #Kidney
@@ -513,7 +542,7 @@ ode.func <- function(time, inits, params){
     #Rest of body
     
     #blood subcompartment
-    dMBR = QBR*CBfart - (QBR-QBR/500)*CRBf - PeffRT*AR*(CBf-CRFf) - CRBf*QBR/500
+    dMBR = QBR*CBfart - (QBR-QBR/500)*CRBf - PeffR*AR*(CBf-CRFf) - CRBf*QBR/500
     #interstitial fluid subcompartment 
     dMRF = CRBf*QBR/500 - CRFf*QBR/500 + PeffR*AR*(CBf-CRFf) - kRFRT*(CRT-CRFf) 
     #Rest of body tissue subcompartment 
@@ -522,7 +551,14 @@ ode.func <- function(time, inits, params){
     
     #Lung Tissue subcompartment
     
-    
+    #blood subcompartment
+    dMBLu = CBfven *QBLu - (QBLu-QBLu/500)*CLuBf - PeffLu*ALu*(CBf-CLuFf) - CLuBf*QBLu/500
+    #interstitial fluid subcompartment
+    dMLuF = CLuBf*QBLu/500 - CLuFf*QBLu/500 + PeffLu*ALu*(CBf-CLuFf) - kLuFLuT*(CLuT-CLuFf)
+    #Lung tissue
+    dMLuT = kLuFLuT*(CLuT-CLuFf) - kLuTLuAF * (CLuAF-CLuT)
+    #Alveolar lining fluid
+    dMLuAF = kLuTLuAF * (CLuAF-CLuT)
   
     
     
