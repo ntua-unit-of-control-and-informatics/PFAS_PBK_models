@@ -361,7 +361,9 @@ ode.func <- function(time, inits, params){
     #====================PFOA mass balance at each tissue or fluid compartment==============================     
       
     # Blood concentration
-    CBf = MBf/VB
+    CBfven = MBart/Vven
+    CBfart <- 
+    
     # Kidney interstitial fluid concentration
     CKFf = MKFf/VKF
     # Kidney blood concentration
@@ -397,50 +399,82 @@ ode.func <- function(time, inits, params){
     CRFf = MRFf/VRF
     CRT = MRT/VRT
     
+    #Lymph node
+    CLN <- MLN /Vlymph
+    
     # Concentrations in ug/L
     # k in 1/h
-   
+      
+    #Cfree calculation using the expression of free fraction ff
+    CBfart = CBart * 1.0 / (1.0 + CalbB * Ka)
+    CBfven= CBven * 1.0 / (1.0 + CalbB * Ka)
+    CLNf = CLN * 1.0 / (1.0 + CalbB * Ka)  # find albumin concentration in Lymph Nodes
+    
+    
+    #Calculation of free concentrations in organ blood
+    CKBf = CKB * 1.0 / (1.0 + CalbB * Ka)
+    CLBf = CLB * 1.0 / (1.0 + CalbB * Ka)
+    CGBf = CGB * 1.0 / (1.0 + CalbB * Ka)
+    CMBf = CMB * 1.0 / (1.0 + CalbB * Ka)
+    CABf = CAB * 1.0 / (1.0 + CalbB * Ka)
+    CRBf = CRB * 1.0 / (1.0 + CalbB * Ka)
+    
+    #Calculation of free concentrations in organ interstitial fluid
+    CKFf = CKF * 1.0 / (1.0 + CalbKF * Ka)
+    CLFf = CLF * 1.0 / (1.0 + CalbLF * Ka)
+    CGFf = CGF * 1.0 / (1.0 + CalbGF * Ka)
+    CMFf = CMF * 1.0 / (1.0 + CalbMF * Ka)
+    CAFf = CAF * 1.0 / (1.0 + CalbAF * Ka)
+    CRFf = CRF * 1.0 / (1.0 + CalbRF * Ka)
+    
+    #Calculation of free concentrations in organ where we have tissue binding
+    CKTf = CKT * 1.0 / (1.0 + Ca2uKT * Ka2u + CLfabpKT * KLfabp)
+    CLTf = CLT * 1.0 / (1.0 + CLfabpLT * KLfabp)
     
     #Arterial Blood
-    dMBart = - QBK*CBfart - QBL*CBfart - QBG*CBfart - QBM*CBfart - QBA*CBfart - QBR*CBfart
+    dMBart = CLuBf *QBLu - CBfart*(QBK+QBL+ QBG+ QBM+ QBA+ QBR)-QGFR*CBfart
     
     #Venous Blood
-    dMBven = QBK*CKBf + (QBK+QBK/500)*CLNf + QBL*CLBf + (QBL+QBL/500)*CLNf + 
-             QBG*CGBf + (QBG+QBG/500)*CLNf + QBM*CMBf + (QBM+QBM/500)*CLNf +
-             QBA*CABf + (QBA+QBA/500)*CLNf + QBR*CRBf + (QBR+QBR/500)*CLNf 
-    
+    dMBven = - CBfven *QBLu +  CLNf*(QBK/500+QBL/500+QBG/500+QBM/500+QBA/500+QBR/500)+
+              (QBK-QBK/500)*CKBf+(QBL-QBL/500)*CLBf+(QBG-QBG/500)*CGBf +
+               (QBM-QBM/500)*CMBf+ (QBA/500)*CABf+(QBR-QBR/500)*CRBf
+      
     #Lymph nodes
-    dMLN = QBK/500*CKFf - (QBK+QBK/500)*CLNf + QBL/500*CLFf - (QBL+QBL/500)*CLNf +
-      QBG/500*CGFf - (QBG+QBG/500)*CLNf + QBM/500*CMFf - (QBM+QBM/500)*CLNf +
-      QBA/500*CAFf - (QBA+QBA/500)*CLNf + QBR/500*CRFf - (QBR+QBR/500)*CLNf
+    dMLN = CKFf*QBK/500 + CLFf*QBL/500 +  CGFf*QBG/500 + CMFf*QBM/500 + CAFf*QBA/500+
+      CRFf*QBR/500 - CLNf*(QBK/500+QBL/500+QBG/500+QBM/500+QBA/500+QBR/500)
+    
     
     #Kidney
     
     #blood subcompartment
-    dMBK = QBK*CBfart - QBK*CKBf - PeffK*AK*(CBf-CKFf) - QBK/500*CKBf
+    dMBK = QBK*CBfart - (QBK-QBK/500)*CKBf - PeffK*AK*(CBf-CKFf) - CKBf*QBK/500 
     #interstitial fluid subcompartment
-    dMKF = QBK/500*CKBf - QBK/500*CKFf + PeffK*AK*(CBf-CKFf) - kKFKT*(CKFf-CKTf) - (VmK_Oat1*CKFf/KmK_Oat1+CKFf)*VKF - (VmK_Oat3*CKFf/KmK_Oat3+CKFf)*VKF #+ (VmK_Osta*CKTf/KmK_Osta+CKTf)
+    dMKF = CKBf*QBK/500 - CKFf*QBK/500 + PeffK*AK*(CBf-CKFf) - kKFKT*(CKFf-CKTf) -
+            (VmK_Oat1*CKFf/KmK_Oat1+CKFf)*VKF - (VmK_Oat3*CKFf/KmK_Oat3+CKFf)*VKF #+ (VmK_Osta*CKTf/KmK_Osta+CKTf)
     #Kidney proximal tubule cells subcompartment
-    dMKT = kKFKT*(CKFf-CKTf) - kFKT*(CKTf - CFil) + (VmK_Oatp*CFil/KmK_Oatp+CFil)*VFil + (VmK_Oat1*CKFf/KmK_Oat1+CKFf)*VKF + (VmK_Oat3*CKFf/KmK_Oat3+CKFf)*VKF # + (VmK_Osta*CKTf/KmK_Osta+CKTf)
-    dMFil = kBF*(CBfart-CFil) +  kFKT*(CKTf - CFil) - (VmK_Oatp*CFil/KmK_Oatp+CFil)*VFil - (Qurine/VFil)*CFil
+    dMKT = kKFKT*(CKFf-CKTf) - kFKT*(CKTf - CFil) + (VmK_Oatp*CFil/KmK_Oatp+CFil)*VFil +
+            (VmK_Oat1*CKFf/KmK_Oat1+CKFf)*VKF + (VmK_Oat3*CKFf/KmK_Oat3+CKFf)*VKF # + (VmK_Osta*CKTf/KmK_Osta+CKTf)
+    dMFil =  QGFR*CBfart+ kFKT*(CKTf - CFil) - (VmK_Oatp*CFil/KmK_Oatp+CFil)*VFil - (Qurine/VFil)*CFil
     dMurine = (Qurine/VFil)*CFil
     
     #Liver
     
     #blood subcompartment
-    dMBL = QBL*CBfart - QBL*CLBf - PeffL*AL*(CBf-CLFf) - QBL/500*CLBf
+    dMBL = QBL*CBfart - (QBL-QBL/500)*CLBf - PeffL*AL*(CBf-CLFf) - CLBf*QBL/500
     #interstitial fluid subcompartment 
-    dMLF = QBL/500*CLBf - QBL/500*CLFf + PeffL*AL*(CBf-CLFf) - kLFLT*(CLFf-CLTf) - (VmL_Oatp*CLFf/KmL_Oatp+CLFf) - (VmL_Ntcp*CLFf/KmL_Ntcp+CLFf)
+    dMLF = CLBf*QBL/500 - CLFf*QBL/500 + PeffL*AL*(CBf-CLFf) - kLFLT*(CLFf-CLTf) - 
+          (VmL_Oatp*CLFf/KmL_Oatp+CLFf)*VLF - (VmL_Ntcp*CLFf/KmL_Ntcp+CLFf)*VLF
     #Liver tissue subcompartment
-    dMLT = kLFLT*(CLFf-CLTf) + (VmL_Oatp*CLFf/KmL_Oatp+CLFf) + (VmL_Ntcp*CLFf/KmL_Ntcp+CLFf) - kbileLT*(CLTf-Cbile)
+    dMLT = kLFLT*(CLFf-CLTf) + (VmL_Oatp*CLFf/KmL_Oatp+CLFf)*VLF + 
+                     (VmL_Ntcp*CLFf/KmL_Ntcp+CLFf)*VLF - kbileLT*(CLTf-Cbile)
     dMbile = kbileLT*(CLTf-Cbile) - (Qbile/Vbile)*Cbile
     
     
     #Gut
     #blood subcompartment
-    dMBG = QBG*CBfart - QBG*CGBf - PeffG*AG*(CBf-CGFf) - QBG/500*CGBf
+    dMBG = QBG*CBfart - (QBG-QBG/500)*CGBf - PeffG*AG*(CBf-CGFf) - CGBf*QBG/500
     #interstitial fluid subcompartment 
-    dMGF = QBG/500*CGBf - QBG/500*CGFf + PeffG*AG*(CBf-CGFf) - kGFGT*(CGFf-CGT) 
+    dMGF = CGBf*QBG/500 - CGFf*QBG/500 + PeffG*AG*(CBf-CGFf) - kGFGT*(CGFf-CGT) 
     #Gut tissue subcompartment
     dMGT = kGFGT*(CGFf-CGT)  - kGLGT*(CGT-CGL)
     # Gut lumen
@@ -451,27 +485,27 @@ ode.func <- function(time, inits, params){
     #Muscle
     
     #blood subcompartment
-    dMBM = QBM*CBfart - QBM*CMBf - PeffM*AM*(CBf-CMFf) - QBM/500*CMBf
+    dMBM = QBM*CBfart - (QBM-QBM/500)*CMBf - PeffM*AM*(CBf-CMFf) - CMBf*QBM/500
     #interstitial fluid subcompartment 
-    dMMF = QBM/500*CMBf - QBM/500*CMFf + PeffM*AM*(CBf-CMFf) - kMFMT*(CMFf- CMT)
+    dMMF = CMBf*QBM/500 - CMFf*QBM/500 + PeffM*AM*(CBf-CMFf) - kMFMT*(CMFf- CMT)
     #Muscle tissue subcompartment 
     dMMT = kMFMT*(CMFf- CMT)
     
     #Adipose
     
     #blood subcompartment
-    dMBA = QBA*CBfart - QBA*CABf - PeffA*AA*(CBf-CAFf) - QBA/500*CABf
+    dMBA = QBA*CBfart - (QBA/500)*CABf - PeffA*AA*(CBf-CAFf) - CABf*QBA/500
     #interstitial fluid subcompartment 
-    dMAF = QBA/500*CABf - QBA/500*CAFf + PeffA*AA*(CBf-CAFf) - kAFAT*(CAFf-CAT) 
+    dMAF = CABf*QBA/500 - CAFf*QBA/500 + PeffA*AA*(CBf-CAFf) - kAFAT*(CAFf-CAT) 
     #Adipose tissue subcompartment 
     dMAT =  kAFAT*(CAFf-CAT) 
     
     #Rest of body
     
     #blood subcompartment
-    dMBR = QBR*CBfart - QBR*CRBf - PeffRT*AR*(CBf-CRFf) - QBR/500*CRBf
+    dMBR = QBR*CBfart - (QBR-QBR/500)*CRBf - PeffRT*AR*(CBf-CRFf) - CRBf*QBR/500
     #interstitial fluid subcompartment 
-    dMRF = QBR/500*CRBf - QBR/500*CRFf + PeffR*AR*(CBf-CRFf) - kRFRT*(CRT-CRFf) 
+    dMRF = CRBf*QBR/500 - CRFf*QBR/500 + PeffR*AR*(CBf-CRFf) - kRFRT*(CRT-CRFf) 
     #Rest of body tissue subcompartment 
     dMRT = kRFRT*(CRT-CRFf)
     
@@ -479,19 +513,7 @@ ode.func <- function(time, inits, params){
     #Lung Tissue subcompartment
     
     
-    
-    #Cfree calculation using the expression of free fraction ff
-    CBfart = CBart * 1.0 / (1.0 + CalbB * Ka)
-    CBf = CBf * 1.0 / (1.0 + CalbB * Ka)
-    CKFf = CKF * 1.0 / (1.0 + CalbKF * Ka)
-    CLFf = CLF * 1.0 / (1.0 + CalbLF * Ka)
-    CGFf = CGF * 1.0 / (1.0 + CalbGF * Ka)
-    CMFf = CMF * 1.0 / (1.0 + CalbMF * Ka)
-    CAFf = CAF * 1.0 / (1.0 + CalbAF * Ka)
-    CRFf = CRF * 1.0 / (1.0 + CalbRF * Ka)
-    CKTf = CKT * 1.0 / (1.0 + Ca2uKT * Ka2u + CLfabpKT * KLfabp)
-    CLTf = CLT * 1.0 / (1.0 + CLfabpLT * KLfabp)
-    
+  
     
     
     Cblood <- CB * VB /Vplasma
