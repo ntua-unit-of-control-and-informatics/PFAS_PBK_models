@@ -63,6 +63,12 @@ create.params <- function(user.input){
     VRF <- PVRF * PVR * BW #interstitial fluid volume of the rest of body kg=L
     VRT <- VR - VRF #tissue volume of the rest of body kg=L
     
+    PVLN <- 1.15/280#Shah & Betts, 2012. https://doi.org/10.1007/s10928-011-9232-2
+    VLN <- PVLN*BW#lymph fluid volume
+    
+    Vven<- BW*11.3/250 	#volume of venous plasma (L); from doi:10.1007/bf02353860
+    Vart <- BW*5.6/250	#volume of arterial plasma (L); from doi:10.1007/bf02353860
+      
     #Capillary surface area for each tissue (Ai) as percentage of body weight
     #or weight of corresponding tissue (PAi, m^2/g) and surface area (m^2)
     
@@ -134,7 +140,7 @@ create.params <- function(user.input){
     CalbMF <- 146e-3*7.8 #n=7.8 binding sites (mol/m3)
     CalbAF <- 73e-3*7.8 #n=7.8 binding sites (mol/m3)
     CalbRF <- 73e-3*7.8 #n=7.8 binding sites (mol/m3)
-    
+    CalbLN <- CalbGF #assumption based on https://doi.org/10.1016/j.jconrel.2020.07.046
     
     #Alpha2mu-globulin concentration in kidney tissue (mol/m3)
 
@@ -309,7 +315,8 @@ create.params <- function(user.input){
                 'PVM'=PVM, 'VM'=VM, 'PVMB'=PVMB, 'VMB'=VMB, 'PVMF'=PVMF, 'VMF'=VMF, 
                 'VMT'=VMT,'PVA'=PVA, 'VA'=VA, 'PVAB'=PVAB, 'VAB'=VAB, 'PVAF'=PVAF, 
                 'VAF'=VAF, 'VAT'=VAT, 'PVR'=PVR, 'VR'=VR, 'PVRB'=PVRB, 'VRB'=VRB, 
-                'PVRF'=PVRF, 'VRF'=VRF, 'VRT'=VRT,
+                'PVRF'=PVRF, 'VRF'=VRF, 'VRT'=VRT, 'VLN' = VLN, 'Vven' = Vven,
+                'Vart' = Vart
                 
                 'AKG'=AKG, 'PAL'=PAL, 'AL'=AL, 'PAG'=PAG, 'AG'=AG, 'PAGL'=PAGL,
                 'AGL'=AGL, 'PAM'=PAM, 'AM'=AM, 'PAA'=PAA, 'AA'=AA, 'PAR'=PAR, 'AR'=AR,
@@ -324,8 +331,9 @@ create.params <- function(user.input){
                 'PQGFR'=PQGFR, 'QGFR'=QGFR,'Qurine'=Qurine, 'QGFR'=QGFR,
                 
                 'CalbB'=CalbB, 'CalbKF'=CalbKF, 'CalbLF'=CalbLF, 'CalbGF'=CalbGF, 
-                'CalbMF'=CalbMF, 'CalbAF'=CalbAF, 'CalbRF'=CalbRF,'Ca2uKT'=Ca2uKT,
-                'CLfabpKT'=CLfabpKT,'CLfabpLT'=CLfabpLT,
+                'CalbMF'=CalbMF, 'CalbAF'=CalbAF, 'CalbRF'=CalbRF,'CalbLN' = CalbLN,
+                
+                'Ca2uKT'=Ca2uKT,'CLfabpKT'=CLfabpKT,'CLfabpLT'=CLfabpLT, 
                 
                 'Ka'=Ka, 'Ka2u'=Ka2u, 'KLfabp'=KLfabp,
                 
@@ -361,8 +369,12 @@ ode.func <- function(time, inits, params){
     #====================PFOA mass balance at each tissue or fluid compartment==============================     
       
     # Blood concentration
-    CBfven = MBart/Vven
-    CBfart <- 
+    CBfven <- MBven/Vven
+    CBfart <- MBart/Vart
+    
+    #Lymph node
+    CLN <- MLN /VLN
+    
     
     # Kidney interstitial fluid concentration
     CKFf = MKFf/VKF
@@ -399,8 +411,6 @@ ode.func <- function(time, inits, params){
     CRFf = MRFf/VRF
     CRT = MRT/VRT
     
-    #Lymph node
-    CLN <- MLN /Vlymph
     
     # Concentrations in ug/L
     # k in 1/h
