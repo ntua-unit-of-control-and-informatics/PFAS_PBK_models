@@ -558,7 +558,9 @@ ode.func <- function(time, inits, params){
     #Lung tissue
     dMLuT = kLuFLuT*(CLuT-CLuFf) - kLuTLuAF * (CLuAF-CLuT)
     #Alveolar lining fluid
-    dMLuAF = kLuTLuAF * (CLuAF-CLuT)
+    dMLuAF = kLuTLuAF * (CLuAF-CLuT) - Qp * CLuAF/PLungA
+    #depot
+    dMDep = Qp * CLuAF/PLungA
   
     
     
