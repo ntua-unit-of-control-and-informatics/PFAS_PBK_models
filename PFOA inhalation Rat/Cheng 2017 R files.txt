@@ -10,3 +10,9 @@ deletion of cell-water concentration ratios, change of bGTGL <- kGLGT/(VGT * CRs
 
 Cheng 2017_single_optimisation: file for optimising Cheng model based on a single dataset. In the future this code will
 be extended to allow optimisation of parameters by fitting on multiple datasets 
+
+Cheng 2017_single_optimisation - mass_p:
+model with lungs, tested with Kudo et al., 2007 data, with good prediciton results AAFE ~ 1.75
+
+Cheng 2017_single_optimisation - mass_p-2
+add more CMTs in the model 
