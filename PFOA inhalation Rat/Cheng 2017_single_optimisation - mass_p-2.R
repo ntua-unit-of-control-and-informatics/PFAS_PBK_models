@@ -90,9 +90,9 @@ create.params <- function(user.input){
     VLu <- PVLu * BW
     PVLuB <- 0.09*VLu #Brown et al. 1997, p 459 --> capillary blood occupied 9% of the lung volume
     VLuB <- PVLuB * PVLu * BW #volume of the blood of lung kg=L
-    PVLuF <- 0.263/280 #Shah & Betts, 2012. https://doi.org/10.1007/s10928-011-9232-2
+    PVLuF <- 0.263/280 #0.263 ml, Shah & Betts, 2012. https://doi.org/10.1007/s10928-011-9232-2
     VLuF <- PVLuF * PVLu * BW #lung interstitial fluid volume
-    PVLuAF <- 0.4/1000/275 #0.4 mL Leslie et al, 1989 https://doi.org/10.1164/ajrccm/139.2.360 --> Watkins & Rannels 1979 https://doi.org/10.1152/jappl.1979.47.2.325  
+    PVLuAF <- 0.4/275 #0.4 mL Leslie et al, 1989 https://doi.org/10.1164/ajrccm/139.2.360 --> Watkins & Rannels 1979 https://doi.org/10.1152/jappl.1979.47.2.325  
     VLuAF <- PVLuAF * PVLu * BW #lung alveolar lining fluid volume kg=LL
     PVLuT <- VLu - VLuF - VLuAF 
     VLuT <- PVLuT * PVLu* BW #lung tissue volume kg=L
@@ -157,38 +157,38 @@ create.params <- function(user.input){
     #Capillary surface area for each tissue (Ai) as percentage of body weight
     #or weight of corresponding tissue (PAi, m^2/g) and surface area (m^2)
     
-    PAK <- 350e-4 #cm2/g   cm2*L/g-> 1e4 m2*1000
-    AK <- PAK * VK * 1e7 #kidney surface area (m^2)
+    PAK <- 350e-4 #cm2/g  --> *e-4 --> m^2/g  https://doi.org/10.1111/j.1748-1716.1963.tb02652.x
+    AK <- PAK * VK * 1e3 #kidney surface area (m^2)
     PAKG <- 68.90e-4 
-    AKG <- PAKG * VK * 1e7 #the surface area of glomerular capillary (m^2)
+    AKG <- PAKG * VK * 1e3 #the surface area of glomerular capillary (m^2)
     PAL <- 250e-4 
-    AL <- PAL * VL * 1e7 #liver surface area (m^2)
+    AL <- PAL * VL * 1e3 #liver surface area (m^2)
     
     PAST <- 100e-4 #Cheng et al., 2017 value for gut
-    AST <- PAST * VST * 1e7 #stomach surface area (m^2)
+    AST <- PAST * VST * 1e3 #stomach surface area (m^2)
     PASTL<- 100e-4 #Cheng et al., 2017 value for gut
     ASTL<- PASTL * VSTL #stomach lumen surface area (m^2)
     PAIN <- 100e-4 #Cheng et al., 2017 value for gut
-    AIN <- PAIN * VIN * 1e7 #intestine surface area (m^2)
+    AIN <- PAIN * VIN * 1e3 #intestine surface area (m^2)
     PAINL<- 100e-4 #Cheng et al., 2017 value for gut
-    AINL<- PAINL * VINL * 1e7 #intestine lumen surface area (m^2)
+    AINL<- PAINL * VINL * 1e3 #intestine lumen surface area (m^2)
     
     PAM <- 70e-4 
-    AM <- PAM * VM * 1e7 #muscle surface area (m^2)
+    AM <- PAM * VM * 1e3 #muscle surface area (m^2)
     PAA <- 70e-4
-    AA <- PAA * VA * 1e7 #adipose surface area (m^2)
+    AA <- PAA * VA * 1e3 #adipose surface area (m^2)
     PAR <- 100e-4
-    AR <- PAR * VR * 1e7 #surface area of rest of body (m^2)
+    AR <- PAR * VR * 1e3 #surface area of rest of body (m^2)
     PLu <- 250e-4        #https://doi.org/10.1111/j.1748-1716.1963.tb02652.x
-    ALu <- PLu* VLu * 1e7 #lung surface area (m^2)
+    ALu <- PLu* VLu * 1e3 #lung surface area (m^2)
     PSP <- 70e-4
-    ASP <- PSP* VSP * 1e7 #spleen surface area (m^2), same as muscle #assumption
-    PH <- 50.313e-3/302 #m^2/g https://doi.org/10.1007/BF00410278 
-    AH <- PH* VH #heart surface area (m^2), same as muscle
-    PBr <- 240e-4         #https://doi.org/10.1111/j.1748-1716.1963.tb02652.x 
-    ABr <- PBr* VBr * 1e7 #brain surface area (m^2)
+    ASP <- PSP* VSP * 1e3 #spleen surface area (m^2), same as muscle #assumption
+    PH <- 50.3e-3/302 #50313 mm^2/kg --> *e-6 --> m^2/kg  https://doi.org/10.1007/BF00410278 
+    AH <- PH* VH * 1e3 #heart surface area (m^2), same as muscle
+    PBr <- 240e-4     #https://doi.org/10.1111/j.1748-1716.1963.tb02652.x 
+    ABr <- PBr* VBr * 1e3 #brain surface area (m^2)
     PT <- 70e-4
-    AT <- PT* VT * 1e7 #testis surface area (m^2), same as muscle #assumption
+    AT <- PT* VT * 1e3 #testis surface area (m^2), same as muscle #assumption
     # PSK <- 70e-4
     # ASK <- PSK* VSK * 1e7 #skin surface area (m^2), same as muscle #assumption
     
