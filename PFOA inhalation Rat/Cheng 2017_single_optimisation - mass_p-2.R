@@ -184,7 +184,7 @@ create.params <- function(user.input){
     PSP <- 70e-4
     ASP <- PSP* VSP * 1e3 #spleen surface area (m^2), same as muscle #assumption
     PH <- 50.3e-3/302 #50313 mm^2/kg --> *e-6 --> m^2/kg  https://doi.org/10.1007/BF00410278 
-    AH <- PH* VH * 1e3 #heart surface area (m^2), same as muscle
+    AH <- PH* VH * 1e3 #heart surface area (m^2)
     PBr <- 240e-4     #https://doi.org/10.1111/j.1748-1716.1963.tb02652.x 
     ABr <- PBr* VBr * 1e3 #brain surface area (m^2)
     PT <- 70e-4
