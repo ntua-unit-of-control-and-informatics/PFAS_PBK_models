@@ -138,8 +138,8 @@ create.params <- function(user_input){
       Pegggon_1 = 0.13 # our data
       Pbb_1 = 0.07
       Plivb_1 = 0.26
-      Pgonb_1 = 0.13
-      Pgitb_1 = 0.93
+      Pgonb_1 = 0.2
+      Pgitb_1 = 0.31
       Pppb_1 = 0.05
       Prpb_1 = 0.25
       Pfatb_1 = 0.3
@@ -158,7 +158,7 @@ create.params <- function(user_input){
       # Dmw = 10^(3.51-2.0)
       # Dpw = 10^(3.43-2.0)
       Pegggon_1 = 0.19 # our data
-      Pbb_1 = 0.06
+      Pbb_1 = 0.07
       Plivb_1 = 0.46
       Pgonb_1 = 0.62
       Pgitb_1 = 0.64
@@ -194,7 +194,7 @@ create.params <- function(user_input){
       K_1 = 1/Kd # 1/Kd with Kd in M  PFHpA maybe multiply by the number of active sites
     }
     # Exposure quantity (microg)
-    WaterExposure_1  = WaterExposure_1 # microg/mL 
+    WaterExposure_1  = WaterExposure # microg/mL 
     
     return(list(  "Bw_Fcard_ref"=Bw_Fcard_ref, "F_card_ref" =F_card_ref,
                   "BW_VO2_ref" = BW_VO2_ref, "TC_c" = TC_c,
@@ -227,7 +227,7 @@ create.params <- function(user_input){
                   "Pgitb_1" = Pgitb_1, "Pppb_1" = Pppb_1, "Prpb_1" = Prpb_1,
                   "Pfatb_1" = Pfatb_1, "Pskinb_1" = Pskinb_1, "Pkidb_1" = Pkidb_1,
                   "Kd" = Kd, "K_1" = K_1, "WaterExposure_1" = WaterExposure_1,
-                  "BW" = BW, "start_point"= start_point, "end_point" = end_point,
+                  "BW" = BW, "start_point"= 0, "end_point" = end_point,
                   "time_of_exposure"=time_of_exposure, "WaterExposure_1"=WaterExposure_1
                   
     ))})
@@ -521,10 +521,10 @@ ode.func <- function(t,initial_v, parameters, custom.func) {
 user_input <- list(
   'BW'       = 0.8,
   'substance' = "PFNA",
-  'WaterExposure_1' = 100, #8.91*10^(-3), #8.91*10^(-3), # microg/mL ,
+  'WaterExposure' = 100, #8.91*10^(-3), #8.91*10^(-3), # microg/mL ,
   'time_of_exposure' = 0,
   'V_water' = 100, #1E12,
-  start_point  = 0 ,      # days
+  #start_point  = 0 ,      # days
   end_point = 10
   # period = NA,
   # time_final_dose = NA,
