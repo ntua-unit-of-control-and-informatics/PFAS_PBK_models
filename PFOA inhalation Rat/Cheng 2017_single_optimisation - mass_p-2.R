@@ -1206,7 +1206,7 @@ obj.func <- function(x, dataset){
 }
 
 ################################################################################
-setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
+setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
 # Read data
 kudo_high_dose <- openxlsx::read.xlsx("Data/IV_male_rats_tissues_high_kudo_2007.xlsx")
 kudo_low_dose <- openxlsx::read.xlsx("Data/IV_male_rats_tissues_low_kudo_2007.xlsx")
@@ -1271,11 +1271,9 @@ sample_time=seq(0,2,0.01)
                                      y = inits, parms = params,events = events,
                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
 
- preds_kudo_high <- solution[solution$time %in% unique(dataset$df1$Time_hours), c("Cblood",
-                                                                    "Cliver","Ckidney", "Ccarcass",
-                                                                    "Clungs", "Cspleen", "Cheart",
-                                                                    "Cbrain", "Ctestis", "Cstomach", "Cintestine"
-                                                                                     )]
+ preds_kudo_high <-  solution[, c("time", "Cblood","Cliver","Ckidney", "Ccarcass","Clungs", 
+                                  "Cspleen", "Cheart","Cbrain", "Ctestis", "Cstomach", 
+                                  "Cintestine")]
  
  
  user_input$admin.dose <- 0.041*BW *1e03 #ug PFOA
@@ -1287,44 +1285,91 @@ sample_time=seq(0,2,0.01)
                                      y = inits, parms = params,events = events,
                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
  
- preds_kudo_low <- solution[solution$time %in% unique(dataset$df2$Time_hours), c("Cblood",
-                                                                        "Cliver","Ckidney", "Ccarcass",
-                                                                        "Clungs", "Cspleen", "Cheart",
-                                                                        "Cbrain", "Ctestis", "Cstomach", "Cintestine"
-                                                                           )]
- preds_kudo_high <- preds_kudo_high /1000 #convert ug/kg to ug/g
- print("Kudo high: ")
- print(preds_kudo_high)
- preds_kudo_low <- preds_kudo_low /1000 #convert ug/kg to ug/g
- print("Kudo low: ")
- print(preds_kudo_low)
+ preds_kudo_low <- solution[, c("time", "Cblood","Cliver","Ckidney", "Ccarcass","Clungs", 
+                                "Cspleen", "Cheart","Cbrain", "Ctestis", "Cstomach", 
+                                "Cintestine")]
+ #convert ug/L, which is returned by the ODE function, to ug/g, which are the units in kudo et al. (2007)
+ preds_kudo_high[,2:dim(preds_kudo_high)[2]] <- preds_kudo_high[,2:dim(preds_kudo_high)[2]] /1000 
+ preds_kudo_low[,2:dim(preds_kudo_low)[2]] <- preds_kudo_low[,2:dim(preds_kudo_low)[2]] /1000 
+
+ 
  # ######################################################################################
-# 
-# 
-# # Plot with ggplot2
-# library (ggplot2)
-# compartment <- c('Cblood')
-# color_codes <- scales::hue_pal()(length(compartment))
-# 
-# plot <- ggplot(data = solution)+
-#   geom_line( aes(x = time, y = Cblood, color='Cblood'), size=1.3)+
-#   scale_y_log10()+       
-#   scale_x_continuous()+
-#  
-#   labs(title = 'Predicted values',
-#        y = 'Concentration (ng/g)', x = "Time (hours)")+
-#   theme(plot.title = element_text(hjust = 0.5,size=30),
-#         axis.title.y =element_text(hjust = 0.5,size=25,face="bold"),
-#         axis.text.y=element_text(size=22),
-#         axis.title.x =element_text(hjust = 0.5,size=25,face="bold"),
-#         axis.text.x=element_text(size=22),
-#         legend.title=element_text(hjust = 0.5,size=25),
-#         legend.text=element_text(size=22),
-#         panel.border = element_rect(colour = "black", fill=NA, size=1.0)) +
-#   
-#   scale_color_manual("Compartment", values=color_codes)+
-#   theme(legend.key.size = unit(1.5, 'cm'),
-#         legend.title = element_text(size=14),
-#         legend.text = element_text(size=14),
-#         axis.text = element_text(size = 14))
-# print(plot)
+#Plot the predictions against the observations
+library(ggplot2) 
+ 
+ # Function that creates a plot given a compartment name and the respective predictions and observations
+ create.plots <- function(predictions, observations, compartment){  
+   #Colours of observations and predictions
+   cls <-  c("predictions" = "#56B4E9",  "Observations" = "#D55E00")
+   
+   ggplot(data = predictions)+
+     geom_line( aes_string(x= "Time", y= rlang::expr(!!compartment), 
+                           color = '"predictions"'),  size=1.5,alpha = 0.7) +
+     geom_point(data=observations, aes_string(x="Time", y= rlang::expr(!!compartment), 
+                                              color='"Observations"'), size=4)+
+     labs(title = rlang::expr(!!compartment), 
+          y = expression("PFOA concentration (" * mu* "g/g tissue)" ),
+          x = "Time (hours)")+
+     theme(plot.title = element_text(hjust = 0.5))+
+     scale_color_manual("", values=cls,
+                        guide = guide_legend(override.aes =
+                                               list(shape = c(16,NA),
+                                                    linetype = c(0,1))))+
+     theme_light() + 
+     theme(legend.position=c(1,1), 
+           legend.justification=c(0, 1), 
+           legend.key.size = unit(1.5, 'cm'),  
+           legend.title = element_text(size=14),
+           axis.title=element_text(size=14),
+           legend.text = element_text(size=14)
+     )
+   
+ }
+ 
+# Convert Kudo High dose from long to wide format using reshape
+experiment1 <- reshape(kudo_high_dose[c("Tissue" ,"Time_hours", 
+                                         "Concentration_microg_per_g_organ)")], 
+                       idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+colnames(experiment1) <- c("Time",kudo_high_dose$Tissue )
+ 
+# Convert Kudo Low dose from long to wide format using reshape
+experiment2 <- reshape(kudo_low_dose[c("Tissue" ,"Time_hours", 
+                                         "Concentration_microg_per_g_organ)")], 
+                        idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+ colnames(experiment2) <- c("Time",kudo_low_dose$Tissue )
+ # Put the experiments in a list
+ experiments <- list(experiment1 = experiment1, experiment2 = experiment2)
+ # Rename predictions so that they share the same name as the names of the experimental data dataframe
+ colnames(preds_kudo_high) <- c( "Time", "Blood", "Liver",  "Kidney", "Carcass", "Lung",  "Spleen", 
+                                 "Heart", "Brain", "Testis", "Stomach", "Intestine")
+ colnames(preds_kudo_low) <-  colnames(preds_kudo_high) 
+ # Create a list containing the corresponding predictions
+ simulations <- list(predictions1 = preds_kudo_high,  predictions2 = preds_kudo_low)
+ 
+ # Iterate over all existing experiments and create the accompanying plots
+ for(i in 1:length(experiments)){
+   # Retrieve the corresponding observations and simulations
+   observations <- experiments[[i]]
+   predictions <- simulations[[i]]
+   # Extract the compartment names
+   compartments <- names(predictions)[2:length(predictions)]
+   
+   # Use lapply to iterate over the column names and create plots
+   plots <- lapply(compartments, function(compartment) {
+     create.plots(predictions, observations, compartment )
+   })
+   final_plot <- do.call(ggpubr::ggarrange, c(plots, ncol = 3, nrow = ceiling(length(plots) / 3),
+                                              common.legend = TRUE, legend = "right"))
+   
+   plot.margin=unit(c(0,0,0,0), "pt")
+   
+   
+   # Save the plot with dynamically adjusted dimensions
+   ggsave(paste0("experiment", i,".png"), plot = final_plot,
+          device = 'png', dpi = 300,
+          width = 13,
+          height = 10,
+          units = "in")
+
+
+ }
