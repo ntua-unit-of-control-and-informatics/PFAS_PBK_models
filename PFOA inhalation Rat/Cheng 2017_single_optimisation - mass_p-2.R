@@ -1222,9 +1222,9 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "print_level" = 1)
 # Create initial conditions (zero initialisation)
 #Parameter names:
-# Male RAFOatp_k, Male RAFOat1, Male RAFOat3, Male RAFOatp_l,
-# Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,
-#  bile_correction_factor, correction factor for permabilities
+# Male RAFOatp_k, Male RAFOat1, Male RAFOat3, Male RAFOatp_l,Male RAFNtcp
+# Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
+#  bile_correction_factor, 11 correction factors for permeabilities
 
 N_pars <- 22# Number of parameters to be fitted
 fit <- log(rep(1,N_pars))
