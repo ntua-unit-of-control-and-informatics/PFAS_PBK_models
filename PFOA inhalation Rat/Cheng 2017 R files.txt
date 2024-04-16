@@ -16,3 +16,6 @@ model with lungs, tested with Kudo et al., 2007 data, with good prediciton resul
 
 Cheng 2017_single_optimisation - mass_p-2
 add more CMTs in the model 
+
+Cheng 2017_single_optimisation - mass_p-3
+advanced model (with more CMTs) + plots 
