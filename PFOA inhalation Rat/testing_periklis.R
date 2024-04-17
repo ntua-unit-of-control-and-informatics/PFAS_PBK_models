@@ -24,7 +24,8 @@ create.params <- function(user.input){
     
     #permeabilities correction factor
     CF_Peff <- estimated_params[12] 
-    kabs <- estimated_params[13]
+    # Absorption rate per area
+    kabs <- estimated_params[13] #m/h
     CFurine <- estimated_params[14]
     
     #units conversion from Cheng 2017R, time-> h, PFOA mass->ng, tissues mass-> g
