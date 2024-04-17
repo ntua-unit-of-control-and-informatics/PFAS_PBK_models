@@ -23,10 +23,10 @@ create.params <- function(user.input){
     bile_correction_factor <- estimated_params[11]
     
     #permeabilities correction factor
-    CFst <- estimated_params[12] ;CFin <- estimated_params[13];CFad <- estimated_params[14];
-    CFmu <- estimated_params[15];CFre <- estimated_params[16];CFlu <- estimated_params[17];
-    CFspl <- estimated_params[18];CFht <- estimated_params[19];CFbr <- estimated_params[20];
-    CFgo <- estimated_params[21];CFsk <- estimated_params[22]
+    CF_Peff <- estimated_params[12] 
+    # Absorption rate per area
+    kabs <- estimated_params[13] #m/h
+    CFurine <- estimated_params[14]
 
     #units conversion from Cheng 2017R, time-> h, PFOA mass->ng, tissues mass-> g
     
@@ -52,20 +52,6 @@ create.params <- function(user.input){
     VKT <- VK - VKF - VKB #kidney tissue volume kg=L
     VFil <- 0.25 #renal filtrate volume kg=L Cheng et al., 2017 (from Arthur, 1986; Bonvalet, 1981)
     
-    #All the parameters were collected from Shah & Betts, 2012. https://doi.org/10.1007/s10928-011-9232-2
-    # PVK <- 2.41/280 
-    # VK <- PVK * BW #kidney volume kg=L
-    # PVKB <- (0.132+0.108)/280 
-    # VKB <- PVKB * BW #kidney blood volume kg=L
-    # PVKF <- 0.361/280 
-    # VKF <- PVKF * BW #kidney interstitial fluid volume kg=L
-    # PVKE <- 0.012/280 
-    # VKE <- PVKE * BW #kidney endosomal volume kg=L
-    # PVKC <- 0.012/280 
-    # VKC <- PVKC * BW #kidney cellular volume kg=L
-    # VKT <- VK - VKF - VKB - VKE - VKC #kidney tissue volume kg=L
-    # VFil <- 0.25 #renal filtrate volume kg=L Cheng et al., 2017 (from Arthur, 1986; Bonvalet, 1981)
-    
     #Liver
     PVL <- 3.66e-2 #Brown et al. 1997
     VL <- PVL * BW #liver volume kg=L
@@ -76,23 +62,7 @@ create.params <- function(user.input){
     VLT <- VL - VLF #liver tissue volume kg=L
     PVbile <- 0.004 #Blouin et al. 1977
     Vbile <- PVbile * PVL * BW #bile volume kg=L
-    
-    #All the parameters were collected from Shah & Betts, 2012. https://doi.org/10.1007/s10928-011-9232-2
-    # PVL <- 15.7/280 
-    # VL <- PVL * BW #liver volume kg=L
-    # PVLB <- (1.34+1.1)/280 
-    # VLB <- PVLB * BW #liver blood volume kg=L
-    # PVLF <- 2.56/280 
-    # VLF <- PVLF * BW #liver interstitial fluid volume kg=L
-    # PVLE <- 0.0787/280 
-    # VLE <- PVLE * BW #liver endosomal volume kg=L
-    # PVLC <- 10.7/280 
-    # VLC <- PVLC * BW #liver cellular volume kg=L
-    # VLT <- VL - VLF - VLB - VLE - VLC #liver tissue volume kg=L
-    # PVbile <- 0.004 #Blouin et al. 1977
-    # Vbile <- PVbile * PVL * BW #bile volume kg=L
-    
-    
+   
     #Intestine (small and large)
     PVIN <- 2.24e-2 #Brown et al. 1997, p 416, Table 5: 1.4+0.84
     VIN <- PVIN * BW #intestine volume kg=L
@@ -256,21 +226,21 @@ create.params <- function(user.input){
     #stomach(ST),intestine (IN), adipose(A), muscle(M), spleen (SP), heart (H), 
     #brain (Br), testis (T), rest of body(R)
 
-    PeffB <- 4.98e-8*3600
-    PeffK <- 4.38e-8*3600
-    PeffL <- 5.15e-8*3600
+    PeffB <- 4.98e-8*3600*CF_Peff
+    PeffK <- 4.38e-8*3600*CF_Peff
+    PeffL <- 5.15e-8*3600*CF_Peff
     #PeffG <- 2.65e-8*3600
-    PeffST <- 2.65e-8*3600*CFst #assumption
-    PeffIN <- 2.65e-8*3600*CFin #assumption
-    PeffA <- 2.65e-8*3600*CFad
-    PeffM <- 2.65e-8*3600*CFmu
-    PeffR <- 2.65e-8*3600*CFre
-    PeffLu <- 2.65e-8*3600*CFlu #assumption
-    PeffSP <- 2.65e-8*3600*CFspl #assumption
-    PeffH <- 2.65e-8*3600*CFht #assumption
-    PeffBr <- 2.65e-8*3600*CFbr #assumption
-    PeffT <- 2.65e-8*3600*CFgo #assumption
-    PeffSK <- 2.65e-8*3600*CFsk #assumption
+    PeffST <- 2.65e-8*3600*CF_Peff #assumption
+    PeffIN <- 2.65e-8*3600*CF_Peff #assumption
+    PeffA <- 2.65e-8*3600*CF_Peff
+    PeffM <- 2.65e-8*3600*CF_Peff
+    PeffR <- 2.65e-8*3600*CF_Peff
+    PeffLu <- 2.65e-8*3600*CF_Peff #assumption
+    PeffSP <- 2.65e-8*3600*CF_Peff #assumption
+    PeffH <- 2.65e-8*3600*CF_Peff #assumption
+    PeffBr <- 2.65e-8*3600*CF_Peff #assumption
+    PeffT <- 2.65e-8*3600*CF_Peff #assumption
+    PeffSK <- 2.65e-8*3600*CF_Peff #assumption
     
     
     #Blood flow rates (QBi, in L/h) to different tissues (i=L, K, G, A, M, R)
@@ -317,7 +287,7 @@ create.params <- function(user.input){
     Qfeces <- 5.63/1000/24 #mL water/d --> L/h
     PQbile <- 90/1000/24 #mL/d/kg BW --> L/d/kg BW
     Qbile <- PQbile * BW #L/h
-    PQurine <- 200/1000/24 #mL/d/kg BW --> L/h/kg
+    PQurine <- (200/1000/24)*CFurine #mL/d/kg BW --> L/h/kg
     Qurine <- PQurine * BW #L/h
     
     
@@ -487,7 +457,7 @@ create.params <- function(user.input){
     intestine_protein_total <- intestine_protein*(1000*VINT)
     ClINFT <- ClINFT_unscaled *intestine_protein_total#uL/min for the whole gut compartment
     kINFINT <-  (60*ClINFT)/1e06 #L/h
-    kabIN <- PeffIN * AINL
+    kabIN <- kabs * AINL
     
     #Stomach
     stomach_cells = NA
@@ -496,7 +466,9 @@ create.params <- function(user.input){
     stomach_protein_total <- stomach_protein*(1000*VSTT)
     ClSTFT <- ClSTFT_unscaled *stomach_protein_total #uL/min for the whole gut compartment
     kSTFSTT <-  (60*ClSTFT)/1e06 #L/h
-    kabST <- PeffST * ASTL
+    # For identifiability reasons we assume that absorption is realised only through the intestines
+    #kabST <- kabs * ASTL
+    kabST <- 0
     
     #Adipose
     adipose_cells = NA
@@ -1659,7 +1631,7 @@ obj.func <- function(x, dataset){
   # Kim IV male blood
   #-------------------------
   ##########################
-  # Set up simulations for the 10th case, i.e. Kim (2016) ORAL male blood
+  # Set up simulations for the 10th case, i.e. Kim (2016) IV male blood
   BW <- 0.25  # body weight (kg) not reported
   admin.dose_per_g <- 1 # administered dose in mg PFOA/kg BW 
   admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
@@ -1681,7 +1653,8 @@ obj.func <- function(x, dataset){
   events <- create.events(params)
   
   # sample_time: a vector of time points to solve the ODEs
-  sample_time=seq(0,288,1)
+  
+  sample_time=c(0, 5/60, seq(1,288,1))
   
   # ode(): The solver of the ODEs
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -1785,7 +1758,7 @@ obj.func <- function(x, dataset){
 }
 
 ################################################################################
-setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
+setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
 # Read data
 kudo_high_dose <- openxlsx::read.xlsx("Data/IV_male_rats_tissues_high_kudo_2007.xlsx")
 kudo_low_dose <- openxlsx::read.xlsx("Data/IV_male_rats_tissues_low_kudo_2007.xlsx")
@@ -1811,7 +1784,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0 ,
-              "maxeval" = 10, 
+              "maxeval" = 250, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
@@ -1820,16 +1793,16 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
 #  bile_correction_factor, 11 correction factors for permeabilities
 
-N_pars <- 22# Number of parameters to be fitted
+N_pars <- 14 # Number of parameters to be fitted
 fit <- log(rep(1,N_pars))
 
 # Run the optimization algorithmm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
-                               eval_f = obj.func,
-                               lb	= rep(log(0.001), N_pars),
-                               ub = rep(log(1000), N_pars),
-                               opts = opts,
-                               dataset = dataset)
+                             eval_f = obj.func,
+                             lb	= c(rep(log(1e-10), 11),log(1e-05),log(1e-05), log(1e-03)),
+                             ub = c(rep(log(1e10), 11),log(1e05),log(1e05), log(1e03)),
+                             opts = opts,
+                             dataset = dataset)
 
 estimated_params <- exp(optimizer$solution)
 
@@ -2107,6 +2080,7 @@ sample_time=seq(0,2,0.01)
  
  
  sample_time=seq(0,288,1)
+ 
  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                      y = inits, parms = params,events = events,
                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
