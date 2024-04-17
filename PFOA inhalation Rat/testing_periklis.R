@@ -23,11 +23,10 @@ create.params <- function(user.input){
     bile_correction_factor <- estimated_params[11]
     
     #permeabilities correction factor
-    CFst <- estimated_params[12] ;CFin <- estimated_params[13];CFad <- estimated_params[14];
-    CFmu <- estimated_params[15];CFre <- estimated_params[16];CFlu <- estimated_params[17];
-    CFspl <- estimated_params[18];CFht <- estimated_params[19];CFbr <- estimated_params[20];
-    CFgo <- estimated_params[21];CFsk <- estimated_params[22]
-
+    CF_Peff <- estimated_params[12] 
+    kabs <- estimated_params[13]
+    CFurine <- estimated_params[14]
+    
     #units conversion from Cheng 2017R, time-> h, PFOA mass->ng, tissues mass-> g
     
     Hct <- 0.41 #hematocrit for rats, https://doi.org/10.1080/13685538.2017.1350156 mean value for both males and females
@@ -190,7 +189,7 @@ create.params <- function(user.input){
     PVTF <- 0.16/239.03 #Table 02 https://doi.org/10.1590/S1516-89132012000100013
     VTF <- PVTF * PVT * BW #testis interstitial fluid volume kg=L
     VTT <- VT - VTF #testis tissue volume kg=L
-
+    
     #Skin
     PVSK <- 19.03/100 #Brown et al. 1997, p 416, Table 5
     VSK <- PVSK * BW
@@ -255,22 +254,22 @@ create.params <- function(user.input){
     #Effective permeability (Peff, in m/h) for blood (B), liver(L), kidney(K),
     #stomach(ST),intestine (IN), adipose(A), muscle(M), spleen (SP), heart (H), 
     #brain (Br), testis (T), rest of body(R)
-
-    PeffB <- 4.98e-8*3600
-    PeffK <- 4.38e-8*3600
-    PeffL <- 5.15e-8*3600
+    
+    PeffB <- 4.98e-8*3600*CF_Peff
+    PeffK <- 4.38e-8*3600*CF_Peff
+    PeffL <- 5.15e-8*3600*CF_Peff
     #PeffG <- 2.65e-8*3600
-    PeffST <- 2.65e-8*3600*CFst #assumption
-    PeffIN <- 2.65e-8*3600*CFin #assumption
-    PeffA <- 2.65e-8*3600*CFad
-    PeffM <- 2.65e-8*3600*CFmu
-    PeffR <- 2.65e-8*3600*CFre
-    PeffLu <- 2.65e-8*3600*CFlu #assumption
-    PeffSP <- 2.65e-8*3600*CFspl #assumption
-    PeffH <- 2.65e-8*3600*CFht #assumption
-    PeffBr <- 2.65e-8*3600*CFbr #assumption
-    PeffT <- 2.65e-8*3600*CFgo #assumption
-    PeffSK <- 2.65e-8*3600*CFsk #assumption
+    PeffST <- 2.65e-8*3600*CF_Peff #assumption
+    PeffIN <- 2.65e-8*3600*CF_Peff #assumption
+    PeffA <- 2.65e-8*3600*CF_Peff
+    PeffM <- 2.65e-8*3600*CF_Peff
+    PeffR <- 2.65e-8*3600*CF_Peff
+    PeffLu <- 2.65e-8*3600*CF_Peff #assumption
+    PeffSP <- 2.65e-8*3600*CF_Peff #assumption
+    PeffH <- 2.65e-8*3600*CF_Peff #assumption
+    PeffBr <- 2.65e-8*3600*CF_Peff #assumption
+    PeffT <- 2.65e-8*3600*CF_Peff #assumption
+    PeffSK <- 2.65e-8*3600*CF_Peff #assumption
     
     
     #Blood flow rates (QBi, in L/h) to different tissues (i=L, K, G, A, M, R)
@@ -286,7 +285,7 @@ create.params <- function(user.input){
     QBST <- PQBST * Qcardiac #L/h
     PQBIN <- 9/100 #https://doi.org/10.3390/pharmaceutics6010097 Qcard=0.235*(0.250^0.75)*60 (L/h) and PQBIN = (451/1000)/Qcard *100
     QBIN <- PQBIN * Qcardiac #L/h
-   
+    
     QGE<- 0.54/BW^0.25 #gastric emptying time (1/(h*BW^0.25)); from Yang, 2013
     #QGE<- VSTL * 2.03 #L/h https://doi.org/10.1124/dmd.118.085902, Table 5   
     
@@ -317,7 +316,7 @@ create.params <- function(user.input){
     Qfeces <- 5.63/1000/24 #mL water/d --> L/h
     PQbile <- 90/1000/24 #mL/d/kg BW --> L/d/kg BW
     Qbile <- PQbile * BW #L/h
-    PQurine <- 200/1000/24 #mL/d/kg BW --> L/h/kg
+    PQurine <- (200/1000/24)*CFurine #mL/d/kg BW --> L/h/kg
     Qurine <- PQurine * BW #L/h
     
     
@@ -329,19 +328,19 @@ create.params <- function(user.input){
       RAFOat1 <- estimated_params[2]
       RAFOat3 <-  estimated_params[3]
       
-      }else if(sex == "F"){
+    }else if(sex == "F"){
       PQGFR <- 41.04  #L/h/kg  Corley et al., 2005 https://doi.org/10.1093/toxsci/kfi119, GFRC --> scaled fraction of kidney weight
       QGFR <- PQGFR * VK #L/h
       RAFOatp_k <- estimated_params[6]
       RAFOat1 <- estimated_params[7]
       RAFOat3 <-  estimated_params[8]
-    
+      
     }
-
+    
     
     #======Table S2=======#
     #Albumin concentration in blood and interstitial fluid compartments(mol/m^3 = 1e-6* nmol/g)
-
+    
     CalbB <- 281e-3*7.8 #n=7.8 binding sites (mol/m3)
     CalbKF <- 243e-3*7.8 #n=7.8 binding sites (mol/m3)
     CalbLF <- 243e-3*7.8 #n=7.8 binding sites (mol/m3)
@@ -367,20 +366,20 @@ create.params <- function(user.input){
     
     #Alpha2mu-globulin concentration in kidney tissue (mol/m3)
     Ca2uKT <- 110e-3
-
+    
     #LFABP concentration in kidney and liver tissue (mol/m^3)
     CLfabpKT <- 2.65e-3 * 3 #n=3 binding sites (mol/m3)
     CLfabpLT <- 133e-3 * 3 #n=3 binding sites (mol/m3)
-  
-
+    
+    
     #======Table S2=======#
     #Equilibrium association constant (m^3/mol= 10^-3*M-1) for albumin(Ka), LFABP(KL_fabp),
     #and alpha2mu-globulin(Ka2u). See SI section S2-2 for details
-
+    
     Ka <-  24.18 #3.1*7.8 m3/mol multiplying by number of binding sites (Cheng et al. 2021)
     KLfabp <- 135  #45.0*3 geo_mean of 3 binding affinity, may try normal mean (Cheng et al. 2021)
     Ka2u <- 0.5 #m3/mol
-
+    
     
     #Overall mass transfer coefficients between subcompartments and passive
     #diffusion rate constants. See SI section S3-1 for details
@@ -424,11 +423,8 @@ create.params <- function(user.input){
     # Uptake for the whole kidney tissue 
     kKFKT <- (60*ClKFT)/1e06 #L/h
     
- 
-    
     n <- 5 #enlargement factor of apical membrane of proximal tubule
     kFKT <- PeffK * AK * n
-    
     
     #Oatp kidney
     VmK_Oatp_in_vitro <- 9.3 #nmol/mg protein/min (Weaver et al. 2010)
@@ -447,7 +443,7 @@ create.params <- function(user.input){
     VmK_Oat3_scaled = 60*VmK_Oat3_in_vitro*MW*kidney_protein_per_gram/1000  #physiologically scaled to in vivo, ug/L/h
     VmK_Oat3 = VmK_Oat3_scaled*RAFOat3 #in vivo value, in  ug/L/h
     KmK_Oat3= 65.7 * MW #umol/L (Weaver et al. 2010) --> ug/L
-
+    
     #Liver
     liver_protein_per_rat <- 1000*(1.52+1.53+1.52)/3#mg of protein per rat  (Addis 1936)
     rat_weight_addis <- 200 #g, average rat weight in Addis, 1936
@@ -487,7 +483,7 @@ create.params <- function(user.input){
     intestine_protein_total <- intestine_protein*(1000*VINT)
     ClINFT <- ClINFT_unscaled *intestine_protein_total#uL/min for the whole gut compartment
     kINFINT <-  (60*ClINFT)/1e06 #L/h
-    kabIN <- PeffIN * AINL
+    kabIN <- kabs * AINL
     
     #Stomach
     stomach_cells = NA
@@ -496,7 +492,9 @@ create.params <- function(user.input){
     stomach_protein_total <- stomach_protein*(1000*VSTT)
     ClSTFT <- ClSTFT_unscaled *stomach_protein_total #uL/min for the whole gut compartment
     kSTFSTT <-  (60*ClSTFT)/1e06 #L/h
-    kabST <- PeffST * ASTL
+    # For identifiability reasons we assume that absorption is realised only through the intestines
+    #kabST <- kabs * ASTL
+    kabST <- 0
     
     #Adipose
     adipose_cells = NA
@@ -551,7 +549,7 @@ create.params <- function(user.input){
     testis_protein_total <- testis_protein * (1000*VTT)
     ClTFT <- ClTFT_unscaled * testis_protein_total#uL/min
     kTFTT <-  (60*ClTFT)/1e06 #L/h
-
+    
     #Skin
     skin_cells = NA
     Cmedium_SK = 1*MW# Kimura et al. 2017 1uM umol/L -->  ug/L
@@ -623,7 +621,7 @@ create.params <- function(user.input){
                 #'VmK_Osta'=VmK_Osta,'KmK_Osta'=KmK_Osta, 
                 'VmK_Oat1'=VmK_Oat1, 'KmK_Oat1'=KmK_Oat1, 'KmK_Oat1'=KmK_Oat1, 
                 'VmK_Oat3'=VmK_Oat3, 'KmK_Oat3'=KmK_Oat3, 
-                  
+                
                 
                 'kKFKT'=kKFKT, 'kFKT'=kFKT,  
                 'kLFLT'=kLFLT, 'kbileLT'=kbileLT,  'kAFAT'=kAFAT, 
@@ -636,16 +634,16 @@ create.params <- function(user.input){
                 
                 "admin.time" = admin.time, "admin.dose" = admin.dose,
                 "admin.type" = admin.type
-                ))
-  
+    ))
+    
   })
 }  
 
 ode.func <- function(time, inits, params){
   with(as.list(c(inits, params)),{
-
+    
     #====================PFOA mass balance at each tissue or fluid compartment==============================     
-      
+    
     # Concentrations in ug/L
     
     # Blood concentration
@@ -743,13 +741,13 @@ ode.func <- function(time, inits, params){
     CABf = CAB * 1.0 / (1.0 + CalbB * Ka)
     CRBf = CRB * 1.0 / (1.0 + CalbB * Ka)
     CLuBf = CLuB * 1.0 / (1.0 + CalbB * Ka)
-   
+    
     CSPBf = CSPB * 1.0 / (1.0 + CalbB * Ka)
     CHBf = CHB * 1.0 / (1.0 + CalbB * Ka)
     CBrBf = CBrB * 1.0 / (1.0 + CalbB * Ka)
     CTBf = CTB * 1.0 / (1.0 + CalbB * Ka)
     CSKBf = CSKB * 1.0 / (1.0 + CalbB * Ka)
-   
+    
     
     #Calculation of free concentrations in organ interstitial fluid
     CKFf = CKF * 1.0 / (1.0 + CalbKF * Ka)
@@ -783,19 +781,19 @@ ode.func <- function(time, inits, params){
     #Venous Blood
     dMBven = - CBfven *QBLu +  CLNf*(QBK/500+QBLtot/500+QBM/500+QBA/500+QBR/500+QBLu/500+QBH/500+QBBr/500+QBT/500+QBSK/500+
                                        QBST/500+QBSP/500+QBIN/500)+
-                                    (QBK-QBK/500)*CKBf + (QBLtot-QBLtot/500)*CLBf + 
-                                    (QBM-QBM/500)*CMBf + (QBA-QBA/500)*CABf + (QBR-QBR/500)*CRBf+
-                                    (QBH-QBH/500)*CHBf + (QBBr-QBBr/500)*CBrBf+
-                                    (QBT-QBT/500)*CTBf + (QBSK-QBSK/500)*CSKBf
+      (QBK-QBK/500)*CKBf + (QBLtot-QBLtot/500)*CLBf + 
+      (QBM-QBM/500)*CMBf + (QBA-QBA/500)*CABf + (QBR-QBR/500)*CRBf+
+      (QBH-QBH/500)*CHBf + (QBBr-QBBr/500)*CBrBf+
+      (QBT-QBT/500)*CTBf + (QBSK-QBSK/500)*CSKBf
     
     
     #Lymph nodes
     dMLN = CKFf*QBK/500 + CLFf*QBLtot/500 + CMFf*QBM/500 + CAFf*QBA/500+
-           CRFf*QBR/500 + CLuFf*QBLu/500 + CHFf*QBH/500 + CBrFf*QBBr/500+
-           CTFf*QBT/500 + CSKFf*QBSK/500 + CSTFf*QBST/500 + CINFf*QBIN/500 + CSPFf*QBSP/500-
-           CLNf*(QBK/500+QBLtot/500+QBM/500+QBA/500+QBR/500+QBLu/500+QBH/500+QBBr/500+QBT/500+QBSK/500+
-                 QBST/500+QBSP/500+QBIN/500)
-   
+      CRFf*QBR/500 + CLuFf*QBLu/500 + CHFf*QBH/500 + CBrFf*QBBr/500+
+      CTFf*QBT/500 + CSKFf*QBSK/500 + CSTFf*QBST/500 + CINFf*QBIN/500 + CSPFf*QBSP/500-
+      CLNf*(QBK/500+QBLtot/500+QBM/500+QBA/500+QBR/500+QBLu/500+QBH/500+QBBr/500+QBT/500+QBSK/500+
+              QBST/500+QBSP/500+QBIN/500)
+    
     
     #Kidney
     
@@ -803,10 +801,10 @@ ode.func <- function(time, inits, params){
     dMBK = QBK*CBfart - (QBK-QBK/500)*CKBf - PeffK*AK*(CKBf-CKFf) - CKBf*QBK/500 
     #interstitial fluid subcompartment
     dMKF = CKBf*QBK/500 - CKFf*QBK/500 + PeffK*AK*(CKBf-CKFf) - kKFKT*(CKFf-CKTf) -
-            (VmK_Oat1*CKFf/KmK_Oat1+CKFf)*VKF - (VmK_Oat3*CKFf/KmK_Oat3+CKFf)*VKF #+ (VmK_Osta*CKTf/KmK_Osta+CKTf)
+      (VmK_Oat1*CKFf/KmK_Oat1+CKFf)*VKF - (VmK_Oat3*CKFf/KmK_Oat3+CKFf)*VKF #+ (VmK_Osta*CKTf/KmK_Osta+CKTf)
     #Kidney proximal tubule cells subcompartment
     dMKT = kKFKT*(CKFf-CKTf) - kFKT*(CKTf - CFil) + (VmK_Oatp*CFil/KmK_Oatp+CFil)*VFil +
-            (VmK_Oat1*CKFf/KmK_Oat1+CKFf)*VKF + (VmK_Oat3*CKFf/KmK_Oat3+CKFf)*VKF # + (VmK_Osta*CKTf/KmK_Osta+CKTf)
+      (VmK_Oat1*CKFf/KmK_Oat1+CKFf)*VKF + (VmK_Oat3*CKFf/KmK_Oat3+CKFf)*VKF # + (VmK_Osta*CKTf/KmK_Osta+CKTf)
     dMFil =  QGFR*CBfart+ kFKT*(CKTf - CFil) - (VmK_Oatp*CFil/KmK_Oatp+CFil)*VFil - (Qurine/VFil)*CFil
     dMurine = (Qurine/VFil)*CFil
     
@@ -816,10 +814,10 @@ ode.func <- function(time, inits, params){
     dMBL = QBL*CBfart + (QBSP-QBSP/500)*CSPBf + (QBIN-QBIN/500)*CINBf + (QBST-QBST/500)*CSTBf - PeffL*AL*(CLBf-CLFf) - CLBf*QBLtot/500 - (QBLtot-QBLtot/500)*CLBf
     #interstitial fluid subcompartment 
     dMLF = CLBf*QBLtot/500 - CLFf*QBLtot/500 + PeffL*AL*(CLBf-CLFf) - kLFLT*(CLFf-CLTf) - 
-          (VmL_Oatp*CLFf/KmL_Oatp+CLFf)*VLF - (VmL_Ntcp*CLFf/KmL_Ntcp+CLFf)*VLF
+      (VmL_Oatp*CLFf/KmL_Oatp+CLFf)*VLF - (VmL_Ntcp*CLFf/KmL_Ntcp+CLFf)*VLF
     #Liver tissue subcompartment
     dMLT = kLFLT*(CLFf-CLTf) + (VmL_Oatp*CLFf/KmL_Oatp+CLFf)*VLF + 
-                     (VmL_Ntcp*CLFf/KmL_Ntcp+CLFf)*VLF - kbileLT*(CLTf-Cbile)
+      (VmL_Ntcp*CLFf/KmL_Ntcp+CLFf)*VLF - kbileLT*(CLTf-Cbile)
     dMbile = kbileLT*(CLTf-Cbile) - (Qbile/Vbile)*Cbile
     
     
@@ -845,7 +843,7 @@ ode.func <- function(time, inits, params){
     dMINT = kINFINT*(CINFf-CINT) + kabIN*CINL
     #Intestine lumen
     dMINL = QGE*CSTL - (Qfeces/VINL)*CINL - kabIN*CINL + (Qbile/Vbile)*Cbile
-
+    
     
     #Muscle
     
@@ -875,7 +873,7 @@ ode.func <- function(time, inits, params){
     dMRT = kRFRT*(CRFf -CRT) 
     
     #Lung  
-
+    
     #blood subcompartment
     dMBLu = CBfven *QBLu - (QBLu-QBLu/500)*CLuBf - PeffLu*ALu*(CLuBf-CLuFf) - CLuBf*QBLu/500
     #interstitial fluid subcompartment
@@ -983,41 +981,41 @@ ode.func <- function(time, inits, params){
             
             'dMBST'=dMBST, 'dMSTF'=dMSTF, 'dMSTT'=dMSTT,
             'dMBIN'=dMBIN, 'dMINF'=dMINF, 'dMINT'=dMINT,
-           
+            
             'dMBM'=dMBM, 'dMMF'=dMMF, 'dMMT'=dMMT,
             'dMBA'=dMBA, 'dMAF'=dMAF, 
             'dMAT'=dMAT, 'dMBR'=dMBR, 'dMRF'=dMRF,'dMRT'=dMRT,
             'dMBLu'=dMBLu, 'dMLuF'=dMLuF,'dMLuT'=dMLuT,'dMLuAF' = dMLuAF,
-           
+            
             'dMBSP'=dMBSP, 'dMSPF'=dMSPF, 'dMSPT'=dMSPT,
             'dMBH'=dMBH, 'dMHF'=dMHF, 'dMHT'=dMHT,
             'dMBBr'=dMBBr, 'dMBrF'=dMBrF, 'dMBrT'=dMBrT,
             'dMBT'=dMBT, 'dMTF'=dMTF, 'dMTT'=dMTT,
             'dMBSK'=dMBSK, 'dMSKF'=dMSKF, 'dMSKT'=dMSKT
-            ),
-                  
-           'CKFf'=CKFf, 'CLNf'=CLNf, 'CLFf'=CLFf,
-           'CMFf'=CMFf,'CAFf'=CAFf, 'CRFf'=CRFf, 'CBfart'=CBfart, 
-           'CKBf'=CKBf, 'CLBf'=CLBf, 'CMBf'=CMBf, 'CABf'=CABf,
-           'CRBf'=CRBf, 'CFil'=CFil, 'Cbile'=Cbile, 
-           'Cfeces'=Cfeces, 'CKTf'=CKTf, 'CLTf'=CLTf,
-           'CSTL'=CSTL,'CINL'=CINL,
-           'CMT'=CMT, 'CAT'=CAT, 'CRT'=CRT, 
-            
-           # 'CKB'=CKB, 'CLB'=CLB, 'CSTB'=CSTB, 'CINB'=CINB, 'CMB'=CMB,
-           # 'CAB'=CAB, 'CLuB'=CLuB, 'CRB'=CRB, 'CSPB'=CSPB, 'CHB'=CHB,
-           # 'CBrB'=CBrB, 'CTB'=CTB, 'CSKB'=CSKB,
-         
-                  
-                  'Cven'=Cven, 'Cart' = Cart,'Cblood' = Cblood,
-                  'Ckidney'=Ckidney, 'Cliver'=Cliver,
-                  'Cstomach'=Cstomach, 'Cintestine'=Cintestine,
-                  'Cmuscle'=Cmuscle, 'Cadipose'=Cadipose, 
-                  'Clungs' = Clungs, 'Crest'=Crest,'Ccarcass' = Ccarcass,
-                  'Cfeces'=Cfeces, 'Cbile'=Cbile, 'Curine'=Curine,
-                  'Cspleen'=Cspleen, 'Cheart'=Cheart, 'Cbrain'=Cbrain, 
-                  'Ctestis'=Ctestis, 'Cskin'=Cskin
-         )
+    ),
+    
+    'CKFf'=CKFf, 'CLNf'=CLNf, 'CLFf'=CLFf,
+    'CMFf'=CMFf,'CAFf'=CAFf, 'CRFf'=CRFf, 'CBfart'=CBfart, 
+    'CKBf'=CKBf, 'CLBf'=CLBf, 'CMBf'=CMBf, 'CABf'=CABf,
+    'CRBf'=CRBf, 'CFil'=CFil, 'Cbile'=Cbile, 
+    'Cfeces'=Cfeces, 'CKTf'=CKTf, 'CLTf'=CLTf,
+    'CSTL'=CSTL,'CINL'=CINL,
+    'CMT'=CMT, 'CAT'=CAT, 'CRT'=CRT, 
+    
+    # 'CKB'=CKB, 'CLB'=CLB, 'CSTB'=CSTB, 'CINB'=CINB, 'CMB'=CMB,
+    # 'CAB'=CAB, 'CLuB'=CLuB, 'CRB'=CRB, 'CSPB'=CSPB, 'CHB'=CHB,
+    # 'CBrB'=CBrB, 'CTB'=CTB, 'CSKB'=CSKB,
+    
+    
+    'Cven'=Cven, 'Cart' = Cart,'Cblood' = Cblood,
+    'Ckidney'=Ckidney, 'Cliver'=Cliver,
+    'Cstomach'=Cstomach, 'Cintestine'=Cintestine,
+    'Cmuscle'=Cmuscle, 'Cadipose'=Cadipose, 
+    'Clungs' = Clungs, 'Crest'=Crest,'Ccarcass' = Ccarcass,
+    'Cfeces'=Cfeces, 'Cbile'=Cbile, 'Curine'=Curine,
+    'Cspleen'=Cspleen, 'Cheart'=Cheart, 'Cbrain'=Cbrain, 
+    'Ctestis'=Ctestis, 'Cskin'=Cskin
+    )
     
   })
 }
@@ -1121,193 +1119,6 @@ obj.func <- function(x, dataset){
   # from the odes!!!)
   
   
-  
-  ##########################
-  #-------------------------
-  # Kudo high
-  #-------------------------
-  ##########################
-  # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
-  BW <- 0.29  # body weight (kg)
-  admin.dose_per_g <- 16.56 # administered dose in mg PFOA/kg BW 
-  admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
-  admin.time <- 0 # time when doses are administered, in hours
-  admin.type <- "iv"
-  sex <- "M" 
-
-  estimated_params <- exp(x)
-  user_input <- list('BW'=BW,
-                     "admin.dose"= admin.dose,
-                     "admin.time" = admin.time, 
-                     "admin.type" = admin.type,
-                     "estimated_params" = estimated_params,
-                     "sex" = sex)
-  
-  params <- create.params(user_input)
-  inits <- create.inits(params)
-  events <- create.events(params)
-  
-  # sample_time: a vector of time points to solve the ODEs
-  sample_time=seq(0,2,0.01)
-  
-  # ode(): The solver of the ODEs
-  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                      y = inits, parms = params,
-                                      events = events,
-                                      method="lsodes",rtol = 1e-07, atol = 1e-07))
-  
-  # We need to keep only the predictions for the relevant compartments for the time points 
-  # at which we have available data. 
-  
-#======================================df1=========================================================
-  
-  exp_data <- dataset$df1 # retrieve data of Kudo et al. 2007 high dose
-  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
-  preds_kudo_high <- solution[solution$time %in% unique(exp_data$time), c("Cblood",
-                                                  "Cliver","Ckidney", "Ccarcass",
-                                                  "Clungs", "Cspleen", "Cheart",
-                                                  "Cbrain", "Ctestis", "Cstomach", "Cintestine")]
-  
-  preds_kudo_high <- preds_kudo_high /1000 #convert ug/kg to ug/g
-  # Estimate gut concentration from stomach and intestines
-  V_stomach <- 0.0046*BW*1000
-  V_int <- 0.0124*BW*1000
-  C_stomach <- exp_data[exp_data$Tissue == "Stomach", "concentration"] 
-  C_int <- exp_data[exp_data$Tissue == "Intestine", "concentration"]   
-  #exp_gut <- (C_stomach*V_stomach+C_int*V_int)/(V_stomach+V_int)
-  
-  obs_kudo_high <- c(exp_data[exp_data$Tissue == "Blood", "concentration"],
-                     exp_data[exp_data$Tissue == "Liver", "concentration"],
-                     exp_data[exp_data$Tissue == "Kidney", "concentration"],
-                     exp_data[exp_data$Tissue == "Carcass", "concentration"],
-                     exp_data[exp_data$Tissue == "Lung", "concentration"],
-                     exp_data[exp_data$Tissue == "Spleen", "concentration"],
-                     exp_data[exp_data$Tissue == "Heart", "concentration"],
-                     exp_data[exp_data$Tissue == "Brain", "concentration"],
-                     exp_data[exp_data$Tissue == "Testis", "concentration"],
-                     exp_data[exp_data$Tissue == "Stomach", "concentration"],
-                     exp_data[exp_data$Tissue == "Intestine", "concentration"])
-  
-  
-  ##########################
-  #-------------------------
-  # Kudo low
-  #-------------------------
-  ##########################
-  # Set up simulations for the 2nd case, i.e. kudo (2007) low dose, tissues
-  BW <- 0.29  # body weight (kg)
-  admin.dose_per_g <- 0.041 # administered dose in mg PFOA/kg BW 
-  admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
-  admin.time <- 0 # time when doses are administered, in hours
-  admin.type <- "iv"
-  sex <- "M" 
-  
-  
-  estimated_params <- exp(x)
-  user_input <- list('BW'=BW,
-                     "admin.dose"= admin.dose,
-                     "admin.time" = admin.time, 
-                     "admin.type" = admin.type,
-                     "estimated_params" = estimated_params,
-                     "sex" = sex)
-  
-  params <- create.params(user_input)
-  inits <- create.inits(params)
-  events <- create.events(params)
-  
-  # sample_time: a vector of time points to solve the ODEs
-  sample_time=seq(0,2,0.01)
-  
-  # ode(): The solver of the ODEs
-  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                      y = inits, parms = params,
-                                      events = events,
-                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
-  
-  # We need to keep only the predictions for the relevant compartments for the time points 
-  # at which we have available data. 
-  
-  #======================================df2=========================================================
-  
-  exp_data <- dataset$df2 # retrieve data of Kudo et al. 2007 low dose
-  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
-  preds_kudo_low <- solution[solution$time %in% unique(exp_data$time), c("Cblood",
-                                                                         "Cliver","Ckidney", "Ccarcass",
-                                                                         "Clungs", "Cspleen", "Cheart",
-                                                                         "Cbrain", "Ctestis", "Cstomach", "Cintestine")]
-  preds_kudo_low<- preds_kudo_low /1000 #convert ug/kg to ug/g
-  # Estimate gut concentration from stomach and intestines
-  V_stomach <- 0.0046*BW*1000
-  V_int <- 0.0124*BW*1000
-  C_stomach <- exp_data[exp_data$Tissue == "Stomach", "concentration"] 
-  C_int <- exp_data[exp_data$Tissue == "Intestine", "concentration"]   
-  exp_gut <- (C_stomach*V_stomach+C_int*V_int)/(V_stomach+V_int)
-  
-  obs_kudo_low <- c(exp_data[exp_data$Tissue == "Blood", "concentration"],
-                    exp_data[exp_data$Tissue == "Liver", "concentration"],
-                    exp_data[exp_data$Tissue == "Kidney", "concentration"],
-                    exp_data[exp_data$Tissue == "Carcass", "concentration"],
-                    exp_data[exp_data$Tissue == "Lung", "concentration"],
-                    exp_data[exp_data$Tissue == "Spleen", "concentration"],
-                    exp_data[exp_data$Tissue == "Heart", "concentration"],
-                    exp_data[exp_data$Tissue == "Brain", "concentration"],
-                    exp_data[exp_data$Tissue == "Testis", "concentration"],
-                    exp_data[exp_data$Tissue == "Stomach", "concentration"],
-                    exp_data[exp_data$Tissue == "Intestine", "concentration"])
-  
-  ##########################
-  #-------------------------
-  # Kim IV male tissues
-  #-------------------------
-  ##########################
-  # Set up simulations for the 3rd case, i.e. kim (2016) IV male tissues
-  BW <- 0.25  # body weight (kg) not reported
-  admin.dose_per_g <- 1 # administered dose in mg PFOA/kg BW 
-  admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
-  admin.time <- 0 #time when doses are administered, in hours
-  admin.type <- "iv"
-  sex <- "M" 
-  
-  
-  estimated_params <- exp(x)
-  user_input <- list('BW'=BW,
-                     "admin.dose"= admin.dose,
-                     "admin.time" = admin.time, 
-                     "admin.type" = admin.type,
-                     "estimated_params" = estimated_params,
-                     "sex" = sex)
-  
-  params <- create.params(user_input)
-  inits <- create.inits(params)
-  events <- create.events(params)
-  
-  # sample_time: a vector of time points to solve the ODEs
-  sample_time=seq(0,288,1)
-  
-  # ode(): The solver of the ODEs
-  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                      y = inits, parms = params,
-                                      events = events,
-                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
-  
-  # We need to keep only the predictions for the relevant compartments for the time points 
-  # at which we have available data. 
-  
-  #======================================df3=========================================================
-  
-  exp_data <- dataset$df3 # retrieve data of kim (2016) IV male tissues
-  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
-  preds_kim_IV_Mtissues <- solution[solution$time %in% unique(exp_data$time), c("Cliver","Ckidney", 
-                                                                         "Clungs", "Cspleen", "Cheart"
-                                                                         )]
-  preds_kim_IV_Mtissues<- preds_kim_IV_Mtissues /1000 #convert ug/kg to ug/g
-  
-  
-  obs_kim_IV_Mtissues <- c(exp_data[exp_data$Tissue == "Liver", "concentration"],
-                           exp_data[exp_data$Tissue == "Kidney", "concentration"],
-                           exp_data[exp_data$Tissue == "Lung", "concentration"],
-                           exp_data[exp_data$Tissue == "Spleen", "concentration"],
-                           exp_data[exp_data$Tissue == "Heart", "concentration"])
   ##########################
   #-------------------------
   # Kim ORAL male tissues
@@ -1341,18 +1152,17 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
   
-  #======================================df4=========================================================
   
   exp_data <- dataset$df4 # retrieve data of kim (2016) ORAL male tissues
   colnames(exp_data)[c(2,3)] <- c("time", "concentration")
   preds_kim_OR_Mtissues <- solution[solution$time %in% unique(exp_data$time), c("Cliver","Ckidney", 
                                                                                 "Clungs", "Cspleen", "Cheart" )]
- 
+  
   preds_kim_OR_Mtissues<- preds_kim_OR_Mtissues /1000 #convert ug/kg to ug/g
   
   
@@ -1362,420 +1172,11 @@ obj.func <- function(x, dataset){
                            exp_data[exp_data$Tissue == "Spleen", "concentration"],
                            exp_data[exp_data$Tissue == "Heart", "concentration"])
   
-  ##########################
-  #-------------------------
-  # Kim IV female tissues
-  #-------------------------
-  ##########################
-  # Set up simulations for the 5th case, i.e. kim (2016) IV female tissues
-  BW <- 0.25  # body weight (kg) not reported
-  admin.dose_per_g <- 1 # administered dose in mg PFOA/kg BW 
-  admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
-  admin.time <- 0 #time when doses are administered, in hours
-  admin.type <- "iv"
-  sex <- "F" 
-  
-  
-  estimated_params <- exp(x)
-  user_input <- list('BW'=BW,
-                     "admin.dose"= admin.dose,
-                     "admin.time" = admin.time, 
-                     "admin.type" = admin.type,
-                     "estimated_params" = estimated_params,
-                     "sex" = sex)
-  
-  params <- create.params(user_input)
-  inits <- create.inits(params)
-  events <- create.events(params)
-  
-  # sample_time: a vector of time points to solve the ODEs
-  sample_time=seq(0,288,1)
-  
-  # ode(): The solver of the ODEs
-  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                      y = inits, parms = params,
-                                      events = events,
-                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
-  
-  # We need to keep only the predictions for the relevant compartments for the time points 
-  # at which we have available data. 
-  
-  #======================================df5=========================================================
-  
-  exp_data <- dataset$df5 # retrieve data of kim (2016) ORAL female tissues
-  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
-  preds_kim_IV_Ftissues <- solution[solution$time %in% unique(exp_data$time), c("Cliver","Ckidney", 
-                                                                                "Clungs", "Cspleen", "Cheart" )]
-  
-  preds_kim_IV_Ftissues<- preds_kim_IV_Ftissues /1000 #convert ug/kg to ug/g
-  
-  
-  obs_kim_IV_Ftissues <- c(exp_data[exp_data$Tissue == "Liver", "concentration"],
-                           exp_data[exp_data$Tissue == "Kidney", "concentration"],
-                           exp_data[exp_data$Tissue == "Lung", "concentration"],
-                           exp_data[exp_data$Tissue == "Spleen", "concentration"],
-                           exp_data[exp_data$Tissue == "Heart", "concentration"])
-  
-  
-  ##########################
-  #-------------------------
-  # Kim ORAL female tissues
-  #-------------------------
-  ##########################
-  # Set up simulations for the 6th case, i.e. kim (2016) IV female tissues
-  BW <- 0.25  # body weight (kg) not reported
-  admin.dose_per_g <- 1 # administered dose in mg PFOA/kg BW 
-  admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
-  admin.time <- 0 #time when doses are administered, in hours
-  admin.type <- "oral"
-  sex <- "F" 
-  
-  
-  estimated_params <- exp(x)
-  user_input <- list('BW'=BW,
-                     "admin.dose"= admin.dose,
-                     "admin.time" = admin.time, 
-                     "admin.type" = admin.type,
-                     "estimated_params" = estimated_params,
-                     "sex" = sex)
-  
-  params <- create.params(user_input)
-  inits <- create.inits(params)
-  events <- create.events(params)
-  
-  # sample_time: a vector of time points to solve the ODEs
-  sample_time=seq(0,288,1)
-  
-  # ode(): The solver of the ODEs
-  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                      y = inits, parms = params,
-                                      events = events,
-                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
-  
-  # We need to keep only the predictions for the relevant compartments for the time points 
-  # at which we have available data. 
-  
-  #======================================df6=========================================================
-  
-  exp_data <- dataset$df6 # retrieve data of kim (2016) ORAL female tissues
-  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
-  preds_kim_OR_Ftissues <- solution[solution$time %in% unique(exp_data$time), c("Cliver","Ckidney", 
-                                                                                "Clungs", "Cspleen", "Cheart" )]
-  
-  preds_kim_OR_Ftissues<- preds_kim_OR_Ftissues /1000 #convert ug/kg to ug/g
-  
-  
-  obs_kim_OR_Ftissues <- c(exp_data[exp_data$Tissue == "Liver", "concentration"],
-                           exp_data[exp_data$Tissue == "Kidney", "concentration"],
-                           exp_data[exp_data$Tissue == "Lung", "concentration"],
-                           exp_data[exp_data$Tissue == "Spleen", "concentration"],
-                           exp_data[exp_data$Tissue == "Heart", "concentration"])
-  
-  ##########################
-  #-------------------------
-  # Dzierlenga ORAL male tissues
-  #-------------------------
-  ##########################
-  # Set up simulations for the 7th case, i.e. Dzierlenga (2021) ORAL male tissues
-  BW <- 0.25  # body weight (kg) not reported
-  admin.dose_per_g <- 12 # administered dose in mg PFOA/kg BW 
-  admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
-  admin.time <- 0 #time when doses are administered, in hours
-  admin.type <- "oral"
-  sex <- "M" 
-  
-  
-  estimated_params <- exp(x)
-  user_input <- list('BW'=BW,
-                     "admin.dose"= admin.dose,
-                     "admin.time" = admin.time, 
-                     "admin.type" = admin.type,
-                     "estimated_params" = estimated_params,
-                     "sex" = sex)
-  
-  params <- create.params(user_input)
-  inits <- create.inits(params)
-  events <- create.events(params)
-  
-  # sample_time: a vector of time points to solve the ODEs
-  sample_time=seq(0,864,1)
-  
-  # ode(): The solver of the ODEs
-  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                      y = inits, parms = params,
-                                      events = events,
-                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
-  
-  # We need to keep only the predictions for the relevant compartments for the time points 
-  # at which we have available data. 
-  
-  #======================================df7=========================================================
-  
-  exp_data <- dataset$df7 # retrieve data of Dzierlenga (2021) ORAL male tissues
-  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
-  column_names <- c("Cliver","Ckidney","Cbrain" )
-  
-  preds_dzi_OR_Mtissues <- list()
-  # loop over compartments with available data
-  for (i in 1:length(unique(exp_data$Tissue))) {
-  compartment <- unique(exp_data$Tissue)[i]
-  #Retrieve time points at which measurements are available for compartment i
-  exp_time <- exp_data[exp_data$Tissue == compartment, 2]
-  
-  preds_dzi_OR_Mtissues[[i]] <- solution[solution$time %in% exp_time, column_names[i]]
-  }
-  
-  preds_dzi_OR_Mtissues<- unlist(preds_dzi_OR_Mtissues) /1000 #convert ug/kg to ug/g
-  
-  
-  obs_dzi_OR_Mtissues <- c(exp_data[exp_data$Tissue == "Liver", "concentration"],
-                           exp_data[exp_data$Tissue == "Kidney", "concentration"],
-                           exp_data[exp_data$Tissue == "Brain", "concentration"])
-  
-  
-  ##########################
-  #-------------------------
-  # Dzierlenga ORAL female tissues
-  #-------------------------
-  ##########################
-  # Set up simulations for the 8th case, i.e. Dzierlenga (2021) ORAL female tissues
-  BW <- 0.25  # body weight (kg) not reported
-  admin.dose_per_g <- 80 # administered dose in mg PFOA/kg BW 
-  admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
-  admin.time <- 0 #time when doses are administered, in hours
-  admin.type <- "oral"
-  sex <- "F" 
-  
-  
-  estimated_params <- exp(x)
-  user_input <- list('BW'=BW,
-                     "admin.dose"= admin.dose,
-                     "admin.time" = admin.time, 
-                     "admin.type" = admin.type,
-                     "estimated_params" = estimated_params,
-                     "sex" = sex)
-  
-  params <- create.params(user_input)
-  inits <- create.inits(params)
-  events <- create.events(params)
-  
-  # sample_time: a vector of time points to solve the ODEs
-  sample_time=seq(0,24,0.1)
-  
-  # ode(): The solver of the ODEs
-  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                      y = inits, parms = params,
-                                      events = events,
-                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
-  
-  # We need to keep only the predictions for the relevant compartments for the time points 
-  # at which we have available data. 
-  
-  #======================================df8=========================================================
-  
-  exp_data <- dataset$df8 # retrieve data of Dzierlenga (2021) ORAL female tissues
-  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
-  column_names <- c("Cliver","Ckidney","Cbrain" )
-  
-  preds_dzi_OR_Ftissues <- list()
-  # loop over compartments with available data
-  for (i in 1:length(unique(exp_data$Tissue))) {
-    compartment <- unique(exp_data$Tissue)[i]
-    #Retrieve time points at which measurements are available for compartment i
-    exp_time <- exp_data[exp_data$Tissue == compartment, 2]
-    
-    preds_dzi_OR_Ftissues[[i]] <- solution[solution$time %in% exp_time, column_names[i]]
-  }
-  
-  preds_dzi_OR_Ftissues <- unlist(preds_dzi_OR_Ftissues) /1000 #convert ug/kg to ug/g
-  
-  
-  obs_dzi_OR_Ftissues <- c(exp_data[exp_data$Tissue == "Liver", "concentration"],
-                           exp_data[exp_data$Tissue == "Kidney", "concentration"],
-                           exp_data[exp_data$Tissue == "Brain", "concentration"])
-  
-  ##########################
-  #-------------------------
-  # Kim ORAL male blood
-  #-------------------------
-  ##########################
-  # Set up simulations for the 9th case, i.e. Kim (2016) ORAL male blood
-  BW <- 0.25  # body weight (kg) not reported
-  admin.dose_per_g <- 1 # administered dose in mg PFOA/kg BW 
-  admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
-  admin.time <- 0 #time when doses are administered, in hours
-  admin.type <- "oral"
-  sex <- "M" 
-  
-  
-  estimated_params <- exp(x)
-  user_input <- list('BW'=BW,
-                     "admin.dose"= admin.dose,
-                     "admin.time" = admin.time, 
-                     "admin.type" = admin.type,
-                     "estimated_params" = estimated_params,
-                     "sex" = sex)
-  
-  params <- create.params(user_input)
-  inits <- create.inits(params)
-  events <- create.events(params)
-  
-  # sample_time: a vector of time points to solve the ODEs
-  sample_time=seq(0,288,1)
-  
-  # ode(): The solver of the ODEs
-  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                      y = inits, parms = params,
-                                      events = events,
-                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
-  
-  # We need to keep only the predictions for the relevant compartments for the time points 
-  # at which we have available data. 
-  
-  #======================================df9=========================================================
-  
-  exp_data <- dataset$df9 # retrieve data of Kim (2016) ORAL male blood
-  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
-  column_names <- c("Cblood")
-  
-  preds_kim_OR_Mblood <- list()
-  # loop over compartments with available data
-  for (i in 1:length(unique(exp_data$Tissue))) {
-    compartment <- unique(exp_data$Tissue)[i]
-    #Retrieve time points at which measurements are available for compartment i
-    exp_time <- exp_data[exp_data$Tissue == compartment, 2]
-    
-    preds_kim_OR_Mblood [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
-  }
-  
-  preds_kim_OR_Mblood <- unlist(preds_kim_OR_Mblood) /1000 #convert ug/kg to ug/g
-  
-  
-  obs_kim_OR_Mblood <- c(exp_data[exp_data$Tissue == "Blood", "concentration"])
-  
- 
-  ##########################
-  #-------------------------
-  # Kim IV male blood
-  #-------------------------
-  ##########################
-  # Set up simulations for the 10th case, i.e. Kim (2016) ORAL male blood
-  BW <- 0.25  # body weight (kg) not reported
-  admin.dose_per_g <- 1 # administered dose in mg PFOA/kg BW 
-  admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
-  admin.time <- 0 #time when doses are administered, in hours
-  admin.type <- "iv"
-  sex <- "M" 
-  
-  
-  estimated_params <- exp(x)
-  user_input <- list('BW'=BW,
-                     "admin.dose"= admin.dose,
-                     "admin.time" = admin.time, 
-                     "admin.type" = admin.type,
-                     "estimated_params" = estimated_params,
-                     "sex" = sex)
-  
-  params <- create.params(user_input)
-  inits <- create.inits(params)
-  events <- create.events(params)
-  
-  # sample_time: a vector of time points to solve the ODEs
-  sample_time=seq(0,288,1)
-  
-  # ode(): The solver of the ODEs
-  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                      y = inits, parms = params,
-                                      events = events,
-                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
-  
-  # We need to keep only the predictions for the relevant compartments for the time points 
-  # at which we have available data. 
-  
-  #======================================df10=========================================================
-  
-  exp_data <- dataset$df10 # retrieve data of Kim (2016) IV male blood
-  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
-  column_names <- c("Cblood")
-  
-  preds_kim_IV_Mblood <- list()
-  # loop over compartments with available data
-  for (i in 1:length(unique(exp_data$Tissue))) {
-    compartment <- unique(exp_data$Tissue)[i]
-    #Retrieve time points at which measurements are available for compartment i
-    exp_time <- exp_data[exp_data$Tissue == compartment, 2]
-    
-    preds_kim_IV_Mblood [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
-  }
-  
-  preds_kim_IV_Mblood <- unlist(preds_kim_IV_Mblood) /1000 #convert ug/kg to ug/g
-  
-  
-  obs_kim_IV_Mblood <- c(exp_data[exp_data$Tissue == "Blood", "concentration"])
-  
-  
-  ##########################
-  #-------------------------
-  # Lupton ORAL female tissues
-  #-------------------------
-  ##########################
-  # Set up simulations for the 11th case, i.e. Lupton (2020) ORAL female tissues
-  BW <- 0.1875  # body weight (kg) not reported
-  admin.dose_per_g <- 0.047 # administered dose in mg PFOA/kg BW 
-  admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
-  admin.time <- 0 #time when doses are administered, in hours
-  admin.type <- "oral"
-  sex <- "F" 
-  
-  
-  estimated_params <- exp(x)
-  user_input <- list('BW'=BW,
-                     "admin.dose"= admin.dose,
-                     "admin.time" = admin.time, 
-                     "admin.type" = admin.type,
-                     "estimated_params" = estimated_params,
-                     "sex" = sex)
-  
-  params <- create.params(user_input)
-  inits <- create.inits(params)
-  events <- create.events(params)
-  
-  # sample_time: a vector of time points to solve the ODEs
-  sample_time=seq(0,12,0.05)
-  
-  # ode(): The solver of the ODEs
-  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                      y = inits, parms = params,
-                                      events = events,
-                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
-  
-  # We need to keep only the predictions for the relevant compartments for the time points 
-  # at which we have available data. 
-  
-  #======================================df11=========================================================
-  
-  exp_data <- dataset$df11 # retrieve data of Lupton (2020) ORAL female tissues
-  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
-  preds_Lup_OR_Ftissues <- solution[solution$time %in% unique(exp_data$time), c("Cliver","Ckidney", 
-                                                                                "Cblood", "Cskin")]
-  
-  preds_Lup_OR_Ftissues <- preds_Lup_OR_Ftissues /1000 #convert ug/kg to ug/g
-  
-  
-  obs_Lup_OR_Ftissues <- c(exp_data[exp_data$Tissue == "Liver", "concentration"],
-                           exp_data[exp_data$Tissue == "Kidney", "concentration"],
-                           exp_data[exp_data$Tissue == "Blood", "concentration"],
-                           exp_data[exp_data$Tissue == "Skin", "concentration"])
-  
-  
-  
   
   #Aggregate observations for all scenarios
   
-  preds <-c(preds_kudo_high, preds_kudo_low, preds_kim_IV_Mtissues, preds_kim_OR_Mtissues, preds_kim_IV_Ftissues, preds_kim_OR_Ftissues,
-            preds_dzi_OR_Mtissues, preds_dzi_OR_Ftissues, preds_kim_OR_Mblood, preds_kim_IV_Mblood, preds_Lup_OR_Ftissues)
-  obs <- c(obs_kudo_high, obs_kudo_low, obs_kim_IV_Mtissues, obs_kim_OR_Mtissues, obs_kim_IV_Ftissues, obs_kim_OR_Ftissues,
-           obs_dzi_OR_Mtissues, obs_dzi_OR_Ftissues, obs_kim_OR_Mblood, obs_kim_IV_Mblood, obs_Lup_OR_Ftissues)
+  preds <-c(preds_kim_OR_Mtissues)
+  obs <- c(obs_kim_OR_Mtissues)
   
   
   score <- AAFE(predictions = preds, observations = obs)
@@ -1811,7 +1212,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0 ,
-              "maxeval" = 10, 
+              "maxeval" = 300, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
@@ -1820,26 +1221,25 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
 #  bile_correction_factor, 11 correction factors for permeabilities
 
-N_pars <- 22# Number of parameters to be fitted
+N_pars <- 14# Number of parameters to be fitted
 fit <- log(rep(1,N_pars))
 
 # Run the optimization algorithmm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
-                               eval_f = obj.func,
-                               lb	= rep(log(0.001), N_pars),
-                               ub = rep(log(1000), N_pars),
-                               opts = opts,
-                               dataset = dataset)
+                             eval_f = obj.func,
+                             lb	= c(rep(log(1e-10), 11),log(1e-05),log(1e-05), log(1e-03)),
+                             ub = c(rep(log(1e10), 11),log(1e05),log(1e05), log(1e03)),
+                             opts = opts,
+                             dataset = dataset)
 
 estimated_params <- exp(optimizer$solution)
 
-
-# Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
-BW <- 0.29  # body weight (kg)
-admin.dose_per_g <- 16.56 # administered dose in mg PFOA/kg BW 
+# Set up simulations for the 4th case, i.e. kim (2016) ORAL Male tissues
+BW <- 0.25  # body weight (kg) not reported
+admin.dose_per_g <- 1 # administered dose in mg PFOA/kg BW 
 admin.dose <- admin.dose_per_g*BW *1e03 #ug PFOA
-admin.time <- 0 #0.5/60 # time when doses are administered, in hours
-admin.type <- "iv"
+admin.time <- 0 #time when doses are administered, in hours
+admin.type <- "oral"
 sex <- "M"
 
 user_input <- list('BW'=BW,
@@ -1855,478 +1255,194 @@ inits <- create.inits(params)
 events <- create.events(params)
 
 
-sample_time=seq(0,2,0.01)
- solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                     y = inits, parms = params,events = events,
-                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
-
- preds_kudo_high <-  solution[, c("time","Cblood","Cliver","Ckidney", "Ccarcass","Clungs", 
-                                  "Cspleen", "Cheart","Cbrain", "Ctestis", "Cstomach", 
-                                  "Cintestine")]
- 
- 
- # Set up simulations for the 2nd case, i.e. kudo (2007) high dose, tissues
- user_input$admin.dose <- 0.041*BW *1e03 #ug PFOA
- params <- create.params(user_input)
- inits <- create.inits(params)
- events <- create.events(params)
- sample_time=seq(0,2,0.01)
- solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                     y = inits, parms = params,events = events,
-                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
- 
- preds_kudo_low <- solution[, c("time","Cblood","Cliver","Ckidney", "Ccarcass","Clungs", 
-                                "Cspleen", "Cheart","Cbrain", "Ctestis", "Cstomach", 
-                                "Cintestine")]
- 
- 
- # Set up simulations for the 3rd case, i.e. kim (2016) IV Male tissues
- BW <- 0.25  # body weight (kg) not reported
- admin.dose_per_g <- 1 # administered dose in mg PFOA/kg BW 
- admin.dose <- admin.dose_per_g*BW *1e03 #ug PFOA
- admin.time <- 0 #time when doses are administered, in hours
- admin.type <- "iv"
- sex <- "M"
- 
- user_input <- list('BW'=BW,
-                    "admin.dose"= admin.dose,
-                    "admin.time" = admin.time, 
-                    "admin.type" = admin.type,
-                    "estimated_params" = estimated_params,
-                    "sex" = sex)
- 
- 
- params <- create.params(user_input)
- inits <- create.inits(params)
- events <- create.events(params)
- 
- 
- sample_time=seq(0,288,1)
- solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                     y = inits, parms = params,events = events,
-                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
- 
- preds_kim_IV_Mtissues <-  solution[, c("time", "Cliver","Ckidney", "Clungs", 
-                                        "Cspleen", "Cheart")]
- 
- 
- # Set up simulations for the 4th case, i.e. kim (2016) ORAL Male tissues
- BW <- 0.25  # body weight (kg) not reported
- admin.dose_per_g <- 1 # administered dose in mg PFOA/kg BW 
- admin.dose <- admin.dose_per_g*BW *1e03 #ug PFOA
- admin.time <- 0 #time when doses are administered, in hours
- admin.type <- "oral"
- sex <- "M"
- 
- user_input <- list('BW'=BW,
-                    "admin.dose"= admin.dose,
-                    "admin.time" = admin.time, 
-                    "admin.type" = admin.type,
-                    "estimated_params" = estimated_params,
-                    "sex" = sex)
- 
- 
- params <- create.params(user_input)
- inits <- create.inits(params)
- events <- create.events(params)
- 
- 
- sample_time=seq(0,288,1)
- solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                     y = inits, parms = params,events = events,
-                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
- 
- preds_kim_OR_Mtissues <-  solution[, c("time", "Cliver","Ckidney", "Clungs", 
-                                        "Cspleen", "Cheart")]
- 
- # Set up simulations for the 5th case, i.e. kim (2016) IV female tissues
- BW <- 0.25  # body weight (kg) not reported
- admin.dose_per_g <- 1 # administered dose in mg PFOA/kg BW 
- admin.dose <- admin.dose_per_g*BW *1e03 #ug PFOA
- admin.time <- 0 #time when doses are administered, in hours
- admin.type <- "iv"
- sex <- "F"
- 
- user_input <- list('BW'=BW,
-                    "admin.dose"= admin.dose,
-                    "admin.time" = admin.time, 
-                    "admin.type" = admin.type,
-                    "estimated_params" = estimated_params,
-                    "sex" = sex)
- 
- 
- params <- create.params(user_input)
- inits <- create.inits(params)
- events <- create.events(params)
- 
- 
- sample_time=seq(0,288,1)
- solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                     y = inits, parms = params,events = events,
-                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
- 
- preds_kim_IV_Ftissues <-  solution[, c("time", "Cliver","Ckidney", "Clungs", 
-                                        "Cspleen", "Cheart")]
- 
- # Set up simulations for the 6th case, i.e. kim (2016) ORAL female tissues
- BW <- 0.25  # body weight (kg) not reported
- admin.dose_per_g <- 1 # administered dose in mg PFOA/kg BW 
- admin.dose <- admin.dose_per_g*BW *1e03 #ug PFOA
- admin.time <- 0 #time when doses are administered, in hours
- admin.type <- "oral"
- sex <- "F"
- 
- user_input <- list('BW'=BW,
-                    "admin.dose"= admin.dose,
-                    "admin.time" = admin.time, 
-                    "admin.type" = admin.type,
-                    "estimated_params" = estimated_params,
-                    "sex" = sex)
- 
- 
- params <- create.params(user_input)
- inits <- create.inits(params)
- events <- create.events(params)
- 
- 
- sample_time=seq(0,288,1)
- solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                     y = inits, parms = params,events = events,
-                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
- 
- preds_kim_OR_Ftissues <-  solution[, c("time", "Cliver","Ckidney", "Clungs", 
-                                        "Cspleen", "Cheart")]
- 
- 
- # Set up simulations for the 7th case, i.e. Dzierlenga (2021) ORAL male tissues
- BW <- 0.25  # body weight (kg) not reported
- admin.dose_per_g <- 12 # administered dose in mg PFOA/kg BW 
- admin.dose <- admin.dose_per_g*BW *1e03 #ug PFOA
- admin.time <- 0 #time when doses are administered, in hours
- admin.type <- "oral"
- sex <- "M"
- 
- user_input <- list('BW'=BW,
-                    "admin.dose"= admin.dose,
-                    "admin.time" = admin.time, 
-                    "admin.type" = admin.type,
-                    "estimated_params" = estimated_params,
-                    "sex" = sex)
- 
- 
- params <- create.params(user_input)
- inits <- create.inits(params)
- events <- create.events(params)
- 
- 
- sample_time=seq(0,864,1)
- solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+sample_time=  seq(0,288,1)
+solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
 
- preds_dzi_OR_Mtissues <-  solution[, c("time", "Cliver","Ckidney", "Cbrain")]
- 
- 
- # Set up simulations for the 8th case, i.e. Dzierlenga (2021) ORAL female tissues
- BW <- 0.25  # body weight (kg) not reported
- admin.dose_per_g <- 80 # administered dose in mg PFOA/kg BW 
- admin.dose <- admin.dose_per_g*BW *1e03 #ug PFOA
- admin.time <- 0 #time when doses are administered, in hours
- admin.type <- "oral"
- sex <- "F"
- 
- user_input <- list('BW'=BW,
-                    "admin.dose"= admin.dose,
-                    "admin.time" = admin.time, 
-                    "admin.type" = admin.type,
-                    "estimated_params" = estimated_params,
-                    "sex" = sex)
- 
- 
- params <- create.params(user_input)
- inits <- create.inits(params)
- events <- create.events(params)
- 
- 
- sample_time=seq(0,24,1)
- solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                     y = inits, parms = params,events = events,
-                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
- 
- preds_dzi_OR_Ftissues <-  solution[, c("time", "Cliver","Ckidney", "Cbrain")]
- 
- 
- # Set up simulations for the 9th case, i.e. Kim (2016) ORAL male blood
- BW <- 0.25  # body weight (kg) not reported
- admin.dose_per_g <- 1 # administered dose in mg PFOA/kg BW 
- admin.dose <- admin.dose_per_g*BW *1e03 #ug PFOA
- admin.time <- 0 #time when doses are administered, in hours
- admin.type <- "oral"
- sex <- "M"
- 
- user_input <- list('BW'=BW,
-                    "admin.dose"= admin.dose,
-                    "admin.time" = admin.time, 
-                    "admin.type" = admin.type,
-                    "estimated_params" = estimated_params,
-                    "sex" = sex)
- 
- 
- params <- create.params(user_input)
- inits <- create.inits(params)
- events <- create.events(params)
- 
- 
- sample_time=seq(0,288,1)
- solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                     y = inits, parms = params,events = events,
-                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
- 
- preds_kim_OR_Mblood <-  solution[, c("time", "Cblood")]
- 
- 
- # Set up simulations for the 10th case, i.e. Kim (2016) IV male blood
- BW <- 0.25  # body weight (kg) not reported
- admin.dose_per_g <- 1 # administered dose in mg PFOA/kg BW 
- admin.dose <- admin.dose_per_g*BW *1e03 #ug PFOA
- admin.time <- 0 #time when doses are administered, in hours
- admin.type <- "iv"
- sex <- "M"
- 
- user_input <- list('BW'=BW,
-                    "admin.dose"= admin.dose,
-                    "admin.time" = admin.time, 
-                    "admin.type" = admin.type,
-                    "estimated_params" = estimated_params,
-                    "sex" = sex)
- 
- 
- params <- create.params(user_input)
- inits <- create.inits(params)
- events <- create.events(params)
- 
- 
- sample_time=seq(0,288,1)
- solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                     y = inits, parms = params,events = events,
-                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
- 
- preds_kim_IV_Mblood <-  solution[, c("time", "Cblood")]
- 
- 
- # Set up simulations for the 11th case, i.e. Lupton (2020) ORAL female tissues
- BW <- 0.1875  # body weight (kg) not reported
- admin.dose_per_g <- 0.047 # administered dose in mg PFOA/kg BW 
- admin.dose <- admin.dose_per_g*BW *1e03 #ug PFOA
- admin.time <- 0 #time when doses are administered, in hours
- admin.type <- "oral"
- sex <- "F"
- 
- user_input <- list('BW'=BW,
-                    "admin.dose"= admin.dose,
-                    "admin.time" = admin.time, 
-                    "admin.type" = admin.type,
-                    "estimated_params" = estimated_params,
-                    "sex" = sex)
- 
- 
- params <- create.params(user_input)
- inits <- create.inits(params)
- events <- create.events(params)
- 
- 
- sample_time=seq(0,12,0.05)
- solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                     y = inits, parms = params,events = events,
-                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
- 
- preds_Lup_OR_Ftissues <-  solution[, c("time", "Cliver","Ckidney", "Cblood", "Cskin")]
- 
+preds_kim_OR_Mtissues <-  solution[, c("time", "Cliver","Ckidney", "Clungs", 
+                                       "Cspleen", "Cheart")]
 
- #convert ug/L, which is returned by the ODE function, to ug/g, which are the units in all the datasets
- 
- preds_kudo_high[,2:dim(preds_kudo_high)[2]] <- preds_kudo_high[,2:dim(preds_kudo_high)[2]] /1000 
- preds_kudo_low[,2:dim(preds_kudo_low)[2]] <- preds_kudo_low[,2:dim(preds_kudo_low)[2]] /1000 
- preds_kim_IV_Mtissues[,2:dim(preds_kim_IV_Mtissues)[2]] <- preds_kim_IV_Mtissues[,2:dim(preds_kim_IV_Mtissues)[2]] /1000
- preds_kim_OR_Mtissues[,2:dim(preds_kim_OR_Mtissues)[2]] <- preds_kim_OR_Mtissues[,2:dim(preds_kim_OR_Mtissues)[2]] /1000
- preds_kim_IV_Ftissues[,2:dim(preds_kim_IV_Ftissues)[2]] <- preds_kim_IV_Ftissues[,2:dim(preds_kim_IV_Ftissues)[2]] /1000
- preds_kim_OR_Ftissues[,2:dim(preds_kim_OR_Ftissues)[2]] <- preds_kim_OR_Ftissues[,2:dim(preds_kim_OR_Ftissues)[2]] /1000
- preds_dzi_OR_Mtissues[,2:dim(preds_dzi_OR_Mtissues)[2]] <- preds_dzi_OR_Mtissues[,2:dim(preds_dzi_OR_Mtissues)[2]] /1000
- preds_dzi_OR_Ftissues[,2:dim(preds_dzi_OR_Ftissues)[2]] <- preds_dzi_OR_Ftissues[,2:dim(preds_dzi_OR_Ftissues)[2]] /1000
- preds_kim_OR_Mblood[,2:dim(preds_kim_OR_Mblood)[2]] <- preds_kim_OR_Mblood[,2:dim(preds_kim_OR_Mblood)[2]] /1000
- preds_kim_IV_Mblood[,2:dim(preds_kim_IV_Mblood)[2]] <- preds_kim_IV_Mblood[,2:dim(preds_kim_IV_Mblood)[2]] /1000
- preds_Lup_OR_Ftissues[,2:dim(preds_Lup_OR_Ftissues)[2]] <- preds_Lup_OR_Ftissues[,2:dim(preds_Lup_OR_Ftissues)[2]] /1000
- 
- #convert ug/L, which is returned by the ODE function, to uM [Dzierlenga (2021) ORAL male tissues]
- 
- 
- # preds_dzi_OR_Mtissues[,2] <- preds_dzi_OR_Mtissues[,2]* VLT/MW
- # preds_dzi_OR_Mtissues[,3] <- preds_dzi_OR_Mtissues[,3] * VKT/MW 
- # preds_dzi_OR_Mtissues[,4] <- preds_dzi_OR_Mtissues[,4] * VBrT/MW 
- 
- # ######################################################################################
+
+#convert ug/L, which is returned by the ODE function, to ug/g, which are the units in all the datasets
+
+preds_kudo_high[,2:dim(preds_kudo_high)[2]] <- preds_kudo_high[,2:dim(preds_kudo_high)[2]] /1000 
+preds_kudo_low[,2:dim(preds_kudo_low)[2]] <- preds_kudo_low[,2:dim(preds_kudo_low)[2]] /1000 
+preds_kim_IV_Mtissues[,2:dim(preds_kim_IV_Mtissues)[2]] <- preds_kim_IV_Mtissues[,2:dim(preds_kim_IV_Mtissues)[2]] /1000
+preds_kim_OR_Mtissues[,2:dim(preds_kim_OR_Mtissues)[2]] <- preds_kim_OR_Mtissues[,2:dim(preds_kim_OR_Mtissues)[2]] /1000
+preds_kim_IV_Ftissues[,2:dim(preds_kim_IV_Ftissues)[2]] <- preds_kim_IV_Ftissues[,2:dim(preds_kim_IV_Ftissues)[2]] /1000
+preds_kim_OR_Ftissues[,2:dim(preds_kim_OR_Ftissues)[2]] <- preds_kim_OR_Ftissues[,2:dim(preds_kim_OR_Ftissues)[2]] /1000
+preds_dzi_OR_Mtissues[,2:dim(preds_dzi_OR_Mtissues)[2]] <- preds_dzi_OR_Mtissues[,2:dim(preds_dzi_OR_Mtissues)[2]] /1000
+preds_dzi_OR_Ftissues[,2:dim(preds_dzi_OR_Ftissues)[2]] <- preds_dzi_OR_Ftissues[,2:dim(preds_dzi_OR_Ftissues)[2]] /1000
+preds_kim_OR_Mblood[,2:dim(preds_kim_OR_Mblood)[2]] <- preds_kim_OR_Mblood[,2:dim(preds_kim_OR_Mblood)[2]] /1000
+preds_kim_IV_Mblood[,2:dim(preds_kim_IV_Mblood)[2]] <- preds_kim_IV_Mblood[,2:dim(preds_kim_IV_Mblood)[2]] /1000
+preds_Lup_OR_Ftissues[,2:dim(preds_Lup_OR_Ftissues)[2]] <- preds_Lup_OR_Ftissues[,2:dim(preds_Lup_OR_Ftissues)[2]] /1000
+
+#convert ug/L, which is returned by the ODE function, to uM [Dzierlenga (2021) ORAL male tissues]
+
+
+# preds_dzi_OR_Mtissues[,2] <- preds_dzi_OR_Mtissues[,2]* VLT/MW
+# preds_dzi_OR_Mtissues[,3] <- preds_dzi_OR_Mtissues[,3] * VKT/MW 
+# preds_dzi_OR_Mtissues[,4] <- preds_dzi_OR_Mtissues[,4] * VBrT/MW 
+
+# ######################################################################################
 #Plot the predictions against the observations
 library(ggplot2) 
- 
- # Function that creates a plot given a compartment name and the respective predictions and observations
- create.plots <- function(predictions, observations, compartment){  
-   #Colours of observations and predictions
-   cls <-  c("predictions" = "#56B4E9",  "Observations" = "#D55E00")
-   
-   ggplot(data = predictions)+
-     geom_line( aes_string(x= "Time", y= rlang::expr(!!compartment), 
-                           color = '"predictions"'),  size=1.5,alpha = 0.7) +
-     geom_point(data=observations, aes_string(x="Time", y= rlang::expr(!!compartment), 
-                                              color='"Observations"'), size=4)+
-     labs(title = rlang::expr(!!compartment), 
-          y = expression("PFOA concentration (" * mu* "g/g tissue)" ),
-          x = "Time (hours)")+
-     theme(plot.title = element_text(hjust = 0.5))+
-     scale_color_manual("", values=cls,
-                        guide = guide_legend(override.aes =
-                                               list(shape = c(16,NA),
-                                                    linetype = c(0,1))))+
-     theme_light() + 
-     theme(legend.position=c(1,1), 
-           legend.justification=c(0, 1), 
-           legend.key.size = unit(1.5, 'cm'),  
-           legend.title = element_text(size=14),
-           axis.title=element_text(size=14),
-           legend.text = element_text(size=14)
-     )
-   
- }
- 
- 
+
+# Function that creates a plot given a compartment name and the respective predictions and observations
+create.plots <- function(predictions, observations, compartment){  
+  #Colours of observations and predictions
+  cls <-  c("predictions" = "#56B4E9",  "Observations" = "#D55E00")
+  
+  ggplot(data = predictions)+
+    geom_line( aes_string(x= "Time", y= rlang::expr(!!compartment), 
+                          color = '"predictions"'),  size=1.5,alpha = 0.7) +
+    geom_point(data=observations, aes_string(x="Time", y= rlang::expr(!!compartment), 
+                                             color='"Observations"'), size=4)+
+    labs(title = rlang::expr(!!compartment), 
+         y = expression("PFOA concentration (" * mu* "g/g tissue)" ),
+         x = "Time (hours)")+
+    theme(plot.title = element_text(hjust = 0.5))+
+    scale_color_manual("", values=cls,
+                       guide = guide_legend(override.aes =
+                                              list(shape = c(16,NA),
+                                                   linetype = c(0,1))))+
+    theme_light() + 
+    theme(legend.position=c(1,1), 
+          legend.justification=c(0, 1), 
+          legend.key.size = unit(1.5, 'cm'),  
+          legend.title = element_text(size=14),
+          axis.title=element_text(size=14),
+          legend.text = element_text(size=14)
+    )
+  
+}
+
+
 # Convert Kudo High dose from long to wide format using reshape
 experiment1 <- reshape(kudo_high_dose[c("Tissue" ,"Time_hours", 
-                                         "Concentration_microg_per_g_organ")], 
+                                        "Concentration_microg_per_g_organ")], 
                        idvar = "Time_hours", timevar = "Tissue", direction = "wide")
 colnames(experiment1) <- c("Time",kudo_high_dose$Tissue )
- 
+
 # Convert Kudo Low dose from long to wide format using reshape
 experiment2 <- reshape(kudo_low_dose[c("Tissue" ,"Time_hours", 
+                                       "Concentration_microg_per_g_organ")], 
+                       idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+colnames(experiment2) <- c("Time",kudo_low_dose$Tissue )
+
+# Convert Kim IV Male tissues from long to wide format using reshape
+experiment3 <- reshape(kim_IV_Mtissues[c("Tissue" ,"Time_hours", 
                                          "Concentration_microg_per_g_organ")], 
-                        idvar = "Time_hours", timevar = "Tissue", direction = "wide")
- colnames(experiment2) <- c("Time",kudo_low_dose$Tissue )
- 
- # Convert Kim IV Male tissues from long to wide format using reshape
- experiment3 <- reshape(kim_IV_Mtissues[c("Tissue" ,"Time_hours", 
+                       idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+colnames(experiment3) <- c("Time",kim_IV_Mtissues$Tissue )
+
+# Convert Kim ORAL Male tissues from long to wide format using reshape
+experiment4 <- reshape(kim_OR_Mtissues[c("Tissue" ,"Time_hours", 
+                                         "Concentration_microg_per_g_organ")], 
+                       idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+colnames(experiment4) <- c("Time",kim_OR_Mtissues$Tissue )
+
+# Convert Kim IV female tissues from long to wide format using reshape
+experiment5 <- reshape(kim_IV_Ftissues[c("Tissue" ,"Time_hours", 
+                                         "Concentration_microg_per_g_organ")], 
+                       idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+colnames(experiment5) <- c("Time",kim_IV_Ftissues$Tissue )
+
+# Convert Kim ORAL female tissues from long to wide format using reshape
+experiment6 <- reshape(kim_OR_Ftissues[c("Tissue" ,"Time_hours", 
+                                         "Concentration_microg_per_g_organ")], 
+                       idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+colnames(experiment6) <- c("Time",kim_OR_Ftissues$Tissue )
+
+# Convert Dzierlenga ORAL male tissues from long to wide format using reshape
+experiment7 <- reshape(dzi_OR_Mtissues[c("Tissue" ,"Time_hours", 
+                                         "Concentration_microg_per_g_organ")], 
+                       idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+colnames(experiment7) <- c("Time",unique(dzi_OR_Mtissues$Tissue))
+
+
+# Convert Dzierlenga ORAL female tissues from long to wide format using reshape
+experiment8 <- reshape(dzi_OR_Ftissues[c("Tissue" ,"Time_hours", 
+                                         "Concentration_microg_per_g_organ")], 
+                       idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+colnames(experiment8) <- c("Time",unique(dzi_OR_Ftissues$Tissue))
+
+# Convert Kim ORAL male blood from long to wide format using reshape
+experiment9 <- reshape(kim_OR_Mblood[c("Tissue" ,"Time_hours", 
+                                       "Concentration_microg_per_g_organ")], 
+                       idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+colnames(experiment9) <- c("Time",unique(kim_OR_Mblood$Tissue))
+
+
+# Convert Kim IV male blood from long to wide format using reshape
+experiment10 <- reshape(kim_IV_Mblood[c("Tissue" ,"Time_hours", 
                                         "Concentration_microg_per_g_organ")], 
                         idvar = "Time_hours", timevar = "Tissue", direction = "wide")
- colnames(experiment3) <- c("Time",kim_IV_Mtissues$Tissue )
- 
- # Convert Kim ORAL Male tissues from long to wide format using reshape
- experiment4 <- reshape(kim_OR_Mtissues[c("Tissue" ,"Time_hours", 
-                                          "Concentration_microg_per_g_organ")], 
-                        idvar = "Time_hours", timevar = "Tissue", direction = "wide")
- colnames(experiment4) <- c("Time",kim_OR_Mtissues$Tissue )
- 
- # Convert Kim IV female tissues from long to wide format using reshape
- experiment5 <- reshape(kim_IV_Ftissues[c("Tissue" ,"Time_hours", 
-                                          "Concentration_microg_per_g_organ")], 
-                        idvar = "Time_hours", timevar = "Tissue", direction = "wide")
- colnames(experiment5) <- c("Time",kim_IV_Ftissues$Tissue )
- 
- # Convert Kim ORAL female tissues from long to wide format using reshape
- experiment6 <- reshape(kim_OR_Ftissues[c("Tissue" ,"Time_hours", 
-                                          "Concentration_microg_per_g_organ")], 
-                        idvar = "Time_hours", timevar = "Tissue", direction = "wide")
- colnames(experiment6) <- c("Time",kim_OR_Ftissues$Tissue )
- 
- # Convert Dzierlenga ORAL male tissues from long to wide format using reshape
- experiment7 <- reshape(dzi_OR_Mtissues[c("Tissue" ,"Time_hours", 
-                                          "Concentration_microg_per_g_organ")], 
-                        idvar = "Time_hours", timevar = "Tissue", direction = "wide")
- colnames(experiment7) <- c("Time",unique(dzi_OR_Mtissues$Tissue))
+colnames(experiment10) <- c("Time",unique(kim_IV_Mblood$Tissue))
 
- 
- # Convert Dzierlenga ORAL female tissues from long to wide format using reshape
- experiment8 <- reshape(dzi_OR_Ftissues[c("Tissue" ,"Time_hours", 
+# Convert Lupton ORAL female tissues from long to wide format using reshape
+experiment11 <- reshape(Lup_OR_Ftissues[c("Tissue" ,"Time_hours", 
                                           "Concentration_microg_per_g_organ")], 
                         idvar = "Time_hours", timevar = "Tissue", direction = "wide")
- colnames(experiment8) <- c("Time",unique(dzi_OR_Ftissues$Tissue))
- 
- # Convert Kim ORAL male blood from long to wide format using reshape
- experiment9 <- reshape(kim_OR_Mblood[c("Tissue" ,"Time_hours", 
-                                          "Concentration_microg_per_g_organ")], 
-                        idvar = "Time_hours", timevar = "Tissue", direction = "wide")
- colnames(experiment9) <- c("Time",unique(kim_OR_Mblood$Tissue))
- 
- 
- # Convert Kim IV male blood from long to wide format using reshape
- experiment10 <- reshape(kim_IV_Mblood[c("Tissue" ,"Time_hours", 
-                                        "Concentration_microg_per_g_organ")], 
-                        idvar = "Time_hours", timevar = "Tissue", direction = "wide")
- colnames(experiment10) <- c("Time",unique(kim_IV_Mblood$Tissue))
- 
- # Convert Lupton ORAL female tissues from long to wide format using reshape
- experiment11 <- reshape(Lup_OR_Ftissues[c("Tissue" ,"Time_hours", 
-                                         "Concentration_microg_per_g_organ")], 
-                         idvar = "Time_hours", timevar = "Tissue", direction = "wide")
- colnames(experiment11) <- c("Time",unique(Lup_OR_Ftissues$Tissue))
- 
- 
- # Put the experiments in a list
- experiments <- list(experiment1 = experiment1, experiment2 = experiment2, experiment3 = experiment3, experiment4 = experiment4,
-                     experiment5 = experiment5, experiment6 = experiment6, experiment7 = experiment7, experiment8 = experiment8,
-                     experiment9 = experiment9, experiment10 = experiment10, experiment11 = experiment11)
- 
-
-  # Rename predictions so that they share the same name as the names of the experimental data dataframe
- colnames(preds_kudo_high) <- c( "Time", "Blood", "Liver",  "Kidney", "Carcass", "Lung",  "Spleen", 
-                                 "Heart", "Brain", "Testis", "Stomach", "Intestine")
- 
- colnames(preds_kudo_low) <-  colnames(preds_kudo_high) 
- colnames(preds_kim_IV_Mtissues) <- c( "Time", "Liver",  "Kidney", "Lung",
-                                 "Spleen", "Heart")
- 
- colnames(preds_kim_OR_Mtissues) <- colnames(preds_kim_IV_Mtissues)
- colnames(preds_kim_IV_Ftissues) <- colnames(preds_kim_IV_Mtissues)
- colnames(preds_kim_OR_Ftissues) <- colnames(preds_kim_IV_Mtissues)
- 
- colnames(preds_dzi_OR_Mtissues) <- c("Time","Liver","Kidney","Brain")
- colnames(preds_dzi_OR_Ftissues) <- colnames(preds_dzi_OR_Mtissues)
- 
- colnames(preds_kim_OR_Mblood) <- c ("Time", "Blood")
- colnames(preds_kim_IV_Mblood) <- c ("Time", "Blood")
- 
- colnames(preds_Lup_OR_Ftissues) <- c ("Time", "Liver","Kidney","Blood","Skin")
- 
- 
- # Create a list containing the corresponding predictions
- simulations <- list(predictions1 = preds_kudo_high,  predictions2 = preds_kudo_low, predictions3 = preds_kim_IV_Mtissues, 
-                     predictions4 = preds_kim_OR_Mtissues, predictions5 = preds_kim_IV_Ftissues, predictions6 = preds_kim_OR_Ftissues,
-                     predictions7 = preds_dzi_OR_Mtissues, predictions8 = preds_dzi_OR_Ftissues, predictions9 = preds_kim_OR_Mblood,
-                     predictions10 = preds_kim_IV_Mblood, predictions11 = preds_Lup_OR_Ftissues)
-                    
- 
- # Iterate over all existing experiments and create the accompanying plots
- for(i in 1:length(experiments)){
-   # Retrieve the corresponding observations and simulations
-   observations <- experiments[[i]]
-   predictions <- simulations[[i]]
-   # Extract the compartment names
-   compartments <- names(predictions)[2:length(predictions)]
-   
-   # Use lapply to iterate over the column names and create plots
-   plots <- lapply(compartments, function(compartment) {
-     create.plots(predictions, observations, compartment )
-   })
-   final_plot <- do.call(ggpubr::ggarrange, c(plots, ncol = 3, nrow = ceiling(length(plots) / 3),
-                                              common.legend = TRUE, legend = "right"))
-   
-   plot.margin=unit(c(0,0,0,0), "pt")
-   
-   
-   # Save the plot with dynamically adjusted dimensions
-   ggsave(paste0("experiment", i,".png"), plot = final_plot,
-          device = 'png', dpi = 300,
-          width = 13,
-          height = 10,
-          units = "in")
+colnames(experiment11) <- c("Time",unique(Lup_OR_Ftissues$Tissue))
 
 
- }
+# Put the experiments in a list
+experiments <- list(experiment4 = experiment4
+                    )
 
- 
+
+# Rename predictions so that they share the same name as the names of the experimental data dataframe
+colnames(preds_kudo_high) <- c( "Time", "Blood", "Liver",  "Kidney", "Carcass", "Lung",  "Spleen", 
+                                "Heart", "Brain", "Testis", "Stomach", "Intestine")
+
+colnames(preds_kudo_low) <-  colnames(preds_kudo_high) 
+colnames(preds_kim_IV_Mtissues) <- c( "Time", "Liver",  "Kidney", "Lung",
+                                      "Spleen", "Heart")
+
+colnames(preds_kim_OR_Mtissues) <- colnames(preds_kim_IV_Mtissues)
+colnames(preds_kim_IV_Ftissues) <- colnames(preds_kim_IV_Mtissues)
+colnames(preds_kim_OR_Ftissues) <- colnames(preds_kim_IV_Mtissues)
+
+colnames(preds_dzi_OR_Mtissues) <- c("Time","Liver","Kidney","Brain")
+colnames(preds_dzi_OR_Ftissues) <- colnames(preds_dzi_OR_Mtissues)
+
+colnames(preds_kim_OR_Mblood) <- c ("Time", "Blood")
+colnames(preds_kim_IV_Mblood) <- c ("Time", "Blood")
+
+colnames(preds_Lup_OR_Ftissues) <- c ("Time", "Liver","Kidney","Blood","Skin")
+
+
+# Create a list containing the corresponding predictions
+simulations <- list(predictions4 = preds_kim_OR_Mtissues)
+
+
+# Iterate over all existing experiments and create the accompanying plots
+for(i in 1:length(experiments)){
+  # Retrieve the corresponding observations and simulations
+  observations <- experiments[[i]]
+  predictions <- simulations[[i]]
+  # Extract the compartment names
+  compartments <- names(predictions)[2:length(predictions)]
+  
+  # Use lapply to iterate over the column names and create plots
+  plots <- lapply(compartments, function(compartment) {
+    create.plots(predictions, observations, compartment )
+  })
+  final_plot <- do.call(ggpubr::ggarrange, c(plots, ncol = 3, nrow = ceiling(length(plots) / 3),
+                                             common.legend = TRUE, legend = "right"))
+  
+  plot.margin=unit(c(0,0,0,0), "pt")
+  
+  
+  # Save the plot with dynamically adjusted dimensions
+  ggsave(paste0("experiment", i,".png"), plot = final_plot,
+         device = 'png', dpi = 300,
+         width = 13,
+         height = 10,
+         units = "in")
+  
+  
+}
+
