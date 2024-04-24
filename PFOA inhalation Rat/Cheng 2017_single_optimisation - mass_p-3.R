@@ -779,8 +779,8 @@ ode.func <- function(time, inits, params){
     #Kidney proximal tubule cells subcompartment
     dMKT = kKFKT*(CKFf-CKTf) - kFKT*(CKTf - CFil) + (VmK_Oatp*CFil/KmK_Oatp+CFil)*VFil +
             (VmK_Oat1*CKFf/KmK_Oat1+CKFf)*VKF + (VmK_Oat3*CKFf/KmK_Oat3+CKFf)*VKF # + (VmK_Osta*CKTf/KmK_Osta+CKTf)
-    dMFil =  QGFR*CBfart+ kFKT*(CKTf - CFil) - (VmK_Oatp*CFil/KmK_Oatp+CFil)*VFil - (Qurine/VFil)*CFil
-    dMurine = (Qurine/VFil)*CFil
+    dMFil =  QGFR*CBfart+ kFKT*(CKTf - CFil) - (VmK_Oatp*CFil/KmK_Oatp+CFil)*VFil - (Qurine*CFil)
+    dMurine = Qurine*CFil
     
     #Liver
     
@@ -796,7 +796,7 @@ ode.func <- function(time, inits, params){
     
     
     # Feces
-    dMfeces = (Qfeces/VINL)*CINL
+    dMfeces = Qfeces*CINL
     
     #Stomach
     #blood subcompartment
@@ -816,7 +816,7 @@ ode.func <- function(time, inits, params){
     #Intestine tissue subcompartment
     dMINT = kINFINT*(CINFf-CINT) + kabIN*CINL
     #Intestine lumen
-    dMINL = QGE*CSTL - (Qfeces/VINL)*CINL - kabIN*CINL + (Qbile/Vbile)*Cbile
+    dMINL = QGE*CSTL - (Qfeces*CINL) - kabIN*CINL + (Qbile/Vbile)*Cbile
 
     
     #Muscle
@@ -916,9 +916,9 @@ ode.func <- function(time, inits, params){
     Clungs <-  (MBLu + MLuF+ MLuT)/(VLuB+VLuF+VLuT)
     Crest <-  (MBR + MRF+ MRT)/(VRB+VRF+VRT)
     Ccarcass <- (MBM + MMF+ MMT+MBA + MAF+ MAT +MBR + MRF+ MRT)/(VM+VA+VR)
-    #Cfeces <- Mfeces/....
+    Cfeces <- Mfeces/VINL
     Cbile <- Cbile
-    #Curine <- Murine/...
+    Curine <- Murine/Vfil
     Cspleen <-  (MBSP + MSPF+ MSPT)/(VSPB+VSPF+VSPT)
     Cheart <-  (MBH + MHF+ MHT)/(VHB+VHF+VHT)
     Cbrain <-  (MBBr + MBrF+ MBrT)/(VBrB+VBrF+VBrT)
@@ -1910,7 +1910,7 @@ obj.func <- function(x, dataset){
   #======================================df14=========================================================
   
   exp_data <- dataset$df14 # retrieve data of Cui (2010) ORAL male urine low
-  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
+  colnames(exp_data)[c(2,3)] <- c("time", "mass")
   column_names <- c("Curine")
   
   preds_Cui_OR_Murine <- list()
@@ -1926,7 +1926,7 @@ obj.func <- function(x, dataset){
   preds_Cui_OR_Murine <- unlist(preds_Cui_OR_Murine) /1000 #convert ug/kg to ug/g
   
   
-  obs_Cui_OR_Murine <- c(exp_data[exp_data$Tissue == "Urine", "concentration"])
+  obs_Cui_OR_Murine <- c(exp_data[exp_data$Tissue == "Urine", "mass"])
   
   
   #Aggregate observations for all scenarios
