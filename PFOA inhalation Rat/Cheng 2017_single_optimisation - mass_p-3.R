@@ -1695,8 +1695,10 @@ obj.func <- function(x, dataset){
   # Set up simulations for the 11th case, i.e. Lupton (2020) ORAL female tissues
   BW <- 0.1875  # body weight (kg) not reported
   admin.dose_per_g <- 0.047 # administered dose in mg PFOA/kg BW 
-  admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
-  admin.time <- 0 #time when doses are administered, in hours
+  admin.dose_single <- (admin.dose_per_g*BW*1e03)/2 #ug PFOA
+  admin.time <- seq(0,13.5*24,12) #time when doses are administered, in hours
+  admin.dose <- rep(admin.dose_single, length(admin.time))
+  
   admin.type <- "oral"
   sex <- "F" 
   
@@ -1714,7 +1716,7 @@ obj.func <- function(x, dataset){
   events <- create.events(params)
   
   # sample_time: a vector of time points to solve the ODEs
-  sample_time=seq(0,12,0.05)
+  sample_time=seq(0,324,1)
   
   # ode(): The solver of the ODEs
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -1741,14 +1743,201 @@ obj.func <- function(x, dataset){
                            exp_data[exp_data$Tissue == "Skin", "concentration"])
   
   
+  ##########################
+  #-------------------------
+  # Lupton ORAL female feces
+  #-------------------------
+  ##########################
+  # Set up simulations for the 12th case, i.e. Lupton (2020) ORAL female feces
+  BW <- 0.1875  # body weight (kg) not reported
+  admin.dose_per_g <- 0.047 # administered dose in mg PFOA/kg BW 
+  admin.dose_single <- (admin.dose_per_g*BW*1e03)/2 #ug PFOA
+  admin.time <- seq(0,13.5*24,12) #time when doses are administered, in hours
+  admin.dose <- rep(admin.dose_single, length(admin.time))
+  
+  admin.type <- "oral"
+  sex <- "F" 
+  
+  
+  
+  estimated_params <- exp(x)
+  user_input <- list('BW'=BW,
+                     "admin.dose"= admin.dose,
+                     "admin.time" = admin.time, 
+                     "admin.type" = admin.type,
+                     "estimated_params" = estimated_params,
+                     "sex" = sex)
+  
+  params <- create.params(user_input)
+  inits <- create.inits(params)
+  events <- create.events(params)
+  
+  # sample_time: a vector of time points to solve the ODEs
+  sample_time=seq(0,384,1)
+  
+  # ode(): The solver of the ODEs
+  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                      y = inits, parms = params,
+                                      events = events,
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
+  
+  # We need to keep only the predictions for the relevant compartments for the time points 
+  # at which we have available data. 
+  
+  #======================================df12=========================================================
+  
+  exp_data <- dataset$df12 # retrieve data of Lupton (2020) ORAL female feces
+  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
+  column_names <- c("Cfeces")
+  
+  preds_Lup_OR_Ffeces <- list()
+  # loop over compartments with available data
+  for (i in 1:length(unique(exp_data$Tissue))) {
+    compartment <- unique(exp_data$Tissue)[i]
+    #Retrieve time points at which measurements are available for compartment i
+    exp_time <- exp_data[exp_data$Tissue == compartment, 2]
+    
+    preds_Lup_OR_Ffeces [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+  }
+  
+  preds_Lup_OR_Ffeces <- unlist(preds_Lup_OR_Ffeces) /1000 #convert ug/kg to ug/g
+  
+  
+  obs_Lup_OR_Ffeces <- c(exp_data[exp_data$Tissue == "Feces", "concentration"])
+  
+  ##########################
+  #-------------------------
+  # Lupton ORAL female urine
+  #-------------------------
+  ##########################
+  # Set up simulations for the 13th case, i.e. Lupton (2020) ORAL female urine
+  BW <- 0.1875  # body weight (kg) not reported
+  admin.dose_per_g <- 0.047 # administered dose in mg PFOA/kg BW 
+  admin.dose_single <- (admin.dose_per_g*BW*1e03)/2 #ug PFOA
+  admin.time <- seq(0,13.5*24,12) #time when doses are administered, in hours
+  admin.dose <- rep(admin.dose_single, length(admin.time))
+  
+  admin.type <- "oral"
+  sex <- "F" 
+  
+  
+  
+  estimated_params <- exp(x)
+  user_input <- list('BW'=BW,
+                     "admin.dose"= admin.dose,
+                     "admin.time" = admin.time, 
+                     "admin.type" = admin.type,
+                     "estimated_params" = estimated_params,
+                     "sex" = sex)
+  
+  params <- create.params(user_input)
+  inits <- create.inits(params)
+  events <- create.events(params)
+  
+  # sample_time: a vector of time points to solve the ODEs
+  sample_time=seq(0,384,1)
+  
+  # ode(): The solver of the ODEs
+  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                      y = inits, parms = params,
+                                      events = events,
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
+  
+  # We need to keep only the predictions for the relevant compartments for the time points 
+  # at which we have available data. 
+  
+  #======================================df13=========================================================
+  
+  exp_data <- dataset$df13 # retrieve data of Lupton (2020) ORAL female feces
+  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
+  column_names <- c("Curine")
+  
+  preds_Lup_OR_Furine <- list()
+  # loop over compartments with available data
+  for (i in 1:length(unique(exp_data$Tissue))) {
+    compartment <- unique(exp_data$Tissue)[i]
+    #Retrieve time points at which measurements are available for compartment i
+    exp_time <- exp_data[exp_data$Tissue == compartment, 2]
+    
+    preds_Lup_OR_Furine [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+  }
+  
+  preds_Lup_OR_Furine <- unlist(preds_Lup_OR_Ffeces) /1000 #convert ug/kg to ug/g
+  
+  
+  obs_Lup_OR_Furine <- c(exp_data[exp_data$Tissue == "Urine", "concentration"])
+  
+  ##########################
+  #-------------------------
+  # Cui ORAL male urine low
+  #-------------------------
+  ##########################
+  # Set up simulations for the 14th case, i.e. Cui (2010) ORAL male urine low
+  BW <- 0.2  # body weight (kg) not reported
+  admin.dose_per_g <- 5 # administered dose in mg PFOA/kg BW 
+  admin.dose_single <- (admin.dose_per_g*BW*1e03) #ug PFOA
+  admin.time <- seq(0,28*24,24) #time when doses are administered, in hours
+  admin.dose <- rep(admin.dose_single, length(admin.time))
+  
+  admin.type <- "oral"
+  sex <- "M" 
+  
+  
+  estimated_params <- exp(x)
+  user_input <- list('BW'=BW,
+                     "admin.dose"= admin.dose,
+                     "admin.time" = admin.time, 
+                     "admin.type" = admin.type,
+                     "estimated_params" = estimated_params,
+                     "sex" = sex)
+  
+  params <- create.params(user_input)
+  inits <- create.inits(params)
+  events <- create.events(params)
+  
+  # sample_time: a vector of time points to solve the ODEs
+  sample_time=seq(0,672,2)
+  
+  # ode(): The solver of the ODEs
+  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                      y = inits, parms = params,
+                                      events = events,
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
+  
+  # We need to keep only the predictions for the relevant compartments for the time points 
+  # at which we have available data. 
+  
+  #======================================df14=========================================================
+  
+  exp_data <- dataset$df14 # retrieve data of Cui (2010) ORAL male urine low
+  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
+  column_names <- c("Curine")
+  
+  preds_Cui_OR_Murine <- list()
+  # loop over compartments with available data
+  for (i in 1:length(unique(exp_data$Tissue))) {
+    compartment <- unique(exp_data$Tissue)[i]
+    #Retrieve time points at which measurements are available for compartment i
+    exp_time <- exp_data[exp_data$Tissue == compartment, 2]
+    
+    preds_Cui_OR_Murine [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+  }
+  
+  preds_Cui_OR_Murine <- unlist(preds_Cui_OR_Murine) /1000 #convert ug/kg to ug/g
+  
+  
+  obs_Cui_OR_Murine <- c(exp_data[exp_data$Tissue == "Urine", "concentration"])
   
   
   #Aggregate observations for all scenarios
   
   preds <-c(preds_kudo_high, preds_kudo_low, preds_kim_IV_Mtissues, preds_kim_OR_Mtissues, preds_kim_IV_Ftissues, preds_kim_OR_Ftissues,
-            preds_dzi_OR_Mtissues, preds_dzi_OR_Ftissues, preds_kim_OR_Mblood, preds_kim_IV_Mblood, preds_Lup_OR_Ftissues)
+            preds_dzi_OR_Mtissues, preds_dzi_OR_Ftissues, preds_kim_OR_Mblood, preds_kim_IV_Mblood, preds_Lup_OR_Ftissues,
+            preds_Lup_OR_Ffeces, preds_Lup_OR_Furine, preds_Cui_OR_Murine)
+  
   obs <- c(obs_kudo_high, obs_kudo_low, obs_kim_IV_Mtissues, obs_kim_OR_Mtissues, obs_kim_IV_Ftissues, obs_kim_OR_Ftissues,
-           obs_dzi_OR_Mtissues, obs_dzi_OR_Ftissues, obs_kim_OR_Mblood, obs_kim_IV_Mblood, obs_Lup_OR_Ftissues)
+           obs_dzi_OR_Mtissues, obs_dzi_OR_Ftissues, obs_kim_OR_Mblood, obs_kim_IV_Mblood, obs_Lup_OR_Ftissues,
+           obs_Lup_OR_Ffeces, obs_Lup_OR_Furine, obs_Cui_OR_Murine)
   
   
   score <- AAFE(predictions = preds, observations = obs)
@@ -1771,11 +1960,14 @@ dzi_OR_Ftissues <- openxlsx::read.xlsx("Data/Dzierlenga_tissue_female_ORAL_2021.
 kim_OR_Mblood <- openxlsx::read.xlsx("Data/PFOA_male_blood_ORAL_kim_2016.xlsx")
 kim_IV_Mblood <- openxlsx::read.xlsx("Data/PFOA_male_blood_IV_kim_2016.xlsx")
 Lup_OR_Ftissues <- openxlsx::read.xlsx("Data/PFOA_female_tissues_Lupton_2020.xlsx")
-
+Lup_OR_Ffeces <- openxlsx::read.xlsx("Data/PFOA_female_add-feces_Lupton_2020.xlsx")
+Lup_OR_Furine <- openxlsx::read.xlsx("Data/PFOA_female_add-urine_Lupton_2020.xlsx")
+Cui_OR_Murine <- openxlsx::read.xlsx("Data/PFOA_male_urine_oral_low_Cui_2010.xlsx")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
-                "df9" = kim_OR_Mblood, "df10" = kim_IV_Mblood, "df11" = Lup_OR_Ftissues)
+                "df9" = kim_OR_Mblood, "df10" = kim_IV_Mblood, "df11" = Lup_OR_Ftissues, "df12" = Lup_OR_Ffeces,
+                "df13" = Lup_OR_Furine, "df14" = Cui_OR_Murine)
 
 
 #Initialise optimiser to NULL for better error handling later
@@ -1784,7 +1976,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0 ,
-              "maxeval" = 250, 
+              "maxeval" = 100, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
@@ -2091,8 +2283,10 @@ sample_time=seq(0,2,0.01)
  # Set up simulations for the 11th case, i.e. Lupton (2020) ORAL female tissues
  BW <- 0.1875  # body weight (kg) not reported
  admin.dose_per_g <- 0.047 # administered dose in mg PFOA/kg BW 
- admin.dose <- admin.dose_per_g*BW *1e03 #ug PFOA
- admin.time <- 0 #time when doses are administered, in hours
+ admin.dose_single <- (admin.dose_per_g*BW*1e03)/2 #ug PFOA
+ admin.time <- seq(0,13.5*24,12) #time when doses are administered, in hours
+ admin.dose <- rep(admin.dose_single, length(admin.time))
+ 
  admin.type <- "oral"
  sex <- "F"
  
@@ -2109,14 +2303,107 @@ sample_time=seq(0,2,0.01)
  events <- create.events(params)
  
  
- sample_time=seq(0,12,0.05)
+ sample_time=seq(0,324,1)
  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                      y = inits, parms = params,events = events,
                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
  
  preds_Lup_OR_Ftissues <-  solution[, c("time", "Cliver","Ckidney", "Cblood", "Cskin")]
  
-
+ # Set up simulations for the 12th case, i.e. Lupton (2020) ORAL female feces
+ BW <- 0.1875  # body weight (kg) not reported
+ admin.dose_per_g <- 0.047 # administered dose in mg PFOA/kg BW 
+ admin.dose_single <- (admin.dose_per_g*BW*1e03)/2 #ug PFOA
+ admin.time <- seq(0,13.5*24,12) #time when doses are administered, in hours
+ admin.dose <- rep(admin.dose_single, length(admin.time))
+ 
+ admin.type <- "oral"
+ sex <- "F"
+ 
+ user_input <- list('BW'=BW,
+                    "admin.dose"= admin.dose,
+                    "admin.time" = admin.time, 
+                    "admin.type" = admin.type,
+                    "estimated_params" = estimated_params,
+                    "sex" = sex)
+ 
+ 
+ params <- create.params(user_input)
+ inits <- create.inits(params)
+ events <- create.events(params)
+ 
+ 
+ sample_time=seq(0,384,1)
+ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                     y = inits, parms = params,events = events,
+                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
+ 
+ preds_Lup_OR_Ffeces <-  solution[, c("time", "Cfeces")]
+ 
+ 
+ # Set up simulations for the 13th case, i.e. Lupton (2020) ORAL female urine
+ BW <- 0.1875  # body weight (kg) not reported
+ admin.dose_per_g <- 0.047 # administered dose in mg PFOA/kg BW 
+ admin.dose_single <- (admin.dose_per_g*BW*1e03)/2 #ug PFOA
+ admin.time <- seq(0,13.5*24,12) #time when doses are administered, in hours
+ admin.dose <- rep(admin.dose_single, length(admin.time))
+ 
+ admin.type <- "oral"
+ sex <- "F"
+ 
+ user_input <- list('BW'=BW,
+                    "admin.dose"= admin.dose,
+                    "admin.time" = admin.time, 
+                    "admin.type" = admin.type,
+                    "estimated_params" = estimated_params,
+                    "sex" = sex)
+ 
+ 
+ params <- create.params(user_input)
+ inits <- create.inits(params)
+ events <- create.events(params)
+ 
+ 
+ sample_time=seq(0,384,1)
+ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                     y = inits, parms = params,events = events,
+                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
+ 
+ preds_Lup_OR_Furine <-  solution[, c("time", "Curine")]
+ 
+ 
+ 
+ # Set up simulations for the 14th case, i.e. Cui (2010) ORAL male urine low
+ BW <- 0.2  # body weight (kg) not reported
+ admin.dose_per_g <- 5 # administered dose in mg PFOA/kg BW 
+ admin.dose_single <- (admin.dose_per_g*BW*1e03) #ug PFOA
+ admin.time <- seq(0,28*24,24) #time when doses are administered, in hours
+ admin.dose <- rep(admin.dose_single, length(admin.time))
+ admin.type <- "oral"
+ sex <- "M" 
+ 
+ 
+ user_input <- list('BW'=BW,
+                    "admin.dose"= admin.dose,
+                    "admin.time" = admin.time, 
+                    "admin.type" = admin.type,
+                    "estimated_params" = estimated_params,
+                    "sex" = sex)
+ 
+ 
+ params <- create.params(user_input)
+ inits <- create.inits(params)
+ events <- create.events(params)
+ 
+ 
+ sample_time=seq(0,672,2)
+ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                     y = inits, parms = params,events = events,
+                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
+ 
+ preds_Cui_OR_Murine <-  solution[, c("time", "Curine")]
+ 
+ 
  #convert ug/L, which is returned by the ODE function, to ug/g, which are the units in all the datasets
  
  preds_kudo_high[,2:dim(preds_kudo_high)[2]] <- preds_kudo_high[,2:dim(preds_kudo_high)[2]] /1000 
@@ -2130,13 +2417,10 @@ sample_time=seq(0,2,0.01)
  preds_kim_OR_Mblood[,2:dim(preds_kim_OR_Mblood)[2]] <- preds_kim_OR_Mblood[,2:dim(preds_kim_OR_Mblood)[2]] /1000
  preds_kim_IV_Mblood[,2:dim(preds_kim_IV_Mblood)[2]] <- preds_kim_IV_Mblood[,2:dim(preds_kim_IV_Mblood)[2]] /1000
  preds_Lup_OR_Ftissues[,2:dim(preds_Lup_OR_Ftissues)[2]] <- preds_Lup_OR_Ftissues[,2:dim(preds_Lup_OR_Ftissues)[2]] /1000
- 
- #convert ug/L, which is returned by the ODE function, to uM [Dzierlenga (2021) ORAL male tissues]
- 
- 
- # preds_dzi_OR_Mtissues[,2] <- preds_dzi_OR_Mtissues[,2]* VLT/MW
- # preds_dzi_OR_Mtissues[,3] <- preds_dzi_OR_Mtissues[,3] * VKT/MW 
- # preds_dzi_OR_Mtissues[,4] <- preds_dzi_OR_Mtissues[,4] * VBrT/MW 
+ preds_Lup_OR_Ffeces[,2:dim(preds_Lup_OR_Ffeces)[2]] <- preds_Lup_OR_Ffeces[,2:dim(preds_Lup_OR_Ffeces)[2]] /1000
+ preds_Lup_OR_Furine[,2:dim(preds_Lup_OR_Furine)[2]] <- preds_Lup_OR_Furine[,2:dim(preds_Lup_OR_Furine)[2]] /1000
+ preds_Cui_OR_Murine[,2:dim(preds_Cui_OR_Murine)[2]] <- preds_Cui_OR_Murine[,2:dim(preds_Cui_OR_Murine)[2]] /1000
+
  
  # ######################################################################################
 #Plot the predictions against the observations
@@ -2240,11 +2524,30 @@ experiment2 <- reshape(kudo_low_dose[c("Tissue" ,"Time_hours",
                          idvar = "Time_hours", timevar = "Tissue", direction = "wide")
  colnames(experiment11) <- c("Time",unique(Lup_OR_Ftissues$Tissue))
  
+ # Convert Lupton ORAL female feces from long to wide format using reshape
+ experiment12 <- reshape(Lup_OR_Ffeces[c("Tissue" ,"Time_hours", 
+                                           "Concentration_microg_per_g_organ")], 
+                         idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+ colnames(experiment12) <- c("Time",unique(Lup_OR_Ffeces$Tissue))
+ 
+ # Convert Lupton ORAL female urine from long to wide format using reshape
+ experiment13 <- reshape(Lup_OR_Furine[c("Tissue" ,"Time_hours", 
+                                           "Concentration_microg_per_g_organ")], 
+                         idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+ colnames(experiment13) <- c("Time",unique(Lup_OR_Furine$Tissue))
+ 
+ 
+ # Convert Cui ORAL male urine low from long to wide format using reshape
+ experiment14 <- reshape(Cui_OR_Murine[c("Tissue" ,"Time_hours", 
+                                         "Concentration_microg_per_g_organ")], 
+                         idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+ colnames(experiment14) <- c("Time",unique(Cui_OR_Murine$Tissue))
  
  # Put the experiments in a list
  experiments <- list(experiment1 = experiment1, experiment2 = experiment2, experiment3 = experiment3, experiment4 = experiment4,
                      experiment5 = experiment5, experiment6 = experiment6, experiment7 = experiment7, experiment8 = experiment8,
-                     experiment9 = experiment9, experiment10 = experiment10, experiment11 = experiment11)
+                     experiment9 = experiment9, experiment10 = experiment10, experiment11 = experiment11, experiment12 = experiment12,
+                     experiment13 = experiment13,  experiment14 = experiment14)
  
 
   # Rename predictions so that they share the same name as the names of the experimental data dataframe
@@ -2266,13 +2569,19 @@ experiment2 <- reshape(kudo_low_dose[c("Tissue" ,"Time_hours",
  colnames(preds_kim_IV_Mblood) <- c ("Time", "Blood")
  
  colnames(preds_Lup_OR_Ftissues) <- c ("Time", "Liver","Kidney","Blood","Skin")
+ colnames(preds_Lup_OR_Ffeces) <- c ("Time", "Feces")
+ colnames(preds_Lup_OR_Furine) <- c ("Time", "Urine")
+ 
+ colnames(preds_Cui_OR_Murine) <- c ("Time", "Urine")
+ 
  
  
  # Create a list containing the corresponding predictions
  simulations <- list(predictions1 = preds_kudo_high,  predictions2 = preds_kudo_low, predictions3 = preds_kim_IV_Mtissues, 
                      predictions4 = preds_kim_OR_Mtissues, predictions5 = preds_kim_IV_Ftissues, predictions6 = preds_kim_OR_Ftissues,
                      predictions7 = preds_dzi_OR_Mtissues, predictions8 = preds_dzi_OR_Ftissues, predictions9 = preds_kim_OR_Mblood,
-                     predictions10 = preds_kim_IV_Mblood, predictions11 = preds_Lup_OR_Ftissues)
+                     predictions10 = preds_kim_IV_Mblood, predictions11 = preds_Lup_OR_Ftissues, predictions12 = preds_Lup_OR_Ffeces,
+                     predictions13 = preds_Lup_OR_Furine, predictions14 = preds_Cui_OR_Murine)
                     
  
  # Iterate over all existing experiments and create the accompanying plots
