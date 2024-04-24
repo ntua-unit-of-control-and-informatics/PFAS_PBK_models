@@ -916,9 +916,9 @@ ode.func <- function(time, inits, params){
     Clungs <-  (MBLu + MLuF+ MLuT)/(VLuB+VLuF+VLuT)
     Crest <-  (MBR + MRF+ MRT)/(VRB+VRF+VRT)
     Ccarcass <- (MBM + MMF+ MMT+MBA + MAF+ MAT +MBR + MRF+ MRT)/(VM+VA+VR)
-    Cfeces <- CINL
+    #Cfeces <- Mfeces/....
     Cbile <- Cbile
-    Curine <- CFil
+    #Curine <- Murine/...
     Cspleen <-  (MBSP + MSPF+ MSPT)/(VSPB+VSPF+VSPT)
     Cheart <-  (MBH + MHF+ MHT)/(VHB+VHF+VHT)
     Cbrain <-  (MBBr + MBrF+ MBrT)/(VBrB+VBrF+VBrT)
@@ -1862,7 +1862,7 @@ obj.func <- function(x, dataset){
     preds_Lup_OR_Furine [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
   }
   
-  preds_Lup_OR_Furine <- unlist(preds_Lup_OR_Ffeces) /1000 #convert ug/kg to ug/g
+  preds_Lup_OR_Furine <- unlist(preds_Lup_OR_Furine) /1000 #convert ug/kg to ug/g
   
   
   obs_Lup_OR_Furine <- c(exp_data[exp_data$Tissue == "Urine", "concentration"])
@@ -1876,7 +1876,7 @@ obj.func <- function(x, dataset){
   BW <- 0.2  # body weight (kg) not reported
   admin.dose_per_g <- 5 # administered dose in mg PFOA/kg BW 
   admin.dose_single <- (admin.dose_per_g*BW*1e03) #ug PFOA
-  admin.time <- seq(0,28*24,24) #time when doses are administered, in hours
+  admin.time <- seq(0,27*24,24) #time when doses are administered, in hours
   admin.dose <- rep(admin.dose_single, length(admin.time))
   
   admin.type <- "oral"
@@ -1947,7 +1947,9 @@ obj.func <- function(x, dataset){
 }
 
 ################################################################################
-setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
+#setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
+setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
+
 # Read data
 kudo_high_dose <- openxlsx::read.xlsx("Data/IV_male_rats_tissues_high_kudo_2007.xlsx")
 kudo_low_dose <- openxlsx::read.xlsx("Data/IV_male_rats_tissues_low_kudo_2007.xlsx")
