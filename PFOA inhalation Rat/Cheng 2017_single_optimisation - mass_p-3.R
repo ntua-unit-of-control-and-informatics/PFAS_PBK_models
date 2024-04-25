@@ -1911,7 +1911,7 @@ obj.func <- function(x, dataset){
   
   exp_data <- dataset$df14 # retrieve data of Cui (2010) ORAL male urine low
   colnames(exp_data)[c(2,3)] <- c("time", "mass")
-  column_names <- c("Curine")
+  column_names <- c("Murine")
   
   preds_Cui_OR_Murine <- list()
   # loop over compartments with available data
@@ -1923,7 +1923,7 @@ obj.func <- function(x, dataset){
     preds_Cui_OR_Murine [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
   }
   
-  preds_Cui_OR_Murine <- unlist(preds_Cui_OR_Murine) /1000 #convert ug/kg to ug/g
+  preds_Cui_OR_Murine <- unlist(preds_Cui_OR_Murine) 
   
   
   obs_Cui_OR_Murine <- c(exp_data[exp_data$Tissue == "Urine", "mass"])
@@ -2379,7 +2379,7 @@ sample_time=seq(0,2,0.01)
  BW <- 0.2  # body weight (kg) not reported
  admin.dose_per_g <- 5 # administered dose in mg PFOA/kg BW 
  admin.dose_single <- (admin.dose_per_g*BW*1e03) #ug PFOA
- admin.time <- seq(0,28*24,24) #time when doses are administered, in hours
+ admin.time <- seq(0,27*24,24) #time when doses are administered, in hours
  admin.dose <- rep(admin.dose_single, length(admin.time))
  admin.type <- "oral"
  sex <- "M" 
