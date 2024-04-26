@@ -13,3 +13,7 @@ Model experiments list
 11.Lupton (2020) ORAL female tissues
 12.Lupton (2020) ORAL female feces
 13.Lupton (2020) ORAL female urine
+14.Cui (2010) ORAL male urine low
+15.Cui (2010) ORAL male urine high
+16.Cui (2010) ORAL male feces low
+17.Cui (2010) ORAL male feces high
