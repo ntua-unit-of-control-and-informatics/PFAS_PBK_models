@@ -396,11 +396,8 @@ create.params <- function(user.input){
     # Uptake for the whole kidney tissue 
     kKFKT <- (60*ClKFT)/1e06 #L/h
     
- 
-    
     n <- 5 #enlargement factor of apical membrane of proximal tubule
     kFKT <- PeffK * AK * n
-    
     
     #Oatp kidney
     VmK_Oatp_in_vitro <- 9.3 #nmol/mg protein/min (Weaver et al. 2010)
@@ -1725,14 +1722,14 @@ obj.func <- function(x, dataset){
   events <- create.events(params)
   
   # sample_time: a vector of time points to solve the ODEs
-  sample_time=seq(0,324,1)
+  sample_time=seq(0,384,1)
   
   # ode(): The solver of the ODEs
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
                                       method="lsodes",rtol = 1e-03, atol = 1e-03))
-  
+
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
   
@@ -1757,38 +1754,6 @@ obj.func <- function(x, dataset){
   # Lupton ORAL female feces
   #-------------------------
   ##########################
-  # Set up simulations for the 12th case, i.e. Lupton (2020) ORAL female feces
-  BW <- 0.1875  # body weight (kg) not reported
-  admin.dose_per_g <- 0.047 # administered dose in mg PFOA/kg BW 
-  admin.dose_single <- (admin.dose_per_g*BW*1e03)/2 #ug PFOA
-  admin.time <- seq(0,13.5*24,12) #time when doses are administered, in hours
-  admin.dose <- rep(admin.dose_single, length(admin.time))
-  
-  admin.type <- "oral"
-  sex <- "F" 
-  
-  
-  
-  estimated_params <- exp(x)
-  user_input <- list('BW'=BW,
-                     "admin.dose"= admin.dose,
-                     "admin.time" = admin.time, 
-                     "admin.type" = admin.type,
-                     "estimated_params" = estimated_params,
-                     "sex" = sex)
-  
-  params <- create.params(user_input)
-  inits <- create.inits(params)
-  events <- create.events(params)
-  
-  # sample_time: a vector of time points to solve the ODEs
-  sample_time=seq(0,384,1)
-  
-  # ode(): The solver of the ODEs
-  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                      y = inits, parms = params,
-                                      events = events,
-                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -1797,7 +1762,7 @@ obj.func <- function(x, dataset){
   
   exp_data <- dataset$df12 # retrieve data of Lupton (2020) ORAL female feces
   colnames(exp_data)[c(2,3)] <- c("time", "concentration")
-  column_names <- c("Cfeces")
+  column_names <- c("Mfeces")
   
   preds_Lup_OR_Ffeces <- list()
   # loop over compartments with available data
@@ -1808,49 +1773,23 @@ obj.func <- function(x, dataset){
     
     preds_Lup_OR_Ffeces [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
   }
+  preds_Lup_OR_Ffeces <- unlist(preds_Lup_OR_Ffeces) #ug
   
-  preds_Lup_OR_Ffeces <- unlist(preds_Lup_OR_Ffeces) /1000 #convert ug/kg to ug/g
+  #Estimate fecal dry mass 
+  feces_density <- 1.3*1000 #g/mL *1000--> g/L
+  Mfeces_wet <- solution$Vfeces[solution$time%in% exp_time ]*feces_density #g
+  Mfeces_dry <- Mfeces_wet*0.25 # This is assumption, we need to find an actual conversion factor
   
-  
-  obs_Lup_OR_Ffeces <- c(exp_data[exp_data$Tissue == "Feces", "concentration"])
+  # Estimate the mass of feces by multiplying concentration by dry mass
+  obs_Lup_OR_Ffeces <- c(exp_data[exp_data$Tissue == "Feces", "concentration"])*Mfeces_dry
+  # Estimate cumulative fecal mass
+  obs_Lup_OR_Ffeces_cum <- cumsum(obs_Lup_OR_Ffeces)
   
   ##########################
   #-------------------------
   # Lupton ORAL female urine
   #-------------------------
   ##########################
-  # Set up simulations for the 13th case, i.e. Lupton (2020) ORAL female urine
-  BW <- 0.1875  # body weight (kg) not reported
-  admin.dose_per_g <- 0.047 # administered dose in mg PFOA/kg BW 
-  admin.dose_single <- (admin.dose_per_g*BW*1e03)/2 #ug PFOA
-  admin.time <- seq(0,13.5*24,12) #time when doses are administered, in hours
-  admin.dose <- rep(admin.dose_single, length(admin.time))
-  
-  admin.type <- "oral"
-  sex <- "F" 
-  
-  
-  
-  estimated_params <- exp(x)
-  user_input <- list('BW'=BW,
-                     "admin.dose"= admin.dose,
-                     "admin.time" = admin.time, 
-                     "admin.type" = admin.type,
-                     "estimated_params" = estimated_params,
-                     "sex" = sex)
-  
-  params <- create.params(user_input)
-  inits <- create.inits(params)
-  events <- create.events(params)
-  
-  # sample_time: a vector of time points to solve the ODEs
-  sample_time=seq(0,384,1)
-  
-  # ode(): The solver of the ODEs
-  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                      y = inits, parms = params,
-                                      events = events,
-                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -1859,7 +1798,7 @@ obj.func <- function(x, dataset){
   
   exp_data <- dataset$df13 # retrieve data of Lupton (2020) ORAL female feces
   colnames(exp_data)[c(2,3)] <- c("time", "concentration")
-  column_names <- c("Curine")
+  column_names <- c("Murine")
   
   preds_Lup_OR_Furine <- list()
   # loop over compartments with available data
@@ -1871,11 +1810,14 @@ obj.func <- function(x, dataset){
     preds_Lup_OR_Furine [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
   }
   
-  preds_Lup_OR_Furine <- unlist(preds_Lup_OR_Furine) /1000 #convert ug/kg to ug/g
+  preds_Lup_OR_Furine <- unlist(preds_Lup_OR_Furine) #ug
   
+  #Estimate urine volume
+  Vurine <- solution$Vurine[solution$time%in% exp_time ]*1000 #mL
   
-  obs_Lup_OR_Furine <- c(exp_data[exp_data$Tissue == "Urine", "concentration"])
-  
+  obs_Lup_OR_Furine <- c(exp_data[exp_data$Tissue == "Urine", "concentration"])*Vurine
+  # Estimate cumulative fecal mass
+  obs_Lup_OR_Furine_cum <- cumsum(obs_Lup_OR_Furine)
   ##########################
   #-------------------------
   # Cui ORAL male urine low
@@ -2066,7 +2008,7 @@ obj.func <- function(x, dataset){
   
   obs <- c(obs_kudo_high, obs_kudo_low, obs_kim_IV_Mtissues, obs_kim_OR_Mtissues, obs_kim_IV_Ftissues, obs_kim_OR_Ftissues,
            obs_dzi_OR_Mtissues, obs_dzi_OR_Ftissues, obs_kim_OR_Mblood, obs_kim_IV_Mblood, obs_Lup_OR_Ftissues,
-           obs_Lup_OR_Ffeces, obs_Lup_OR_Furine, obs_Cui_OR_MurineL, obs_Cui_OR_MurineH, obs_Cui_OR_MfecesL,
+           obs_Lup_OR_Ffeces_cum, obs_Lup_OR_Furine_cum, obs_Cui_OR_MurineL, obs_Cui_OR_MurineH, obs_Cui_OR_MfecesL,
            obs_Cui_OR_MfecesH)
   
   
@@ -2077,8 +2019,8 @@ obj.func <- function(x, dataset){
 }
 
 ################################################################################
-setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
-#setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
+#setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
+setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
 
 # Read data
 kudo_high_dose <- openxlsx::read.xlsx("Data/IV_male_rats_tissues_high_kudo_2007.xlsx")
@@ -2113,7 +2055,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0 ,
-              "maxeval" = 1, 
+              "maxeval" = 10, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
