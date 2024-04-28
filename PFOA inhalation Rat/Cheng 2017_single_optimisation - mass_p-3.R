@@ -1792,8 +1792,8 @@ obj.func <- function(x, dataset){
   
   #Estimate urine volume
   Vurine <- solution$Vurine[solution$time%in% exp_time ]*1000 #mL
-  
-  obs_Lup_OR_Furine <- c(exp_data[exp_data$Tissue == "Urine", "concentration"])*Vurine
+  Qurine_daily <- 18 #mean of 13-23 mL/24h  https://doi.org/10.1016/B978-0-323-48435-0.00025-3
+  obs_Lup_OR_Furine <- c(exp_data[exp_data$Tissue == "Urine", "concentration"])*Qurine_daily
   # Estimate cumulative fecal mass
   obs_Lup_OR_Furine_cum <- cumsum(obs_Lup_OR_Furine)
   ##########################
@@ -1878,7 +1878,6 @@ obj.func <- function(x, dataset){
   }
   
   preds_Cui_OR_MfecesL <- unlist(preds_Cui_OR_MfecesL) 
-  
   
   obs_Cui_OR_MfecesL <- c(exp_data[exp_data$Tissue == "Feces", "mass"])*1000
   
@@ -1974,14 +1973,16 @@ obj.func <- function(x, dataset){
   obs_Cui_OR_MfecesH <- c(exp_data[exp_data$Tissue == "Feces", "mass"])*1000
   
   #Aggregate observations for all scenarios
+  #CAUTION!:Lupton tissues have been excluded
+  #preds_Lup_OR_Ftissues, obs_Lup_OR_Ftissues
   
   preds <-c(preds_kudo_high, preds_kudo_low, preds_kim_IV_Mtissues, preds_kim_OR_Mtissues, preds_kim_IV_Ftissues, preds_kim_OR_Ftissues,
-            preds_dzi_OR_Mtissues, preds_dzi_OR_Ftissues, preds_kim_OR_Mblood, preds_kim_IV_Mblood, preds_Lup_OR_Ftissues,
+            preds_dzi_OR_Mtissues, preds_dzi_OR_Ftissues, preds_kim_OR_Mblood, preds_kim_IV_Mblood, 
             preds_Lup_OR_Ffeces, preds_Lup_OR_Furine, preds_Cui_OR_MurineL, preds_Cui_OR_MurineH, preds_Cui_OR_MfecesL,
             preds_Cui_OR_MfecesH)
   
   obs <- c(obs_kudo_high, obs_kudo_low, obs_kim_IV_Mtissues, obs_kim_OR_Mtissues, obs_kim_IV_Ftissues, obs_kim_OR_Ftissues,
-           obs_dzi_OR_Mtissues, obs_dzi_OR_Ftissues, obs_kim_OR_Mblood, obs_kim_IV_Mblood, obs_Lup_OR_Ftissues,
+           obs_dzi_OR_Mtissues, obs_dzi_OR_Ftissues, obs_kim_OR_Mblood, obs_kim_IV_Mblood, 
            obs_Lup_OR_Ffeces_cum, obs_Lup_OR_Furine_cum, obs_Cui_OR_MurineL, obs_Cui_OR_MurineH, obs_Cui_OR_MfecesL,
            obs_Cui_OR_MfecesH)
   
@@ -2413,8 +2414,8 @@ sample_time=seq(0,2,0.01)
  
  #Estimate urine volume
  Vurine <- solution$Vurine[solution$time%in% exp_time ]*1000 #mL
- 
- Lupton_urine <- c(exp_data[exp_data$Tissue == "Urine", "concentration"])*Vurine
+ Qurine_daily <- 18 #mean of 13-23 mL/24h  https://doi.org/10.1016/B978-0-323-48435-0.00025-3
+ Lupton_urine <- c(exp_data[exp_data$Tissue == "Urine", "concentration"])*Qurine_daily
  # Estimate cumulative fecal mass
  obs_Lup_OR_Furine_cum <- cumsum(Lupton_urine)
  
