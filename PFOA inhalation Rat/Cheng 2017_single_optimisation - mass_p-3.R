@@ -10,22 +10,26 @@ create.params <- function(user.input){
     if (sex == "M"){
       RAFOatp_k <- estimated_params[1]
       RAFOat1 <- estimated_params[2]
-      RAFOat3 <-  estimated_params[3]
-      RAFOatp_l <- estimated_params[4]
-      RAFNtcp <- estimated_params[5]
+      RAFOat3 <- RAFOat1
+      #RAFOat3 <-  estimated_params[3]
+      RAFOatp_l <- estimated_params[3] 
+      RAFNtcp <- RAFOatp_l
+      #RAFNtcp <- estimated_params[5]
     }else if(sex == "F"){
-      RAFOatp_k <- estimated_params[6]
-      RAFOat1 <- estimated_params[7]
-      RAFOat3 <-  estimated_params[8]
-      RAFOatp_l <- estimated_params[9]
-      RAFNtcp <- estimated_params[10]
+      RAFOatp_k <- estimated_params[4]
+      RAFOat1 <- estimated_params[5] 
+      RAFOat3 <- RAFOat1
+     # RAFOat3 <-  estimated_params[8]
+      RAFOatp_l <- estimated_params[6] 
+      RAFNtcp <- RAFOatp_l
+     # RAFNtcp <- estimated_params[10]
     }
-    bile_correction_factor <- estimated_params[11]
+    bile_correction_factor <- estimated_params[7]
     
     #permeabilities correction factor
-    CF_Peff <- estimated_params[12] 
+    CF_Peff <- estimated_params[8] 
     # Absorption rate per area
-    kabs <- estimated_params[13] #m/h
+    kabs <- estimated_params[9] #m/h
 
     #units conversion from Cheng 2017R, time-> h, PFOA mass->ng, tissues mass-> g
     
@@ -297,17 +301,9 @@ create.params <- function(user.input){
     if (sex == "M"){
       PQGFR <- 62.1  #L/h/kg   Corley et al., 2005 https://doi.org/10.1093/toxsci/kfi119, GFRC --> scaled fraction of kidney weight
       QGFR <- PQGFR * VK #L/h
-      RAFOatp_k <- estimated_params[1]
-      RAFOat1 <- estimated_params[2]
-      RAFOat3 <-  estimated_params[3]
-      
       }else if(sex == "F"){
       PQGFR <- 41.04  #L/h/kg  Corley et al., 2005 https://doi.org/10.1093/toxsci/kfi119, GFRC --> scaled fraction of kidney weight
       QGFR <- PQGFR * VK #L/h
-      RAFOatp_k <- estimated_params[6]
-      RAFOat1 <- estimated_params[7]
-      RAFOat3 <-  estimated_params[8]
-    
     }
 
     
@@ -349,7 +345,9 @@ create.params <- function(user.input){
     #Equilibrium association constant (m^3/mol= 10^-3*M-1) for albumin(Ka), LFABP(KL_fabp),
     #and alpha2mu-globulin(Ka2u). See SI section S2-2 for details
 
-    Ka <-  24.18 #3.1*7.8 m3/mol multiplying by number of binding sites (Cheng et al. 2021)
+    #Ka <-  24.18 #3.1*7.8 m3/mol multiplying by number of binding sites (Cheng et al. 2021)
+    Ka <-  1e05/1e03 #3.1*7.8 m3/mol multiplying by number of binding sites (Cheng et al. 2021)
+    
     KLfabp <- 135  #45.0*3 geo_mean of 3 binding affinity, may try normal mean (Cheng et al. 2021)
     Ka2u <- 0.5 #m3/mol
 
@@ -2055,7 +2053,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0 ,
-              "maxeval" = 10, 
+              "maxeval" = 200, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
@@ -2064,16 +2062,16 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
 #  bile_correction_factor, 11 correction factors for permeabilities
 
-N_pars <- 13 # Number of parameters to be fitted
+N_pars <- 9 # Number of parameters to be fitted
 fit <- log(rep(1,N_pars))
 
 # Run the optimization algorithmm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,
                              #lb	= c(rep(log(1e-10), 11),log(1e-05),log(1e-05), log(1e-03)),
-                             lb	= rep(log(1e-3), N_pars),
+                             lb	= rep(log(1e-20), N_pars),
                              #ub = c(rep(log(1e10), 11),log(1e05),log(1e05), log(1e03)),
-                             ub = rep(log(1e3), N_pars),
+                             ub = rep(log(1e10), N_pars),
                              opts = opts,
                              dataset = dataset)
 
@@ -2302,6 +2300,13 @@ sample_time=seq(0,2,0.01)
  preds_dzi_OR_Ftissues <-  solution[, c("time", "Cliver","Ckidney", "Cbrain")]
  
  
+ 
+ #################################################################################
+ #--------------------------------------------------------------------------------
+ #                                Kim 2016
+ #-------------------------------------------------------------------------------
+ #################################################################################
+ 
  # Set up simulations for the 9th case, i.e. Kim (2016) ORAL male blood
  BW <- 0.25  # body weight (kg) not reported
  admin.dose_per_g <- 1 # administered dose in mg PFOA/kg BW 
@@ -2361,6 +2366,13 @@ sample_time=seq(0,2,0.01)
  preds_kim_IV_Mblood <-  solution[, c("time", "Cblood")]
  
  
+ 
+ #################################################################################
+ #--------------------------------------------------------------------------------
+ #                                Lupton 2020
+ #-------------------------------------------------------------------------------
+ #################################################################################
+ 
  # Set up simulations for the 11th case, i.e. Lupton (2020) ORAL female tissues
  BW <- 0.1875  # body weight (kg) not reported
  admin.dose_per_g <- 0.047 # administered dose in mg PFOA/kg BW 
@@ -2390,69 +2402,43 @@ sample_time=seq(0,2,0.01)
                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
  
  preds_Lup_OR_Ftissues <-  solution[, c("time", "Cliver","Ckidney", "Cblood", "Cskin")]
+ preds_Lup_OR_Ffeces <-  solution[, c("time", "Mfeces")]
+ preds_Lup_OR_Furine <-  solution[, c("time", "Murine")]
+
+ # Convert the Lupton excreta data to cumulative masses
+ #Feces
+ exp_data <- dataset$df12 # retrieve data of Lupton (2020) ORAL female feces
+ colnames(exp_data)[c(2,3)] <- c("time", "concentration")
+ # Convert Lupton's excreta data to cumulative mass
+ exp_time <- exp_data$time
+ #Estimate fecal dry mass 
+ feces_density <- 1.3*1000 #g/mL *1000--> g/L
+ Mfeces_wet <- solution$Vfeces[solution$time%in% exp_time ]*feces_density #g
+ Mfeces_dry <- Mfeces_wet*0.25 # This is assumption, we need to find an actual conversion factor
  
- # Set up simulations for the 12th case, i.e. Lupton (2020) ORAL female feces
- BW <- 0.1875  # body weight (kg) not reported
- admin.dose_per_g <- 0.047 # administered dose in mg PFOA/kg BW 
- admin.dose_single <- (admin.dose_per_g*BW*1e03)/2 #ug PFOA
- admin.time <- seq(0,13.5*24,12) #time when doses are administered, in hours
- admin.dose <- rep(admin.dose_single, length(admin.time))
+ # Estimate the mass of feces by multiplying concentration by dry mass
+ Lupton_Ffeces <- c(exp_data[exp_data$Tissue == "Feces", "concentration"])*Mfeces_dry
+ # Estimate cumulative fecal mass
+ obs_Lup_OR_Ffeces_cum <- cumsum(Lupton_Ffeces)
  
- admin.type <- "oral"
- sex <- "F"
+ #Urine
+ exp_data <- dataset$df13 # retrieve data of Lupton (2020) ORAL female feces
+ colnames(exp_data)[c(2,3)] <- c("time", "concentration")
+ # Convert Lupton's excreta data to cumulative mass
+ exp_time <- exp_data$time
  
- user_input <- list('BW'=BW,
-                    "admin.dose"= admin.dose,
-                    "admin.time" = admin.time, 
-                    "admin.type" = admin.type,
-                    "estimated_params" = estimated_params,
-                    "sex" = sex)
+ #Estimate urine volume
+ Vurine <- solution$Vurine[solution$time%in% exp_time ]*1000 #mL
  
+ Lupton_urine <- c(exp_data[exp_data$Tissue == "Urine", "concentration"])*Vurine
+ # Estimate cumulative fecal mass
+ obs_Lup_OR_Furine_cum <- cumsum(Lupton_urine)
  
- params <- create.params(user_input)
- inits <- create.inits(params)
- events <- create.events(params)
- 
- 
- sample_time=seq(0,384,1)
- solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                     y = inits, parms = params,events = events,
-                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
- 
- preds_Lup_OR_Ffeces <-  solution[, c("time", "Cfeces")]
- 
- 
- # Set up simulations for the 13th case, i.e. Lupton (2020) ORAL female urine
- BW <- 0.1875  # body weight (kg) not reported
- admin.dose_per_g <- 0.047 # administered dose in mg PFOA/kg BW 
- admin.dose_single <- (admin.dose_per_g*BW*1e03)/2 #ug PFOA
- admin.time <- seq(0,13.5*24,12) #time when doses are administered, in hours
- admin.dose <- rep(admin.dose_single, length(admin.time))
- 
- admin.type <- "oral"
- sex <- "F"
- 
- user_input <- list('BW'=BW,
-                    "admin.dose"= admin.dose,
-                    "admin.time" = admin.time, 
-                    "admin.type" = admin.type,
-                    "estimated_params" = estimated_params,
-                    "sex" = sex)
- 
- 
- params <- create.params(user_input)
- inits <- create.inits(params)
- events <- create.events(params)
- 
- 
- sample_time=seq(0,384,1)
- solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                     y = inits, parms = params,events = events,
-                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
- 
- preds_Lup_OR_Furine <-  solution[, c("time", "Curine")]
- 
- 
+ #################################################################################
+ #--------------------------------------------------------------------------------
+ #                                Cui 2010
+ #-------------------------------------------------------------------------------
+ #################################################################################
  
  # Set up simulations for the 14th case, i.e. Cui (2010) ORAL male urine low
  BW <- 0.2  # body weight (kg) not reported
@@ -2592,13 +2578,7 @@ sample_time=seq(0,2,0.01)
  preds_kim_OR_Mblood[,2:dim(preds_kim_OR_Mblood)[2]] <- preds_kim_OR_Mblood[,2:dim(preds_kim_OR_Mblood)[2]] /1000
  preds_kim_IV_Mblood[,2:dim(preds_kim_IV_Mblood)[2]] <- preds_kim_IV_Mblood[,2:dim(preds_kim_IV_Mblood)[2]] /1000
  preds_Lup_OR_Ftissues[,2:dim(preds_Lup_OR_Ftissues)[2]] <- preds_Lup_OR_Ftissues[,2:dim(preds_Lup_OR_Ftissues)[2]] /1000
- preds_Lup_OR_Ffeces[,2:dim(preds_Lup_OR_Ffeces)[2]] <- preds_Lup_OR_Ffeces[,2:dim(preds_Lup_OR_Ffeces)[2]] /1000
- preds_Lup_OR_Furine[,2:dim(preds_Lup_OR_Furine)[2]] <- preds_Lup_OR_Furine[,2:dim(preds_Lup_OR_Furine)[2]] /1000
- preds_Cui_OR_MurineL[,2:dim(preds_Cui_OR_MurineL)[2]] <- preds_Cui_OR_MurineL[,2:dim(preds_Cui_OR_MurineL)[2]] /1000
- preds_Cui_OR_MurineH[,2:dim(preds_Cui_OR_MurineH)[2]] <- preds_Cui_OR_MurineH[,2:dim(preds_Cui_OR_MurineH)[2]] /1000
- preds_Cui_OR_MfecesL[,2:dim(preds_Cui_OR_MfecesL)[2]] <- preds_Cui_OR_MfecesL[,2:dim(preds_Cui_OR_MfecesL)[2]] /1000
- preds_Cui_OR_MfecesH[,2:dim(preds_Cui_OR_MfecesH)[2]] <- preds_Cui_OR_MfecesH[,2:dim(preds_Cui_OR_MfecesH)[2]] /1000
- 
+
  
  # ######################################################################################
 #Plot the predictions against the observations
@@ -2707,39 +2687,47 @@ experiment2 <- reshape(kudo_low_dose[c("Tissue" ,"Time_hours",
                                            "Concentration_microg_per_g_organ")], 
                          idvar = "Time_hours", timevar = "Tissue", direction = "wide")
  colnames(experiment12) <- c("Time",unique(Lup_OR_Ffeces$Tissue))
+ # Change original data with cumulative data
+ experiment12$Feces <- obs_Lup_OR_Ffeces_cum
  
  # Convert Lupton ORAL female urine from long to wide format using reshape
  experiment13 <- reshape(Lup_OR_Furine[c("Tissue" ,"Time_hours", 
                                            "Concentration_microg_per_g_organ")], 
                          idvar = "Time_hours", timevar = "Tissue", direction = "wide")
  colnames(experiment13) <- c("Time",unique(Lup_OR_Furine$Tissue))
+ # Change original data with cumulative data
+ experiment13$Urine <- obs_Lup_OR_Furine_cum
  
- 
+ # In Cui et al.2010, all results are in mg, so we convert them to ug
  # Convert Cui ORAL male urine low from long to wide format using reshape
  experiment14 <- reshape(Cui_OR_MurineL[c("Tissue" ,"Time_hours", 
-                                         "Mass_ug")], 
+                                         "Mass_mg")], 
                          idvar = "Time_hours", timevar = "Tissue", direction = "wide")
  colnames(experiment14) <- c("Time",unique(Cui_OR_MurineL$Tissue))
+ experiment14$Urine <- experiment14$Urine *1000
+ 
  
  # Convert Cui ORAL male urine high from long to wide format using reshape
  experiment15 <- reshape(Cui_OR_MurineH[c("Tissue" ,"Time_hours", 
-                                          "Mass_ug")], 
+                                          "Mass_mg")], 
                          idvar = "Time_hours", timevar = "Tissue", direction = "wide")
  colnames(experiment15) <- c("Time",unique(Cui_OR_MurineH$Tissue))
+ experiment15$Urine <- experiment15$Urine *1000
  
  
  # Convert Cui ORAL male urine high from long to wide format using reshape
  experiment16 <- reshape(Cui_OR_MfecesL[c("Tissue" ,"Time_hours", 
-                                          "Mass_ug")], 
+                                          "Mass_mg")], 
                          idvar = "Time_hours", timevar = "Tissue", direction = "wide")
  colnames(experiment16) <- c("Time",unique(Cui_OR_MfecesL$Tissue))
- 
+ experiment16$Feces <- experiment16$Feces *1000
  
  # Convert Cui ORAL male urine high from long to wide format using reshape
  experiment17 <- reshape(Cui_OR_MfecesH[c("Tissue" ,"Time_hours", 
-                                          "Mass_ug")], 
+                                          "Mass_mg")], 
                          idvar = "Time_hours", timevar = "Tissue", direction = "wide")
  colnames(experiment17) <- c("Time",unique(Cui_OR_MfecesH$Tissue))
+ experiment17$Feces <- experiment17$Feces *1000
  
  
  # Put the experiments in a list
@@ -2811,8 +2799,6 @@ experiment2 <- reshape(kudo_low_dose[c("Tissue" ,"Time_hours",
           width = 13,
           height = 10,
           units = "in")
-
-
  }
 
  
