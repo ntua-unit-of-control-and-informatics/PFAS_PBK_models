@@ -2047,7 +2047,7 @@ fit <- rep(1,N_pars)
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,
                              #lb	= c(rep(log(1e-10), 11),log(1e-05),log(1e-05), log(1e-03)),
-                             lb	= rep(0.0001, N_pars),
+                             lb	= rep(0, N_pars),
                              #ub = c(rep(log(1e10), 11),log(1e05),log(1e05), log(1e03)),
                              ub = rep(10000, N_pars),
                              opts = opts,
