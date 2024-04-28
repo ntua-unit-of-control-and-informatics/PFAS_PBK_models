@@ -1095,7 +1095,7 @@ AFE <- function(predictions, observations, times=NULL){
 obj.func <- function(x, dataset){
   # x: a vector with the values of the optimized parameters (it is not the x
   # from the odes!!!)
-  
+  estimated_params <- x
   
   
   ##########################
@@ -1111,7 +1111,6 @@ obj.func <- function(x, dataset){
   admin.type <- "iv"
   sex <- "M" 
 
-  estimated_params <- exp(x)
   user_input <- list('BW'=BW,
                      "admin.dose"= admin.dose,
                      "admin.time" = admin.time, 
@@ -1179,7 +1178,6 @@ obj.func <- function(x, dataset){
   sex <- "M" 
   
   
-  estimated_params <- exp(x)
   user_input <- list('BW'=BW,
                      "admin.dose"= admin.dose,
                      "admin.time" = admin.time, 
@@ -1244,8 +1242,6 @@ obj.func <- function(x, dataset){
   admin.type <- "iv"
   sex <- "M" 
   
-  
-  estimated_params <- exp(x)
   user_input <- list('BW'=BW,
                      "admin.dose"= admin.dose,
                      "admin.time" = admin.time, 
@@ -1297,8 +1293,6 @@ obj.func <- function(x, dataset){
   admin.type <- "oral"
   sex <- "M" 
   
-  
-  estimated_params <- exp(x)
   user_input <- list('BW'=BW,
                      "admin.dose"= admin.dose,
                      "admin.time" = admin.time, 
@@ -1351,8 +1345,6 @@ obj.func <- function(x, dataset){
   admin.type <- "iv"
   sex <- "F" 
   
-  
-  estimated_params <- exp(x)
   user_input <- list('BW'=BW,
                      "admin.dose"= admin.dose,
                      "admin.time" = admin.time, 
@@ -1406,8 +1398,6 @@ obj.func <- function(x, dataset){
   admin.type <- "oral"
   sex <- "F" 
   
-  
-  estimated_params <- exp(x)
   user_input <- list('BW'=BW,
                      "admin.dose"= admin.dose,
                      "admin.time" = admin.time, 
@@ -1460,8 +1450,6 @@ obj.func <- function(x, dataset){
   admin.type <- "oral"
   sex <- "M" 
   
-  
-  estimated_params <- exp(x)
   user_input <- list('BW'=BW,
                      "admin.dose"= admin.dose,
                      "admin.time" = admin.time, 
@@ -1522,8 +1510,6 @@ obj.func <- function(x, dataset){
   admin.type <- "oral"
   sex <- "F" 
   
-  
-  estimated_params <- exp(x)
   user_input <- list('BW'=BW,
                      "admin.dose"= admin.dose,
                      "admin.time" = admin.time, 
@@ -1583,8 +1569,6 @@ obj.func <- function(x, dataset){
   admin.type <- "oral"
   sex <- "M" 
   
-  
-  estimated_params <- exp(x)
   user_input <- list('BW'=BW,
                      "admin.dose"= admin.dose,
                      "admin.time" = admin.time, 
@@ -1643,8 +1627,6 @@ obj.func <- function(x, dataset){
   admin.type <- "iv"
   sex <- "M" 
   
-  
-  estimated_params <- exp(x)
   user_input <- list('BW'=BW,
                      "admin.dose"= admin.dose,
                      "admin.time" = admin.time, 
@@ -1706,8 +1688,6 @@ obj.func <- function(x, dataset){
   admin.type <- "oral"
   sex <- "F" 
   
-  
-  estimated_params <- exp(x)
   user_input <- list('BW'=BW,
                      "admin.dose"= admin.dose,
                      "admin.time" = admin.time, 
@@ -1831,8 +1811,6 @@ obj.func <- function(x, dataset){
   admin.type <- "oral"
   sex <- "M" 
   
-  
-  estimated_params <- exp(x)
   user_input <- list('BW'=BW,
                      "admin.dose"= admin.dose,
                      "admin.time" = admin.time, 
@@ -1921,8 +1899,6 @@ obj.func <- function(x, dataset){
   admin.type <- "oral"
   sex <- "M" 
   
-  
-  estimated_params <- exp(x)
   user_input <- list('BW'=BW,
                      "admin.dose"= admin.dose,
                      "admin.time" = admin.time, 
@@ -2053,7 +2029,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0 ,
-              "maxeval" = 200, 
+              "maxeval" = 500, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
@@ -2063,20 +2039,21 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 #  bile_correction_factor, 11 correction factors for permeabilities
 
 N_pars <- 9 # Number of parameters to be fitted
-fit <- log(rep(1,N_pars))
+#fit <- log(rep(1,N_pars))
+fit <- rep(1,N_pars)
 
 # Run the optimization algorithmm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,
                              #lb	= c(rep(log(1e-10), 11),log(1e-05),log(1e-05), log(1e-03)),
-                             lb	= rep(log(1e-20), N_pars),
+                             lb	= rep(0.0001, N_pars),
                              #ub = c(rep(log(1e10), 11),log(1e05),log(1e05), log(1e03)),
-                             ub = rep(log(1e10), N_pars),
+                             ub = rep(10000, N_pars),
                              opts = opts,
                              dataset = dataset)
 
-estimated_params <- exp(optimizer$solution)
-
+#estimated_params <- exp(optimizer$solution)
+estimated_params <- optimizer$solution
 
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
 BW <- 0.29  # body weight (kg)
@@ -2397,6 +2374,13 @@ sample_time=seq(0,2,0.01)
  
  
  sample_time=seq(0,324,1)
+ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                     y = inits, parms = params,events = events,
+                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
+ 
+ preds_Lup_OR_Ftissues <-  solution[, c("time", "Cliver","Ckidney", "Cblood", "Cskin")]
+ 
+ sample_time=seq(0,384,1)
  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                      y = inits, parms = params,events = events,
                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
@@ -2787,8 +2771,15 @@ experiment2 <- reshape(kudo_low_dose[c("Tissue" ,"Time_hours",
    plots <- lapply(compartments, function(compartment) {
      create.plots(predictions, observations, compartment )
    })
-   final_plot <- do.call(ggpubr::ggarrange, c(plots, ncol = 3, nrow = ceiling(length(plots) / 3),
-                                              common.legend = TRUE, legend = "right"))
+   if(length(compartments) == 1){
+     final_plot <- do.call(ggpubr::ggarrange, c(plots, ncol = 1, nrow = 1,
+                                                common.legend = TRUE, legend = "right"))
+     
+   }else{
+     final_plot <- do.call(ggpubr::ggarrange, c(plots, ncol = 3, nrow = ceiling(length(plots) / 3),
+                                                common.legend = TRUE, legend = "right"))
+   }
+  
    
    plot.margin=unit(c(0,0,0,0), "pt")
    
