@@ -30,7 +30,8 @@ create.params <- function(user.input){
     CF_Peff <- estimated_params[8] 
     # Absorption rate per area
     kabs <- estimated_params[9] #m/h
-
+    # urine correction factor
+    CFurine <- estimated_params[10] #m/h
     #units conversion from Cheng 2017R, time-> h, PFOA mass->ng, tissues mass-> g
     
     Hct <- 0.41 #hematocrit for rats, https://doi.org/10.1080/13685538.2017.1350156 mean value for both males and females
@@ -54,7 +55,7 @@ create.params <- function(user.input){
     VKF <- PVKF * PVK * BW #kidney interstitial fluid volume kg=L
     VKT <- VK - VKF - VKB #kidney tissue volume kg=L
     VFil <- 0.25 #renal filtrate volume kg=L Cheng et al., 2017 (from Arthur, 1986; Bonvalet, 1981)
-    Qurine <- 18/24/1000 #mean of 13-23 mL/24h -> L/h,  https://doi.org/10.1016/B978-0-323-48435-0.00025-3
+    Qurine <- 18/24/1000*CFurine #mean of 13-23 mL/24h -> L/h,  https://doi.org/10.1016/B978-0-323-48435-0.00025-3
     
     
     #Liver
@@ -232,12 +233,14 @@ create.params <- function(user.input){
     #stomach(ST),intestine (IN), adipose(A), muscle(M), spleen (SP), heart (H), 
     #brain (Br), testis (T), rest of body(R)
 
-    PeffB <- 4.98e-8*3600*CF_Peff
-    PeffK <- 4.38e-8*3600*CF_Peff
-    PeffL <- 5.15e-8*3600*CF_Peff
+    #PeffB <- 4.98e-8*3600*CF_Peff1
+    #PeffK <- 4.38e-8*3600*CF_Peff1
+    #PeffL <- 5.15e-8*3600*CF_Peff1
+    PeffK <-2.65e-8*3600*CF_Peff
+    PeffL <-2.65e-8*3600*CF_Peff
     #PeffG <- 2.65e-8*3600
     PeffST <- 2.65e-8*3600*CF_Peff #assumption
-    PeffIN <- 2.65e-8*3600*CF_Peff #assumption
+    PeffIN <- 2.65e-8*3600*CF_Peff#assumption
     PeffA <- 2.65e-8*3600*CF_Peff
     PeffM <- 2.65e-8*3600*CF_Peff
     PeffR <- 2.65e-8*3600*CF_Peff
@@ -552,7 +555,8 @@ create.params <- function(user.input){
                 'AIN'=AIN, 'AT'=AT,
                 'ASK'= ASK,
                 
-                'PeffB'=PeffB, 'PeffK'=PeffK, 'PeffL'=PeffL, 
+                #'PeffB'=PeffB, 
+                'PeffK'=PeffK, 'PeffL'=PeffL, 
                 'PeffA'=PeffA, 'PeffM'=PeffM, 'PeffR'=PeffR, 'PeffLu' = PeffLu,
                 'PeffSP'=PeffSP, 'PeffH'=PeffH, 'PeffBr'=PeffBr, 'PeffST' = PeffST,
                 'PeffIN'=PeffIN, 'PeffT'=PeffT,
@@ -562,7 +566,7 @@ create.params <- function(user.input){
                 'QBL'=QBL, 'QBLtot'=QBLtot,
                 'QBM'=QBM, 'QBA'=QBA,
                 'QBR'=QBR, 'QBLu'=QBLu, 'Qfeces'=Qfeces, 'feces_density'=feces_density,
-                'Qbile'=Qbile, 'QGFR'=QGFR,'Qurine'=Qurine, 'QGFR'=QGFR,
+                'Qbile'=Qbile, 'QGFR'=QGFR,'Qurine'=Qurine,
                 'QBSP'=QBSP, 'QBH'=QBH, 'QBBr'=QBBr, 'QBST'=QBST,
                 'QBIN'=QBIN, 'QGE'=QGE,
                 'QBT'=QBT,
@@ -1095,7 +1099,7 @@ AFE <- function(predictions, observations, times=NULL){
 obj.func <- function(x, dataset){
   # x: a vector with the values of the optimized parameters (it is not the x
   # from the odes!!!)
-  estimated_params <- x
+  estimated_params <- exp(x)
   
   
   ##########################
@@ -1995,7 +1999,7 @@ obj.func <- function(x, dataset){
 
 ################################################################################
 #setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
-setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
+setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
 
 # Read data
 kudo_high_dose <- openxlsx::read.xlsx("Data/IV_male_rats_tissues_high_kudo_2007.xlsx")
@@ -2030,7 +2034,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0 ,
-              "maxeval" = 500, 
+              "maxeval" = 200, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
@@ -2039,22 +2043,20 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
 #  bile_correction_factor, 11 correction factors for permeabilities
 
-N_pars <- 9 # Number of parameters to be fitted
+N_pars <- 10 # Number of parameters to be fitted
 #fit <- log(rep(1,N_pars))
 fit <- rep(1,N_pars)
 
 # Run the optimization algorithmm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,
-                             #lb	= c(rep(log(1e-10), 11),log(1e-05),log(1e-05), log(1e-03)),
-                             lb	= rep(0, N_pars),
-                             #ub = c(rep(log(1e10), 11),log(1e05),log(1e05), log(1e03)),
-                             ub = rep(10000, N_pars),
+                             lb	= rep(log(1e-20), N_pars),
+                             ub = rep(log(1e8), N_pars),
                              opts = opts,
                              dataset = dataset)
 
 #estimated_params <- exp(optimizer$solution)
-estimated_params <- optimizer$solution
+estimated_params <- exp(optimizer$solution)
 
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
 BW <- 0.29  # body weight (kg)
