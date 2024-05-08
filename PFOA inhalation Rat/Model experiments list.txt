@@ -17,3 +17,17 @@ Model experiments list
 15.Cui (2010) ORAL male urine high
 16.Cui (2010) ORAL male feces low
 17.Cui (2010) ORAL male feces high
+18.Dzierlenga (2021) IV male serum
+19.Dzierlenga (2021) ORAL male serum low
+20.Dzierlenga (2021) ORAL male serum medium
+21.Dzierlenga (2021) ORAL male serum high
+22.Dzierlenga (2021) IV female serum
+23.Dzierlenga (2021) ORAL female serum low
+24.Dzierlenga (2021) ORAL female serum medium
+25.Dzierlenga (2021) ORAL female serum high
+
+
+
+
+
+

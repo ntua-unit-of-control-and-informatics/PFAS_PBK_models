@@ -301,14 +301,21 @@ create.params <- function(user.input){
     
     
     #
+    # if (sex == "M"){
+    #   PQGFR <- 62.1  #L/h/kg   Corley et al., 2005 https://doi.org/10.1093/toxsci/kfi119, GFRC --> scaled fraction of kidney weight
+    #   QGFR <- PQGFR * VK #L/h
+    #   }else if(sex == "F"){
+    #   PQGFR <- 41.04  #L/h/kg  Corley et al., 2005 https://doi.org/10.1093/toxsci/kfi119, GFRC --> scaled fraction of kidney weight
+    #   QGFR <- PQGFR * VK #L/h
+    # }
+    
     if (sex == "M"){
-      PQGFR <- 62.1  #L/h/kg   Corley et al., 2005 https://doi.org/10.1093/toxsci/kfi119, GFRC --> scaled fraction of kidney weight
+      PQGFR <- 1.08e-3*60*1000/100 #L/h/kg   1.08 mL/min/100 g BW --> L/h/ kg Bw Sadick et al., 2011, https://doi.org/10.1093/ndt/gfr148
       QGFR <- PQGFR * VK #L/h
-      }else if(sex == "F"){
-      PQGFR <- 41.04  #L/h/kg  Corley et al., 2005 https://doi.org/10.1093/toxsci/kfi119, GFRC --> scaled fraction of kidney weight
+    }else if(sex == "F"){
+      PQGFR <- 1.08e-3*60*1000/100 #L/h/kg   1.08 mL/min/100 g BW --> L/h/ kg Bw Sadick et al., 2011, https://doi.org/10.1093/ndt/gfr148
       QGFR <- PQGFR * VK #L/h
     }
-
     
     #======Table S2=======#
     #Albumin concentration in blood and interstitial fluid compartments(mol/m^3 = 1e-6* nmol/g)
@@ -381,7 +388,7 @@ create.params <- function(user.input){
     
     
     #For all CMTs
-    MW <- 414.07 #ug/umol, PFOA molecular weight
+    MW = 414.07 #ug/umol, PFOA molecular weight
     Acell = 4000 #um^2/cell
     
     #Kidney
@@ -608,7 +615,7 @@ create.params <- function(user.input){
                 'kSKFSKT' =kSKFSKT,
                 
                 "admin.time" = admin.time, "admin.dose" = admin.dose,
-                "admin.type" = admin.type
+                "admin.type" = admin.type, "MW"=MW
                 ))
   
   })
@@ -912,8 +919,15 @@ ode.func <- function(time, inits, params){
     Cven <- CBven
     Cart <- CBart
     Cblood <- (MBven + MBart)/ (Vven+Vart)
+    Mblood <- MBven + MBart
+    Cplasma <- (MBven + MBart)/ Vplasma
+    
     Ckidney <- (MBK + MKF+ MKT)/(VKB+VKF+VKT)
+    Mkidney <- MBK + MKF+ MKT
+    
     Cliver <- (MBL + MLF+ MLT)/(VLB+VLF+VKT)
+    Mliver <- MBL + MLF+ MLT
+    
     Cstomach <-  (MBST + MSTF+ MSTT)/(VSTB+VSTF+VSTT)
     Cintestine <-  (MBIN + MINF+ MINT+MINL)/(VINB+VINF+VINT+VINL)
     Cmuscle <-  (MBM + MMF+ MMT)/(VMB+VMF+VMT)
@@ -926,7 +940,10 @@ ode.func <- function(time, inits, params){
     Curine <- Murine/Vurine
     Cspleen <-  (MBSP + MSPF+ MSPT)/(VSPB+VSPF+VSPT)
     Cheart <-  (MBH + MHF+ MHT)/(VHB+VHF+VHT)
+    
     Cbrain <-  (MBBr + MBrF+ MBrT)/(VBrB+VBrF+VBrT)
+    Mbrain <- MBBr + MBrF+ MBrT
+    
     Ctestis <-  (MBT + MTF+ MTT)/(VTB+VTF+VTT)
     Cskin <-  (MBSK + MSKF+ MSKT)/(VSKB+VSKF+VSKT)
     
@@ -987,14 +1004,17 @@ ode.func <- function(time, inits, params){
            # 'CBrB'=CBrB, 'CTB'=CTB, 'CSKB'=CSKB,
          
                   
-                  'Cven'=Cven, 'Cart' = Cart,'Cblood' = Cblood,
-                  'Ckidney'=Ckidney, 'Cliver'=Cliver,
-                  'Cstomach'=Cstomach, 'Cintestine'=Cintestine,
-                  'Cmuscle'=Cmuscle, 'Cadipose'=Cadipose, 
-                  'Clungs' = Clungs, 'Crest'=Crest,'Ccarcass' = Ccarcass,
-                  'Cfeces'=Cfeces, 'Cbile'=Cbile, 'Curine'=Curine,
-                  'Cspleen'=Cspleen, 'Cheart'=Cheart, 'Cbrain'=Cbrain, 
-                  'Ctestis'=Ctestis, 'Cskin'=Cskin
+            'Cven'= Cven, 'Cart' = Cart,'Cblood' = Cblood, 'Mblood'= Mblood, 'Cplasma'= Cplasma,
+            'Ckidney'= Ckidney, 'Mkidney'= Mkidney,
+            'Cliver'= Cliver, 'Mliver'= Mliver,
+            'Cstomach'= Cstomach, 'Cintestine'= Cintestine,
+            'Cmuscle'= Cmuscle, 'Cadipose'= Cadipose, 
+            'Clungs' = Clungs, 'Crest'= Crest,'Ccarcass' = Ccarcass,
+            'Cfeces'= Cfeces, 'Cbile'= Cbile, 'Curine'= Curine,
+            'Cspleen'= Cspleen, 'Cheart'= Cheart,
+            'Cbrain'= Cbrain, 'Mbrain'= Mbrain,
+            'Ctestis'= Ctestis, 'Cskin'= Cskin
+                
          )
     
   })
@@ -1481,7 +1501,8 @@ obj.func <- function(x, dataset){
   
   exp_data <- dataset$df7 # retrieve data of Dzierlenga (2021) ORAL male tissues
   colnames(exp_data)[c(2,3)] <- c("time", "concentration")
-  column_names <- c("Cliver","Ckidney","Cbrain" )
+  column_names <- c("Cliver","Ckidney","Cbrain"  )
+  MW <- params$MW
   
   preds_dzi_OR_Mtissues <- list()
   # loop over compartments with available data
@@ -1493,12 +1514,11 @@ obj.func <- function(x, dataset){
   preds_dzi_OR_Mtissues[[i]] <- solution[solution$time %in% exp_time, column_names[i]]
   }
   
-  preds_dzi_OR_Mtissues<- unlist(preds_dzi_OR_Mtissues) /1000 #convert ug/kg to ug/g
+  preds_dzi_OR_Mtissues<- unlist(preds_dzi_OR_Mtissues) 
   
-  
-  obs_dzi_OR_Mtissues <- c(exp_data[exp_data$Tissue == "Liver", "concentration"],
-                           exp_data[exp_data$Tissue == "Kidney", "concentration"],
-                           exp_data[exp_data$Tissue == "Brain", "concentration"])
+  obs_dzi_OR_Mtissues <- c( exp_data[exp_data$Tissue == "Liver", "concentration"],
+                            exp_data[exp_data$Tissue == "Kidney", "concentration"],
+                            exp_data[exp_data$Tissue == "Brain", "concentration"]) * MW/1000
   
   
   ##########################
@@ -1542,6 +1562,7 @@ obj.func <- function(x, dataset){
   exp_data <- dataset$df8 # retrieve data of Dzierlenga (2021) ORAL female tissues
   colnames(exp_data)[c(2,3)] <- c("time", "concentration")
   column_names <- c("Cliver","Ckidney","Cbrain" )
+  MW <- params$MW
   
   preds_dzi_OR_Ftissues <- list()
   # loop over compartments with available data
@@ -1553,12 +1574,12 @@ obj.func <- function(x, dataset){
     preds_dzi_OR_Ftissues[[i]] <- solution[solution$time %in% exp_time, column_names[i]]
   }
   
-  preds_dzi_OR_Ftissues <- unlist(preds_dzi_OR_Ftissues) /1000 #convert ug/kg to ug/g
+  preds_dzi_OR_Ftissues <- unlist(preds_dzi_OR_Ftissues)
   
   
-  obs_dzi_OR_Ftissues <- c(exp_data[exp_data$Tissue == "Liver", "concentration"],
-                           exp_data[exp_data$Tissue == "Kidney", "concentration"],
-                           exp_data[exp_data$Tissue == "Brain", "concentration"])
+  obs_dzi_OR_Ftissues <- c( exp_data[exp_data$Tissue == "Liver", "concentration"],
+                            exp_data[exp_data$Tissue == "Kidney", "concentration"],
+                            exp_data[exp_data$Tissue == "Brain", "concentration"]) * MW/1000
   
   ##########################
   #-------------------------
@@ -1760,7 +1781,7 @@ obj.func <- function(x, dataset){
   #Estimate fecal dry mass 
   feces_density <- 1.3*1000 #g/mL *1000--> g/L
   Mfeces_wet <- solution$Vfeces[solution$time%in% exp_time ]*feces_density #g
-  Mfeces_dry <- Mfeces_wet*0.25 # This is assumption, we need to find an actual conversion factor
+  Mfeces_dry <- Mfeces_wet*0.2 # Enqi et al., 2021, control rats:20.1%, https://doi.org/10.3389/fcimb.2020.581974
   
   # Estimate the mass of feces by multiplying concentration by dry mass
   obs_Lup_OR_Ffeces <- c(exp_data[exp_data$Tissue == "Feces", "concentration"])*Mfeces_dry
@@ -1800,6 +1821,8 @@ obj.func <- function(x, dataset){
   obs_Lup_OR_Furine <- c(exp_data[exp_data$Tissue == "Urine", "concentration"])*Qurine_daily
   # Estimate cumulative fecal mass
   obs_Lup_OR_Furine_cum <- cumsum(obs_Lup_OR_Furine)
+  
+  
   ##########################
   #-------------------------
   # Cui ORAL male urine low
@@ -1976,6 +1999,497 @@ obj.func <- function(x, dataset){
   
   obs_Cui_OR_MfecesH <- c(exp_data[exp_data$Tissue == "Feces", "mass"])*1000
   
+  ##########################
+  #-------------------------
+  # Dzierlenga 2021 IV male serum
+  #-------------------------
+  ##########################
+  
+  # Set up simulations for the 18th case, i.e. Dzierlenga 2021, IV male serum
+  BW <- 0.25  # body weight (kg) not reported
+  admin.dose_per_g <- 6 # administered dose in mg PFOA/kg BW 
+  admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
+  admin.time <- 0 #time when doses are administered, in hours
+  admin.type <- "iv"
+  sex <- "M"
+  MW <- params$MW
+  
+  
+  user_input <- list('BW'=BW,
+                     "admin.dose"= admin.dose,
+                     "admin.time" = admin.time, 
+                     "admin.type" = admin.type,
+                     "estimated_params" = estimated_params,
+                     "sex" = sex)
+  
+  params <- create.params(user_input)
+  inits <- create.inits(params)
+  events <- create.events(params)
+  
+  # sample_time: a vector of time points to solve the ODEs
+  sample_time <- c(0.083, 0.25, 0.5, 1, 3, 6, seq(12, 1200, 4))
+  
+  # ode(): The solver of the ODEs
+  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                      y = inits, parms = params,
+                                      events = events,
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
+  
+  # We need to keep only the predictions for the relevant compartments for the time points 
+  # at which we have available data. 
+  #======================================df18=========================================================
+  
+  exp_data <- dataset$df18 # retrieve data of Dzierlenga 2021, IV male serum
+  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
+  column_names <- c("Cplasma")
+  
+  preds_dzi_IV_Mserum <- list()
+  # loop over compartments with available data
+  for (i in 1:length(unique(exp_data$Tissue))) {
+    compartment <- unique(exp_data$Tissue)[i]
+    #Retrieve time points at which measurements are available for compartment i
+    exp_time <- exp_data[exp_data$Tissue == compartment, 2]
+    
+    preds_dzi_IV_Mserum [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+  }
+  
+  preds_dzi_IV_Mserum <- unlist(preds_dzi_IV_Mserum) 
+  
+  #we assume that clotting factors are negligible amount
+  
+  obs_dzi_IV_Mserum <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])* MW/1000
+ 
+  
+  ##########################
+  #-------------------------
+  # Dzierlenga 2021 ORAL male serum low
+  #-------------------------
+  ##########################
+  
+  # Set up simulations for the 19th case, i.e. Dzierlenga 2021, ORAL male serum low
+  BW <- 0.25  # body weight (kg) not reported
+  admin.dose_per_g <- 6 # administered dose in mg PFOA/kg BW 
+  admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
+  admin.time <- 0 #time when doses are administered, in hours
+  admin.type <- "oral"
+  sex <- "M"
+  MW <- params$MW
+  
+  
+  user_input <- list('BW'=BW,
+                     "admin.dose"= admin.dose,
+                     "admin.time" = admin.time, 
+                     "admin.type" = admin.type,
+                     "estimated_params" = estimated_params,
+                     "sex" = sex)
+  
+  params <- create.params(user_input)
+  inits <- create.inits(params)
+  events <- create.events(params)
+  
+  # sample_time: a vector of time points to solve the ODEs
+  sample_time <- c(0.25, 1, 3, 6, seq(12, 1200, 4))
+  
+  # ode(): The solver of the ODEs
+  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                      y = inits, parms = params,
+                                      events = events,
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
+  
+  # We need to keep only the predictions for the relevant compartments for the time points 
+  # at which we have available data. 
+  #======================================df19=========================================================
+  
+  exp_data <- dataset$df19 # retrieve data of Dzierlenga 2021, ORAL male serum low
+  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
+  column_names <- c("Cplasma")
+  
+  preds_dzi_OR_Mserum_low <- list()
+  # loop over compartments with available data
+  for (i in 1:length(unique(exp_data$Tissue))) {
+    compartment <- unique(exp_data$Tissue)[i]
+    #Retrieve time points at which measurements are available for compartment i
+    exp_time <- exp_data[exp_data$Tissue == compartment, 2]
+    
+    preds_dzi_OR_Mserum_low [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+  }
+  
+  preds_dzi_OR_Mserum_low <- unlist(preds_dzi_OR_Mserum_low) 
+  
+  #we assume that clotting factors are negligible amount
+  
+  obs_dzi_OR_Mserum_low <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])* MW/1000
+  
+  
+  
+  ##########################
+  #-------------------------
+  # Dzierlenga 2021 ORAL male serum medium
+  #-------------------------
+  ##########################
+  
+  # Set up simulations for the 20th case, i.e. Dzierlenga 2021, ORAL male serum medium
+  BW <- 0.25  # body weight (kg) not reported
+  admin.dose_per_g <- 12 # administered dose in mg PFOA/kg BW 
+  admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
+  admin.time <- 0 #time when doses are administered, in hours
+  admin.type <- "oral"
+  sex <- "M"
+  MW <- params$MW
+  
+  
+  user_input <- list('BW'=BW,
+                     "admin.dose"= admin.dose,
+                     "admin.time" = admin.time, 
+                     "admin.type" = admin.type,
+                     "estimated_params" = estimated_params,
+                     "sex" = sex)
+  
+  params <- create.params(user_input)
+  inits <- create.inits(params)
+  events <- create.events(params)
+  
+  # sample_time: a vector of time points to solve the ODEs
+  sample_time <- c(0.25, 1, 3, 6, seq(12, 1200, 4))
+  
+  # ode(): The solver of the ODEs
+  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                      y = inits, parms = params,
+                                      events = events,
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
+  
+  # We need to keep only the predictions for the relevant compartments for the time points 
+  # at which we have available data. 
+  #======================================df20=========================================================
+  
+  exp_data <- dataset$df20 # retrieve data of Dzierlenga 2021, ORAL male serum medium
+  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
+  column_names <- c("Cplasma")
+  
+  preds_dzi_OR_Mserum_medium <- list()
+  # loop over compartments with available data
+  for (i in 1:length(unique(exp_data$Tissue))) {
+    compartment <- unique(exp_data$Tissue)[i]
+    #Retrieve time points at which measurements are available for compartment i
+    exp_time <- exp_data[exp_data$Tissue == compartment, 2]
+    
+    preds_dzi_OR_Mserum_medium [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+  }
+  
+  preds_dzi_OR_Mserum_medium <- unlist(preds_dzi_OR_Mserum_medium) 
+  
+  #we assume that clotting factors are negligible amount
+  
+  obs_dzi_OR_Mserum_medium <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])* MW/1000
+  
+  
+  
+  ##########################
+  #-------------------------
+  # Dzierlenga 2021 ORAL male serum high
+  #-------------------------
+  ##########################
+  
+  # Set up simulations for the 21st case, i.e. Dzierlenga 2021, ORAL male serum high
+  BW <- 0.25  # body weight (kg) not reported
+  admin.dose_per_g <- 48 # administered dose in mg PFOA/kg BW 
+  admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
+  admin.time <- 0 #time when doses are administered, in hours
+  admin.type <- "oral"
+  sex <- "M"
+  MW <- params$MW
+  
+  
+  user_input <- list('BW'=BW,
+                     "admin.dose"= admin.dose,
+                     "admin.time" = admin.time, 
+                     "admin.type" = admin.type,
+                     "estimated_params" = estimated_params,
+                     "sex" = sex)
+  
+  params <- create.params(user_input)
+  inits <- create.inits(params)
+  events <- create.events(params)
+  
+  # sample_time: a vector of time points to solve the ODEs
+  sample_time <- c(0.25, 1, 3, 6, seq(12, 1200, 4))
+  
+  # ode(): The solver of the ODEs
+  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                      y = inits, parms = params,
+                                      events = events,
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
+  
+  # We need to keep only the predictions for the relevant compartments for the time points 
+  # at which we have available data. 
+  #======================================df21=========================================================
+  
+  exp_data <- dataset$df21 # retrieve data of Dzierlenga 2021, ORAL male serum high
+  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
+  column_names <- c("Cplasma")
+  
+  preds_dzi_OR_Mserum_high <- list()
+  # loop over compartments with available data
+  for (i in 1:length(unique(exp_data$Tissue))) {
+    compartment <- unique(exp_data$Tissue)[i]
+    #Retrieve time points at which measurements are available for compartment i
+    exp_time <- exp_data[exp_data$Tissue == compartment, 2]
+    
+    preds_dzi_OR_Mserum_high [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+  }
+  
+  preds_dzi_OR_Mserum_high <- unlist(preds_dzi_OR_Mserum_high) 
+  
+  #we assume that clotting factors are negligible amount
+  
+  obs_dzi_OR_Mserum_high <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])* MW/1000
+  
+  
+  ##########################
+  #-------------------------
+  # Dzierlenga 2021 IV female serum 
+  #-------------------------
+  ##########################
+  
+  # Set up simulations for the 22nd case, i.e. Dzierlenga 2021, IV female serum
+  BW <- 0.25  # body weight (kg) not reported
+  admin.dose_per_g <- 40 # administered dose in mg PFOA/kg BW 
+  admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
+  admin.time <- 0 #time when doses are administered, in hours
+  admin.type <- "iv"
+  sex <- "F"
+  MW <- params$MW
+  
+  
+  user_input <- list('BW'=BW,
+                     "admin.dose"= admin.dose,
+                     "admin.time" = admin.time, 
+                     "admin.type" = admin.type,
+                     "estimated_params" = estimated_params,
+                     "sex" = sex)
+  
+  params <- create.params(user_input)
+  inits <- create.inits(params)
+  events <- create.events(params)
+  
+  # sample_time: a vector of time points to solve the ODEs
+  sample_time <- c(0.083, 0.25, seq(0.5, 192, 0.5))
+  
+  # ode(): The solver of the ODEs
+  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                      y = inits, parms = params,
+                                      events = events,
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
+  
+  # We need to keep only the predictions for the relevant compartments for the time points 
+  # at which we have available data. 
+  #======================================df22=========================================================
+  
+  exp_data <- dataset$df22 # retrieve data of Dzierlenga 2021, IV female serum
+  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
+  column_names <- c("Cplasma")
+  
+  preds_dzi_IV_Fserum <- list()
+  # loop over compartments with available data
+  for (i in 1:length(unique(exp_data$Tissue))) {
+    compartment <- unique(exp_data$Tissue)[i]
+    #Retrieve time points at which measurements are available for compartment i
+    exp_time <- exp_data[exp_data$Tissue == compartment, 2]
+    
+    preds_dzi_IV_Fserum [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+  }
+  
+  preds_dzi_IV_Fserum <- unlist(preds_dzi_IV_Fserum) 
+  
+  #we assume that clotting factors are negligible amount
+  
+  obs_dzi_IV_Fserum <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])* MW/1000
+  
+  
+  
+  ##########################
+  #-------------------------
+  # Dzierlenga 2021 ORAL female serum low
+  #-------------------------
+  ##########################
+  
+  # Set up simulations for the 23d case, i.e. Dzierlenga 2021, ORAL female serum low
+  BW <- 0.25  # body weight (kg) not reported
+  admin.dose_per_g <- 40 # administered dose in mg PFOA/kg BW 
+  admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
+  admin.time <- 0 #time when doses are administered, in hours
+  admin.type <- "oral"
+  sex <- "F"
+  MW <- params$MW
+  
+  
+  user_input <- list('BW'=BW,
+                     "admin.dose"= admin.dose,
+                     "admin.time" = admin.time, 
+                     "admin.type" = admin.type,
+                     "estimated_params" = estimated_params,
+                     "sex" = sex)
+  
+  params <- create.params(user_input)
+  inits <- create.inits(params)
+  events <- create.events(params)
+  
+  # sample_time: a vector of time points to solve the ODEs
+  sample_time <- seq(0.25, 96, 0.25)
+  
+  # ode(): The solver of the ODEs
+  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                      y = inits, parms = params,
+                                      events = events,
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
+  
+  # We need to keep only the predictions for the relevant compartments for the time points 
+  # at which we have available data. 
+  #======================================df23=========================================================
+  
+  exp_data <- dataset$df23 # retrieve data of Dzierlenga 2021, ORAL female serum low
+  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
+  column_names <- c("Cplasma")
+  
+  preds_dzi_OR_Fserum_low <- list()
+  # loop over compartments with available data
+  for (i in 1:length(unique(exp_data$Tissue))) {
+    compartment <- unique(exp_data$Tissue)[i]
+    #Retrieve time points at which measurements are available for compartment i
+    exp_time <- exp_data[exp_data$Tissue == compartment, 2]
+    
+    preds_dzi_OR_Fserum_low [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+  }
+  
+  preds_dzi_OR_Fserum_low <- unlist(preds_dzi_OR_Fserum_low) 
+  
+  #we assume that clotting factors are negligible amount
+  
+  obs_dzi_OR_Fserum_low <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])* MW/1000
+  
+  
+  ##########################
+  #-------------------------
+  # Dzierlenga 2021 ORAL female serum medium
+  #-------------------------
+  ##########################
+  
+  # Set up simulations for the 24th case, i.e. Dzierlenga 2021, ORAL female serum medium
+  BW <- 0.25  # body weight (kg) not reported
+  admin.dose_per_g <- 80 # administered dose in mg PFOA/kg BW 
+  admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
+  admin.time <- 0 #time when doses are administered, in hours
+  admin.type <- "oral"
+  sex <- "F"
+  MW <- params$MW
+  
+  
+  user_input <- list('BW'=BW,
+                     "admin.dose"= admin.dose,
+                     "admin.time" = admin.time, 
+                     "admin.type" = admin.type,
+                     "estimated_params" = estimated_params,
+                     "sex" = sex)
+  
+  params <- create.params(user_input)
+  inits <- create.inits(params)
+  events <- create.events(params)
+  
+  # sample_time: a vector of time points to solve the ODEs
+  sample_time <- c(0.25, seq(1, 192, 0.5))
+  
+  # ode(): The solver of the ODEs
+  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                      y = inits, parms = params,
+                                      events = events,
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
+  
+  # We need to keep only the predictions for the relevant compartments for the time points 
+  # at which we have available data. 
+  #======================================df24=========================================================
+  
+  exp_data <- dataset$df24 # retrieve data of Dzierlenga 2021, ORAL female serum medium
+  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
+  column_names <- c("Cplasma")
+  
+  preds_dzi_OR_Fserum_medium<- list()
+  # loop over compartments with available data
+  for (i in 1:length(unique(exp_data$Tissue))) {
+    compartment <- unique(exp_data$Tissue)[i]
+    #Retrieve time points at which measurements are available for compartment i
+    exp_time <- exp_data[exp_data$Tissue == compartment, 2]
+    
+    preds_dzi_OR_Fserum_medium [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+  }
+  
+  preds_dzi_OR_Fserum_medium <- unlist(preds_dzi_OR_Fserum_medium) 
+  
+  #we assume that clotting factors are negligible amount
+  
+  obs_dzi_OR_Fserum_medium <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])* MW/1000
+  
+  
+  ##########################
+  #-------------------------
+  # Dzierlenga 2021 ORAL female serum high
+  #-------------------------
+  ##########################
+  
+  # Set up simulations for the 25th case, i.e. Dzierlenga 2021, ORAL female serum high
+  BW <- 0.25  # body weight (kg) not reported
+  admin.dose_per_g <- 320 # administered dose in mg PFOA/kg BW 
+  admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
+  admin.time <- 0 #time when doses are administered, in hours
+  admin.type <- "oral"
+  sex <- "F"
+  MW <- params$MW
+  
+  
+  user_input <- list('BW'=BW,
+                     "admin.dose"= admin.dose,
+                     "admin.time" = admin.time, 
+                     "admin.type" = admin.type,
+                     "estimated_params" = estimated_params,
+                     "sex" = sex)
+  
+  params <- create.params(user_input)
+  inits <- create.inits(params)
+  events <- create.events(params)
+  
+  # sample_time: a vector of time points to solve the ODEs
+  sample_time <- seq(0.25, 96, 0.25)
+  
+  # ode(): The solver of the ODEs
+  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                      y = inits, parms = params,
+                                      events = events,
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
+  
+  # We need to keep only the predictions for the relevant compartments for the time points 
+  # at which we have available data. 
+  #======================================df25=========================================================
+  
+  exp_data <- dataset$df25 # retrieve data of Dzierlenga 2021, ORAL female serum high
+  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
+  column_names <- c("Cplasma")
+  
+  preds_dzi_OR_Fserum_high<- list()
+  # loop over compartments with available data
+  for (i in 1:length(unique(exp_data$Tissue))) {
+    compartment <- unique(exp_data$Tissue)[i]
+    #Retrieve time points at which measurements are available for compartment i
+    exp_time <- exp_data[exp_data$Tissue == compartment, 2]
+    
+    preds_dzi_OR_Fserum_high [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+  }
+  
+  preds_dzi_OR_Fserum_high <- unlist(preds_dzi_OR_Fserum_high) 
+  
+  #we assume that clotting factors are negligible amount
+  
+  obs_dzi_OR_Fserum_high <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])* MW/1000
+  
+  
   #Aggregate observations for all scenarios
   #CAUTION!:Lupton tissues have been excluded
   #preds_Lup_OR_Ftissues, obs_Lup_OR_Ftissues
@@ -1983,12 +2497,16 @@ obj.func <- function(x, dataset){
   preds <-c(preds_kudo_high, preds_kudo_low, preds_kim_IV_Mtissues, preds_kim_OR_Mtissues, preds_kim_IV_Ftissues, preds_kim_OR_Ftissues,
             preds_dzi_OR_Mtissues, preds_dzi_OR_Ftissues, preds_kim_OR_Mblood, preds_kim_IV_Mblood, 
             preds_Lup_OR_Ffeces, preds_Lup_OR_Furine, preds_Cui_OR_MurineL, preds_Cui_OR_MurineH, preds_Cui_OR_MfecesL,
-            preds_Cui_OR_MfecesH)
+            preds_Cui_OR_MfecesH, preds_dzi_IV_Mserum, preds_dzi_OR_Mserum_low, preds_dzi_OR_Mserum_medium,
+            preds_dzi_OR_Mserum_high, preds_dzi_IV_Fserum, preds_dzi_OR_Fserum_low, preds_dzi_OR_Fserum_medium,
+            preds_dzi_OR_Fserum_high)
   
   obs <- c(obs_kudo_high, obs_kudo_low, obs_kim_IV_Mtissues, obs_kim_OR_Mtissues, obs_kim_IV_Ftissues, obs_kim_OR_Ftissues,
            obs_dzi_OR_Mtissues, obs_dzi_OR_Ftissues, obs_kim_OR_Mblood, obs_kim_IV_Mblood, 
            obs_Lup_OR_Ffeces_cum, obs_Lup_OR_Furine_cum, obs_Cui_OR_MurineL, obs_Cui_OR_MurineH, obs_Cui_OR_MfecesL,
-           obs_Cui_OR_MfecesH)
+           obs_Cui_OR_MfecesH, obs_dzi_IV_Mserum, obs_dzi_OR_Mserum_low, obs_dzi_OR_Mserum_medium,
+           obs_dzi_OR_Mserum_high, obs_dzi_IV_Fserum, obs_dzi_OR_Fserum_low, obs_dzi_OR_Fserum_medium,
+           obs_dzi_OR_Fserum_high)
   
   
   score <- AAFE(predictions = preds, observations = obs)
@@ -1998,8 +2516,10 @@ obj.func <- function(x, dataset){
 }
 
 ################################################################################
-#setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
-setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
+
+setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
+#setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
+
 
 # Read data
 kudo_high_dose <- openxlsx::read.xlsx("Data/IV_male_rats_tissues_high_kudo_2007.xlsx")
@@ -2019,13 +2539,22 @@ Cui_OR_MurineL <- openxlsx::read.xlsx("Data/PFOA_male_urine_oral_low_Cui_2010.xl
 Cui_OR_MurineH <- openxlsx::read.xlsx("Data/PFOA_male_urine_oral_high_Cui_2010.xlsx")
 Cui_OR_MfecesL <- openxlsx::read.xlsx("Data/PFOA_male_feces_oral_low_Cui_2010.xlsx")
 Cui_OR_MfecesH <- openxlsx::read.xlsx("Data/PFOA_male_feces_oral_high_Cui_2010.xlsx")
-
+dzi_IV_Mserum <- openxlsx::read.xlsx("Data/Dzierlenga_serum_male_IV_2021.xlsx")
+dzi_OR_Mserum_low <- openxlsx::read.xlsx("Data/Dzierlenga_serum_male_ORAL_low_2021.xlsx")
+dzi_OR_Mserum_medium <- openxlsx::read.xlsx("Data/Dzierlenga_serum_male_ORAL_medium_2021.xlsx")
+dzi_OR_Mserum_high <- openxlsx::read.xlsx("Data/Dzierlenga_serum_male_ORAL_high_2021.xlsx")
+dzi_IV_Fserum <- openxlsx::read.xlsx("Data/Dzierlenga_serum_female_IV_2021.xlsx")
+dzi_OR_Fserum_low <- openxlsx::read.xlsx("Data/Dzierlenga_serum_female_ORAL_low_2021.xlsx")
+dzi_OR_Fserum_medium <- openxlsx::read.xlsx("Data/Dzierlenga_serum_female_ORAL_medium_2021.xlsx")
+dzi_OR_Fserum_high <- openxlsx::read.xlsx("Data/Dzierlenga_serum_female_ORAL_high_2021.xlsx")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
                 "df9" = kim_OR_Mblood, "df10" = kim_IV_Mblood, "df11" = Lup_OR_Ftissues, "df12" = Lup_OR_Ffeces,
                 "df13" = Lup_OR_Furine, "df14" = Cui_OR_MurineL, "df15" = Cui_OR_MurineH, "df16" = Cui_OR_MfecesL,
-                "df17" = Cui_OR_MfecesH)
+                "df17" = Cui_OR_MfecesH, "df18" = dzi_IV_Mserum, "df19" = dzi_OR_Mserum_low, "df20" = dzi_OR_Mserum_medium,
+                "df21" = dzi_OR_Mserum_high, "df22" = dzi_IV_Fserum, "df23" = dzi_OR_Fserum_low, "df24" = dzi_OR_Fserum_medium,
+                "df25" = dzi_OR_Fserum_high)
 
 
 #Initialise optimiser to NULL for better error handling later
@@ -2248,7 +2777,7 @@ sample_time=seq(0,2,0.01)
                                     y = inits, parms = params,events = events,
                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
 
- preds_dzi_OR_Mtissues <-  solution[, c("time", "Cliver","Ckidney", "Cbrain")]
+ preds_dzi_OR_Mtissues <-  solution[, c("time", "Mliver","Mkidney", "Mbrain")]
  
  
  # Set up simulations for the 8th case, i.e. Dzierlenga (2021) ORAL female tissues
@@ -2277,7 +2806,7 @@ sample_time=seq(0,2,0.01)
                                      y = inits, parms = params,events = events,
                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
  
- preds_dzi_OR_Ftissues <-  solution[, c("time", "Cliver","Ckidney", "Cbrain")]
+ preds_dzi_OR_Ftissues <-  solution[, c("time", "Mliver","Mkidney", "Mbrain")]
  
  
  
@@ -2401,7 +2930,7 @@ sample_time=seq(0,2,0.01)
  #Estimate fecal dry mass 
  feces_density <- 1.3*1000 #g/mL *1000--> g/L
  Mfeces_wet <- solution$Vfeces[solution$time%in% exp_time ]*feces_density #g
- Mfeces_dry <- Mfeces_wet*0.25 # This is assumption, we need to find an actual conversion factor
+ Mfeces_dry <- Mfeces_wet*0.2 # Enqi et al., 2021, control rats:20.1%, https://doi.org/10.3389/fcimb.2020.581974
  
  # Estimate the mass of feces by multiplying concentration by dry mass
  Lupton_Ffeces <- c(exp_data[exp_data$Tissue == "Feces", "concentration"])*Mfeces_dry
@@ -2551,6 +3080,255 @@ sample_time=seq(0,2,0.01)
  preds_Cui_OR_MfecesH <-  solution[, c("time", "Mfeces")]
  
  
+ # Set up simulations for the 18th case, i.e. Dzierlenga 2021, IV male serum
+ BW <- 0.25  # body weight (kg) not reported
+ admin.dose_per_g <- 6 # administered dose in mg PFOA/kg BW 
+ admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
+ admin.time <- 0 #time when doses are administered, in hours
+ admin.type <- "iv"
+ sex <- "M"  
+ 
+ 
+ user_input <- list('BW'=BW,
+                    "admin.dose"= admin.dose,
+                    "admin.time" = admin.time, 
+                    "admin.type" = admin.type,
+                    "estimated_params" = estimated_params,
+                    "sex" = sex)
+ 
+ 
+ params <- create.params(user_input)
+ inits <- create.inits(params)
+ events <- create.events(params)
+ 
+ 
+ sample_time <- c(0.083, 0.25, 0.5, 1, 3, 6, seq(12, 1200, 4))
+ 
+ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                     y = inits, parms = params,events = events,
+                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
+ 
+ preds_dzi_IV_Mserum <-  solution[, c("time", "Cplasma")]
+ 
+ 
+ 
+ # Set up simulations for the 19th case, i.e. Dzierlenga 2021, ORAL male serum low
+ BW <- 0.25  # body weight (kg) not reported
+ admin.dose_per_g <- 6 # administered dose in mg PFOA/kg BW 
+ admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
+ admin.time <- 0 #time when doses are administered, in hours
+ admin.type <- "oral"
+ sex <- "M"  
+ 
+ 
+ user_input <- list('BW'=BW,
+                    "admin.dose"= admin.dose,
+                    "admin.time" = admin.time, 
+                    "admin.type" = admin.type,
+                    "estimated_params" = estimated_params,
+                    "sex" = sex)
+ 
+ 
+ params <- create.params(user_input)
+ inits <- create.inits(params)
+ events <- create.events(params)
+ 
+ 
+ sample_time <- c(0.25, 1, 3, 6, seq(12, 1200, 4))
+ 
+ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                     y = inits, parms = params,events = events,
+                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
+ 
+ preds_dzi_OR_Mserum_low <-  solution[, c("time", "Cplasma")]
+ 
+ 
+ # Set up simulations for the 20th case, i.e. Dzierlenga 2021, ORAL male serum medium
+ BW <- 0.25  # body weight (kg) not reported
+ admin.dose_per_g <- 12 # administered dose in mg PFOA/kg BW 
+ admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
+ admin.time <- 0 #time when doses are administered, in hours
+ admin.type <- "oral"
+ sex <- "M"  
+ 
+ 
+ user_input <- list('BW'=BW,
+                    "admin.dose"= admin.dose,
+                    "admin.time" = admin.time, 
+                    "admin.type" = admin.type,
+                    "estimated_params" = estimated_params,
+                    "sex" = sex)
+ 
+ 
+ params <- create.params(user_input)
+ inits <- create.inits(params)
+ events <- create.events(params)
+ 
+ 
+ sample_time <- c(0.25, 1, 3, 6, seq(12, 1200, 4))
+ 
+ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                     y = inits, parms = params,events = events,
+                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
+ 
+ preds_dzi_OR_Mserum_medium <-  solution[, c("time", "Cplasma")]
+ 
+ 
+ # Set up simulations for the 21st case, i.e. Dzierlenga 2021, ORAL male serum high
+ BW <- 0.25  # body weight (kg) not reported
+ admin.dose_per_g <- 48 # administered dose in mg PFOA/kg BW 
+ admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
+ admin.time <- 0 #time when doses are administered, in hours
+ admin.type <- "oral"
+ sex <- "M"  
+ 
+ 
+ user_input <- list('BW'=BW,
+                    "admin.dose"= admin.dose,
+                    "admin.time" = admin.time, 
+                    "admin.type" = admin.type,
+                    "estimated_params" = estimated_params,
+                    "sex" = sex)
+ 
+ 
+ params <- create.params(user_input)
+ inits <- create.inits(params)
+ events <- create.events(params)
+ 
+ 
+ sample_time <- c(0.25, 1, 3, 6, seq(12, 1200, 4))
+ 
+ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                     y = inits, parms = params,events = events,
+                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
+ 
+ preds_dzi_OR_Mserum_high <-  solution[, c("time", "Cplasma")]
+ 
+ 
+ # Set up simulations for the 22nd case, i.e. Dzierlenga 2021, IV female serum 
+ BW <- 0.25  # body weight (kg) not reported
+ admin.dose_per_g <- 40 # administered dose in mg PFOA/kg BW 
+ admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
+ admin.time <- 0 #time when doses are administered, in hours
+ admin.type <- "iv"
+ sex <- "F"  
+ 
+ 
+ user_input <- list('BW'=BW,
+                    "admin.dose"= admin.dose,
+                    "admin.time" = admin.time, 
+                    "admin.type" = admin.type,
+                    "estimated_params" = estimated_params,
+                    "sex" = sex)
+ 
+ 
+ params <- create.params(user_input)
+ inits <- create.inits(params)
+ events <- create.events(params)
+ 
+ 
+ sample_time <- c(0.083, 0.25, seq(0.5, 192, 0.5))
+ 
+ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                     y = inits, parms = params,events = events,
+                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
+ 
+ preds_dzi_IV_Fserum <-  solution[, c("time", "Cplasma")]
+ 
+ 
+ # Set up simulations for the 23d case, i.e. Dzierlenga 2021, ORAL female serum low
+ BW <- 0.25  # body weight (kg) not reported
+ admin.dose_per_g <- 40 # administered dose in mg PFOA/kg BW 
+ admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
+ admin.time <- 0 #time when doses are administered, in hours
+ admin.type <- "oral"
+ sex <- "F"  
+ 
+ 
+ user_input <- list('BW'=BW,
+                    "admin.dose"= admin.dose,
+                    "admin.time" = admin.time, 
+                    "admin.type" = admin.type,
+                    "estimated_params" = estimated_params,
+                    "sex" = sex)
+ 
+ 
+ params <- create.params(user_input)
+ inits <- create.inits(params)
+ events <- create.events(params)
+ 
+ 
+ sample_time <- seq(0.25, 96, 0.25)
+ 
+ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                     y = inits, parms = params,events = events,
+                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
+ 
+ preds_dzi_OR_Fserum_low <-  solution[, c("time", "Cplasma")]
+ 
+ 
+ # Set up simulations for the 25th case, i.e. Dzierlenga 2021, ORAL female serum medium
+ BW <- 0.25  # body weight (kg) not reported
+ admin.dose_per_g <- 80 # administered dose in mg PFOA/kg BW 
+ admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
+ admin.time <- 0 #time when doses are administered, in hours
+ admin.type <- "oral"
+ sex <- "F"  
+ 
+ 
+ user_input <- list('BW'=BW,
+                    "admin.dose"= admin.dose,
+                    "admin.time" = admin.time, 
+                    "admin.type" = admin.type,
+                    "estimated_params" = estimated_params,
+                    "sex" = sex)
+ 
+ 
+ params <- create.params(user_input)
+ inits <- create.inits(params)
+ events <- create.events(params)
+ 
+ 
+ sample_time <- c(0.25, seq(1, 192, 0.5))
+ 
+ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                     y = inits, parms = params,events = events,
+                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
+ 
+ preds_dzi_OR_Fserum_medium <-  solution[, c("time", "Cplasma")]
+ 
+ 
+ 
+ # Set up simulations for the 25th case, i.e. Dzierlenga 2021, ORAL female serum high
+ BW <- 0.25  # body weight (kg) not reported
+ admin.dose_per_g <- 320 # administered dose in mg PFOA/kg BW 
+ admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
+ admin.time <- 0 #time when doses are administered, in hours
+ admin.type <- "oral"
+ sex <- "F"  
+ 
+ 
+ user_input <- list('BW'=BW,
+                    "admin.dose"= admin.dose,
+                    "admin.time" = admin.time, 
+                    "admin.type" = admin.type,
+                    "estimated_params" = estimated_params,
+                    "sex" = sex)
+ 
+ 
+ params <- create.params(user_input)
+ inits <- create.inits(params)
+ events <- create.events(params)
+ 
+ 
+ sample_time <- seq(0.25, 96, 0.25)
+ 
+ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                     y = inits, parms = params,events = events,
+                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
+ 
+ preds_dzi_OR_Fserum_high <-  solution[, c("time", "Cplasma")]
+ 
  
  #convert ug/L, which is returned by the ODE function, to ug/g, which are the units in all the datasets
  
@@ -2565,7 +3343,15 @@ sample_time=seq(0,2,0.01)
  preds_kim_OR_Mblood[,2:dim(preds_kim_OR_Mblood)[2]] <- preds_kim_OR_Mblood[,2:dim(preds_kim_OR_Mblood)[2]] /1000
  preds_kim_IV_Mblood[,2:dim(preds_kim_IV_Mblood)[2]] <- preds_kim_IV_Mblood[,2:dim(preds_kim_IV_Mblood)[2]] /1000
  preds_Lup_OR_Ftissues[,2:dim(preds_Lup_OR_Ftissues)[2]] <- preds_Lup_OR_Ftissues[,2:dim(preds_Lup_OR_Ftissues)[2]] /1000
-
+ preds_dzi_IV_Mserum[,2:dim(preds_dzi_IV_Mserum)[2]] <- preds_dzi_IV_Mserum[,2:dim(preds_dzi_IV_Mserum)[2]] /1000
+ preds_dzi_OR_Mserum_low[,2:dim(preds_dzi_OR_Mserum_low)[2]] <- preds_dzi_OR_Mserum_low[,2:dim(preds_dzi_OR_Mserum_low)[2]] /1000
+ preds_dzi_OR_Mserum_medium[,2:dim(preds_dzi_OR_Mserum_medium)[2]] <- preds_dzi_OR_Mserum_medium[,2:dim(preds_dzi_OR_Mserum_medium)[2]] /1000
+ preds_dzi_OR_Mserum_high[,2:dim(preds_dzi_OR_Mserum_high)[2]] <- preds_dzi_OR_Mserum_high[,2:dim(preds_dzi_OR_Mserum_high)[2]] /1000
+ preds_dzi_IV_Fserum[,2:dim(preds_dzi_IV_Fserum)[2]] <- preds_dzi_IV_Fserum[,2:dim(preds_dzi_IV_Fserum)[2]] /1000
+ preds_dzi_OR_Fserum_low[,2:dim(preds_dzi_OR_Fserum_low)[2]] <- preds_dzi_OR_Fserum_low[,2:dim(preds_dzi_OR_Fserum_low)[2]] /1000
+ preds_dzi_OR_Fserum_medium[,2:dim(preds_dzi_OR_Fserum_medium)[2]] <- preds_dzi_OR_Fserum_medium[,2:dim(preds_dzi_OR_Fserum_medium)[2]] /1000
+ preds_dzi_OR_Fserum_high[,2:dim(preds_dzi_OR_Fserum_high)[2]] <- preds_dzi_OR_Fserum_high[,2:dim(preds_dzi_OR_Fserum_high)[2]] /1000
+ 
  
  # ######################################################################################
 #Plot the predictions against the observations
@@ -2639,14 +3425,14 @@ experiment2 <- reshape(kudo_low_dose[c("Tissue" ,"Time_hours",
  
  # Convert Dzierlenga ORAL male tissues from long to wide format using reshape
  experiment7 <- reshape(dzi_OR_Mtissues[c("Tissue" ,"Time_hours", 
-                                          "Concentration_microg_per_g_organ")], 
+                                          "Concentration_microM")], 
                         idvar = "Time_hours", timevar = "Tissue", direction = "wide")
  colnames(experiment7) <- c("Time",unique(dzi_OR_Mtissues$Tissue))
 
  
  # Convert Dzierlenga ORAL female tissues from long to wide format using reshape
  experiment8 <- reshape(dzi_OR_Ftissues[c("Tissue" ,"Time_hours", 
-                                          "Concentration_microg_per_g_organ")], 
+                                          "Concentration_microM")], 
                         idvar = "Time_hours", timevar = "Tissue", direction = "wide")
  colnames(experiment8) <- c("Time",unique(dzi_OR_Ftissues$Tissue))
  
@@ -2716,13 +3502,78 @@ experiment2 <- reshape(kudo_low_dose[c("Tissue" ,"Time_hours",
  colnames(experiment17) <- c("Time",unique(Cui_OR_MfecesH$Tissue))
  experiment17$Feces <- experiment17$Feces *1000
  
+ # Convert Dzierlenga 2021, IV male serum from long to wide format using reshape
+ experiment18 <- reshape(dzi_IV_Mserum[c("Tissue" ,"Time_hours", 
+                                          "Concentration_microM")], 
+                         idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+ colnames(experiment18) <- c("Time",unique(dzi_IV_Mserum$Tissue))
+ experiment18$Serum <- experiment18$Serum * params$MW/1000
+ 
+ 
+ # Convert Dzierlenga 2021, ORAL male serum low from long to wide format using reshape
+ experiment19 <- reshape(dzi_OR_Mserum_low[c("Tissue" ,"Time_hours", 
+                                         "Concentration_microM")], 
+                         idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+ colnames(experiment19) <- c("Time",unique(dzi_OR_Mserum_low$Tissue))
+ experiment19$Serum <- experiment19$Serum * params$MW/1000
+ 
+ 
+ # Convert Dzierlenga 2021, ORAL male serum medium from long to wide format using reshape
+ experiment20 <- reshape(dzi_OR_Mserum_medium[c("Tissue" ,"Time_hours", 
+                                             "Concentration_microM")], 
+                         idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+ colnames(experiment20) <- c("Time",unique(dzi_OR_Mserum_low$Tissue))
+ experiment20$Serum <- experiment20$Serum * params$MW/1000
+ 
+ 
+ #Convert Dzierlenga 2021, ORAL male serum high from long to wide format using reshape
+ experiment21 <- reshape(dzi_OR_Mserum_high[c("Tissue" ,"Time_hours", 
+                                                "Concentration_microM")], 
+                         idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+ colnames(experiment21) <- c("Time",unique(dzi_OR_Mserum_high$Tissue))
+ experiment21$Serum <- experiment21$Serum * params$MW/1000
+ 
+ 
+ #Convert Dzierlenga 2021, IV female serum from long to wide format using reshape
+ experiment22 <- reshape(dzi_IV_Fserum[c("Tissue" ,"Time_hours", 
+                                              "Concentration_microM")], 
+                         idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+ colnames(experiment22) <- c("Time",unique(dzi_IV_Fserum$Tissue))
+ experiment22$Serum <- experiment22$Serum * params$MW/1000
+ 
+ 
+ #Convert Dzierlenga 2021, ORAL female serum low from long to wide format using reshape
+ experiment23 <- reshape(dzi_OR_Fserum_low[c("Tissue" ,"Time_hours", 
+                                         "Concentration_microM")], 
+                         idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+ colnames(experiment23) <- c("Time",unique(dzi_OR_Fserum_low$Tissue))
+ experiment23$Serum <- experiment23$Serum * params$MW/1000
+ 
+ 
+ #Convert Dzierlenga 2021, ORAL female serum medium from long to wide format using reshape
+ experiment24 <- reshape(dzi_OR_Fserum_medium[c("Tissue" ,"Time_hours", 
+                                             "Concentration_microM")], 
+                         idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+ colnames(experiment24) <- c("Time",unique(dzi_OR_Fserum_medium$Tissue))
+ experiment24$Serum <- experiment24$Serum * params$MW/1000
+ 
+ 
+ #Convert Dzierlenga 2021, ORAL female serum high from long to wide format using reshape
+ experiment25 <- reshape(dzi_OR_Fserum_high[c("Tissue" ,"Time_hours", 
+                                                "Concentration_microM")], 
+                         idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+ colnames(experiment25) <- c("Time",unique(dzi_OR_Fserum_high$Tissue))
+ experiment25$Serum <- experiment25$Serum * params$MW/1000
+ 
  
  # Put the experiments in a list
  experiments <- list(experiment1 = experiment1, experiment2 = experiment2, experiment3 = experiment3, experiment4 = experiment4,
                      experiment5 = experiment5, experiment6 = experiment6, experiment7 = experiment7, experiment8 = experiment8,
                      experiment9 = experiment9, experiment10 = experiment10, experiment11 = experiment11, experiment12 = experiment12,
                      experiment13 = experiment13,  experiment14 = experiment14, experiment15 = experiment15, experiment16 = experiment16,
-                     experiment17 = experiment17)
+                     experiment17 = experiment17, experiment18 = experiment18, experiment19 = experiment19, experiment20 = experiment20,
+                     experiment21 = experiment21, experiment22 = experiment22, experiment23 = experiment23, experiment24 = experiment24,
+                     experiment25 = experiment25)
  
 
   # Rename predictions so that they share the same name as the names of the experimental data dataframe
@@ -2753,13 +3604,26 @@ experiment2 <- reshape(kudo_low_dose[c("Tissue" ,"Time_hours",
  colnames(preds_Cui_OR_MfecesL) <- c ("Time", "Feces")
  colnames(preds_Cui_OR_MfecesH) <- c ("Time", "Feces")
  
+ colnames(preds_dzi_IV_Mserum) <- c ("Time", "Serum")
+ colnames(preds_dzi_OR_Mserum_low) <- c ("Time", "Serum")
+ colnames(preds_dzi_OR_Mserum_medium) <- c ("Time", "Serum")
+ colnames(preds_dzi_OR_Mserum_high) <- c ("Time", "Serum")
+ colnames(preds_dzi_IV_Fserum) <- c ("Time", "Serum")
+ colnames(preds_dzi_OR_Fserum_low) <- c ("Time", "Serum")
+ colnames(preds_dzi_OR_Fserum_medium) <- c ("Time", "Serum")
+ colnames(preds_dzi_OR_Fserum_high) <- c ("Time", "Serum")
+ 
+ 
  # Create a list containing the corresponding predictions
  simulations <- list(predictions1 = preds_kudo_high,  predictions2 = preds_kudo_low, predictions3 = preds_kim_IV_Mtissues, 
                      predictions4 = preds_kim_OR_Mtissues, predictions5 = preds_kim_IV_Ftissues, predictions6 = preds_kim_OR_Ftissues,
                      predictions7 = preds_dzi_OR_Mtissues, predictions8 = preds_dzi_OR_Ftissues, predictions9 = preds_kim_OR_Mblood,
                      predictions10 = preds_kim_IV_Mblood, predictions11 = preds_Lup_OR_Ftissues, predictions12 = preds_Lup_OR_Ffeces,
                      predictions13 = preds_Lup_OR_Furine, predictions14 = preds_Cui_OR_MurineL, predictions15 = preds_Cui_OR_MurineH,
-                     predictions16 =preds_Cui_OR_MfecesL, predictions17 =preds_Cui_OR_MfecesH)
+                     predictions16 =preds_Cui_OR_MfecesL, predictions17 =preds_Cui_OR_MfecesH, predictions18 =preds_dzi_IV_Mserum,
+                     predictions19 =preds_dzi_OR_Mserum_low, predictions20 =preds_dzi_OR_Mserum_medium, predictions21 =preds_dzi_OR_Mserum_high, 
+                     predictions22 =preds_dzi_IV_Fserum, predictions23 =preds_dzi_OR_Fserum_low, predictions24 =preds_dzi_OR_Fserum_medium,
+                     predictions25 =preds_dzi_OR_Fserum_high)
                     
  
  # Iterate over all existing experiments and create the accompanying plots
