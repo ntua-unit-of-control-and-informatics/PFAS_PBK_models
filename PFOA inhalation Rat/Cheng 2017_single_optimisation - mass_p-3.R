@@ -2027,7 +2027,7 @@ obj.func <- function(x, dataset){
   events <- create.events(params)
   
   # sample_time: a vector of time points to solve the ODEs
-  sample_time <- c(0.083, 0.25, 0.5, 1, 3, 6, seq(12, 1200, 4))
+  sample_time <- c(0, 0.083, 0.25, 0.5, 1, 3, 6, seq(12, 1200, 4))
   
   # ode(): The solver of the ODEs
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -2088,7 +2088,7 @@ obj.func <- function(x, dataset){
   events <- create.events(params)
   
   # sample_time: a vector of time points to solve the ODEs
-  sample_time <- c(0.25, 1, 3, 6, seq(12, 1200, 4))
+  sample_time <- c(0, 0.25, 1, 3, 6, seq(12, 1200, 4))
   
   # ode(): The solver of the ODEs
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -2150,7 +2150,7 @@ obj.func <- function(x, dataset){
   events <- create.events(params)
   
   # sample_time: a vector of time points to solve the ODEs
-  sample_time <- c(0.25, 1, 3, 6, seq(12, 1200, 4))
+  sample_time <- c(0, 0.25, 1, 3, 6, seq(12, 1200, 4))
   
   # ode(): The solver of the ODEs
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -2212,7 +2212,7 @@ obj.func <- function(x, dataset){
   events <- create.events(params)
   
   # sample_time: a vector of time points to solve the ODEs
-  sample_time <- c(0.25, 1, 3, 6, seq(12, 1200, 4))
+  sample_time <- c(0, 0.25, 1, 3, 6, seq(12, 1200, 4))
   
   # ode(): The solver of the ODEs
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -2273,7 +2273,7 @@ obj.func <- function(x, dataset){
   events <- create.events(params)
   
   # sample_time: a vector of time points to solve the ODEs
-  sample_time <- c(0.083, 0.25, seq(0.5, 192, 0.5))
+  sample_time <- c(0, 0.083, 0.25, seq(0.5, 192, 0.5))
   
   # ode(): The solver of the ODEs
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -2335,7 +2335,7 @@ obj.func <- function(x, dataset){
   events <- create.events(params)
   
   # sample_time: a vector of time points to solve the ODEs
-  sample_time <- seq(0.25, 96, 0.25)
+  sample_time <- seq(0, 96, 0.25)
   
   # ode(): The solver of the ODEs
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -2396,7 +2396,7 @@ obj.func <- function(x, dataset){
   events <- create.events(params)
   
   # sample_time: a vector of time points to solve the ODEs
-  sample_time <- c(0.25, seq(1, 192, 0.5))
+  sample_time <- c(0, 0.25, seq(1, 192, 0.5))
   
   # ode(): The solver of the ODEs
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -2457,7 +2457,7 @@ obj.func <- function(x, dataset){
   events <- create.events(params)
   
   # sample_time: a vector of time points to solve the ODEs
-  sample_time <- seq(0.25, 96, 0.25)
+  sample_time <- seq(0, 96, 0.25)
   
   # ode(): The solver of the ODEs
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -2987,7 +2987,7 @@ sample_time=seq(0,2,0.01)
  preds_Cui_OR_MurineL <-  solution[, c("time", "Murine")]
  
  
- # Set up simulations for the 14th case, i.e. Cui (2010) ORAL male urine high
+ # Set up simulations for the 15th case, i.e. Cui (2010) ORAL male urine high
  BW <- 0.2  # body weight (kg) not reported
  admin.dose_per_g <- 20 # administered dose in mg PFOA/kg BW 
  admin.dose_single <- (admin.dose_per_g*BW*1e03) #ug PFOA
@@ -3018,7 +3018,7 @@ sample_time=seq(0,2,0.01)
  preds_Cui_OR_MurineH <-  solution[, c("time", "Murine")]
  
  
- # Set up simulations for the 14th case, i.e. Cui (2010) ORAL male feces low
+ # Set up simulations for the 16th case, i.e. Cui (2010) ORAL male feces low
  BW <- 0.2  # body weight (kg) not reported
  admin.dose_per_g <- 5 # administered dose in mg PFOA/kg BW 
  admin.dose_single <- (admin.dose_per_g*BW*1e03) #ug PFOA
@@ -3049,7 +3049,7 @@ sample_time=seq(0,2,0.01)
  preds_Cui_OR_MfecesL <-  solution[, c("time", "Mfeces")]
  
  
- # Set up simulations for the 14th case, i.e. Cui (2010) ORAL male feces high
+ # Set up simulations for the 17th case, i.e. Cui (2010) ORAL male feces high
  BW <- 0.2  # body weight (kg) not reported
  admin.dose_per_g <- 20 # administered dose in mg PFOA/kg BW 
  admin.dose_single <- (admin.dose_per_g*BW*1e03) #ug PFOA
@@ -3102,7 +3102,7 @@ sample_time=seq(0,2,0.01)
  events <- create.events(params)
  
  
- sample_time <- c(0.083, 0.25, 0.5, 1, 3, 6, seq(12, 1200, 4))
+ sample_time <- c(0, 0.083, 0.25, 0.5, 1, 3, 6, seq(12, 1200, 4))
  
  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                      y = inits, parms = params,events = events,
@@ -3134,7 +3134,7 @@ sample_time=seq(0,2,0.01)
  events <- create.events(params)
  
  
- sample_time <- c(0.25, 1, 3, 6, seq(12, 1200, 4))
+ sample_time <- c(0, 0.25, 1, 3, 6, seq(12, 1200, 4))
  
  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                      y = inits, parms = params,events = events,
@@ -3165,7 +3165,7 @@ sample_time=seq(0,2,0.01)
  events <- create.events(params)
  
  
- sample_time <- c(0.25, 1, 3, 6, seq(12, 1200, 4))
+ sample_time <- c(0, 0.25, 1, 3, 6, seq(12, 1200, 4))
  
  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                      y = inits, parms = params,events = events,
@@ -3196,7 +3196,7 @@ sample_time=seq(0,2,0.01)
  events <- create.events(params)
  
  
- sample_time <- c(0.25, 1, 3, 6, seq(12, 1200, 4))
+ sample_time <- c(0, 0.25, 1, 3, 6, seq(12, 1200, 4))
  
  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                      y = inits, parms = params,events = events,
@@ -3227,7 +3227,7 @@ sample_time=seq(0,2,0.01)
  events <- create.events(params)
  
  
- sample_time <- c(0.083, 0.25, seq(0.5, 192, 0.5))
+ sample_time <- c(0, 0.083, 0.25, seq(0.5, 192, 0.5))
  
  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                      y = inits, parms = params,events = events,
@@ -3258,7 +3258,7 @@ sample_time=seq(0,2,0.01)
  events <- create.events(params)
  
  
- sample_time <- seq(0.25, 96, 0.25)
+ sample_time <- seq(0, 96, 0.25)
  
  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                      y = inits, parms = params,events = events,
@@ -3289,7 +3289,7 @@ sample_time=seq(0,2,0.01)
  events <- create.events(params)
  
  
- sample_time <- c(0.25, seq(1, 192, 0.5))
+ sample_time <- c(0, 0.25, seq(1, 192, 0.5))
  
  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                      y = inits, parms = params,events = events,
@@ -3321,7 +3321,7 @@ sample_time=seq(0,2,0.01)
  events <- create.events(params)
  
  
- sample_time <- seq(0.25, 96, 0.25)
+ sample_time <- seq(0, 96, 0.25)
  
  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                      y = inits, parms = params,events = events,
