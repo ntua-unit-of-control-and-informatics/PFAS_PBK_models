@@ -28,16 +28,19 @@ create.params <- function(user.input){
       RAFNtcp <- RAFOatp_l
      # RAFNtcp <- estimated_params[10]
     }
-    bile_correction_factor <- estimated_params[7]
     
     #permeabilities correction factor
-    CF_Peff <- estimated_params[8] 
+    CF_Peff <- estimated_params[7] 
     # Absorption rate per area
-    kabs <- estimated_params[9]
+    kabs <- estimated_params[8]
+    # Bile correction factor
+    bile_correction_factor <- estimated_params[9]
+    
     # urine correction factor
-    CFurine <- estimated_params[10] 
+    CFurine <- 1#estimated_params[9] 
     # Correction factor for female GFR
-    CF_GFR_female <- estimated_params[11]
+    CF_GFR_female <-1# estimated_params[11]
+
     
     #units conversion from Cheng 2017R, time-> h, PFOA mass->ng, tissues mass-> g
     
@@ -62,8 +65,6 @@ create.params <- function(user.input){
     VKF <- PVKF * PVK * BW #kidney interstitial fluid volume kg=L
     VKT <- VK - VKF - VKB #kidney tissue volume kg=L
     VFil <- 0.25 #renal filtrate volume kg=L Cheng et al., 2017 (from Arthur, 1986; Bonvalet, 1981)
-    Qurine <- 18/24/1000*CFurine #mean of 13-23 mL/24h -> L/h,  https://doi.org/10.1016/B978-0-323-48435-0.00025-3
-    
     
     #Liver
     PVL <- 3.66e-2 #Brown et al. 1997
@@ -103,9 +104,7 @@ create.params <- function(user.input){
     VSTL <- PVSTL * BW #stomach lumen volume kg=L
     PVINL <- (0.894+0.792+0.678+0.598+0.442)/230 #Funai et al., 2023 https://doi.org/10.1038/s41598-023-44742-y --> Figure 3C
     VINL <- PVINL * BW #intestine lumen volume kg=L
-    Qfeces <- 12/24/1000 #mean of 9-15 mL/24h --> L/h,  https://doi.org/10.1016/B978-0-323-48435-0.00025-3
-    feces_density <- 1.29 #g/cm^3 --> g/mL from Lupton 1986, Fig 1. Fiber free control diet, https://doi.org/10.1093/jn/116.1.164
-    
+     
     #Muscle
     PVM <- 40.43e-2 #Brown et al. 1997
     VM <- PVM * BW #muscle volume kg=L
@@ -301,28 +300,31 @@ create.params <- function(user.input){
     #Flow rate of fluids including feces, bile, urine and glomerular filtration rate (GFR), in L/h
     
     #Qfeces <- 5.63/1000/24 #mL water/d --> L/h
-    PQbile <- 90/1000/24 #mL/d/kg BW --> L/d/kg BW
+    PQbile <- 90/1000/24 # [mL/d/kg BW]/1000/24 --> L/h/kg BW
     Qbile <- PQbile * BW #L/h
     #PQurine <- 200/1000/24 #mL/d/kg BW --> L/h/kg
     #Qurine <- PQurine * BW #L/h
-    
-    
-    #
-    # if (sex == "M"){
-    #   PQGFR <- 62.1  #L/h/kg   Corley et al., 2005 https://doi.org/10.1093/toxsci/kfi119, GFRC --> scaled fraction of kidney weight
-    #   QGFR <- PQGFR * VK #L/h
-    #   }else if(sex == "F"){
-    #   PQGFR <- 41.04  #L/h/kg  Corley et al., 2005 https://doi.org/10.1093/toxsci/kfi119, GFRC --> scaled fraction of kidney weight
-    #   QGFR <- PQGFR * VK #L/h
-    # }
-    
+    Qfeces <- (8.18/0.21)*BW #g/kg BW, based on Cui et al.(2010)
+    feces_density <- 1.29 #g/cm^3 --> g/mL from Lupton 1986, Fig 1. Fiber free control diet, https://doi.org/10.1093/jn/116.1.164
+
     if (sex == "M"){
-      PQGFR <- 1.08e-3*60*10/1000 #L/h/kg   1.08 mL/min/100 g BW --> L/h/ kg Bw Sadick et al., 2011, https://doi.org/10.1093/ndt/gfr148
-      QGFR <- PQGFR * BW#L/h
-    }else if(sex == "F"){
-      PQGFR <- 1.08e-3*60*10/1000 #L/h/kg   1.08 mL/min/100 g BW --> L/h/ kg Bw Sadick et al., 2011, https://doi.org/10.1093/ndt/gfr148
-      QGFR <- PQGFR  * BW * CF_GFR_female #L/h
+      PQGFR <- 62.1  #L/h/kg   Corley et al., 2005 https://doi.org/10.1093/toxsci/kfi119, GFRC --> scaled fraction of kidney weight
+      QGFR <- PQGFR * VK #L/h
+      Qurine <- (60/1000)*BW/24 #([ml/d/kg]/1000)*BW/24 --> L/h, from Schmidt et al., 2001, 10.1002/nau.1006
+      }else if(sex == "F"){
+      PQGFR <- 41.04  #L/h/kg  Corley et al., 2005 https://doi.org/10.1093/toxsci/kfi119, GFRC --> scaled fraction of kidney weight
+      QGFR <- PQGFR * VK #L/h
+      Qurine <- (85/1000)*BW/24 #([ml/d/kg]/1000)*BW/24 --> L/h, from Schmidt et al., 2001, 10.1002/nau.1006  
     }
+    
+    # if (sex == "M"){
+    #   PQGFR <- 1.08e-3*60*10/1000 #L/h/kg   1.08 mL/min/100 g BW --> L/h/ kg Bw Sadick et al., 2011, https://doi.org/10.1093/ndt/gfr148
+    #   QGFR <- PQGFR * BW#L/h
+    # }else if(sex == "F"){
+    #   PQGFR <- 1.08e-3*60*10/1000 #L/h/kg   1.08 mL/min/100 g BW --> L/h/ kg Bw Sadick et al., 2011, https://doi.org/10.1093/ndt/gfr148
+    #   QGFR <- PQGFR  * BW * CF_GFR_female #L/h
+    #   Qurine <- (85/1000)*BW/24 #([ml/d/kg]/1000)*BW/24 --> L/h, from Schmidt et al., 2001, 10.1002/nau.1006  
+    # }
     
     #======Table S2=======#
     #Albumin concentration in blood and interstitial fluid compartments(mol/m^3 = 1e-6* nmol/g)
@@ -1769,9 +1771,8 @@ obj.func <- function(x, dataset){
   preds_Lup_OR_Ffeces <- unlist(preds_Lup_OR_Ffeces) #ug
   
   #Estimate fecal dry mass 
-  feces_density <- 1.3*1000 #g/mL *1000--> g/L
-  Mfeces_wet <- solution$Vfeces[solution$time%in% exp_time ]*feces_density #g
-  Mfeces_dry <- Mfeces_wet*0.2 # Enqi et al., 2021, control rats:20.1%, https://doi.org/10.3389/fcimb.2020.581974
+  Mfeces_wet <- (8.18/0.21)*BW #g
+  Mfeces_dry <- Mfeces_wet*0.8 # Enqi et al., 2021, control rats:20.1% water content, https://doi.org/10.3389/fcimb.2020.581974
   
   # Estimate the mass of feces by multiplying concentration by dry mass
   obs_Lup_OR_Ffeces <- c(exp_data[exp_data$Tissue == "Feces", "concentration"])*Mfeces_dry
@@ -1808,7 +1809,7 @@ obj.func <- function(x, dataset){
   
   preds_Lup_OR_Furine <- unlist(preds_Lup_OR_Furine) #ug
   
-  Qurine_daily <- 85 * BW#  (ml/d/kg)*BW/1000  --> L/d, Schmidt et al., 2001, doi:10.1002/nau.1006
+  Qurine_daily <- 85 * BW#  (ml/d/kg)*BW  --> mL/d, Schmidt et al., 2001, doi:10.1002/nau.1006
   obs_Lup_OR_Furine <- c(exp_data[exp_data$Tissue == "Urine", "concentration"])*Qurine_daily
   # Estimate cumulative fecal mass
   obs_Lup_OR_Furine_cum <- cumsum(obs_Lup_OR_Furine)
@@ -1841,7 +1842,7 @@ obj.func <- function(x, dataset){
   admin.type <- "oral"
   sex <- "M" 
   
-  user_input <- list('BW'=BW,
+  user_input <- list('BW'=BW_init,
                      "admin.dose"= admin.dose,
                      "admin.time" = admin.time, 
                      "admin.type" = admin.type,
@@ -1883,7 +1884,7 @@ obj.func <- function(x, dataset){
   preds_Cui_OR_MurineL <- unlist(preds_Cui_OR_MurineL) 
   
   
-  obs_Cui_OR_MurineL <- c(exp_data[exp_data$Tissue == "Urine", "mass"])*1000
+  obs_Cui_OR_MurineL <- c(exp_data[exp_data$Tissue == "Urine", "mass"])
   
   score[14] <- AAFE(predictions = preds_Cui_OR_MurineL, observations = obs_Cui_OR_MurineL)
   
@@ -1910,7 +1911,7 @@ obj.func <- function(x, dataset){
   
   preds_Cui_OR_MfecesL <- unlist(preds_Cui_OR_MfecesL) 
   
-  obs_Cui_OR_MfecesL <- c(exp_data[exp_data$Tissue == "Feces", "mass"])*1000
+  obs_Cui_OR_MfecesL <- c(exp_data[exp_data$Tissue == "Feces", "mass"])
   
   score[15] <- AAFE(predictions = preds_Cui_OR_MfecesL, observations = obs_Cui_OR_MfecesL)
   
@@ -1940,7 +1941,7 @@ obj.func <- function(x, dataset){
   admin.type <- "oral"
   sex <- "M" 
   
-  user_input <- list('BW'=BW,
+  user_input <- list('BW'=BW_init,
                      "admin.dose"= admin.dose,
                      "admin.time" = admin.time, 
                      "admin.type" = admin.type,
@@ -1982,7 +1983,7 @@ obj.func <- function(x, dataset){
   preds_Cui_OR_MurineH <- unlist(preds_Cui_OR_MurineH) 
   
   
-  obs_Cui_OR_MurineH <- c(exp_data[exp_data$Tissue == "Urine", "mass"])*1000
+  obs_Cui_OR_MurineH <- c(exp_data[exp_data$Tissue == "Urine", "mass"])
   
   score[16] <- AAFE(predictions = preds_Cui_OR_MurineH, observations = obs_Cui_OR_MurineH)
   
@@ -2013,9 +2014,9 @@ obj.func <- function(x, dataset){
   preds_Cui_OR_MfecesH <- unlist(preds_Cui_OR_MfecesH) 
   
   
-  obs_Cui_OR_MfecesH <- c(exp_data[exp_data$Tissue == "Feces", "mass"])*1000
+  obs_Cui_OR_MfecesH <- c(exp_data[exp_data$Tissue == "Feces", "mass"])
   
-  score[17] <- NA #AAFE(predictions = preds_Cui_OR_MfecesH, observations = obs_Cui_OR_MfecesH)
+  score[17] <- AAFE(predictions = preds_Cui_OR_MfecesH, observations = obs_Cui_OR_MfecesH)
   
   ##########################
   #-------------------------
@@ -2517,7 +2518,6 @@ obj.func <- function(x, dataset){
   
   score[25] <- AAFE(predictions = preds_dzi_OR_Fserum_high, observations = obs_dzi_OR_Fserum_high)
   
-  
   ##########################
   #-------------------------
   # Kim ORAL female blood
@@ -2603,7 +2603,7 @@ obj.func <- function(x, dataset){
   
   # sample_time: a vector of time points to solve the ODEs
   
-  sample_time=c(0, 24, 0.5)
+  sample_time= seq(0, 24, 0.5)
   
   # ode(): The solver of the ODEs
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -2641,7 +2641,6 @@ obj.func <- function(x, dataset){
   # Estimate final score
   
   final_score <- mean(score, na.rm = TRUE)
-  
   return(final_score)
   
 }
@@ -2710,7 +2709,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0 ,
-              "maxeval" = 200, 
+              "maxeval" = 10, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
@@ -2719,7 +2718,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
 #  bile_correction_factor, 11 correction factors for permeabilities
 
-N_pars <- 11 # Number of parameters to be fitted
+N_pars <- 9 # Number of parameters to be fitted
 #fit <- log(rep(1,N_pars))
 fit <- rep(1,N_pars)
 
@@ -2727,7 +2726,7 @@ fit <- rep(1,N_pars)
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,
                              lb	= rep(log(1e-20), N_pars),
-                             ub = rep(log(1e8), N_pars),
+                             ub = rep(log(1e10), N_pars),
                              opts = opts,
                              dataset = dataset)
 
@@ -3030,7 +3029,7 @@ sample_time=seq(0,2,0.01)
  #################################################################################
  
  # Set up simulations for the 11th case, i.e. Lupton (2020) ORAL female tissues
- BW <- 0.1875  # body weight (kg) not reported
+ BW <- 0.184  # body weight (kg) not reported
  admin.dose_per_g <- 0.047 # administered dose in mg PFOA/kg BW 
  admin.dose_single <- (admin.dose_per_g*BW*1e03)/2 #ug PFOA
  admin.time <- seq(0,13.5*24,12) #time when doses are administered, in hours
@@ -3075,9 +3074,8 @@ sample_time=seq(0,2,0.01)
  # Convert Lupton's excreta data to cumulative mass
  exp_time <- exp_data$time
  #Estimate fecal dry mass 
- feces_density <- 1.3*1000 #g/mL *1000--> g/L
- Mfeces_wet <- solution$Vfeces[solution$time%in% exp_time ]*feces_density #g
- Mfeces_dry <- Mfeces_wet*0.2 # Enqi et al., 2021, control rats:20.1%, https://doi.org/10.3389/fcimb.2020.581974
+ Mfeces_wet <- (8.18/0.21) #g
+ Mfeces_dry <- Mfeces_wet*0.2 # Enqi et al., 2021, control rats:20.1% water content, https://doi.org/10.3389/fcimb.2020.581974
  
  # Estimate the mass of feces by multiplying concentration by dry mass
  Lupton_Ffeces <- c(exp_data[exp_data$Tissue == "Feces", "concentration"])*Mfeces_dry
@@ -3091,7 +3089,7 @@ sample_time=seq(0,2,0.01)
  exp_time <- exp_data$time
  
  #Estimate urine volume
- Qurine_daily <- 85 * BW #  (ml/d/kg)*BW/1000  --> L/d, Schmidt et al., 2001, doi:10.1002/nau.1006
+ Qurine_daily <- 85 * BW #  (ml/d/kg)*BW  --> mL/d, Schmidt et al., 2001, doi:10.1002/nau.1006
  Lupton_urine <- c(exp_data[exp_data$Tissue == "Urine", "concentration"])*Qurine_daily
  # Estimate cumulative fecal mass
  obs_Lup_OR_Furine_cum <- cumsum(Lupton_urine)
