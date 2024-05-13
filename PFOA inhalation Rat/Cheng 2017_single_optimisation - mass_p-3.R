@@ -2709,7 +2709,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0 ,
-              "maxeval" = 10, 
+              "maxeval" = 1000, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
@@ -3855,8 +3855,8 @@ experiment2 <- reshape(kudo_low_dose[c("Tissue" ,"Time_hours",
  colnames(preds_dzi_OR_Fserum_medium) <- c ("Time", "Serum")
  colnames(preds_dzi_OR_Fserum_high) <- c ("Time", "Serum")
  
- colnames(preds_kim_IV_Fblood) <- c ("Time", "Serum")
- colnames(preds_kim_OR_Fblood) <- c ("Time", "Serum")
+ colnames(preds_kim_IV_Fblood) <- c ("Time", "Blood")
+ colnames(preds_kim_OR_Fblood) <- c ("Time", "Blood")
  
  
  # Create a list containing the corresponding predictions
