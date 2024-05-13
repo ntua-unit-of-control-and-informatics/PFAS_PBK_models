@@ -1,3 +1,7 @@
+
+#female increase in BW: 3.5 g/d
+#Male increase in BW: 5.9 g.d
+
 library(deSolve)
 
 create.params <- function(user.input){
@@ -29,9 +33,12 @@ create.params <- function(user.input){
     #permeabilities correction factor
     CF_Peff <- estimated_params[8] 
     # Absorption rate per area
-    kabs <- estimated_params[9] #m/h
+    kabs <- estimated_params[9]
     # urine correction factor
-    CFurine <- estimated_params[10] #m/h
+    CFurine <- estimated_params[10] 
+    # Correction factor for female GFR
+    CF_GFR_female <- estimated_params[11]
+    
     #units conversion from Cheng 2017R, time-> h, PFOA mass->ng, tissues mass-> g
     
     Hct <- 0.41 #hematocrit for rats, https://doi.org/10.1080/13685538.2017.1350156 mean value for both males and females
@@ -310,11 +317,11 @@ create.params <- function(user.input){
     # }
     
     if (sex == "M"){
-      PQGFR <- 1.08e-3*60*1000/100 #L/h/kg   1.08 mL/min/100 g BW --> L/h/ kg Bw Sadick et al., 2011, https://doi.org/10.1093/ndt/gfr148
-      QGFR <- PQGFR * VK #L/h
+      PQGFR <- 1.08e-3*60*10/1000 #L/h/kg   1.08 mL/min/100 g BW --> L/h/ kg Bw Sadick et al., 2011, https://doi.org/10.1093/ndt/gfr148
+      QGFR <- PQGFR * BW#L/h
     }else if(sex == "F"){
-      PQGFR <- 1.08e-3*60*1000/100 #L/h/kg   1.08 mL/min/100 g BW --> L/h/ kg Bw Sadick et al., 2011, https://doi.org/10.1093/ndt/gfr148
-      QGFR <- PQGFR * VK #L/h
+      PQGFR <- 1.08e-3*60*10/1000 #L/h/kg   1.08 mL/min/100 g BW --> L/h/ kg Bw Sadick et al., 2011, https://doi.org/10.1093/ndt/gfr148
+      QGFR <- PQGFR  * BW * CF_GFR_female #L/h
     }
     
     #======Table S2=======#
@@ -388,7 +395,7 @@ create.params <- function(user.input){
     
     
     #For all CMTs
-    MW = 414.07 #ug/umol, PFOA molecular weight
+    MW = 414.07 #g/mol, PFOA molecular weight
     Acell = 4000 #um^2/cell
     
     #Kidney
@@ -946,29 +953,7 @@ ode.func <- function(time, inits, params){
     
     Ctestis <-  (MBT + MTF+ MTT)/(VTB+VTF+VTT)
     Cskin <-  (MBSK + MSKF+ MSKT)/(VSKB+VSKF+VSKT)
-    
-    # Cven <- CBven
-    # Cart <- CBart
-    # Cblood <- (MBven + MBart)/ VB
-    # Ckidney <- (CKB*VKB + MKF+ MKT)/ VK
-    # Cliver <- (CLB*VLB + MLF+ MLT)/ VL
-    # Cstomach <-  (CSTB*VSTB + MSTF+ MSTT)/ VST
-    # Cintestine <-  (CINB*VINB+ MINT+MINL)/ VIN
-    # Cmuscle <-  (CMB*VMB + MMF+ MMT)/ VM
-    # Cadipose <-  (CAB*VAB + MAF+ MAT)/ VA
-    # Clungs <-  (CLuB*VLuB + MLuF+ MLuT)/ VLu
-    # Crest <-  (CRB*VRB + MRF+ MRT)/ VR
-    # Ccarcass <- (CMB*VMB + MMF + MMT + CAB*VAB + MAF+ MAT + CRB*VRB + MRF+ MRT)/(VM+VA+VR)
-    # Cfeces <- CINL
-    # Cbile <- Cbile
-    # Curine <- CFil
-    # Cspleen <-  (CSPB*VSPB + MSPF+ MSPT)/ VSP
-    # Cheart <-  (CHB*VHB + MHF+ MHT)/ VH
-    # Cbrain <-  (CBrB*VBrB + MBrF+ MBrT)/ VBr
-    # Ctestis <-  (CTB*VTB + MTF+ MTT)/ VT
-    # Cskin <-  (CSKB*VSKB + MSKF+ MSKT)/ VSK
-    
-    
+   
     list(c( 'dMBart'=dMBart, 'dMBven'=dMBven, 'dMLN'=dMLN, 'dMBK'=dMBK, 
             'dMKF'=dMKF, 'dMKT'=dMKT,
             'dMFil'=dMFil, 'dMurine'=dMurine, 'dMBL'=dMBL, 
@@ -998,11 +983,6 @@ ode.func <- function(time, inits, params){
            'CKTf'=CKTf, 'CLTf'=CLTf,
            'CSTL'=CSTL,'CINL'=CINL,
            'CMT'=CMT, 'CAT'=CAT, 'CRT'=CRT, 
-            
-           # 'CKB'=CKB, 'CLB'=CLB, 'CSTB'=CSTB, 'CINB'=CINB, 'CMB'=CMB,
-           # 'CAB'=CAB, 'CLuB'=CLuB, 'CRB'=CRB, 'CSPB'=CSPB, 'CHB'=CHB,
-           # 'CBrB'=CBrB, 'CTB'=CTB, 'CSKB'=CSKB,
-         
                   
             'Cven'= Cven, 'Cart' = Cart,'Cblood' = Cblood, 'Mblood'= Mblood, 'Cplasma'= Cplasma,
             'Ckidney'= Ckidney, 'Mkidney'= Mkidney,
@@ -1117,6 +1097,9 @@ AFE <- function(predictions, observations, times=NULL){
 # Objective function
 #-------------------------
 obj.func <- function(x, dataset){
+  N_studies <- length(dataset)
+  score <- rep(NA, N_studies)
+  
   # x: a vector with the values of the optimized parameters (it is not the x
   # from the odes!!!)
   estimated_params <- exp(x)
@@ -1168,12 +1151,7 @@ obj.func <- function(x, dataset){
                                                   "Cbrain", "Ctestis", "Cstomach", "Cintestine")]
   
   preds_kudo_high <- preds_kudo_high /1000 #convert ug/kg to ug/g
-  # Estimate gut concentration from stomach and intestines
-  V_stomach <- 0.0046*BW*1000
-  V_int <- 0.0124*BW*1000
-  C_stomach <- exp_data[exp_data$Tissue == "Stomach", "concentration"] 
-  C_int <- exp_data[exp_data$Tissue == "Intestine", "concentration"]   
-  #exp_gut <- (C_stomach*V_stomach+C_int*V_int)/(V_stomach+V_int)
+ 
   
   obs_kudo_high <- c(exp_data[exp_data$Tissue == "Blood", "concentration"],
                      exp_data[exp_data$Tissue == "Liver", "concentration"],
@@ -1187,6 +1165,7 @@ obj.func <- function(x, dataset){
                      exp_data[exp_data$Tissue == "Stomach", "concentration"],
                      exp_data[exp_data$Tissue == "Intestine", "concentration"])
   
+  score[1] <- AAFE(predictions = preds_kudo_high, observations = obs_kudo_high)
   
   ##########################
   #-------------------------
@@ -1234,12 +1213,7 @@ obj.func <- function(x, dataset){
                                                                          "Clungs", "Cspleen", "Cheart",
                                                                          "Cbrain", "Ctestis", "Cstomach", "Cintestine")]
   preds_kudo_low<- preds_kudo_low /1000 #convert ug/kg to ug/g
-  # Estimate gut concentration from stomach and intestines
-  V_stomach <- 0.0046*BW*1000
-  V_int <- 0.0124*BW*1000
-  C_stomach <- exp_data[exp_data$Tissue == "Stomach", "concentration"] 
-  C_int <- exp_data[exp_data$Tissue == "Intestine", "concentration"]   
-  exp_gut <- (C_stomach*V_stomach+C_int*V_int)/(V_stomach+V_int)
+
   
   obs_kudo_low <- c(exp_data[exp_data$Tissue == "Blood", "concentration"],
                     exp_data[exp_data$Tissue == "Liver", "concentration"],
@@ -1253,13 +1227,15 @@ obj.func <- function(x, dataset){
                     exp_data[exp_data$Tissue == "Stomach", "concentration"],
                     exp_data[exp_data$Tissue == "Intestine", "concentration"])
   
+  score[2] <- AAFE(predictions = preds_kudo_low, observations = obs_kudo_low)
+  
   ##########################
   #-------------------------
   # Kim IV male tissues
   #-------------------------
   ##########################
   # Set up simulations for the 3rd case, i.e. kim (2016) IV male tissues
-  BW <- 0.25  # body weight (kg) not reported
+  BW <- 0.25 #kg, from Kim et al. 2018
   admin.dose_per_g <- 1 # administered dose in mg PFOA/kg BW 
   admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
   admin.time <- 0 #time when doses are administered, in hours
@@ -1304,13 +1280,16 @@ obj.func <- function(x, dataset){
                            exp_data[exp_data$Tissue == "Lung", "concentration"],
                            exp_data[exp_data$Tissue == "Spleen", "concentration"],
                            exp_data[exp_data$Tissue == "Heart", "concentration"])
+  
+  score[3] <- AAFE(predictions = preds_kim_IV_Mtissues, observations = obs_kim_IV_Mtissues)
+  
   ##########################
   #-------------------------
   # Kim ORAL male tissues
   #-------------------------
   ##########################
   # Set up simulations for the 4th case, i.e. kim (2016) ORAL male tissues
-  BW <- 0.25  # body weight (kg) not reported
+  BW <- 0.25 #kg, from Kim et al. 2018
   admin.dose_per_g <- 1 # administered dose in mg PFOA/kg BW 
   admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
   admin.time <- 0 #time when doses are administered, in hours
@@ -1356,13 +1335,14 @@ obj.func <- function(x, dataset){
                            exp_data[exp_data$Tissue == "Spleen", "concentration"],
                            exp_data[exp_data$Tissue == "Heart", "concentration"])
   
+  score[4] <- AAFE(predictions = preds_kim_OR_Mtissues, observations = obs_kim_OR_Mtissues)
   ##########################
   #-------------------------
   # Kim IV female tissues
   #-------------------------
   ##########################
   # Set up simulations for the 5th case, i.e. kim (2016) IV female tissues
-  BW <- 0.25  # body weight (kg) not reported
+  BW <- 0.25 #kg, from Kim et al. 2018
   admin.dose_per_g <- 1 # administered dose in mg PFOA/kg BW 
   admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
   admin.time <- 0 #time when doses are administered, in hours
@@ -1381,7 +1361,7 @@ obj.func <- function(x, dataset){
   events <- create.events(params)
   
   # sample_time: a vector of time points to solve the ODEs
-  sample_time=seq(0,288,1)
+  sample_time=seq(0,24,1)
   
   # ode(): The solver of the ODEs
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -1408,6 +1388,7 @@ obj.func <- function(x, dataset){
                            exp_data[exp_data$Tissue == "Spleen", "concentration"],
                            exp_data[exp_data$Tissue == "Heart", "concentration"])
   
+  score[5] <- AAFE(predictions = preds_kim_IV_Ftissues, observations = obs_kim_IV_Ftissues)
   
   ##########################
   #-------------------------
@@ -1415,7 +1396,7 @@ obj.func <- function(x, dataset){
   #-------------------------
   ##########################
   # Set up simulations for the 6th case, i.e. kim (2016) IV female tissues
-  BW <- 0.25  # body weight (kg) not reported
+  BW <- 0.25 #kg, from Kim et al. 2018
   admin.dose_per_g <- 1 # administered dose in mg PFOA/kg BW 
   admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
   admin.time <- 0 #time when doses are administered, in hours
@@ -1434,7 +1415,7 @@ obj.func <- function(x, dataset){
   events <- create.events(params)
   
   # sample_time: a vector of time points to solve the ODEs
-  sample_time=seq(0,288,1)
+  sample_time=seq(0,24,1)
   
   # ode(): The solver of the ODEs
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -1461,13 +1442,15 @@ obj.func <- function(x, dataset){
                            exp_data[exp_data$Tissue == "Spleen", "concentration"],
                            exp_data[exp_data$Tissue == "Heart", "concentration"])
   
+  score[6] <- AAFE(predictions = preds_kim_OR_Ftissues, observations = obs_kim_OR_Ftissues)
+  
   ##########################
   #-------------------------
   # Dzierlenga ORAL male tissues
   #-------------------------
   ##########################
   # Set up simulations for the 7th case, i.e. Dzierlenga (2021) ORAL male tissues
-  BW <- 0.25  # body weight (kg) not reported
+  BW <- 0.3  # body weight (kg) not reported, based on 8 week male rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   admin.dose_per_g <- 12 # administered dose in mg PFOA/kg BW 
   admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
   admin.time <- 0 #time when doses are administered, in hours
@@ -1514,12 +1497,13 @@ obj.func <- function(x, dataset){
   preds_dzi_OR_Mtissues[[i]] <- solution[solution$time %in% exp_time, column_names[i]]
   }
   
-  preds_dzi_OR_Mtissues<- unlist(preds_dzi_OR_Mtissues) 
+  preds_dzi_OR_Mtissues<- unlist(preds_dzi_OR_Mtissues)/1000 
   
   obs_dzi_OR_Mtissues <- c( exp_data[exp_data$Tissue == "Liver", "concentration"],
                             exp_data[exp_data$Tissue == "Kidney", "concentration"],
-                            exp_data[exp_data$Tissue == "Brain", "concentration"]) * MW/1000
+                            exp_data[exp_data$Tissue == "Brain", "concentration"]) 
   
+  score[7] <- AAFE(predictions = preds_dzi_OR_Mtissues, observations = obs_dzi_OR_Mtissues)
   
   ##########################
   #-------------------------
@@ -1527,7 +1511,7 @@ obj.func <- function(x, dataset){
   #-------------------------
   ##########################
   # Set up simulations for the 8th case, i.e. Dzierlenga (2021) ORAL female tissues
-  BW <- 0.25  # body weight (kg) not reported
+  BW <- 0.2  # body weight (kg) not reported, # body weight (kg) not reported, based on 8 week female rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   admin.dose_per_g <- 80 # administered dose in mg PFOA/kg BW 
   admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
   admin.time <- 0 #time when doses are administered, in hours
@@ -1574,12 +1558,14 @@ obj.func <- function(x, dataset){
     preds_dzi_OR_Ftissues[[i]] <- solution[solution$time %in% exp_time, column_names[i]]
   }
   
-  preds_dzi_OR_Ftissues <- unlist(preds_dzi_OR_Ftissues)
+  preds_dzi_OR_Ftissues <- unlist(preds_dzi_OR_Ftissues)/1000
   
   
   obs_dzi_OR_Ftissues <- c( exp_data[exp_data$Tissue == "Liver", "concentration"],
                             exp_data[exp_data$Tissue == "Kidney", "concentration"],
-                            exp_data[exp_data$Tissue == "Brain", "concentration"]) * MW/1000
+                            exp_data[exp_data$Tissue == "Brain", "concentration"]) 
+  
+  score[8] <- AAFE(predictions = preds_dzi_OR_Ftissues, observations = obs_dzi_OR_Ftissues)
   
   ##########################
   #-------------------------
@@ -1587,7 +1573,7 @@ obj.func <- function(x, dataset){
   #-------------------------
   ##########################
   # Set up simulations for the 9th case, i.e. Kim (2016) ORAL male blood
-  BW <- 0.25  # body weight (kg) not reported
+  BW <- 0.25  #kg, from Kim et al. 2018
   admin.dose_per_g <- 1 # administered dose in mg PFOA/kg BW 
   admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
   admin.time <- 0 #time when doses are administered, in hours
@@ -1638,14 +1624,15 @@ obj.func <- function(x, dataset){
   
   obs_kim_OR_Mblood <- c(exp_data[exp_data$Tissue == "Blood", "concentration"])
   
- 
+  score[9] <- AAFE(predictions = preds_kim_OR_Mblood, observations = obs_kim_OR_Mblood)
+  
   ##########################
   #-------------------------
   # Kim IV male blood
   #-------------------------
   ##########################
   # Set up simulations for the 10th case, i.e. Kim (2016) IV male blood
-  BW <- 0.25  # body weight (kg) not reported
+  BW <- 0.25 #kg, from Kim et al. 2018
   admin.dose_per_g <- 1 # administered dose in mg PFOA/kg BW 
   admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
   admin.time <- 0 #time when doses are administered, in hours
@@ -1697,6 +1684,7 @@ obj.func <- function(x, dataset){
   
   obs_kim_IV_Mblood <- c(exp_data[exp_data$Tissue == "Blood", "concentration"])
   
+  score[10] <- AAFE(predictions = preds_kim_IV_Mblood, observations = obs_kim_IV_Mblood)
   
   ##########################
   #-------------------------
@@ -1704,7 +1692,7 @@ obj.func <- function(x, dataset){
   #-------------------------
   ##########################
   # Set up simulations for the 11th case, i.e. Lupton (2020) ORAL female tissues
-  BW <- 0.1875  # body weight (kg) not reported
+  BW <- 0.184  # body weight (kg) 
   admin.dose_per_g <- 0.047 # administered dose in mg PFOA/kg BW 
   admin.dose_single <- (admin.dose_per_g*BW*1e03)/2 #ug PFOA
   admin.time <- seq(0,13.5*24,12) #time when doses are administered, in hours
@@ -1751,6 +1739,8 @@ obj.func <- function(x, dataset){
                            exp_data[exp_data$Tissue == "Blood", "concentration"],
                            exp_data[exp_data$Tissue == "Skin", "concentration"])
   
+  score[11] <- NA#AAFE(predictions = preds_Lup_OR_Ftissues, observations = obs_Lup_OR_Ftissues)
+  
   
   ##########################
   #-------------------------
@@ -1788,6 +1778,9 @@ obj.func <- function(x, dataset){
   # Estimate cumulative fecal mass
   obs_Lup_OR_Ffeces_cum <- cumsum(obs_Lup_OR_Ffeces)
   
+  score[12] <- AAFE(predictions = preds_Lup_OR_Ffeces, observations = obs_Lup_OR_Ffeces_cum)
+  
+  
   ##########################
   #-------------------------
   # Lupton ORAL female urine
@@ -1815,13 +1808,12 @@ obj.func <- function(x, dataset){
   
   preds_Lup_OR_Furine <- unlist(preds_Lup_OR_Furine) #ug
   
-  #Estimate urine volume
-  Vurine <- solution$Vurine[solution$time%in% exp_time ]*1000 #mL
-  Qurine_daily <- 18 #mean of 13-23 mL/24h  https://doi.org/10.1016/B978-0-323-48435-0.00025-3
+  Qurine_daily <- 85 * BW#  (ml/d/kg)*BW/1000  --> L/d, Schmidt et al., 2001, doi:10.1002/nau.1006
   obs_Lup_OR_Furine <- c(exp_data[exp_data$Tissue == "Urine", "concentration"])*Qurine_daily
   # Estimate cumulative fecal mass
   obs_Lup_OR_Furine_cum <- cumsum(obs_Lup_OR_Furine)
   
+  score[13] <- AAFE(predictions = preds_Lup_OR_Furine, observations = obs_Lup_OR_Furine_cum)
   
   ##########################
   #-------------------------
@@ -1829,11 +1821,22 @@ obj.func <- function(x, dataset){
   #-------------------------
   ##########################
   # Set up simulations for the 14th case, i.e. Cui (2010) ORAL male urine low
-  BW <- 0.2  # body weight (kg) not reported
-  admin.dose_per_g <- 5 # administered dose in mg PFOA/kg BW 
-  admin.dose_single <- (admin.dose_per_g*BW*1e03) #ug PFOA
+  
+  BW <-  0.200 #kg, before quarantine
+  # Each day the male rat body weight increases by 5.9 g
+  for (i in 1:7){
+    BW <- BW + 5.9/1000
+  }
+  BW_init <- BW #Body weight at the beginning of the experiment
+  #Initialize a vector of daily body weight
+  BW <- c(BW_init, rep(NA, 27))
+  # Estimate the BW each day
+  for (i in 2:length(BW)){
+    BW[i] <- BW[i-1] + 5.9/1000
+  } 
+  admin.dose_per_BW <- 5 # administered dose in mg PFOA/kg BW 
   admin.time <- seq(0,27*24,24) #time when doses are administered, in hours
-  admin.dose <- rep(admin.dose_single, length(admin.time))
+  admin.dose <- admin.dose_per_BW*BW*1e03#ug PFOA
   
   admin.type <- "oral"
   sex <- "M" 
@@ -1882,6 +1885,7 @@ obj.func <- function(x, dataset){
   
   obs_Cui_OR_MurineL <- c(exp_data[exp_data$Tissue == "Urine", "mass"])*1000
   
+  score[14] <- AAFE(predictions = preds_Cui_OR_MurineL, observations = obs_Cui_OR_MurineL)
   
   ##########################
   #-------------------------
@@ -1908,6 +1912,7 @@ obj.func <- function(x, dataset){
   
   obs_Cui_OR_MfecesL <- c(exp_data[exp_data$Tissue == "Feces", "mass"])*1000
   
+  score[15] <- AAFE(predictions = preds_Cui_OR_MfecesL, observations = obs_Cui_OR_MfecesL)
   
   
   ##########################
@@ -1915,12 +1920,22 @@ obj.func <- function(x, dataset){
   # Cui ORAL male urine high
   #-------------------------
   ##########################
-  # Set up simulations for the 14th case, i.e. Cui (2010) ORAL male urine high
-  BW <- 0.2  # body weight (kg) not reported
-  admin.dose_per_g <- 20 # administered dose in mg PFOA/kg BW 
-  admin.dose_single <- (admin.dose_per_g*BW*1e03) #ug PFOA
+  # Set up simulations for the 14th case, i.e. Cui (2010) ORAL male urine low
+  BW <-  0.210 #kg, before quarantine
+  # Each day the male rat body weight increases by 5.9 g
+  for (i in 1:7){
+    BW <- BW + 5.9/1000
+  }
+  BW_init <- BW #Body weight at the beginning of the experiment
+  #Initialize a vector of daily body weight
+  BW <- c(BW_init, rep(NA, 27))
+  # Estimate the BW each day
+  for (i in 2:length(BW)){
+    BW[i] <- BW[i-1] + 5.9/1000
+  } 
+  admin.dose_per_BW <- 20 # administered dose in mg PFOA/kg BW 
   admin.time <- seq(0,27*24,24) #time when doses are administered, in hours
-  admin.dose <- rep(admin.dose_single, length(admin.time))
+  admin.dose <- admin.dose_per_BW*BW*1e03#ug PFOA
   
   admin.type <- "oral"
   sex <- "M" 
@@ -1969,6 +1984,7 @@ obj.func <- function(x, dataset){
   
   obs_Cui_OR_MurineH <- c(exp_data[exp_data$Tissue == "Urine", "mass"])*1000
   
+  score[16] <- AAFE(predictions = preds_Cui_OR_MurineH, observations = obs_Cui_OR_MurineH)
   
   
   ##########################
@@ -1999,6 +2015,8 @@ obj.func <- function(x, dataset){
   
   obs_Cui_OR_MfecesH <- c(exp_data[exp_data$Tissue == "Feces", "mass"])*1000
   
+  score[17] <- NA #AAFE(predictions = preds_Cui_OR_MfecesH, observations = obs_Cui_OR_MfecesH)
+  
   ##########################
   #-------------------------
   # Dzierlenga 2021 IV male serum
@@ -2006,7 +2024,7 @@ obj.func <- function(x, dataset){
   ##########################
   
   # Set up simulations for the 18th case, i.e. Dzierlenga 2021, IV male serum
-  BW <- 0.25  # body weight (kg) not reported
+  BW <- 0.3   # body weight (kg) not reported, # body weight (kg) not reported, based on 8 week male rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   admin.dose_per_g <- 6 # administered dose in mg PFOA/kg BW 
   admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
   admin.time <- 0 #time when doses are administered, in hours
@@ -2053,12 +2071,13 @@ obj.func <- function(x, dataset){
     preds_dzi_IV_Mserum [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
   }
   
-  preds_dzi_IV_Mserum <- unlist(preds_dzi_IV_Mserum) 
+  preds_dzi_IV_Mserum <- unlist(preds_dzi_IV_Mserum) /1000
   
   #we assume that clotting factors are negligible amount
   
-  obs_dzi_IV_Mserum <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])* MW/1000
+  obs_dzi_IV_Mserum <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])
  
+  score[18] <- NA #AAFE(predictions = preds_dzi_IV_Mserum, observations = obs_dzi_IV_Mserum)
   
   ##########################
   #-------------------------
@@ -2067,7 +2086,7 @@ obj.func <- function(x, dataset){
   ##########################
   
   # Set up simulations for the 19th case, i.e. Dzierlenga 2021, ORAL male serum low
-  BW <- 0.25  # body weight (kg) not reported
+  BW <- 0.3   # body weight (kg) not reported, # body weight (kg) not reported, based on 8 week male rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   admin.dose_per_g <- 6 # administered dose in mg PFOA/kg BW 
   admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
   admin.time <- 0 #time when doses are administered, in hours
@@ -2114,13 +2133,13 @@ obj.func <- function(x, dataset){
     preds_dzi_OR_Mserum_low [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
   }
   
-  preds_dzi_OR_Mserum_low <- unlist(preds_dzi_OR_Mserum_low) 
+  preds_dzi_OR_Mserum_low <- unlist(preds_dzi_OR_Mserum_low)/1000 
   
   #we assume that clotting factors are negligible amount
   
-  obs_dzi_OR_Mserum_low <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])* MW/1000
+  obs_dzi_OR_Mserum_low <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])
   
-  
+  score[19] <- AAFE(predictions = preds_dzi_OR_Mserum_low, observations = obs_dzi_OR_Mserum_low)
   
   ##########################
   #-------------------------
@@ -2129,7 +2148,7 @@ obj.func <- function(x, dataset){
   ##########################
   
   # Set up simulations for the 20th case, i.e. Dzierlenga 2021, ORAL male serum medium
-  BW <- 0.25  # body weight (kg) not reported
+  BW <- 0.3   # body weight (kg) not reported, # body weight (kg) not reported, based on 8 week male rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   admin.dose_per_g <- 12 # administered dose in mg PFOA/kg BW 
   admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
   admin.time <- 0 #time when doses are administered, in hours
@@ -2176,12 +2195,13 @@ obj.func <- function(x, dataset){
     preds_dzi_OR_Mserum_medium [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
   }
   
-  preds_dzi_OR_Mserum_medium <- unlist(preds_dzi_OR_Mserum_medium) 
+  preds_dzi_OR_Mserum_medium <- unlist(preds_dzi_OR_Mserum_medium)/1000 
   
   #we assume that clotting factors are negligible amount
   
-  obs_dzi_OR_Mserum_medium <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])* MW/1000
+  obs_dzi_OR_Mserum_medium <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])
   
+  score[20] <- AAFE(predictions = preds_dzi_OR_Mserum_medium, observations = obs_dzi_OR_Mserum_medium)
   
   
   ##########################
@@ -2191,7 +2211,7 @@ obj.func <- function(x, dataset){
   ##########################
   
   # Set up simulations for the 21st case, i.e. Dzierlenga 2021, ORAL male serum high
-  BW <- 0.25  # body weight (kg) not reported
+  BW <- 0.3   # body weight (kg) not reported, # body weight (kg) not reported, based on 8 week male rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   admin.dose_per_g <- 48 # administered dose in mg PFOA/kg BW 
   admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
   admin.time <- 0 #time when doses are administered, in hours
@@ -2238,11 +2258,13 @@ obj.func <- function(x, dataset){
     preds_dzi_OR_Mserum_high [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
   }
   
-  preds_dzi_OR_Mserum_high <- unlist(preds_dzi_OR_Mserum_high) 
+  preds_dzi_OR_Mserum_high <- unlist(preds_dzi_OR_Mserum_high)/1000 
   
   #we assume that clotting factors are negligible amount
   
-  obs_dzi_OR_Mserum_high <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])* MW/1000
+  obs_dzi_OR_Mserum_high <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])
+ 
+   score[21] <- AAFE(predictions = preds_dzi_OR_Mserum_high, observations = obs_dzi_OR_Mserum_high)
   
   
   ##########################
@@ -2252,7 +2274,7 @@ obj.func <- function(x, dataset){
   ##########################
   
   # Set up simulations for the 22nd case, i.e. Dzierlenga 2021, IV female serum
-  BW <- 0.25  # body weight (kg) not reported
+  BW <- 0.2    # body weight (kg) not reported, based on 8 week female rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   admin.dose_per_g <- 40 # administered dose in mg PFOA/kg BW 
   admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
   admin.time <- 0 #time when doses are administered, in hours
@@ -2299,12 +2321,13 @@ obj.func <- function(x, dataset){
     preds_dzi_IV_Fserum [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
   }
   
-  preds_dzi_IV_Fserum <- unlist(preds_dzi_IV_Fserum) 
+  preds_dzi_IV_Fserum <- unlist(preds_dzi_IV_Fserum)/1000 
   
   #we assume that clotting factors are negligible amount
   
-  obs_dzi_IV_Fserum <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])* MW/1000
+  obs_dzi_IV_Fserum <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])
   
+  score[22] <- AAFE(predictions = preds_dzi_IV_Fserum, observations = obs_dzi_IV_Fserum)
   
   
   ##########################
@@ -2314,7 +2337,7 @@ obj.func <- function(x, dataset){
   ##########################
   
   # Set up simulations for the 23d case, i.e. Dzierlenga 2021, ORAL female serum low
-  BW <- 0.25  # body weight (kg) not reported
+  BW <- 0.2    # body weight (kg) not reported, based on 8 week female rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   admin.dose_per_g <- 40 # administered dose in mg PFOA/kg BW 
   admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
   admin.time <- 0 #time when doses are administered, in hours
@@ -2361,12 +2384,13 @@ obj.func <- function(x, dataset){
     preds_dzi_OR_Fserum_low [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
   }
   
-  preds_dzi_OR_Fserum_low <- unlist(preds_dzi_OR_Fserum_low) 
+  preds_dzi_OR_Fserum_low <- unlist(preds_dzi_OR_Fserum_low)/1000 
   
   #we assume that clotting factors are negligible amount
   
-  obs_dzi_OR_Fserum_low <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])* MW/1000
+  obs_dzi_OR_Fserum_low <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])
   
+  score[23] <- AAFE(predictions = preds_dzi_OR_Fserum_low, observations = obs_dzi_OR_Fserum_low)
   
   ##########################
   #-------------------------
@@ -2375,7 +2399,7 @@ obj.func <- function(x, dataset){
   ##########################
   
   # Set up simulations for the 24th case, i.e. Dzierlenga 2021, ORAL female serum medium
-  BW <- 0.25  # body weight (kg) not reported
+  BW <- 0.2    # body weight (kg) not reported, based on 8 week female rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   admin.dose_per_g <- 80 # administered dose in mg PFOA/kg BW 
   admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
   admin.time <- 0 #time when doses are administered, in hours
@@ -2422,11 +2446,13 @@ obj.func <- function(x, dataset){
     preds_dzi_OR_Fserum_medium [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
   }
   
-  preds_dzi_OR_Fserum_medium <- unlist(preds_dzi_OR_Fserum_medium) 
+  preds_dzi_OR_Fserum_medium <- unlist(preds_dzi_OR_Fserum_medium)/1000 
   
   #we assume that clotting factors are negligible amount
   
-  obs_dzi_OR_Fserum_medium <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])* MW/1000
+  obs_dzi_OR_Fserum_medium <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])
+  
+  score[24] <- AAFE(predictions = preds_dzi_OR_Fserum_medium, observations = obs_dzi_OR_Fserum_medium)
   
   
   ##########################
@@ -2436,7 +2462,7 @@ obj.func <- function(x, dataset){
   ##########################
   
   # Set up simulations for the 25th case, i.e. Dzierlenga 2021, ORAL female serum high
-  BW <- 0.25  # body weight (kg) not reported
+  BW <- 0.2    # body weight (kg) not reported, based on 8 week female rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   admin.dose_per_g <- 320 # administered dose in mg PFOA/kg BW 
   admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
   admin.time <- 0 #time when doses are administered, in hours
@@ -2483,43 +2509,148 @@ obj.func <- function(x, dataset){
     preds_dzi_OR_Fserum_high [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
   }
   
-  preds_dzi_OR_Fserum_high <- unlist(preds_dzi_OR_Fserum_high) 
+  preds_dzi_OR_Fserum_high <- unlist(preds_dzi_OR_Fserum_high)/1000 
   
   #we assume that clotting factors are negligible amount
   
-  obs_dzi_OR_Fserum_high <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])* MW/1000
+  obs_dzi_OR_Fserum_high <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])
+  
+  score[25] <- AAFE(predictions = preds_dzi_OR_Fserum_high, observations = obs_dzi_OR_Fserum_high)
   
   
-  #Aggregate observations for all scenarios
-  #CAUTION!:Lupton tissues have been excluded
-  #preds_Lup_OR_Ftissues, obs_Lup_OR_Ftissues
+  ##########################
+  #-------------------------
+  # Kim ORAL female blood
+  #-------------------------
+  ##########################
+  # Set up simulations for the 26th case, i.e. Kim (2016) ORAL female blood
+  BW <- 0.25  #kg, from Kim et al. 2018
+  admin.dose_per_g <- 1 # administered dose in mg PFOA/kg BW 
+  admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
+  admin.time <- 0 #time when doses are administered, in hours
+  admin.type <- "oral"
+  sex <- "F" 
   
-  preds <-c(preds_kudo_high, preds_kudo_low, preds_kim_IV_Mtissues, preds_kim_OR_Mtissues, preds_kim_IV_Ftissues, preds_kim_OR_Ftissues,
-            preds_dzi_OR_Mtissues, preds_dzi_OR_Ftissues, preds_kim_OR_Mblood, preds_kim_IV_Mblood, 
-            preds_Lup_OR_Ffeces, preds_Lup_OR_Furine, preds_Cui_OR_MurineL, preds_Cui_OR_MurineH, preds_Cui_OR_MfecesL,
-            preds_Cui_OR_MfecesH, preds_dzi_IV_Mserum, preds_dzi_OR_Mserum_low, preds_dzi_OR_Mserum_medium,
-            preds_dzi_OR_Mserum_high, preds_dzi_IV_Fserum, preds_dzi_OR_Fserum_low, preds_dzi_OR_Fserum_medium,
-            preds_dzi_OR_Fserum_high)
+  user_input <- list('BW'=BW,
+                     "admin.dose"= admin.dose,
+                     "admin.time" = admin.time, 
+                     "admin.type" = admin.type,
+                     "estimated_params" = estimated_params,
+                     "sex" = sex)
   
-  obs <- c(obs_kudo_high, obs_kudo_low, obs_kim_IV_Mtissues, obs_kim_OR_Mtissues, obs_kim_IV_Ftissues, obs_kim_OR_Ftissues,
-           obs_dzi_OR_Mtissues, obs_dzi_OR_Ftissues, obs_kim_OR_Mblood, obs_kim_IV_Mblood, 
-           obs_Lup_OR_Ffeces_cum, obs_Lup_OR_Furine_cum, obs_Cui_OR_MurineL, obs_Cui_OR_MurineH, obs_Cui_OR_MfecesL,
-           obs_Cui_OR_MfecesH, obs_dzi_IV_Mserum, obs_dzi_OR_Mserum_low, obs_dzi_OR_Mserum_medium,
-           obs_dzi_OR_Mserum_high, obs_dzi_IV_Fserum, obs_dzi_OR_Fserum_low, obs_dzi_OR_Fserum_medium,
-           obs_dzi_OR_Fserum_high)
+  params <- create.params(user_input)
+  inits <- create.inits(params)
+  events <- create.events(params)
+  
+  # sample_time: a vector of time points to solve the ODEs
+  sample_time=seq(0,24,0.5)
+  
+  # ode(): The solver of the ODEs
+  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                      y = inits, parms = params,
+                                      events = events,
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
+  
+  # We need to keep only the predictions for the relevant compartments for the time points 
+  # at which we have available data. 
+  
+  #======================================df26=========================================================
+  
+  exp_data <- dataset$df26 # retrieve data of Kim (2016) ORAL male blood
+  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
+  column_names <- c("Cblood")
+  
+  preds_kim_OR_Fblood <- list()
+  # loop over compartments with available data
+  for (i in 1:length(unique(exp_data$Tissue))) {
+    compartment <- unique(exp_data$Tissue)[i]
+    #Retrieve time points at which measurements are available for compartment i
+    exp_time <- exp_data[exp_data$Tissue == compartment, 2]
+    
+    preds_kim_OR_Fblood [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+  }
+  
+  preds_kim_OR_Fblood <- unlist(preds_kim_OR_Fblood) /1000 #convert ug/kg to ug/g
   
   
-  score <- AAFE(predictions = preds, observations = obs)
+  obs_kim_OR_Fblood <- c(exp_data[exp_data$Tissue == "Blood", "concentration"])
   
-  return(score)
+  score[26] <- AAFE(predictions = preds_kim_OR_Fblood, observations = obs_kim_OR_Fblood)
+  
+  ##########################
+  #-------------------------
+  # Kim IV male blood
+  #-------------------------
+  ##########################
+  # Set up simulations for the 27th case, i.e. Kim (2016) IV male blood
+  BW <- 0.25 #kg, from Kim et al. 2018
+  admin.dose_per_g <- 1 # administered dose in mg PFOA/kg BW 
+  admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
+  admin.time <- 0 #time when doses are administered, in hours
+  admin.type <- "iv"
+  sex <- "F" 
+  
+  user_input <- list('BW'=BW,
+                     "admin.dose"= admin.dose,
+                     "admin.time" = admin.time, 
+                     "admin.type" = admin.type,
+                     "estimated_params" = estimated_params,
+                     "sex" = sex)
+  
+  params <- create.params(user_input)
+  inits <- create.inits(params)
+  events <- create.events(params)
+  
+  # sample_time: a vector of time points to solve the ODEs
+  
+  sample_time=c(0, 24, 0.5)
+  
+  # ode(): The solver of the ODEs
+  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                      y = inits, parms = params,
+                                      events = events,
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
+  
+  # We need to keep only the predictions for the relevant compartments for the time points 
+  # at which we have available data. 
+  
+  #======================================df27=========================================================
+  
+  exp_data <- dataset$df27 # retrieve data of Kim (2016) IV male blood
+  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
+  column_names <- c("Cblood")
+  
+  preds_kim_IV_Fblood <- list()
+  # loop over compartments with available data
+  for (i in 1:length(unique(exp_data$Tissue))) {
+    compartment <- unique(exp_data$Tissue)[i]
+    #Retrieve time points at which measurements are available for compartment i
+    exp_time <- exp_data[exp_data$Tissue == compartment, 2]
+    
+    preds_kim_IV_Fblood [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+  }
+  
+  preds_kim_IV_Fblood <- unlist(preds_kim_IV_Fblood) /1000 #convert ug/kg to ug/g
+  
+  
+  obs_kim_IV_Fblood <- c(exp_data[exp_data$Tissue == "Blood", "concentration"])
+  
+  score[27] <- AAFE(predictions = preds_kim_IV_Fblood, observations = obs_kim_IV_Fblood)
+  
+  ########################################################################################
+  # Estimate final score
+  
+  final_score <- mean(score, na.rm = TRUE)
+  
+  return(final_score)
   
 }
 
 ################################################################################
 
-setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
-#setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
-
+#setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
+setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
+MW <- 414.07 #g/mol
 
 # Read data
 kudo_high_dose <- openxlsx::read.xlsx("Data/IV_male_rats_tissues_high_kudo_2007.xlsx")
@@ -2529,24 +2660,40 @@ kim_OR_Mtissues <- openxlsx::read.xlsx("Data/PFOA_male_tissues_ORAL_kim_2016.xls
 kim_IV_Ftissues <- openxlsx::read.xlsx("Data/PFOA_female_tissues_IV_kim_2016.xlsx")
 kim_OR_Ftissues <- openxlsx::read.xlsx("Data/PFOA_female_tissues_ORAL_kim_2016.xlsx")
 dzi_OR_Mtissues <- openxlsx::read.xlsx("Data/Dzierlenga_tissue_male_ORAL_2021.xlsx")
+dzi_OR_Mtissues$Concentration_microM <- dzi_OR_Mtissues$Concentration_microM * MW/1000 #convert from uM to ug/g
 dzi_OR_Ftissues <- openxlsx::read.xlsx("Data/Dzierlenga_tissue_female_ORAL_2021.xlsx")
+dzi_OR_Ftissues$Concentration_microM <- dzi_OR_Ftissues$Concentration_microM* MW/1000 #convert from uM to ug/g
 kim_OR_Mblood <- openxlsx::read.xlsx("Data/PFOA_male_blood_ORAL_kim_2016.xlsx")
 kim_IV_Mblood <- openxlsx::read.xlsx("Data/PFOA_male_blood_IV_kim_2016.xlsx")
 Lup_OR_Ftissues <- openxlsx::read.xlsx("Data/PFOA_female_tissues_Lupton_2020.xlsx")
 Lup_OR_Ffeces <- openxlsx::read.xlsx("Data/PFOA_female_add-feces_Lupton_2020.xlsx")
 Lup_OR_Furine <- openxlsx::read.xlsx("Data/PFOA_female_add-urine_Lupton_2020.xlsx")
 Cui_OR_MurineL <- openxlsx::read.xlsx("Data/PFOA_male_urine_oral_low_Cui_2010.xlsx")
+Cui_OR_MurineL$Mass_mg <-  Cui_OR_MurineL$Mass_mg*1000 #convert from mg to ug
 Cui_OR_MurineH <- openxlsx::read.xlsx("Data/PFOA_male_urine_oral_high_Cui_2010.xlsx")
+Cui_OR_MurineH$Mass_mg <- Cui_OR_MurineH$Mass_mg*1000 #convert from mg to ug
 Cui_OR_MfecesL <- openxlsx::read.xlsx("Data/PFOA_male_feces_oral_low_Cui_2010.xlsx")
+Cui_OR_MfecesL$Mass_mg <- Cui_OR_MfecesL$Mass_mg*1000 #convert from mg to ug
 Cui_OR_MfecesH <- openxlsx::read.xlsx("Data/PFOA_male_feces_oral_high_Cui_2010.xlsx")
+Cui_OR_MfecesH$Mass_mg <- Cui_OR_MfecesH$Mass_mg*1000 #convert from mg to ug
 dzi_IV_Mserum <- openxlsx::read.xlsx("Data/Dzierlenga_serum_male_IV_2021.xlsx")
+dzi_IV_Mserum$Concentration_microM <- dzi_IV_Mserum$Concentration_microM* MW/1000 #convert from uM to ug/g
 dzi_OR_Mserum_low <- openxlsx::read.xlsx("Data/Dzierlenga_serum_male_ORAL_low_2021.xlsx")
+dzi_OR_Mserum_low$Concentration_microM <- dzi_OR_Mserum_low$Concentration_microM * MW/1000 #convert from uM to ug/g
 dzi_OR_Mserum_medium <- openxlsx::read.xlsx("Data/Dzierlenga_serum_male_ORAL_medium_2021.xlsx")
+dzi_OR_Mserum_medium$Concentration_microM <- dzi_OR_Mserum_medium$Concentration_microM* MW/1000 #convert from uM to ug/g
 dzi_OR_Mserum_high <- openxlsx::read.xlsx("Data/Dzierlenga_serum_male_ORAL_high_2021.xlsx")
+dzi_OR_Mserum_high$Concentration_microM <- dzi_OR_Mserum_high$Concentration_microM* MW/1000 #convert from uM to ug/g
 dzi_IV_Fserum <- openxlsx::read.xlsx("Data/Dzierlenga_serum_female_IV_2021.xlsx")
+dzi_IV_Fserum$Concentration_microM <- dzi_IV_Fserum$Concentration_microM* MW/1000 #convert from uM to ug/g
 dzi_OR_Fserum_low <- openxlsx::read.xlsx("Data/Dzierlenga_serum_female_ORAL_low_2021.xlsx")
+dzi_OR_Fserum_low$Concentration_microM <- dzi_OR_Fserum_low$Concentration_microM * MW/1000 #convert from uM to ug/g
 dzi_OR_Fserum_medium <- openxlsx::read.xlsx("Data/Dzierlenga_serum_female_ORAL_medium_2021.xlsx")
+dzi_OR_Fserum_medium$Concentration_microM <- dzi_OR_Fserum_medium$Concentration_microM * MW/1000 #convert from uM to ug/g
 dzi_OR_Fserum_high <- openxlsx::read.xlsx("Data/Dzierlenga_serum_female_ORAL_high_2021.xlsx")
+dzi_OR_Fserum_high$Concentration_microM <- dzi_OR_Fserum_high$Concentration_microM * MW/1000 #convert from uM to ug/g
+kim_OR_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_ORAL_kim_2016.xlsx")
+kim_IV_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_IV_kim_2016.xlsx")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -2554,7 +2701,7 @@ dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mt
                 "df13" = Lup_OR_Furine, "df14" = Cui_OR_MurineL, "df15" = Cui_OR_MurineH, "df16" = Cui_OR_MfecesL,
                 "df17" = Cui_OR_MfecesH, "df18" = dzi_IV_Mserum, "df19" = dzi_OR_Mserum_low, "df20" = dzi_OR_Mserum_medium,
                 "df21" = dzi_OR_Mserum_high, "df22" = dzi_IV_Fserum, "df23" = dzi_OR_Fserum_low, "df24" = dzi_OR_Fserum_medium,
-                "df25" = dzi_OR_Fserum_high)
+                "df25" = dzi_OR_Fserum_high, "df26" = kim_OR_Fblood, "df27" = kim_IV_Fblood)
 
 
 #Initialise optimiser to NULL for better error handling later
@@ -2572,7 +2719,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
 #  bile_correction_factor, 11 correction factors for permeabilities
 
-N_pars <- 10 # Number of parameters to be fitted
+N_pars <- 11 # Number of parameters to be fitted
 #fit <- log(rep(1,N_pars))
 fit <- rep(1,N_pars)
 
@@ -2713,7 +2860,7 @@ sample_time=seq(0,2,0.01)
  events <- create.events(params)
  
  
- sample_time=seq(0,288,1)
+ sample_time=seq(0,24,1)
  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                      y = inits, parms = params,events = events,
                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
@@ -2742,7 +2889,7 @@ sample_time=seq(0,2,0.01)
  events <- create.events(params)
  
  
- sample_time=seq(0,288,1)
+ sample_time=seq(0,24,1)
  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                      y = inits, parms = params,events = events,
                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
@@ -2752,7 +2899,7 @@ sample_time=seq(0,2,0.01)
  
  
  # Set up simulations for the 7th case, i.e. Dzierlenga (2021) ORAL male tissues
- BW <- 0.25  # body weight (kg) not reported
+ BW <- 0.3  # body weight (kg) not reported
  admin.dose_per_g <- 12 # administered dose in mg PFOA/kg BW 
  admin.dose <- admin.dose_per_g*BW *1e03 #ug PFOA
  admin.time <- 0 #time when doses are administered, in hours
@@ -2781,7 +2928,7 @@ sample_time=seq(0,2,0.01)
  
  
  # Set up simulations for the 8th case, i.e. Dzierlenga (2021) ORAL female tissues
- BW <- 0.25  # body weight (kg) not reported
+ BW <- 0.2  # body weight (kg) not reported
  admin.dose_per_g <- 80 # administered dose in mg PFOA/kg BW 
  admin.dose <- admin.dose_per_g*BW *1e03 #ug PFOA
  admin.time <- 0 #time when doses are administered, in hours
@@ -2812,7 +2959,7 @@ sample_time=seq(0,2,0.01)
  
  #################################################################################
  #--------------------------------------------------------------------------------
- #                                Kim 2016
+ #                                Kim 2016 male, BLOOD
  #-------------------------------------------------------------------------------
  #################################################################################
  
@@ -2944,8 +3091,7 @@ sample_time=seq(0,2,0.01)
  exp_time <- exp_data$time
  
  #Estimate urine volume
- Vurine <- solution$Vurine[solution$time%in% exp_time ]*1000 #mL
- Qurine_daily <- 18 #mean of 13-23 mL/24h  https://doi.org/10.1016/B978-0-323-48435-0.00025-3
+ Qurine_daily <- 85 * BW #  (ml/d/kg)*BW/1000  --> L/d, Schmidt et al., 2001, doi:10.1002/nau.1006
  Lupton_urine <- c(exp_data[exp_data$Tissue == "Urine", "concentration"])*Qurine_daily
  # Estimate cumulative fecal mass
  obs_Lup_OR_Furine_cum <- cumsum(Lupton_urine)
@@ -2957,11 +3103,21 @@ sample_time=seq(0,2,0.01)
  #################################################################################
  
  # Set up simulations for the 14th case, i.e. Cui (2010) ORAL male urine low
- BW <- 0.2  # body weight (kg) not reported
- admin.dose_per_g <- 5 # administered dose in mg PFOA/kg BW 
- admin.dose_single <- (admin.dose_per_g*BW*1e03) #ug PFOA
+ BW <-  0.200 #kg, before quarantine
+ # Each day the male rat body weight increases by 5.9 g
+ for (i in 1:7){
+   BW <- BW + 5.9/1000
+ }
+ BW_init <- BW #Body weight at the beginning of the experiment
+ #Initialize a vector of daily body weight
+ BW <- c(BW_init, rep(NA, 27))
+ # Estimate the BW each day
+ for (i in 2:length(BW)){
+   BW[i] <- BW[i-1] + 5.9/1000
+ } 
+ admin.dose_per_BW <- 5 # administered dose in mg PFOA/kg BW 
  admin.time <- seq(0,27*24,24) #time when doses are administered, in hours
- admin.dose <- rep(admin.dose_single, length(admin.time))
+ admin.dose <- admin.dose_per_BW*BW*1e03#ug PFOA
  admin.type <- "oral"
  sex <- "M" 
  
@@ -2988,11 +3144,21 @@ sample_time=seq(0,2,0.01)
  
  
  # Set up simulations for the 15th case, i.e. Cui (2010) ORAL male urine high
- BW <- 0.2  # body weight (kg) not reported
- admin.dose_per_g <- 20 # administered dose in mg PFOA/kg BW 
- admin.dose_single <- (admin.dose_per_g*BW*1e03) #ug PFOA
+ BW <-  0.210 #kg, before quarantine
+ # Each day the male rat body weight increases by 5.9 g
+ for (i in 1:7){
+   BW <- BW + 5.9/1000
+ }
+ BW_init <- BW #Body weight at the beginning of the experiment
+ #Initialize a vector of daily body weight
+ BW <- c(BW_init, rep(NA, 27))
+ # Estimate the BW each day
+ for (i in 2:length(BW)){
+   BW[i] <- BW[i-1] + 5.9/1000
+ } 
+ admin.dose_per_BW <- 20 # administered dose in mg PFOA/kg BW 
  admin.time <- seq(0,27*24,24) #time when doses are administered, in hours
- admin.dose <- rep(admin.dose_single, length(admin.time))
+ admin.dose <- admin.dose_per_BW*BW*1e03#ug PFOA
  admin.type <- "oral"
  sex <- "M" 
  
@@ -3019,11 +3185,21 @@ sample_time=seq(0,2,0.01)
  
  
  # Set up simulations for the 16th case, i.e. Cui (2010) ORAL male feces low
- BW <- 0.2  # body weight (kg) not reported
- admin.dose_per_g <- 5 # administered dose in mg PFOA/kg BW 
- admin.dose_single <- (admin.dose_per_g*BW*1e03) #ug PFOA
+ BW <-  0.200 #kg, before quarantine
+ # Each day the male rat body weight increases by 5.9 g
+ for (i in 1:7){
+   BW <- BW + 5.9/1000
+ }
+ BW_init <- BW #Body weight at the beginning of the experiment
+ #Initialize a vector of daily body weight
+ BW <- c(BW_init, rep(NA, 27))
+ # Estimate the BW each day
+ for (i in 2:length(BW)){
+   BW[i] <- BW[i-1] + 5.9/1000
+ } 
+ admin.dose_per_BW <- 5 # administered dose in mg PFOA/kg BW 
  admin.time <- seq(0,27*24,24) #time when doses are administered, in hours
- admin.dose <- rep(admin.dose_single, length(admin.time))
+ admin.dose <- admin.dose_per_BW*BW*1e03#ug PFOA
  admin.type <- "oral"
  sex <- "M" 
  
@@ -3050,11 +3226,21 @@ sample_time=seq(0,2,0.01)
  
  
  # Set up simulations for the 17th case, i.e. Cui (2010) ORAL male feces high
- BW <- 0.2  # body weight (kg) not reported
- admin.dose_per_g <- 20 # administered dose in mg PFOA/kg BW 
- admin.dose_single <- (admin.dose_per_g*BW*1e03) #ug PFOA
+ BW <-  0.210 #kg, before quarantine
+ # Each day the male rat body weight increases by 5.9 g
+ for (i in 1:7){
+   BW <- BW + 5.9/1000
+ }
+ BW_init <- BW #Body weight at the beginning of the experiment
+ #Initialize a vector of daily body weight
+ BW <- c(BW_init, rep(NA, 27))
+ # Estimate the BW each day
+ for (i in 2:length(BW)){
+   BW[i] <- BW[i-1] + 5.9/1000
+ } 
+ admin.dose_per_BW <- 20 # administered dose in mg PFOA/kg BW 
  admin.time <- seq(0,27*24,24) #time when doses are administered, in hours
- admin.dose <- rep(admin.dose_single, length(admin.time))
+ admin.dose <- admin.dose_per_BW*BW*1e03#ug PFOA
  admin.type <- "oral"
  sex <- "M" 
  
@@ -3330,6 +3516,72 @@ sample_time=seq(0,2,0.01)
  preds_dzi_OR_Fserum_high <-  solution[, c("time", "Cplasma")]
  
  
+ 
+ #################################################################################
+ #--------------------------------------------------------------------------------
+ #                                Kim 2016 female
+ #-------------------------------------------------------------------------------
+ #################################################################################
+ 
+ # Set up simulations for the 9th case, i.e. Kim (2016) ORAL male blood
+ BW <- 0.25  # body weight (kg) not reported
+ admin.dose_per_g <- 1 # administered dose in mg PFOA/kg BW 
+ admin.dose <- admin.dose_per_g*BW *1e03 #ug PFOA
+ admin.time <- 0 #time when doses are administered, in hours
+ admin.type <- "oral"
+ sex <- "F"
+ 
+ user_input <- list('BW'=BW,
+                    "admin.dose"= admin.dose,
+                    "admin.time" = admin.time, 
+                    "admin.type" = admin.type,
+                    "estimated_params" = estimated_params,
+                    "sex" = sex)
+ 
+ 
+ params <- create.params(user_input)
+ inits <- create.inits(params)
+ events <- create.events(params)
+ 
+ 
+ sample_time=seq(0,24,1)
+ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                     y = inits, parms = params,events = events,
+                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
+ 
+ preds_kim_OR_Fblood <-  solution[, c("time", "Cblood")]
+ 
+ 
+ # Set up simulations for the 10th case, i.e. Kim (2016) IV male blood
+ BW <- 0.25  # body weight (kg) not reported
+ admin.dose_per_g <- 1 # administered dose in mg PFOA/kg BW 
+ admin.dose <- admin.dose_per_g*BW *1e03 #ug PFOA
+ admin.time <- 0 #time when doses are administered, in hours
+ admin.type <- "iv"
+ sex <- "F"
+ 
+ user_input <- list('BW'=BW,
+                    "admin.dose"= admin.dose,
+                    "admin.time" = admin.time, 
+                    "admin.type" = admin.type,
+                    "estimated_params" = estimated_params,
+                    "sex" = sex)
+ 
+ 
+ params <- create.params(user_input)
+ inits <- create.inits(params)
+ events <- create.events(params)
+ 
+ 
+ sample_time=seq(0,24,1)
+ 
+ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                     y = inits, parms = params,events = events,
+                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
+ 
+ preds_kim_IV_Fblood <-  solution[, c("time", "Cblood")]
+ 
+ 
  #convert ug/L, which is returned by the ODE function, to ug/g, which are the units in all the datasets
  
  preds_kudo_high[,2:dim(preds_kudo_high)[2]] <- preds_kudo_high[,2:dim(preds_kudo_high)[2]] /1000 
@@ -3351,7 +3603,8 @@ sample_time=seq(0,2,0.01)
  preds_dzi_OR_Fserum_low[,2:dim(preds_dzi_OR_Fserum_low)[2]] <- preds_dzi_OR_Fserum_low[,2:dim(preds_dzi_OR_Fserum_low)[2]] /1000
  preds_dzi_OR_Fserum_medium[,2:dim(preds_dzi_OR_Fserum_medium)[2]] <- preds_dzi_OR_Fserum_medium[,2:dim(preds_dzi_OR_Fserum_medium)[2]] /1000
  preds_dzi_OR_Fserum_high[,2:dim(preds_dzi_OR_Fserum_high)[2]] <- preds_dzi_OR_Fserum_high[,2:dim(preds_dzi_OR_Fserum_high)[2]] /1000
- 
+ preds_kim_OR_Fblood[,2:dim(preds_kim_OR_Fblood)[2]] <- preds_kim_OR_Fblood[,2:dim(preds_kim_OR_Fblood)[2]] /1000
+ preds_kim_IV_Fblood[,2:dim(preds_kim_IV_Fblood)[2]] <- preds_kim_IV_Fblood[,2:dim(preds_kim_IV_Fblood)[2]] /1000
  
  # ######################################################################################
 #Plot the predictions against the observations
@@ -3477,94 +3730,85 @@ experiment2 <- reshape(kudo_low_dose[c("Tissue" ,"Time_hours",
                                          "Mass_mg")], 
                          idvar = "Time_hours", timevar = "Tissue", direction = "wide")
  colnames(experiment14) <- c("Time",unique(Cui_OR_MurineL$Tissue))
- experiment14$Urine <- experiment14$Urine *1000
- 
  
  # Convert Cui ORAL male urine high from long to wide format using reshape
  experiment15 <- reshape(Cui_OR_MurineH[c("Tissue" ,"Time_hours", 
                                           "Mass_mg")], 
                          idvar = "Time_hours", timevar = "Tissue", direction = "wide")
  colnames(experiment15) <- c("Time",unique(Cui_OR_MurineH$Tissue))
- experiment15$Urine <- experiment15$Urine *1000
- 
+
  
  # Convert Cui ORAL male urine high from long to wide format using reshape
  experiment16 <- reshape(Cui_OR_MfecesL[c("Tissue" ,"Time_hours", 
                                           "Mass_mg")], 
                          idvar = "Time_hours", timevar = "Tissue", direction = "wide")
  colnames(experiment16) <- c("Time",unique(Cui_OR_MfecesL$Tissue))
- experiment16$Feces <- experiment16$Feces *1000
- 
+
  # Convert Cui ORAL male urine high from long to wide format using reshape
  experiment17 <- reshape(Cui_OR_MfecesH[c("Tissue" ,"Time_hours", 
                                           "Mass_mg")], 
                          idvar = "Time_hours", timevar = "Tissue", direction = "wide")
  colnames(experiment17) <- c("Time",unique(Cui_OR_MfecesH$Tissue))
- experiment17$Feces <- experiment17$Feces *1000
- 
+
  # Convert Dzierlenga 2021, IV male serum from long to wide format using reshape
  experiment18 <- reshape(dzi_IV_Mserum[c("Tissue" ,"Time_hours", 
                                           "Concentration_microM")], 
                          idvar = "Time_hours", timevar = "Tissue", direction = "wide")
  colnames(experiment18) <- c("Time",unique(dzi_IV_Mserum$Tissue))
- experiment18$Serum <- experiment18$Serum * params$MW/1000
- 
  
  # Convert Dzierlenga 2021, ORAL male serum low from long to wide format using reshape
  experiment19 <- reshape(dzi_OR_Mserum_low[c("Tissue" ,"Time_hours", 
                                          "Concentration_microM")], 
                          idvar = "Time_hours", timevar = "Tissue", direction = "wide")
  colnames(experiment19) <- c("Time",unique(dzi_OR_Mserum_low$Tissue))
- experiment19$Serum <- experiment19$Serum * params$MW/1000
- 
  
  # Convert Dzierlenga 2021, ORAL male serum medium from long to wide format using reshape
  experiment20 <- reshape(dzi_OR_Mserum_medium[c("Tissue" ,"Time_hours", 
                                              "Concentration_microM")], 
                          idvar = "Time_hours", timevar = "Tissue", direction = "wide")
  colnames(experiment20) <- c("Time",unique(dzi_OR_Mserum_low$Tissue))
- experiment20$Serum <- experiment20$Serum * params$MW/1000
- 
  
  #Convert Dzierlenga 2021, ORAL male serum high from long to wide format using reshape
  experiment21 <- reshape(dzi_OR_Mserum_high[c("Tissue" ,"Time_hours", 
                                                 "Concentration_microM")], 
                          idvar = "Time_hours", timevar = "Tissue", direction = "wide")
  colnames(experiment21) <- c("Time",unique(dzi_OR_Mserum_high$Tissue))
- experiment21$Serum <- experiment21$Serum * params$MW/1000
- 
  
  #Convert Dzierlenga 2021, IV female serum from long to wide format using reshape
  experiment22 <- reshape(dzi_IV_Fserum[c("Tissue" ,"Time_hours", 
                                               "Concentration_microM")], 
                          idvar = "Time_hours", timevar = "Tissue", direction = "wide")
  colnames(experiment22) <- c("Time",unique(dzi_IV_Fserum$Tissue))
- experiment22$Serum <- experiment22$Serum * params$MW/1000
- 
  
  #Convert Dzierlenga 2021, ORAL female serum low from long to wide format using reshape
  experiment23 <- reshape(dzi_OR_Fserum_low[c("Tissue" ,"Time_hours", 
                                          "Concentration_microM")], 
                          idvar = "Time_hours", timevar = "Tissue", direction = "wide")
  colnames(experiment23) <- c("Time",unique(dzi_OR_Fserum_low$Tissue))
- experiment23$Serum <- experiment23$Serum * params$MW/1000
- 
  
  #Convert Dzierlenga 2021, ORAL female serum medium from long to wide format using reshape
  experiment24 <- reshape(dzi_OR_Fserum_medium[c("Tissue" ,"Time_hours", 
                                              "Concentration_microM")], 
                          idvar = "Time_hours", timevar = "Tissue", direction = "wide")
  colnames(experiment24) <- c("Time",unique(dzi_OR_Fserum_medium$Tissue))
- experiment24$Serum <- experiment24$Serum * params$MW/1000
- 
  
  #Convert Dzierlenga 2021, ORAL female serum high from long to wide format using reshape
  experiment25 <- reshape(dzi_OR_Fserum_high[c("Tissue" ,"Time_hours", 
                                                 "Concentration_microM")], 
                          idvar = "Time_hours", timevar = "Tissue", direction = "wide")
  colnames(experiment25) <- c("Time",unique(dzi_OR_Fserum_high$Tissue))
- experiment25$Serum <- experiment25$Serum * params$MW/1000
  
+ #Convert Kim 2016, IV female serum long to wide format using reshape
+ experiment26 <- reshape(kim_IV_Fblood[c("Tissue" ,"Time_hours", 
+                                              "Concentration_microg_per_g_organ")], 
+                         idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+ colnames(experiment26) <- c("Time",unique(kim_IV_Fblood$Tissue))
+ 
+ #Convert Kim 2016, ORAL female serum long to wide format using reshape
+ experiment27 <- reshape(kim_OR_Fblood[c("Tissue" ,"Time_hours", 
+                                         "Concentration_microg_per_g_organ")], 
+                         idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+ colnames(experiment27) <- c("Time",unique(kim_OR_Fblood$Tissue))
  
  # Put the experiments in a list
  experiments <- list(experiment1 = experiment1, experiment2 = experiment2, experiment3 = experiment3, experiment4 = experiment4,
@@ -3573,7 +3817,7 @@ experiment2 <- reshape(kudo_low_dose[c("Tissue" ,"Time_hours",
                      experiment13 = experiment13,  experiment14 = experiment14, experiment15 = experiment15, experiment16 = experiment16,
                      experiment17 = experiment17, experiment18 = experiment18, experiment19 = experiment19, experiment20 = experiment20,
                      experiment21 = experiment21, experiment22 = experiment22, experiment23 = experiment23, experiment24 = experiment24,
-                     experiment25 = experiment25)
+                     experiment25 = experiment25, experiment25 = experiment26, experiment25 = experiment27)
  
 
   # Rename predictions so that they share the same name as the names of the experimental data dataframe
@@ -3613,6 +3857,9 @@ experiment2 <- reshape(kudo_low_dose[c("Tissue" ,"Time_hours",
  colnames(preds_dzi_OR_Fserum_medium) <- c ("Time", "Serum")
  colnames(preds_dzi_OR_Fserum_high) <- c ("Time", "Serum")
  
+ colnames(preds_kim_IV_Fblood) <- c ("Time", "Serum")
+ colnames(preds_kim_OR_Fblood) <- c ("Time", "Serum")
+ 
  
  # Create a list containing the corresponding predictions
  simulations <- list(predictions1 = preds_kudo_high,  predictions2 = preds_kudo_low, predictions3 = preds_kim_IV_Mtissues, 
@@ -3623,7 +3870,8 @@ experiment2 <- reshape(kudo_low_dose[c("Tissue" ,"Time_hours",
                      predictions16 =preds_Cui_OR_MfecesL, predictions17 =preds_Cui_OR_MfecesH, predictions18 =preds_dzi_IV_Mserum,
                      predictions19 =preds_dzi_OR_Mserum_low, predictions20 =preds_dzi_OR_Mserum_medium, predictions21 =preds_dzi_OR_Mserum_high, 
                      predictions22 =preds_dzi_IV_Fserum, predictions23 =preds_dzi_OR_Fserum_low, predictions24 =preds_dzi_OR_Fserum_medium,
-                     predictions25 =preds_dzi_OR_Fserum_high)
+                     predictions25 =preds_dzi_OR_Fserum_high, predictions26 = preds_kim_IV_Fblood, 
+                     predictions27 = preds_kim_OR_Fblood)
                     
  
  # Iterate over all existing experiments and create the accompanying plots
