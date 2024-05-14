@@ -1099,8 +1099,8 @@ AFE <- function(predictions, observations, times=NULL){
 # Objective function
 #-------------------------
 obj.func <- function(x, dataset){
-  N_studies <- length(dataset)
-  score <- rep(NA, N_studies)
+  N_data <- length(dataset)
+  score <- rep(NA, N_data)
   
   # x: a vector with the values of the optimized parameters (it is not the x
   # from the odes!!!)
@@ -2016,7 +2016,7 @@ obj.func <- function(x, dataset){
   
   obs_Cui_OR_MfecesH <- c(exp_data[exp_data$Tissue == "Feces", "mass"])
   
-  score[17] <- AAFE(predictions = preds_Cui_OR_MfecesH, observations = obs_Cui_OR_MfecesH)
+  score[17] <- NA#AAFE(predictions = preds_Cui_OR_MfecesH, observations = obs_Cui_OR_MfecesH)
   
   ##########################
   #-------------------------
@@ -2078,7 +2078,7 @@ obj.func <- function(x, dataset){
   
   obs_dzi_IV_Mserum <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])
  
-  score[18] <- NA #AAFE(predictions = preds_dzi_IV_Mserum, observations = obs_dzi_IV_Mserum)
+  score[18] <- AAFE(predictions = preds_dzi_IV_Mserum, observations = obs_dzi_IV_Mserum)
   
   ##########################
   #-------------------------
