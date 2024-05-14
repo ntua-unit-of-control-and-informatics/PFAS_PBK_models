@@ -2648,7 +2648,7 @@ obj.func <- function(x, dataset){
 ################################################################################
 
 #setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
-setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
+setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
 MW <- 414.07 #g/mol
 
 # Read data
@@ -3120,7 +3120,7 @@ sample_time=seq(0,2,0.01)
  sex <- "M" 
  
  
- user_input <- list('BW'=BW,
+ user_input <- list('BW'=BW_init,
                     "admin.dose"= admin.dose,
                     "admin.time" = admin.time, 
                     "admin.type" = admin.type,
@@ -3161,7 +3161,7 @@ sample_time=seq(0,2,0.01)
  sex <- "M" 
  
  
- user_input <- list('BW'=BW,
+ user_input <- list('BW'=BW_init,
                     "admin.dose"= admin.dose,
                     "admin.time" = admin.time, 
                     "admin.type" = admin.type,
@@ -3202,7 +3202,7 @@ sample_time=seq(0,2,0.01)
  sex <- "M" 
  
  
- user_input <- list('BW'=BW,
+ user_input <- list('BW'=BW_init,
                     "admin.dose"= admin.dose,
                     "admin.time" = admin.time, 
                     "admin.type" = admin.type,
@@ -3243,7 +3243,7 @@ sample_time=seq(0,2,0.01)
  sex <- "M" 
  
  
- user_input <- list('BW'=BW,
+ user_input <- list('BW'=BW_init,
                     "admin.dose"= admin.dose,
                     "admin.time" = admin.time, 
                     "admin.type" = admin.type,
