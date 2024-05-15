@@ -32,7 +32,7 @@ create.params <- function(user.input){
     #permeabilities correction factor
     CF_Peff <- estimated_params[7] 
     # Absorption rate per area
-    kabs <- estimated_params[8]
+    kabs <- estimated_params[8] #m/h
     # Bile correction factor
     bile_correction_factor <- estimated_params[9]
     
@@ -64,7 +64,7 @@ create.params <- function(user.input){
     PVKF <- 0.13 #Larson et al., 1984
     VKF <- PVKF * PVK * BW #kidney interstitial fluid volume kg=L
     VKT <- VK - VKF - VKB #kidney tissue volume kg=L
-    VFil <- 0.25 #renal filtrate volume kg=L Cheng et al., 2017 (from Arthur, 1986; Bonvalet, 1981)
+    VFil <- 0.25/1000 #renal filtrate volume in L,  from Cheng et al., 2017 (from Arthur, 1986; Bonvalet, 1981)
     
     #Liver
     PVL <- 3.66e-2 #Brown et al. 1997
@@ -75,7 +75,7 @@ create.params <- function(user.input){
     VLF <- PVLF * PVL* BW #liver interstitial fluid volume kg=L
     VLT <- VL - VLF #liver tissue volume kg=L
     PVbile <- 0.004 #Blouin et al. 1977
-    Vbile <- PVbile * PVL * BW #bile volume kg=L
+    Vbile <- PVbile * VL #bile volume kg=L
    
     #Intestine (small and large)
     PVIN <- 2.24e-2 #Brown et al. 1997, p 416, Table 5: 1.4+0.84
@@ -242,7 +242,7 @@ create.params <- function(user.input){
     #PeffB <- 4.98e-8*3600*CF_Peff1
     #PeffK <- 4.38e-8*3600*CF_Peff1
     #PeffL <- 5.15e-8*3600*CF_Peff1
-    PeffK <-2.65e-8*3600*CF_Peff
+    PeffK <-2.65e-8*3600*CF_Peff 
     PeffL <-2.65e-8*3600*CF_Peff
     #PeffG <- 2.65e-8*3600
     PeffST <- 2.65e-8*3600*CF_Peff #assumption
@@ -418,19 +418,19 @@ create.params <- function(user.input){
     
     #Oatp kidney
     VmK_Oatp_in_vitro <- 9.3 #nmol/mg protein/min (Weaver et al. 2010)
-    VmK_Oatp_scaled <- 60*VmK_Oatp_in_vitro*MW*kidney_protein_per_gram/1000  #physiologically scaled to in vivo, ug/L/h
+    VmK_Oatp_scaled <- 60*VmK_Oatp_in_vitro*MW*kidney_protein_per_gram*MW  #physiologically scaled to in vivo, ug/L/h
     VmK_Oatp <- VmK_Oatp_scaled*RAFOatp_k #in vivo value, in  ug/L/h
-    KmK_Oatp=  126.4*MW#umol/L (Weaver et al. 2010) --> ug/L
+    KmK_Oatp=  126.4*MW# [umol/L] * g/mol (Weaver et al. 2010) --> ug/L
     
     #oat1 kidney
     VmK_Oat1_in_vitro= 2.6 #nmol/mg protein/min (Weaver et al. 2010)
-    VmK_Oat1_scaled = 60*VmK_Oat1_in_vitro*MW*kidney_protein_per_gram/1000  #physiologically scaled to in vivo, ug/L/h
+    VmK_Oat1_scaled = 60*VmK_Oat1_in_vitro*MW*kidney_protein_per_gram*MW  #physiologically scaled to in vivo, ug/L/h
     VmK_Oat1= VmK_Oat1_scaled*RAFOat1 #in vivo value, in  ug/L/h
     KmK_Oat1= 43.2 * MW #umol/L (Weaver et al. 2010) --> ug/L
     
     #oat3 kidney
     VmK_Oat3_in_vitro= 3.8 #nmol/mg protein/min  (Weaver et al. 2010)
-    VmK_Oat3_scaled = 60*VmK_Oat3_in_vitro*MW*kidney_protein_per_gram/1000  #physiologically scaled to in vivo, ug/L/h
+    VmK_Oat3_scaled = 60*VmK_Oat3_in_vitro*MW*kidney_protein_per_gram*MW   #physiologically scaled to in vivo, ug/L/h
     VmK_Oat3 = VmK_Oat3_scaled*RAFOat3 #in vivo value, in  ug/L/h
     KmK_Oat3= 65.7 * MW #umol/L (Weaver et al. 2010) --> ug/L
 
@@ -448,13 +448,13 @@ create.params <- function(user.input){
     
     # oatp-liver
     VmL_Oatp_in_vitro= 9.3 #nmol/mg protein/min  (Weaver et al. 2010)
-    VmL_Oatp_scaled = 60*VmL_Oatp_in_vitro*MW*liver_protein_per_gram/1000  #physiologically scaled to in vivo, ug/L/h
+    VmL_Oatp_scaled = 60*VmL_Oatp_in_vitro*MW*liver_protein_per_gram*MW   #physiologically scaled to in vivo, ug/L/h
     VmL_Oatp = VmL_Oatp_scaled*RAFOatp_l #in vivo value, in  ug/L/h
     KmL_Oatp = KmK_Oatp #same as kidney
     
     #Ntcp liver
     VmL_Ntcp_in_vitro= 3#nmol/mg protein/min  (Weaver et al. 2010)
-    VmL_Ntcp_scaled = 60*VmL_Ntcp_in_vitro*MW*liver_protein_per_gram/1000  #physiologically scaled to in vivo, ug/L/h
+    VmL_Ntcp_scaled = 60*VmL_Ntcp_in_vitro*MW*liver_protein_per_gram*MW   #physiologically scaled to in vivo, ug/L/h
     VmL_Ntcp = VmL_Ntcp_scaled*RAFNtcp #in vivo value, in  ug/L/h
     KmL_Ntcp= 20 * MW #umol/L, Ruggiero et al. 2021 --> ug/L
     
@@ -473,7 +473,7 @@ create.params <- function(user.input){
     intestine_protein_total <- intestine_protein*(1000*VINT)
     ClINFT <- ClINFT_unscaled *intestine_protein_total#uL/min for the whole gut compartment
     kINFINT <-  (60*ClINFT)/1e06 #L/h
-    kabIN <- kabs * AINL
+    kabIN <- (kabs * AINL)/1000 #L/h
     
     #Stomach
     stomach_cells = NA
@@ -809,7 +809,7 @@ ode.func <- function(time, inits, params){
     #Liver tissue subcompartment
     dMLT = kLFLT*(CLFf-CLTf) + (VmL_Oatp*CLFf/KmL_Oatp+CLFf)*VLF + 
                      (VmL_Ntcp*CLFf/KmL_Ntcp+CLFf)*VLF - kbileLT*(CLTf-Cbile)
-    dMbile = kbileLT*(CLTf-Cbile) - (Qbile/Vbile)*Cbile
+    dMbile = kbileLT*(CLTf-Cbile) - Qbile*Cbile
     
     
     # Feces
@@ -833,7 +833,7 @@ ode.func <- function(time, inits, params){
     #Intestine tissue subcompartment
     dMINT = kINFINT*(CINFf-CINT) + kabIN*CINL
     #Intestine lumen
-    dMINL = QGE*CSTL - (Qfeces*CINL) - kabIN*CINL + (Qbile/Vbile)*Cbile
+    dMINL = QGE*CSTL - (Qfeces*CINL) - kabIN*CINL + Qbile*Cbile
 
     
     #Muscle
@@ -1487,8 +1487,7 @@ obj.func <- function(x, dataset){
   exp_data <- dataset$df7 # retrieve data of Dzierlenga (2021) ORAL male tissues
   colnames(exp_data)[c(2,3)] <- c("time", "concentration")
   column_names <- c("Cliver","Ckidney","Cbrain"  )
-  MW <- params$MW
-  
+
   preds_dzi_OR_Mtissues <- list()
   # loop over compartments with available data
   for (i in 1:length(unique(exp_data$Tissue))) {
@@ -2016,7 +2015,7 @@ obj.func <- function(x, dataset){
   
   obs_Cui_OR_MfecesH <- c(exp_data[exp_data$Tissue == "Feces", "mass"])
   
-  score[17] <- NA#AAFE(predictions = preds_Cui_OR_MfecesH, observations = obs_Cui_OR_MfecesH)
+  score[17] <- AAFE(predictions = preds_Cui_OR_MfecesH, observations = obs_Cui_OR_MfecesH)
   
   ##########################
   #-------------------------
@@ -2648,7 +2647,7 @@ obj.func <- function(x, dataset){
 ################################################################################
 
 #setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
-setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
+setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
 MW <- 414.07 #g/mol
 
 # Read data
@@ -2709,7 +2708,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0 ,
-              "maxeval" = 1000, 
+              "maxeval" = 200, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
@@ -2923,7 +2922,7 @@ sample_time=seq(0,2,0.01)
                                     y = inits, parms = params,events = events,
                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
 
- preds_dzi_OR_Mtissues <-  solution[, c("time", "Mliver","Mkidney", "Mbrain")]
+ preds_dzi_OR_Mtissues <-  solution[, c("time", "Cliver","Ckidney", "Cbrain")]
  
  
  # Set up simulations for the 8th case, i.e. Dzierlenga (2021) ORAL female tissues
@@ -2952,7 +2951,7 @@ sample_time=seq(0,2,0.01)
                                      y = inits, parms = params,events = events,
                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
  
- preds_dzi_OR_Ftissues <-  solution[, c("time", "Mliver","Mkidney", "Mbrain")]
+ preds_dzi_OR_Ftissues <-  solution[, c("time", "Cliver","Ckidney", "Cbrain")]
  
  
  
