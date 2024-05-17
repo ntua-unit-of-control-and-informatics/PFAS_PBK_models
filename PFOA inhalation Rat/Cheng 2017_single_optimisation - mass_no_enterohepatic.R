@@ -240,8 +240,8 @@ create.params <- function(user.input){
     #brain (Br), testis (T), rest of body(R)
 
     #PeffB <- 4.98e-8*3600*CF_Peff1
-    PeffK <- 4.38e-8*3600*CF_Peff1
-    PeffL <- 5.15e-8*3600*CF_Peff1
+    PeffK <- 4.38e-8*3600*CF_Peff
+    PeffL <- 5.15e-8*3600*CF_Peff
     #PeffK <-2.65e-8*3600*CF_Peff 
     #PeffL <-2.65e-8*3600*CF_Peff
     #PeffG <- 2.65e-8*3600
@@ -1697,7 +1697,8 @@ obj.func <- function(x, dataset){
   admin.dose_per_g <- 0.047 # administered dose in mg PFOA/kg BW 
   admin.dose_single <- (admin.dose_per_g*BW*1e03)/2 #ug PFOA
   admin.time <- seq(0,13.5*24,12) #time when doses are administered, in hours
-  admin.dose <- rep(admin.dose_single, length(admin.time))
+  # Only 80% of the dose was accounted for..
+  admin.dose <- rep(admin.dose_single*0.8, length(admin.time))
   
   admin.type <- "oral"
   sex <- "F" 
@@ -1920,71 +1921,71 @@ obj.func <- function(x, dataset){
   # Cui ORAL male urine high
   #-------------------------
   ##########################
-  # Set up simulations for the 14th case, i.e. Cui (2010) ORAL male urine low
-  BW <-  0.210 #kg, before quarantine
-  # Each day the male rat body weight increases by 5.9 g
-  for (i in 1:7){
-    BW <- BW + 5.9/1000
-  }
-  BW_init <- BW #Body weight at the beginning of the experiment
-  #Initialize a vector of daily body weight
-  BW <- c(BW_init, rep(NA, 27))
-  # Estimate the BW each day
-  for (i in 2:length(BW)){
-    BW[i] <- BW[i-1] + 5.9/1000
-  } 
-  admin.dose_per_BW <- 20 # administered dose in mg PFOA/kg BW 
-  admin.time <- seq(0,27*24,24) #time when doses are administered, in hours
-  admin.dose <- admin.dose_per_BW*BW*1e03#ug PFOA
-  
-  admin.type <- "oral"
-  sex <- "M" 
-  
-  user_input <- list('BW'=BW_init,
-                     "admin.dose"= admin.dose,
-                     "admin.time" = admin.time, 
-                     "admin.type" = admin.type,
-                     "estimated_params" = estimated_params,
-                     "sex" = sex)
-  
-  params <- create.params(user_input)
-  inits <- create.inits(params)
-  events <- create.events(params)
-  
-  # sample_time: a vector of time points to solve the ODEs
-  sample_time=seq(0,672,2)
-  
-  # ode(): The solver of the ODEs
-  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                      y = inits, parms = params,
-                                      events = events,
-                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
-  
-  # We need to keep only the predictions for the relevant compartments for the time points 
-  # at which we have available data. 
-  
-  #======================================df15=========================================================
-  
-  exp_data <- dataset$df15 # retrieve data of Cui (2010) ORAL male urine high
-  colnames(exp_data)[c(2,3)] <- c("time", "mass")
-  column_names <- c("Murine")
-  
-  preds_Cui_OR_MurineH <- list()
-  # loop over compartments with available data
-  for (i in 1:length(unique(exp_data$Tissue))) {
-    compartment <- unique(exp_data$Tissue)[i]
-    #Retrieve time points at which measurements are available for compartment i
-    exp_time <- exp_data[exp_data$Tissue == compartment, 2]
-    
-    preds_Cui_OR_MurineH [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
-  }
-  
-  preds_Cui_OR_MurineH <- unlist(preds_Cui_OR_MurineH) 
-  
-  
-  obs_Cui_OR_MurineH <- c(exp_data[exp_data$Tissue == "Urine", "mass"])
-  
-  score[16] <- AAFE(predictions = preds_Cui_OR_MurineH, observations = obs_Cui_OR_MurineH)
+  # # Set up simulations for the 14th case, i.e. Cui (2010) ORAL male urine low
+  # BW <-  0.210 #kg, before quarantine
+  # # Each day the male rat body weight increases by 5.9 g
+  # for (i in 1:7){
+  #   BW <- BW + 5.9/1000
+  # }
+  # BW_init <- BW #Body weight at the beginning of the experiment
+  # #Initialize a vector of daily body weight
+  # BW <- c(BW_init, rep(NA, 27))
+  # # Estimate the BW each day
+  # for (i in 2:length(BW)){
+  #   BW[i] <- BW[i-1] + 5.9/1000
+  # } 
+  # admin.dose_per_BW <- 20 # administered dose in mg PFOA/kg BW 
+  # admin.time <- seq(0,27*24,24) #time when doses are administered, in hours
+  # admin.dose <- admin.dose_per_BW*BW*1e03#ug PFOA
+  # 
+  # admin.type <- "oral"
+  # sex <- "M" 
+  # 
+  # user_input <- list('BW'=BW_init,
+  #                    "admin.dose"= admin.dose,
+  #                    "admin.time" = admin.time, 
+  #                    "admin.type" = admin.type,
+  #                    "estimated_params" = estimated_params,
+  #                    "sex" = sex)
+  # 
+  # params <- create.params(user_input)
+  # inits <- create.inits(params)
+  # events <- create.events(params)
+  # 
+  # # sample_time: a vector of time points to solve the ODEs
+  # sample_time=seq(0,672,2)
+  # 
+  # # ode(): The solver of the ODEs
+  # solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+  #                                     y = inits, parms = params,
+  #                                     events = events,
+  #                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
+  # 
+  # # We need to keep only the predictions for the relevant compartments for the time points 
+  # # at which we have available data. 
+  # 
+  # #======================================df15=========================================================
+  # 
+  # exp_data <- dataset$df15 # retrieve data of Cui (2010) ORAL male urine high
+  # colnames(exp_data)[c(2,3)] <- c("time", "mass")
+  # column_names <- c("Murine")
+  # 
+  # preds_Cui_OR_MurineH <- list()
+  # # loop over compartments with available data
+  # for (i in 1:length(unique(exp_data$Tissue))) {
+  #   compartment <- unique(exp_data$Tissue)[i]
+  #   #Retrieve time points at which measurements are available for compartment i
+  #   exp_time <- exp_data[exp_data$Tissue == compartment, 2]
+  #   
+  #   preds_Cui_OR_MurineH [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+  # }
+  # 
+  # preds_Cui_OR_MurineH <- unlist(preds_Cui_OR_MurineH) 
+  # 
+  # 
+  # obs_Cui_OR_MurineH <- c(exp_data[exp_data$Tissue == "Urine", "mass"])
+  # 
+  score[16] <- NA#AAFE(predictions = preds_Cui_OR_MurineH, observations = obs_Cui_OR_MurineH)
   
   
   ##########################
@@ -1994,28 +1995,28 @@ obj.func <- function(x, dataset){
   ##########################
   
   
-  #======================================df17=========================================================
+  # #======================================df17=========================================================
+  # 
+  # exp_data <- dataset$df17 # retrieve data of Cui (2010) ORAL male feces high
+  # colnames(exp_data)[c(2,3)] <- c("time", "mass")
+  # column_names <- c("Mfeces")
+  # 
+  # preds_Cui_OR_MfecesH <- list()
+  # # loop over compartments with available data
+  # for (i in 1:length(unique(exp_data$Tissue))) {
+  #   compartment <- unique(exp_data$Tissue)[i]
+  #   #Retrieve time points at which measurements are available for compartment i
+  #   exp_time <- exp_data[exp_data$Tissue == compartment, 2]
+  #   
+  #   preds_Cui_OR_MfecesH [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+  # }
+  # 
+  # preds_Cui_OR_MfecesH <- unlist(preds_Cui_OR_MfecesH) 
+  # 
+  # 
+  # obs_Cui_OR_MfecesH <- c(exp_data[exp_data$Tissue == "Feces", "mass"])
   
-  exp_data <- dataset$df17 # retrieve data of Cui (2010) ORAL male feces high
-  colnames(exp_data)[c(2,3)] <- c("time", "mass")
-  column_names <- c("Mfeces")
-  
-  preds_Cui_OR_MfecesH <- list()
-  # loop over compartments with available data
-  for (i in 1:length(unique(exp_data$Tissue))) {
-    compartment <- unique(exp_data$Tissue)[i]
-    #Retrieve time points at which measurements are available for compartment i
-    exp_time <- exp_data[exp_data$Tissue == compartment, 2]
-    
-    preds_Cui_OR_MfecesH [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
-  }
-  
-  preds_Cui_OR_MfecesH <- unlist(preds_Cui_OR_MfecesH) 
-  
-  
-  obs_Cui_OR_MfecesH <- c(exp_data[exp_data$Tissue == "Feces", "mass"])
-  
-  score[17] <- AAFE(predictions = preds_Cui_OR_MfecesH, observations = obs_Cui_OR_MfecesH)
+  score[17] <- NA#AAFE(predictions = preds_Cui_OR_MfecesH, observations = obs_Cui_OR_MfecesH)
   
   ##########################
   #-------------------------
@@ -2719,7 +2720,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 
 N_pars <- 11 # Number of parameters to be fitted
 #fit <- log(rep(1,N_pars))
-fit <- rep(1,N_pars)
+fit <- c(rep(1,N_pars-1), log(1e04))
 
 # Run the optimization algorithmm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
@@ -3032,7 +3033,8 @@ sample_time=seq(0,2,0.01)
  admin.dose_per_g <- 0.047 # administered dose in mg PFOA/kg BW 
  admin.dose_single <- (admin.dose_per_g*BW*1e03)/2 #ug PFOA
  admin.time <- seq(0,13.5*24,12) #time when doses are administered, in hours
- admin.dose <- rep(admin.dose_single, length(admin.time))
+ # Only 80% of the dose was accounted for..
+ admin.dose <- rep(admin.dose_single*0.8, length(admin.time))
  
  admin.type <- "oral"
  sex <- "F"
@@ -3904,4 +3906,4 @@ experiment2 <- reshape(kudo_low_dose[c("Tissue" ,"Time_hours",
           units = "in")
  }
 
- save.image("Results.RData")
+ save.image("Results_no_enterohepatic.RData")
