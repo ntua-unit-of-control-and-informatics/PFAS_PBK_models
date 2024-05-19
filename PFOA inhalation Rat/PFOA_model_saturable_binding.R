@@ -861,15 +861,12 @@ ode.func <- function(time, inits, params){
     
     #Calculation of free and bound PFOA in venous blood
     dCalbVenf <- koff_alb*CVenb - kon_alb*CalbVenf*CVenf
-    dMVenb <-  kon_alb*CalbVenf*CVenf*VVen
     
     #Calculation of free and bound PFOA in arterial blood
     dCalbArtf <- koff_alb*CArtb - kon_alb*CalbArtf*CArtf
-    dMArtb <- kon_alb*CalbArtf*CArtf*VArt
     
     #Calculation of free and bound PFOA in lymph nodes
     dCalbLyf <- koff_alb*CLyb - kon_alb*CalbLyf*CLyf
-    dMLyb <- kon_alb*CalbLyf*CLyf*VLy
     
     #--------------------------------------------------------------
     #Calculation of free concentrations in organ blood
@@ -877,19 +874,15 @@ ode.func <- function(time, inits, params){
     
     #Calculation of free and bound PFOA in kidney blood
     dCalbKiBf <- koff_alb*CKiBb - kon_alb*CalbKiBf*CKiBf
-    dMKiBb <- kon_alb*CalbKiBf*CKiBf*VKiB
     
     #Calculation of free and bound PFOA in liver blood
     dCalbLiBf <- koff_alb*CLiBb - kon_alb*CalbLiBf*CLiBf
-    dMLiBb <- kon_alb*CalbLiBf*CLiBf*VLiB
     
     #Calculation of free and bound PFOA in stomach blood
     dCalbStBf <- koff_alb*CStBb - kon_alb*CalbStBf*CStBf
-    dMStBb <- kon_alb*CalbStBf*CStBf*VStB
     
     #Calculation of free and bound PFOA in intestine blood
     dCalbInBf <- koff_alb*CInBb - kon_alb*CalbInBf*CInBf
-    dMInBb <- kon_alb*CalbInBf*CInBf*VInB
     
     #Calculation of free and bound PFOA in muscle blood
     dCalbMuBf <- koff_alb*CMuBb - kon_alb*CalbMuBf*CMuBf
@@ -897,7 +890,7 @@ ode.func <- function(time, inits, params){
     
     #Calculation of free and bound PFOA in adipose blood
     dCalbAdBf <- koff_alb*CAdBb - kon_alb*CalbAdBf*CAdBf
-    dMAdBb <- kon_alb*CalbAdBf*CAdBf*VAdB
+    
     
     #Calculation of free and bound PFOA in Rest-of-the-body blood
     dCalbReBf <- koff_alb*CReBb - kon_alb*CalbReBf*CReBf
@@ -905,7 +898,6 @@ ode.func <- function(time, inits, params){
     
     #Calculation of free and bound PFOA in lungs blood
     dCalbLuBf <- koff_alb*CLuBb - kon_alb*CalbLuBf*CLuBf
-    dMLuBb <- kon_alb*CalbLuBf*CLuBf*VLuB
     
     #Calculation of free and bound PFOA in spleen blood
     dCalbSpBf <- koff_alb*CSpBb - kon_alb*CalbSpBf*CSpBf
@@ -913,77 +905,62 @@ ode.func <- function(time, inits, params){
     
     #Calculation of free and bound PFOA in heart blood
     dCalbHtBf <- koff_alb*CHtBb - kon_alb*CalbHtBf*CHtBf
-    dMHtBb <- kon_alb*CalbHtBf*CHtBf*VHtB
     
     #Calculation of free and bound PFOA in brain blood
     dCalbBrBf <- koff_alb*CBrBb - kon_alb*CalbBrBf*CBrBf
-    dMBrBb <- kon_alb*CalbBrBf*CBrBf*VBrB
     
     #Calculation of free and bound PFOA in gonad blood
     dCalbGoBf <- koff_alb*CGoBb - kon_alb*CalbGoBf*CGoBf
-    dMGoBb <- kon_alb*CalbGoBf*CGoBf*VGoB
     
     #Calculation of free and bound PFOA in skin blood
     dCalbSkBf <- koff_alb*CSkBb - kon_alb*CalbSkBf*CSkBf
-    dMSkBb <- kon_alb*CalbSkBf*CSkBf*VSkB
+    
  
     #--------------------------------------------------------------
     #Calculation of free concentrations in organ interstitial fluid
     #--------------------------------------------------------------
-    
     #Calculation of free and bound PFOA in kidney blood
     dCalbKiFf <- koff_alb*CKiFb - kon_alb*CalbKiFf*CKiFf
-    dMKiFb <- kon_alb*CalbKiFf*CKiFf*VKiF
     
     #Calculation of free and bound PFOA in liver blood
     dCalbLiFf <- koff_alb*CLiFb - kon_alb*CalbLiFf*CLiFf
-    dMLiFb <- kon_alb*CalbLiFf*CLiFf*VLiF
+    
     
     #Calculation of free and bound PFOA in stomach blood
     dCalbStFf <- koff_alb*CStFb - kon_alb*CalbStFf*CStFf
-    dMStFb <- kon_alb*CalbStFf*CStFf*VStF
+    
     
     #Calculation of free and bound PFOA in intestine blood
     dCalbInFf <- koff_alb*CInFb - kon_alb*CalbInFf*CInFf
-    dMInFb <- kon_alb*CalbInFf*CInFf*VInF
+    
     
     #Calculation of free and bound PFOA in muscle blood
     dCalbMuFf <- koff_alb*CMuFb - kon_alb*CalbMuFf*CMuFf
-    dMMuFb <- kon_alb*CalbMuFf*CMuFf*VMuF
+    
     
     #Calculation of free and bound PFOA in adipose blood
     dCalbAdFf <- koff_alb*CAdFb - kon_alb*CalbAdFf*CAdFf
-    dMAdFb <- kon_alb*CalbAdFf*CAdFf*VAdF
     
     #Calculation of free and bound PFOA in Rest-of-the-body blood
     dCalbReFf <- koff_alb*CReFb - kon_alb*CalbReFf*CReFf
-    dMReFf <- koff_alb*CReFb*VReF
-    dMReFb <- kon_alb*CalbReFf*CReFf*VReF
-    
+ 
     #Calculation of free and bound PFOA in lungs blood
     dCalbLuFf <- koff_alb*CLuFb - kon_alb*CalbLuFf*CLuFf
-    dMLuFb <- kon_alb*CalbLuFf*CLuFf*VLuF
     
     #Calculation of free and bound PFOA in spleen blood
     dCalbSpFf <- koff_alb*CSpFb - kon_alb*CalbSpFf*CSpFf
-    dMSpFb <- kon_alb*CalbSpFf*CSpFf*VSpF
     
     #Calculation of free and bound PFOA in heart blood
     dCalbHtFf <- koff_alb*CHtFb - kon_alb*CalbHtFf*CHtFf
-    dMHtFb <- kon_alb*CalbHtFf*CHtFf*VHtF
     
     #Calculation of free and bound PFOA in brain blood
     dCalFbrFf <- koff_alb*CBrFb - kon_alb*CalFbrFf*CBrFf
-    dMBrFb <- kon_alb*CalFbrFf*CBrFf*VBrF
     
     #Calculation of free and bound PFOA in gonad blood
     dCalbGoFf <- koff_alb*CGoFb - kon_alb*CalbGoFf*CGoFf
-    dMGoFf <- koff_alb*CGoFb*VGoF
-    dMGoFb <- kon_alb*CalbGoFf*CGoFf*VGoF
     
     #Calculation of free and bound PFOA in skin blood
     dCalbSkFf <- koff_alb*CSkFb - kon_alb*CalbSkFf*CSkFf
-    dMSkFb <- kon_alb*CalbSkFf*CSkFf*VSkF
     
     #-------------------------------------------------------------------
     #Calculation of free concentrations in organ where we have tissue binding
@@ -991,12 +968,44 @@ ode.func <- function(time, inits, params){
     #Calculation of free and bound PFOA in kidney Tissue
     dCA2uKiTf <- koff_a2u*CKiTb - kon_a2u*CA2uKiTf*CKiTf
     dCFabpKiTf <- koff_fabp*CKiTb - kon_fabp*CFabpKiTf*CKiTf
-    dMKiTb <- kon_a2u*CA2uKiTf*CKiTf*VKiT + kon_fabp*CFabpKiTf*CKiTf*VKiT
     
     #Calculation of free and bound PFOA in liver tissue
-    dCFabpLiTf <- koff_fabp*CLiTb - kon_fabp*CFabpLiTf*CLiTf    
+    dCFabpLiTf <- koff_fabp*CLiTb - kon_fabp*CFabpLiTf*CLiTf   
+    
+    # Bound PFOA
+    #Blood
+    dMVenb <-  kon_alb*CalbVenf*CVenf*VVen
+    dMArtb <- kon_alb*CalbArtf*CArtf*VArt
+    dMLyb <- kon_alb*CalbLyf*CLyf*VLy
+    dMKiBb <- kon_alb*CalbKiBf*CKiBf*VKiB
+    dMLiBb <- kon_alb*CalbLiBf*CLiBf*VLiB
+    dMStBb <- kon_alb*CalbStBf*CStBf*VStB
+    dMInBb <- kon_alb*CalbInBf*CInBf*VInB
+    dMAdBb <- kon_alb*CalbAdBf*CAdBf*VAdB
+    dMLuBb <- kon_alb*CalbLuBf*CLuBf*VLuB
+    dMHtBb <- kon_alb*CalbHtBf*CHtBf*VHtB
+    dMBrBb <- kon_alb*CalbBrBf*CBrBf*VBrB
+    dMGoBb <- kon_alb*CalbGoBf*CGoBf*VGoB
+    dMSkBb <- kon_alb*CalbSkBf*CSkBf*VSkB
+    #Interstitial fluid
+    dMGoFf <- koff_alb*CGoFb*VGoF
+    dMKiFb <- kon_alb*CalbKiFf*CKiFf*VKiF
+    dMLiFb <- kon_alb*CalbLiFf*CLiFf*VLiF
+    dMStFb <- kon_alb*CalbStFf*CStFf*VStF
+    dMInFb <- kon_alb*CalbInFf*CInFf*VInF
+    dMMuFb <- kon_alb*CalbMuFf*CMuFf*VMuF
+    dMAdFb <- kon_alb*CalbAdFf*CAdFf*VAdF
+    dMReFb <- kon_alb*CalbReFf*CReFf*VReF
+    dMLuFb <- kon_alb*CalbLuFf*CLuFf*VLuF
+    dMSpFb <- kon_alb*CalbSpFf*CSpFf*VSpF
+    dMHtFb <- kon_alb*CalbHtFf*CHtFf*VHtF
+    dMBrFb <- kon_alb*CalFbrFf*CBrFf*VBrF
+    dMGoFb <- kon_alb*CalbGoFf*CGoFf*VGoF
+    dMSkFb <- kon_alb*CalbSkFf*CSkFf*VSkF
+    #Tissue
+    dMKiTb <- kon_a2u*CA2uKiTf*CKiTf*VKiT + kon_fabp*CFabpKiTf*CKiTf*VKiT
     dMLiTb <-  kon_fabp*CFabpLiTf*CLiTf*VLiT
-
+    
     #Arterial Blood#
     dMArtf <- (QBLu-QBLu/500)*CLuBf -CArtf*(QBKi+QBLi+QBMu+QBAd+QBRe+QBSp+
                                             QBHt+QBBr+QBSt+QBIn+QBGo+QBSk)-
@@ -1190,36 +1199,28 @@ ode.func <- function(time, inits, params){
     Cgonads <-  (MGoB + MGoF+ MGoT)/(VGoB+VGoF+VGoT)
     Cskin <-  (MSkB + MSkF+ MSkT)/(VSkB+VSkF+VSkT)
     
-    list(c( 'dCalbVenf' = dCalbVenf,  'dMVenb' = dMVenb, 'dCalbArtf' = dCalbArtf, 
-            'dMArtb' = dMArtb, 'dCalbLyf' = dCalbLyf, 
-            'dMLyb' = dMLyb, 'dCalbKiBf' = dCalbKiBf, 'dMKiBb' = dMKiBb, 
-            'dCalbLiBf' = dCalbLiBf, 
-            'dMLiBb' = dMLiBb, 'dCalbStBf' = dCalbStBf, 
-            'dMStBb' = dMStBb, 'dCalbInBf' = dCalbInBf,
-            'dMInBb' = dMInBb, 
-            'dCalbMuBf' = dCalbMuBf,  'dMMuBb' = dMMuBb,
-            'dCalbAdBf' = dCalbAdBf, 'dMAdBb' = dMAdBb, 
-            'dCalbReBf' = dCalbReBf, 
-            'dMReBb' = dMReBb, 'dCalbLuBf' = dCalbLuBf, 
-            'dMLuBb' = dMLuBb, 'dCalbSpBf' = dCalbSpBf,  'dMSpBb' = dMSpBb, 
-            'dCalbHtBf' = dCalbHtBf,
-            'dMHtBb' = dMHtBb, 'dCalbBrBf' = dCalbBrBf,
-            'dMBrBb' = dMBrBb, 'dCalbGoBf' = dCalbGoBf, 
-            'dMGoBb' = dMGoBb, 
-            'dCalbSkBf' = dCalbSkBf,  'dMSkBb' = dMSkBb, 'dCalbKiFf' = dCalbKiFf, 
-            'dMKiFb' = dMKiFb, 'dCalbLiFf' = dCalbLiFf,'dMLiFb' = dMLiFb, 
-            'dCalbStFf' = dCalbStFf, 'dMStFb' = dMStFb, 'dCalbInFf' = dCalbInFf, 
-            'dMInFb' = dMInFb, 'dCalbMuFf' = dCalbMuFf, 
-            'dMMuFb' = dMMuFb, 
-            'dCalbAdFf' = dCalbAdFf, 'dMAdFb' = dMAdFb, 'dCalbReFf' = dCalbReFf, 
-            'dMReFb' = dMReFb, 'dCalbLuFf' = dCalbLuFf, 
-            'dMLuFb' = dMLuFb, 
-            'dCalbSpFf' = dCalbSpFf, 'dMSpFb' = dMSpFb, 'dCalbHtFf' = dCalbHtFf, 
-            'dMHtFb' = dMHtFb, 'dCalFbrFf' = dCalFbrFf, 
-            'dMBrFb' = dMBrFb, 
-            'dCalbGoFf' = dCalbGoFf, 'dMGoFb' = dMGoFb, 'dCalbSkFf' = dCalbSkFf, 
-            'dMSkFb' = dMSkFb, 'dCA2uKiTf' = dCA2uKiTf, 'dCFabpKiTf' = dCFabpKiTf, 
-            'dMKiTb' = dMKiTb, 'dCFabpLiTf' = dCFabpLiTf, 'dMLiTb' = dMLiTb,
+    list(c( 'dCalbVenf' = dCalbVenf, 'dCalbArtf' = dCalbArtf,'dCalbLyf' = dCalbLyf,  
+            'dCalbKiBf' = dCalbKiBf, 'dCalbLiBf' = dCalbLiBf, 'dCalbStBf' = dCalbStBf, 
+            'dCalbInBf' = dCalbInBf, 'dCalbMuBf' = dCalbMuBf, 'dCalbAdBf' = dCalbAdBf,
+            'dCalbReBf' = dCalbReBf, 'dCalbLuBf' = dCalbLuBf, 'dCalbSpBf' = dCalbSpBf,
+            'dCalbHtBf' = dCalbHtBf, 'dCalbBrBf' = dCalbBrBf, 'dCalbGoBf' = dCalbGoBf, 
+            'dCalbSkBf' = dCalbSkBf, 'dCalbKiFf' = dCalbKiFf, 'dCalbLiFf' = dCalbLiFf,
+            'dCalbStFf' = dCalbStFf,'dCalbInFf' = dCalbInFf, 'dCalbMuFf' = dCalbMuFf, 
+            'dCalbAdFf' = dCalbAdFf,'dCalbReFf' = dCalbReFf, 'dCalbLuFf' = dCalbLuFf, 
+            'dCalbSpFf' = dCalbSpFf, 'dCalbHtFf' = dCalbHtFf, 'dCalFbrFf' = dCalFbrFf,
+            'dCalbGoFf' = dCalbGoFf, 'dCalbSkFf' = dCalbSkFf, 'dCA2uKiTf' = dCA2uKiTf,
+            'dCFabpKiTf' = dCFabpKiTf, 'dCFabpLiTf' = dCFabpLiTf,
+            
+            'dMVenb' = dMVenb, 'dMArtb' = dMArtb, 'dMLyb' = dMLyb, 'dMKiBb' = dMKiBb, 
+            'dMLiBb' = dMLiBb,'dMStBb' = dMStBb,'dMInBb' = dMInBb,'dMMuBb' = dMMuBb,
+            'dMAdBb' = dMAdBb, 'dMReBb' = dMReBb,'dMLuBb' = dMLuBb,   'dMSpBb' = dMSpBb, 
+            'dMHtBb' = dMHtBb,  'dMBrBb' = dMBrBb,  'dMGoBb' = dMGoBb, 
+             'dMSkBb' = dMSkBb, 'dMKiFb' = dMKiFb, 'dMLiFb' = dMLiFb, 
+            'dMStFb' = dMStFb,  'dMInFb' = dMInFb, 'dMMuFb' = dMMuFb, 
+             'dMAdFb' = dMAdFb, 'dMReFb' = dMReFb, 'dMLuFb' = dMLuFb, 
+           'dMSpFb' = dMSpFb,  'dMHtFb' = dMHtFb, 'dMBrFb' = dMBrFb, 
+            'dMGoFb' = dMGoFb,'dMSkFb' = dMSkFb,  
+            'dMKiTb' = dMKiTb,  'dMLiTb' = dMLiTb,
       
             'dMArtf'=dMArtf, 'dMVenf'=dMVenf, 'dMLyf'=dMLyf, 'dMKiBf'=dMKiBf, 
             'dMKiFf'=dMKiFf, 'dMKiTf'=dMKiTf,
@@ -1288,41 +1289,33 @@ create.inits <- function(parameters){
     MFil <-0; Murine <-0; Mbile <-0;MStL <-0;  MInL <-0;
     Mfeces <-0;  Vurine <-0; Vfeces <-0
     
-    return(c('CalbVenf' = CalbVenf,  'MVenb' = MVenb, 'CalbArtf' = CalbArtf, 
-             'MArtb' = MArtb, 'CalbLyf' = CalbLyf, 
-             'MLyb' = MLyb, 'CalbKiBf' = CalbKiBf, 'MKiBb' = MKiBb, 
-             'CalbLiBf' = CalbLiBf, 
-             'MLiBb' = MLiBb, 'CalbStBf' = CalbStBf, 
-             'MStBb' = MStBb, 'CalbInBf' = CalbInBf,
-             'MInBb' = MInBb, 
-             'CalbMuBf' = CalbMuBf,  'MMuBb' = MMuBb,
-             'CalbAdBf' = CalbAdBf, 'MAdBb' = MAdBb, 
-             'CalbReBf' = CalbReBf, 
-             'MReBb' = MReBb, 'CalbLuBf' = CalbLuBf, 
-             'MLuBb' = MLuBb, 'CalbSpBf' = CalbSpBf,  'MSpBb' = MSpBb, 
-             'CalbHtBf' = CalbHtBf,
-             'MHtBb' = MHtBb, 'CalbBrBf' = CalbBrBf,
-             'MBrBb' = MBrBb, 'CalbGoBf' = CalbGoBf, 
-             'MGoBb' = MGoBb, 
-             'CalbSkBf' = CalbSkBf,  'MSkBb' = MSkBb, 'CalbKiFf' = CalbKiFf, 
-             'MKiFb' = MKiFb, 'CalbLiFf' = CalbLiFf,'MLiFb' = MLiFb, 
-             'CalbStFf' = CalbStFf, 'MStFb' = MStFb, 'CalbInFf' = CalbInFf, 
-             'MInFb' = MInFb, 'CalbMuFf' = CalbMuFf, 
-             'MMuFb' = MMuFb, 
-             'CalbAdFf' = CalbAdFf, 'MAdFb' = MAdFb, 'CalbReFf' = CalbReFf, 
-             'MReFb' = MReFb, 'CalbLuFf' = CalbLuFf, 
-             'MLuFb' = MLuFb, 
-             'CalbSpFf' = CalbSpFf, 'MSpFb' = MSpFb, 'CalbHtFf' = CalbHtFf, 
-             'MHtFb' = MHtFb, 'CalFbrFf' = CalFbrFf, 
-             'MBrFb' = MBrFb, 
-             'CalbGoFf' = CalbGoFf, 'MGoFb' = MGoFb, 'CalbSkFf' = CalbSkFf, 
-             'MSkFb' = MSkFb, 'CA2uKiTf' = CA2uKiTf, 'CFabpKiTf' = CFabpKiTf, 
-             'MKiTb' = MKiTb, 'CFabpLiTf' = CFabpLiTf, 'MLiTb' = MLiTb,
+    return(c('CalbVenf' = CalbVenf, 'CalbArtf' = CalbArtf,'CalbLyf' = CalbLyf,  
+             'CalbKiBf' = CalbKiBf, 'CalbLiBf' = CalbLiBf, 'CalbStBf' = CalbStBf, 
+             'CalbInBf' = CalbInBf, 'CalbMuBf' = CalbMuBf, 'CalbAdBf' = CalbAdBf,
+             'CalbReBf' = CalbReBf, 'CalbLuBf' = CalbLuBf, 'CalbSpBf' = CalbSpBf,
+             'CalbHtBf' = CalbHtBf, 'CalbBrBf' = CalbBrBf, 'CalbGoBf' = CalbGoBf, 
+             'CalbSkBf' = CalbSkBf, 'CalbKiFf' = CalbKiFf, 'CalbLiFf' = CalbLiFf,
+             'CalbStFf' = CalbStFf,'CalbInFf' = CalbInFf, 'CalbMuFf' = CalbMuFf, 
+             'CalbAdFf' = CalbAdFf,'CalbReFf' = CalbReFf, 'CalbLuFf' = CalbLuFf, 
+             'CalbSpFf' = CalbSpFf, 'CalbHtFf' = CalbHtFf, 'CalFbrFf' = CalFbrFf,
+             'CalbGoFf' = CalbGoFf, 'CalbSkFf' = CalbSkFf, 'CA2uKiTf' = CA2uKiTf,
+             'CFabpKiTf' = CFabpKiTf, 'CFabpLiTf' = CFabpLiTf,
+             
+             'MVenb' = MVenb, 'MArtb' = MArtb, 'MLyb' = MLyb, 'MKiBb' = MKiBb, 
+             'MLiBb' = MLiBb,'MStBb' = MStBb,'MInBb' = MInBb,'MMuBb' = MMuBb,
+             'MAdBb' = MAdBb, 'MReBb' = MReBb,'MLuBb' = MLuBb,   'MSpBb' = MSpBb, 
+             'MHtBb' = MHtBb,  'MBrBb' = MBrBb,  'MGoBb' = MGoBb, 
+             'MSkBb' = MSkBb, 'MKiFb' = MKiFb, 'MLiFb' = MLiFb, 
+             'MStFb' = MStFb,  'MInFb' = MInFb, 'MMuFb' = MMuFb, 
+             'MAdFb' = MAdFb, 'MReFb' = MReFb, 'MLuFb' = MLuFb, 
+             'MSpFb' = MSpFb,  'MHtFb' = MHtFb, 'MBrFb' = MBrFb, 
+             'MGoFb' = MGoFb,'MSkFb' = MSkFb,  
+             'MKiTb' = MKiTb,  'MLiTb' = MLiTb,
              
              'MArtf'=MArtf, 'MVenf'=MVenf, 'MLyf'=MLyf, 'MKiBf'=MKiBf, 
              'MKiFf'=MKiFf, 'MKiTf'=MKiTf,
-             'MFil'=MFil,  'MLiBf'=MLiBf,  'MLiFf'=MLiFf,
-             'MLiTf'=MLiTf, 'Mbile'=Mbile,
+             'MFil'=MFil,  'MLiBf'=MLiBf, 
+             'MLiFf'=MLiFf, 'MLiTf'=MLiTf, 'Mbile'=Mbile,
              'MStL'=MStL,'MInL'=MInL,
              
              'MStBf'=MStBf, 'MStFf'=MStFf, 'MStTf'=MStTf,
@@ -3025,8 +3018,8 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 
 N_pars <- 13 # Number of parameters to be fitted
 fit <- rep(0,N_pars)
-lb	= c(rep(log(1e-20), 6),log(1e-3),log(1e-2),  log(1e-20),log(1e-5), rep(log(1e-5),3))
-ub = c(rep(log(1e5), 6),log(1e5),log(1e5),log(1e10),log(1e5), rep(log(1e5),3))
+lb	= c(rep(log(1e-20), 6),log(1e-3),log(1e-2),  log(1e-20),log(1e-5), rep(log(1e-3),3))
+ub = c(rep(log(1e5), 6),log(1e5),log(1e5),log(1e10),log(1e5), rep(log(1e0),3))
 # Run the optimization algorithmm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,
