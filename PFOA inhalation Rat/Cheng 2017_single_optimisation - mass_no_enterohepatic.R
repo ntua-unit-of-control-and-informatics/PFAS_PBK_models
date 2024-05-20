@@ -2648,7 +2648,7 @@ obj.func <- function(x, dataset){
 ################################################################################
 
 #setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
-setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
+setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
 MW <- 414.07 #g/mol
 
 # Read data

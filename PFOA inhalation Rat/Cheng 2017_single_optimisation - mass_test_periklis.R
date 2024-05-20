@@ -765,7 +765,7 @@ ode.func <- function(time, inits, params){
                                        QBST/500+QBSP/500+QBIN/500)+
                                     (QBK-QBK/500)*CKBf + (QBLtot-QBLtot/500)*CLBf + 
                                     (QBM-QBM/500)*CMBf + (QBA-QBA/500)*CABf + (QBR-QBR/500)*CRBf+
-                                    (QBH-QBH/500)*CHBf + 
+                                    (QBH-QBH/500)*CHBf + QBBr*CBrBf+
                                     (QBT-QBT/500)*CTBf + (QBSK-QBSK/500)*CSKBf
     
     
