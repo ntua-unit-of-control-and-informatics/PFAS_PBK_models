@@ -1158,7 +1158,7 @@ obj.func <- function(x, dataset){
                      exp_data[exp_data$Tissue == "Stomach", "concentration"],
                      exp_data[exp_data$Tissue == "Intestine", "concentration"])
   
-  score[1] <- rmsd(predictions = preds_kudo_high, observations = obs_kudo_high)
+  score[1] <- AAFE(predictions = preds_kudo_high, observations = obs_kudo_high)
   
   ##########################
   #-------------------------
@@ -1220,7 +1220,7 @@ obj.func <- function(x, dataset){
                     exp_data[exp_data$Tissue == "Stomach", "concentration"],
                     exp_data[exp_data$Tissue == "Intestine", "concentration"])
   
-  score[2] <- rmsd(predictions = preds_kudo_low, observations = obs_kudo_low)
+  score[2] <- AAFE(predictions = preds_kudo_low, observations = obs_kudo_low)
   
   ##########################
   #-------------------------
@@ -1274,7 +1274,7 @@ obj.func <- function(x, dataset){
                            exp_data[exp_data$Tissue == "Spleen", "concentration"],
                            exp_data[exp_data$Tissue == "Heart", "concentration"])
   
-  score[3] <- rmsd(predictions = preds_kim_IV_Mtissues, observations = obs_kim_IV_Mtissues)
+  score[3] <- AAFE(predictions = preds_kim_IV_Mtissues, observations = obs_kim_IV_Mtissues)
   
   ##########################
   #-------------------------
@@ -1328,7 +1328,7 @@ obj.func <- function(x, dataset){
                            exp_data[exp_data$Tissue == "Spleen", "concentration"],
                            exp_data[exp_data$Tissue == "Heart", "concentration"])
   
-  score[4] <- rmsd(predictions = preds_kim_OR_Mtissues, observations = obs_kim_OR_Mtissues)
+  score[4] <- AAFE(predictions = preds_kim_OR_Mtissues, observations = obs_kim_OR_Mtissues)
   ##########################
   #-------------------------
   # Kim IV female tissues
@@ -1381,7 +1381,7 @@ obj.func <- function(x, dataset){
                            exp_data[exp_data$Tissue == "Spleen", "concentration"],
                            exp_data[exp_data$Tissue == "Heart", "concentration"])
   
-  score[5] <- rmsd(predictions = preds_kim_IV_Ftissues, observations = obs_kim_IV_Ftissues)
+  score[5] <- AAFE(predictions = preds_kim_IV_Ftissues, observations = obs_kim_IV_Ftissues)
   
   ##########################
   #-------------------------
@@ -1435,7 +1435,7 @@ obj.func <- function(x, dataset){
                            exp_data[exp_data$Tissue == "Spleen", "concentration"],
                            exp_data[exp_data$Tissue == "Heart", "concentration"])
   
-  score[6] <- rmsd(predictions = preds_kim_OR_Ftissues, observations = obs_kim_OR_Ftissues)
+  score[6] <- AAFE(predictions = preds_kim_OR_Ftissues, observations = obs_kim_OR_Ftissues)
   
   ##########################
   #-------------------------
@@ -1495,7 +1495,7 @@ obj.func <- function(x, dataset){
                             exp_data[exp_data$Tissue == "Kidney", "concentration"],
                             exp_data[exp_data$Tissue == "Brain", "concentration"]) 
   
-  score[7] <- rmsd(predictions = preds_dzi_OR_Mtissues, observations = obs_dzi_OR_Mtissues)
+  score[7] <- AAFE(predictions = preds_dzi_OR_Mtissues, observations = obs_dzi_OR_Mtissues)
   
   ##########################
   #-------------------------
@@ -1557,7 +1557,7 @@ obj.func <- function(x, dataset){
                             exp_data[exp_data$Tissue == "Kidney", "concentration"],
                             exp_data[exp_data$Tissue == "Brain", "concentration"]) 
   
-  score[8] <- rmsd(predictions = preds_dzi_OR_Ftissues, observations = obs_dzi_OR_Ftissues)
+  score[8] <- AAFE(predictions = preds_dzi_OR_Ftissues, observations = obs_dzi_OR_Ftissues)
   
   ##########################
   #-------------------------
@@ -1616,7 +1616,7 @@ obj.func <- function(x, dataset){
   
   obs_kim_OR_Mblood <- c(exp_data[exp_data$Tissue == "Blood", "concentration"])
   
-  score[9] <- rmsd(predictions = preds_kim_OR_Mblood, observations = obs_kim_OR_Mblood)
+  score[9] <- AAFE(predictions = preds_kim_OR_Mblood, observations = obs_kim_OR_Mblood)
   
   ##########################
   #-------------------------
@@ -1676,7 +1676,7 @@ obj.func <- function(x, dataset){
   
   obs_kim_IV_Mblood <- c(exp_data[exp_data$Tissue == "Blood", "concentration"])
   
-  score[10] <- rmsd(predictions = preds_kim_IV_Mblood, observations = obs_kim_IV_Mblood)
+  score[10] <- AAFE(predictions = preds_kim_IV_Mblood, observations = obs_kim_IV_Mblood)
   
   ##########################
   #-------------------------
@@ -1731,7 +1731,7 @@ obj.func <- function(x, dataset){
                            exp_data[exp_data$Tissue == "Blood", "concentration"],
                            exp_data[exp_data$Tissue == "Skin", "concentration"])
   
-  score[11] <- NA#rmsd(predictions = preds_Lup_OR_Ftissues, observations = obs_Lup_OR_Ftissues)
+  score[11] <- NA#AAFE(predictions = preds_Lup_OR_Ftissues, observations = obs_Lup_OR_Ftissues)
   
   
   ##########################
@@ -1769,7 +1769,7 @@ obj.func <- function(x, dataset){
   # Estimate cumulative fecal mass
   obs_Lup_OR_Ffeces_cum <- cumsum(obs_Lup_OR_Ffeces)
   
-  score[12] <- rmsd(predictions = preds_Lup_OR_Ffeces, observations = obs_Lup_OR_Ffeces_cum)
+  score[12] <- AAFE(predictions = preds_Lup_OR_Ffeces, observations = obs_Lup_OR_Ffeces_cum)
   
   
   ##########################
@@ -1804,7 +1804,7 @@ obj.func <- function(x, dataset){
   # Estimate cumulative fecal mass
   obs_Lup_OR_Furine_cum <- cumsum(obs_Lup_OR_Furine)
   
-  score[13] <- rmsd(predictions = preds_Lup_OR_Furine, observations = obs_Lup_OR_Furine_cum)
+  score[13] <- AAFE(predictions = preds_Lup_OR_Furine, observations = obs_Lup_OR_Furine_cum)
   
   ##########################
   #-------------------------
@@ -1876,7 +1876,7 @@ obj.func <- function(x, dataset){
   
   obs_Cui_OR_MurineL <- c(exp_data[exp_data$Tissue == "Urine", "mass"])
   
-  score[14] <- rmsd(predictions = preds_Cui_OR_MurineL, observations = obs_Cui_OR_MurineL)
+  score[14] <- AAFE(predictions = preds_Cui_OR_MurineL, observations = obs_Cui_OR_MurineL)
   
   ##########################
   #-------------------------
@@ -1903,7 +1903,7 @@ obj.func <- function(x, dataset){
   
   obs_Cui_OR_MfecesL <- c(exp_data[exp_data$Tissue == "Feces", "mass"])
   
-  score[15] <- rmsd(predictions = preds_Cui_OR_MfecesL, observations = obs_Cui_OR_MfecesL)
+  score[15] <- AAFE(predictions = preds_Cui_OR_MfecesL, observations = obs_Cui_OR_MfecesL)
   
   
   ##########################
@@ -1975,7 +1975,7 @@ obj.func <- function(x, dataset){
   
   obs_Cui_OR_MurineH <- c(exp_data[exp_data$Tissue == "Urine", "mass"])
   
-  score[16] <- rmsd(predictions = preds_Cui_OR_MurineH, observations = obs_Cui_OR_MurineH)
+  score[16] <- AAFE(predictions = preds_Cui_OR_MurineH, observations = obs_Cui_OR_MurineH)
   
   
   ##########################
@@ -2006,7 +2006,7 @@ obj.func <- function(x, dataset){
   
   obs_Cui_OR_MfecesH <- c(exp_data[exp_data$Tissue == "Feces", "mass"])
   
-  score[17] <- rmsd(predictions = preds_Cui_OR_MfecesH, observations = obs_Cui_OR_MfecesH)
+  score[17] <- AAFE(predictions = preds_Cui_OR_MfecesH, observations = obs_Cui_OR_MfecesH)
   
   ##########################
   #-------------------------
@@ -2068,7 +2068,7 @@ obj.func <- function(x, dataset){
   
   obs_dzi_IV_Mserum <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])
  
-  score[18] <- rmsd(predictions = preds_dzi_IV_Mserum, observations = obs_dzi_IV_Mserum)
+  score[18] <- AAFE(predictions = preds_dzi_IV_Mserum, observations = obs_dzi_IV_Mserum)
   
   ##########################
   #-------------------------
@@ -2130,7 +2130,7 @@ obj.func <- function(x, dataset){
   
   obs_dzi_OR_Mserum_low <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])
   
-  score[19] <- rmsd(predictions = preds_dzi_OR_Mserum_low, observations = obs_dzi_OR_Mserum_low)
+  score[19] <- AAFE(predictions = preds_dzi_OR_Mserum_low, observations = obs_dzi_OR_Mserum_low)
   
   ##########################
   #-------------------------
@@ -2192,7 +2192,7 @@ obj.func <- function(x, dataset){
   
   obs_dzi_OR_Mserum_medium <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])
   
-  score[20] <- rmsd(predictions = preds_dzi_OR_Mserum_medium, observations = obs_dzi_OR_Mserum_medium)
+  score[20] <- AAFE(predictions = preds_dzi_OR_Mserum_medium, observations = obs_dzi_OR_Mserum_medium)
   
   
   ##########################
@@ -2255,7 +2255,7 @@ obj.func <- function(x, dataset){
   
   obs_dzi_OR_Mserum_high <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])
  
-   score[21] <- rmsd(predictions = preds_dzi_OR_Mserum_high, observations = obs_dzi_OR_Mserum_high)
+   score[21] <- AAFE(predictions = preds_dzi_OR_Mserum_high, observations = obs_dzi_OR_Mserum_high)
   
   
   ##########################
@@ -2318,7 +2318,7 @@ obj.func <- function(x, dataset){
   
   obs_dzi_IV_Fserum <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])
   
-  score[22] <- rmsd(predictions = preds_dzi_IV_Fserum, observations = obs_dzi_IV_Fserum)
+  score[22] <- AAFE(predictions = preds_dzi_IV_Fserum, observations = obs_dzi_IV_Fserum)
   
   
   ##########################
@@ -2381,7 +2381,7 @@ obj.func <- function(x, dataset){
   
   obs_dzi_OR_Fserum_low <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])
   
-  score[23] <- rmsd(predictions = preds_dzi_OR_Fserum_low, observations = obs_dzi_OR_Fserum_low)
+  score[23] <- AAFE(predictions = preds_dzi_OR_Fserum_low, observations = obs_dzi_OR_Fserum_low)
   
   ##########################
   #-------------------------
@@ -2443,7 +2443,7 @@ obj.func <- function(x, dataset){
   
   obs_dzi_OR_Fserum_medium <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])
   
-  score[24] <- rmsd(predictions = preds_dzi_OR_Fserum_medium, observations = obs_dzi_OR_Fserum_medium)
+  score[24] <- AAFE(predictions = preds_dzi_OR_Fserum_medium, observations = obs_dzi_OR_Fserum_medium)
   
   
   ##########################
@@ -2506,7 +2506,7 @@ obj.func <- function(x, dataset){
   
   obs_dzi_OR_Fserum_high <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])
   
-  score[25] <- rmsd(predictions = preds_dzi_OR_Fserum_high, observations = obs_dzi_OR_Fserum_high)
+  score[25] <- AAFE(predictions = preds_dzi_OR_Fserum_high, observations = obs_dzi_OR_Fserum_high)
   
   ##########################
   #-------------------------
@@ -2565,7 +2565,7 @@ obj.func <- function(x, dataset){
   
   obs_kim_OR_Fblood <- c(exp_data[exp_data$Tissue == "Blood", "concentration"])
   
-  score[26] <- rmsd(predictions = preds_kim_OR_Fblood, observations = obs_kim_OR_Fblood)
+  score[26] <- AAFE(predictions = preds_kim_OR_Fblood, observations = obs_kim_OR_Fblood)
   
   ##########################
   #-------------------------
@@ -2625,7 +2625,7 @@ obj.func <- function(x, dataset){
   
   obs_kim_IV_Fblood <- c(exp_data[exp_data$Tissue == "Blood", "concentration"])
   
-  score[27] <- rmsd(predictions = preds_kim_IV_Fblood, observations = obs_kim_IV_Fblood)
+  score[27] <- AAFE(predictions = preds_kim_IV_Fblood, observations = obs_kim_IV_Fblood)
   
   ########################################################################################
   # Estimate final score
@@ -2684,6 +2684,9 @@ dzi_OR_Fserum_high$Concentration_microM <- dzi_OR_Fserum_high$Concentration_micr
 kim_OR_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_ORAL_kim_2016.xlsx")
 kim_IV_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_IV_kim_2016.xlsx")
 
+setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/test_periklis")
+
+
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
                 "df9" = kim_OR_Mblood, "df10" = kim_IV_Mblood, "df11" = Lup_OR_Ftissues, "df12" = Lup_OR_Ffeces,
@@ -2699,7 +2702,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0 ,
-              "maxeval" = 300, 
+              "maxeval" = 400, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
@@ -3895,7 +3898,7 @@ experiment2 <- reshape(kudo_low_dose[c("Tissue" ,"Time_hours",
           units = "in")
  }
 
- save.image("Latest_peri_rmsd.RData")
+ save.image("test_periklis.RData")
  
  
  
