@@ -160,23 +160,23 @@ create.params <- function(user.input){
     VBrF <- PVBrF * PVBr * BW #brain interstitial fluid volume kg=L
     VBrT <- VBr - VBrF #brain tissue volume kg=L
     
-    #Testis
+    #gonads
     PVT <- 1.24/239.03 #Table 01 https://doi.org/10.1590/S1516-89132012000100013
     VT <- PVT * BW
-    PVTB <- 4.75e-2/1.49/243 #Figure 2 https://doi.org/10.1007/BF00410278 --> blood weight/g of testis/BW
-    VTB <-PVTB * PVT * BW #volume of the blood of testis kg=L
+    PVTB <- 4.75e-2/1.49/243 #Figure 2 https://doi.org/10.1007/BF00410278 --> blood weight/g of gonads/BW
+    VTB <-PVTB * PVT * BW #volume of the blood of gonads kg=L
     PVTF <- 0.16/239.03 #Table 02 https://doi.org/10.1590/S1516-89132012000100013
-    VTF <- PVTF * PVT * BW #testis interstitial fluid volume kg=L
-    VTT <- VT - VTF #testis tissue volume kg=L
+    VTF <- PVTF * PVT * BW #gonads interstitial fluid volume kg=L
+    VTT <- VT - VTF #gonads tissue volume kg=L
 
     #Skin
     PVSK <- 19.03/100 #Brown et al. 1997, p 416, Table 5
     VSK <- PVSK * BW
     PVSKB <- 0.02 #Brown et al. 1997, p 458, Table 3
-    VSKB <-PVSKB * PVSK * BW #volume of the blood of testis kg=L
+    VSKB <-PVSKB * PVSK * BW #volume of the blood of gonads kg=L
     PVSKF <- 40*VSK/100/0.225 # https://doi.org/10.1111/j.1748-1716.1981.tb06901.x 40 mL/100 g tissue, BW = 200-250 g
-    VSKF <- PVSKF * PVSK * BW #testis interstitial fluid volume kg=L
-    VSKT <- VSK - VSKF #testis tissue volume kg=L
+    VSKF <- PVSKF * PVSK * BW #gonads interstitial fluid volume kg=L
+    VSKT <- VSK - VSKF #gonads tissue volume kg=L
     
     #RoB
     PVR <- 1 - PVB - PVK - PVL - PVM - PVA - PVSP - PVH - PVBr - PVT - PVST - PVIN - PVSK
@@ -236,14 +236,14 @@ create.params <- function(user.input){
     PBr <- 240e-4#m2/g tissue     #https://doi.org/10.1111/j.1748-1716.1963.tb02652.x 
     ABr <- PBr* VBr *1e03 #brain surface area (m^2)
     PT <- 70e-4#m2/g tissue
-    AT <- PT* VT *1e03 #testis surface area (m^2), same as muscle #assumption
+    AT <- PT* VT *1e03 #gonads surface area (m^2), same as muscle #assumption
     PSK <- 70e-4#m2/g tissue
     #ASK <- PSK* VSK * 1e7 #skin surface area (m^2), same as muscle #assumption
     ASK <- PSK* VSK*1e03 #skin surface area (m^2), same as muscle #assumption
     
     #Effective permeability (Peff, in m/h) for blood (B), liver(L), kidney(K),
     #stomach(ST),intestine (IN), adipose(A), muscle(M), spleen (SP), heart (H), 
-    #brain (Br), testis (T), rest of body(R)
+    #brain (Br), gonads (T), rest of body(R)
 
     #PeffB <- 4.98e-8*3600*CF_Peff1
     PeffK <-5e-8*3600*CF_Peff
@@ -523,12 +523,12 @@ create.params <- function(user.input){
     ClBrFT <- ClBrFT_unscaled * brain_protein_total#uL/min
     kBrFBrT <-  (60*ClBrFT)/1e06 #L/h
     
-    #Testis
-    testis_cells = 1.85e7+1.58e7 #Sertoli and Leydig cells/g tissue  https://doi.org/10.1007/BF00297504 --> Figure 2, LC and SC cells
+    #gonads
+    gonads_cells = 1.85e7+1.58e7 #Sertoli and Leydig cells/g tissue  https://doi.org/10.1007/BF00297504 --> Figure 2, LC and SC cells
     Cmedium_T = 1*MW# Kimura et al. 2017 1uM umol/L -->  ug/L
-    testis_protein <- muscle_protein#NA#5034
-    testis_protein_total <- testis_protein * (1000*VTT)
-    ClTFT <- ClTFT_unscaled * testis_protein_total#uL/min
+    gonads_protein <- muscle_protein#NA#5034
+    gonads_protein_total <- gonads_protein * (1000*VTT)
+    ClTFT <- ClTFT_unscaled * gonads_protein_total#uL/min
     kTFTT <-  (60*ClTFT)/1e06 #L/h
 
     #Skin
@@ -697,7 +697,7 @@ ode.func <- function(time, inits, params){
     CBrF = MBrF/VBrF  #interstitial fluid concentration
     CBrT = MBrT/VBrT # tissue concentration
     
-    #Testis
+    #gonads
     CTB = MBT/VTB # blood concentration
     CTF = MTF/VTF  #interstitial fluid concentration
     CTT = MTT/VTT # tissue concentration
@@ -893,13 +893,13 @@ ode.func <- function(time, inits, params){
     #Brain tissue subcompartment 
     dMBrT = kBrFBrT*(CBrFf -CBrT) 
     
-    #Testis
+    #gonads
     
     #blood subcompartment
     dMBT = QBT*CBfart - (QBT-QBT/500)*CTBf - PeffT*AT*(CTBf-CTFf) - CTBf*QBT/500
     #interstitial fluid subcompartment 
     dMTF = CTBf*QBT/500 - CTFf*QBT/500 + PeffT*AT*(CTBf-CTFf) - kTFTT*(CTFf -CTT) 
-    #Testis tissue subcompartment 
+    #gonads tissue subcompartment 
     dMTT = kTFTT*(CTFf -CTT) 
     
     #Skin
@@ -944,7 +944,7 @@ ode.func <- function(time, inits, params){
     Cbrain <-  (MBBr + MBrF+ MBrT)/(VBrB+VBrF+VBrT)
     Mbrain <- MBBr + MBrF+ MBrT
     
-    Ctestis <-  (MBT + MTF+ MTT)/(VTB+VTF+VTT)
+    Cgonads <-  (MBT + MTF+ MTT)/(VTB+VTF+VTT)
     Cskin <-  (MBSK + MSKF+ MSKT)/(VSKB+VSKF+VSKT)
    
     list(c( 'dMBart'=dMBart, 'dMBven'=dMBven, 'dMLN'=dMLN, 'dMBK'=dMBK, 
@@ -986,7 +986,7 @@ ode.func <- function(time, inits, params){
             'Cfeces'= Cfeces, 'Cbile'= Cbile, 'Curine'= Curine,
             'Cspleen'= Cspleen, 'Cheart'= Cheart,
             'Cbrain'= Cbrain, 'Mbrain'= Mbrain,
-            'Ctestis'= Ctestis, 'Cskin'= Cskin
+            'Cgonads'= Cgonads, 'Cskin'= Cskin
                 
          )
     
@@ -1141,7 +1141,7 @@ obj.func <- function(x, dataset){
   preds_kudo_high <- solution[solution$time %in% unique(exp_data$time), c("Cblood",
                                                   "Cliver","Ckidney", "Ccarcass",
                                                   "Clungs", "Cspleen", "Cheart",
-                                                  "Cbrain", "Ctestis", "Cstomach", "Cintestine")]
+                                                  "Cbrain", "Cgonads", "Cstomach", "Cintestine")]
   
   preds_kudo_high <- preds_kudo_high /1000 #convert ug/kg to ug/g
  
@@ -1154,7 +1154,7 @@ obj.func <- function(x, dataset){
                      exp_data[exp_data$Tissue == "Spleen", "concentration"],
                      exp_data[exp_data$Tissue == "Heart", "concentration"],
                      exp_data[exp_data$Tissue == "Brain", "concentration"],
-                     exp_data[exp_data$Tissue == "Testis", "concentration"],
+                     exp_data[exp_data$Tissue == "Gonads", "concentration"],
                      exp_data[exp_data$Tissue == "Stomach", "concentration"],
                      exp_data[exp_data$Tissue == "Intestine", "concentration"])
   
@@ -1204,7 +1204,7 @@ obj.func <- function(x, dataset){
   preds_kudo_low <- solution[solution$time %in% unique(exp_data$time), c("Cblood",
                                                                          "Cliver","Ckidney", "Ccarcass",
                                                                          "Clungs", "Cspleen", "Cheart",
-                                                                         "Cbrain", "Ctestis", "Cstomach", "Cintestine")]
+                                                                         "Cbrain", "Cgonads", "Cstomach", "Cintestine")]
   preds_kudo_low<- preds_kudo_low /1000 #convert ug/kg to ug/g
 
   
@@ -1216,7 +1216,7 @@ obj.func <- function(x, dataset){
                     exp_data[exp_data$Tissue == "Spleen", "concentration"],
                     exp_data[exp_data$Tissue == "Heart", "concentration"],
                     exp_data[exp_data$Tissue == "Brain", "concentration"],
-                    exp_data[exp_data$Tissue == "Testis", "concentration"],
+                    exp_data[exp_data$Tissue == "Gonads", "concentration"],
                     exp_data[exp_data$Tissue == "Stomach", "concentration"],
                     exp_data[exp_data$Tissue == "Intestine", "concentration"])
   
@@ -2702,7 +2702,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0 ,
-              "maxeval" = 400, 
+              "maxeval" = 1000, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
@@ -2714,7 +2714,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 N_pars <- 10 # Number of parameters to be fitted
 fit <- rep(0,N_pars)
 lb	= c(rep(log(1e-20), 6),log(1e-3),log(1e-2),  log(1e-20),log(1e-5))
-ub = c(rep(log(1e5), 6),log(1e5),log(1e5),log(1e10),log(1e5) )
+ub = c(rep(log(1e8), 6),log(1e8),log(1e8),log(1e10),log(1e5) )
 # Run the optimization algorithmm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,
@@ -2725,6 +2725,8 @@ optimizer <- nloptr::nloptr( x0= fit,
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
+
+save.image("test_periklis.RData")
 
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
 BW <- 0.29  # body weight (kg)
@@ -2753,7 +2755,7 @@ sample_time=seq(0,2,0.01)
                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
 
  preds_kudo_high <-  solution[, c("time","Cblood","Cliver","Ckidney", "Ccarcass","Clungs", 
-                                  "Cspleen", "Cheart","Cbrain", "Ctestis", "Cstomach", 
+                                  "Cspleen", "Cheart","Cbrain", "Cgonads", "Cstomach", 
                                   "Cintestine")]
  
  
@@ -2768,7 +2770,7 @@ sample_time=seq(0,2,0.01)
                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
  
  preds_kudo_low <- solution[, c("time","Cblood","Cliver","Ckidney", "Ccarcass","Clungs", 
-                                "Cspleen", "Cheart","Cbrain", "Ctestis", "Cstomach", 
+                                "Cspleen", "Cheart","Cbrain", "Cgonads", "Cstomach", 
                                 "Cintestine")]
  
  
@@ -3813,7 +3815,7 @@ experiment2 <- reshape(kudo_low_dose[c("Tissue" ,"Time_hours",
 
   # Rename predictions so that they share the same name as the names of the experimental data dataframe
  colnames(preds_kudo_high) <- c( "Time", "Blood", "Liver",  "Kidney", "Carcass", "Lung",  "Spleen", 
-                                 "Heart", "Brain", "Testis", "Stomach", "Intestine")
+                                 "Heart", "Brain", "Gonads", "Stomach", "Intestine")
  
  colnames(preds_kudo_low) <-  colnames(preds_kudo_high) 
  colnames(preds_kim_IV_Mtissues) <- c( "Time", "Liver",  "Kidney", "Lung",
@@ -3898,7 +3900,6 @@ experiment2 <- reshape(kudo_low_dose[c("Tissue" ,"Time_hours",
           units = "in")
  }
 
- save.image("test_periklis.RData")
  
  
  
