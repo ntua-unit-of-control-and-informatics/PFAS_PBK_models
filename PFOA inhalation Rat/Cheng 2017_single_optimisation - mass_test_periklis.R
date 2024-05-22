@@ -33,10 +33,7 @@ create.params <- function(user.input){
     CF_Peff <- estimated_params[7] 
     # Absorption rate per area
     kabs <- estimated_params[8] #m/h
-    # Liver to Bile rate 
-    kbileLT <-estimated_params[9]
-    # Absorption rate of stomach
-    kabs_st <- estimated_params[10] #m/h
+   
     #units conversion from Cheng 2017R, time-> h, PFOA mass->ng, tissues mass-> g
     Hct <- 0.41 #hematocrit for rats, https://doi.org/10.1080/13685538.2017.1350156 mean value for both males and females
     
@@ -68,8 +65,8 @@ create.params <- function(user.input){
     PVLF <- 0.049  #Blouin et al. 1977
     VLF <- PVLF * PVL* BW #liver interstitial fluid volume kg=L
     VLT <- VL - VLF #liver tissue volume kg=L
-    PVbile <- 0.004 #Blouin et al. 1977
-    Vbile <- 0.001#PVbile * VL #bile volume kg=L
+    # PVbile <- 0.004 #Blouin et al. 1977
+    # Vbile <- 0.001#PVbile * VL #bile volume kg=L
    
     #Intestine (small and large)
     PVIN <- 2.24e-2 #Brown et al. 1997, p 416, Table 5: 1.4+0.84
@@ -475,6 +472,7 @@ create.params <- function(user.input){
     kSTFSTT <-  (60*ClSTFT)/1e06 #L/h
     # For identifiability reasons we assume that absorption is realised only through the intestines
     #kabST <- kabs * ASTL
+    kabs_st=0
     kabST <- (kabs_st* ASTL)*1000 #L/h
     
     #Adipose
@@ -497,7 +495,7 @@ create.params <- function(user.input){
     Lung_protein <- muscle_protein#18456
     Lung_protein_total <- Lung_protein * (1000* VRT)
     ClLuFT <- ClLuFT_unscaled * Lung_protein_total#uL/min
-    kLuFLuT <-  (60*ClLuFT)/1e06 #L/h
+    kLuTLuF <-  (60*ClLuFT)/1e06 #L/h
     
     #Spleen
     spleen_cells = 1.76e8 #cells/g tissue https://doi.org/10.1371/journal.pone.0059602 --> Figure 5C
@@ -541,7 +539,7 @@ create.params <- function(user.input){
     
     return(list('VB'=VB, 'Vplasma'=Vplasma, 'VK'=VK, 'VKB'=VKB, 
                 'VKF'=VKF, 'VKT'=VKT, 'VFil'=VFil,
-                'VL'=VL, 'VLB'=VLB, 'VLF'=VLF, 'VLT'=VLT, 'Vbile'=Vbile,
+                'VL'=VL, 'VLB'=VLB, 'VLF'=VLF, 'VLT'=VLT, 
                 'VM'=VM, 'VMB'=VMB, 'VMF'=VMF, 'VMT'=VMT, 'VA'=VA, 'VAB'=VAB, 
                 'VAF'=VAF, 'VAT'=VAT, 'VR'=VR, 'VRB'=VRB, 
                 'VRF'=VRF, 'VRT'=VRT, 'VLN' = VLN, 'Vven' = Vven,
@@ -606,10 +604,11 @@ create.params <- function(user.input){
                   
                 
                 'kKFKT'=kKFKT, 'kFKT'=kFKT,  
-                'kLFLT'=kLFLT, 'kbileLT'=kbileLT,  'kAFAT'=kAFAT, 
+                'kLFLT'=kLFLT, 'kAFAT'=kAFAT, 
                 'kRFRT'=kRFRT,
-                'kabST'=kabST, 'kabIN'=kabIN,
-                'kMFMT'=kMFMT, 'kLuFLuT' =kLuFLuT, 'kSPFSPT' =kSPFSPT,
+                'kabST'=kabST, 
+                'kabIN'=kabIN,
+                'kMFMT'=kMFMT, 'kLuTLuF' =kLuTLuF, 'kSPFSPT' =kSPFSPT,
                 'kSTFSTT' =kSTFSTT, 'kINFINT' =kINFINT, 'kHFHT' =kHFHT,
                 'kBrFBrT' =kBrFBrT, 'kTFTT' =kTFTT,
                 'kSKFSKT' =kSKFSKT,
@@ -645,7 +644,7 @@ ode.func <- function(time, inits, params){
     CLB = MBL/VLB # blood concentration
     CLF = MLF/VLF #interstitial fluid concentration
     CLT = MLT/VLT # tissue concentration
-    Cbile = Mbile/Vbile 
+   
     
     #Stomach
     CSTB = MBST/VSTB # blood concentration
@@ -799,10 +798,8 @@ ode.func <- function(time, inits, params){
           (VmL_Oatp*CLFf/KmL_Oatp+CLFf) - (VmL_Ntcp*CLFf/KmL_Ntcp+CLFf)
     #Liver tissue subcompartment
     dMLT = kLFLT*(CLFf-CLTf) + (VmL_Oatp*CLFf/KmL_Oatp+CLFf) + 
-                     (VmL_Ntcp*CLFf/KmL_Ntcp+CLFf) - kbileLT*CLTf
-    dMbile = kbileLT*CLTf - Qbile*Cbile
-    
-    
+                     (VmL_Ntcp*CLFf/KmL_Ntcp+CLFf) - Qbile*CLTf
+   
     # Feces
     dMfeces = Qfeces*CINL 
     
@@ -814,7 +811,7 @@ ode.func <- function(time, inits, params){
     #Stomach tissue subcompartment
     dMSTT = kSTFSTT*(CSTFf-CSTT) + kabST*CSTL
     #Stomach lumen
-    dMSTL = -kabST*CSTL - QGE*CSTL
+    dMSTL = - QGE*CSTL -kabST*CSTL 
     
     #Intestine
     #blood subcompartment
@@ -824,7 +821,7 @@ ode.func <- function(time, inits, params){
     #Intestine tissue subcompartment
     dMINT = kINFINT*(CINFf-CINT) + kabIN*CINL
     #Intestine lumen
-    dMINL = QGE*CSTL - (Qfeces*CINL) - kabIN*CINL + Qbile*Cbile
+    dMINL = QGE*CSTL - (Qfeces*CINL) - kabIN*CINL + Qbile*CLTf
 
     
     #Muscle
@@ -859,11 +856,11 @@ ode.func <- function(time, inits, params){
     #blood subcompartment
     dMBLu = CBfven *QBLu - (QBLu-QBLu/500)*CLuBf - PeffLu*ALu*(CLuBf-CLuFf) - CLuBf*QBLu/500
     #interstitial fluid subcompartment
-    dMLuF = CLuBf*QBLu/500 - CLuFf*QBLu/500 + PeffLu*ALu*(CLuBf-CLuFf) - kLuFLuT*(CLuFf-CLuT)
+    dMLuF = CLuBf*QBLu/500 - CLuFf*QBLu/500 + PeffLu*ALu*(CLuBf-CLuFf) + kLuTLuF*(CLuT-CLuFf)
     #Lung tissue
-    dMLuT =  kLuFLuT*(CLuFf-CLuT) #- kLuTLuAF * (CLuAF-CLuT)
+    dMLuT =  - kLuTLuF*(CLuT-CLuFf) #+ kLuAFLuT*CLuAFf  
     #Alveolar lining fluid
-    dMLuAF = 0 #kLuTLuAF * (CLuAF-CLuT) - Qp * CLuAF/PLungA + IVR*Cair*Cpfoa*dfalveolar
+    dMLuAF = 0 # - CLEal*CLuAFf - kLuAFLuT*CLuAFf #+ IVR*EC*Dal 
     
     
     #Spleen
@@ -936,7 +933,6 @@ ode.func <- function(time, inits, params){
     Crest <-  (MBR + MRF+ MRT)/(VRB+VRF+VRT)
     Ccarcass <- (MBM + MMF+ MMT+MBA + MAF+ MAT +MBR + MRF+ MRT)/(VM+VA+VR)
     Cfeces <- Mfeces/(Vfeces*feces_density)
-    Cbile <- Cbile
     Curine <- Murine/Vurine
     Cspleen <-  (MBSP + MSPF+ MSPT)/(VSPB+VSPF+VSPT)
     Cheart <-  (MBH + MHF+ MHT)/(VHB+VHF+VHT)
@@ -950,7 +946,7 @@ ode.func <- function(time, inits, params){
     list(c( 'dMBart'=dMBart, 'dMBven'=dMBven, 'dMLN'=dMLN, 'dMBK'=dMBK, 
             'dMKF'=dMKF, 'dMKT'=dMKT,
             'dMFil'=dMFil, 'dMurine'=dMurine, 'dMBL'=dMBL, 
-            'dMLF'=dMLF, 'dMLT'=dMLT, 'dMbile'=dMbile,
+            'dMLF'=dMLF, 'dMLT'=dMLT, 
             'dMSTL'=dMSTL,'dMINL'=dMINL,'dMfeces'=dMfeces,
             
             'dMBST'=dMBST, 'dMSTF'=dMSTF, 'dMSTT'=dMSTT,
@@ -983,7 +979,7 @@ ode.func <- function(time, inits, params){
             'Cstomach'= Cstomach, 'Cintestine'= Cintestine,
             'Cmuscle'= Cmuscle, 'Cadipose'= Cadipose, 
             'Clungs' = Clungs, 'Crest'= Crest,'Ccarcass' = Ccarcass,
-            'Cfeces'= Cfeces, 'Cbile'= Cbile, 'Curine'= Curine,
+            'Cfeces'= Cfeces, 'Curine'= Curine,
             'Cspleen'= Cspleen, 'Cheart'= Cheart,
             'Cbrain'= Cbrain, 'Mbrain'= Mbrain,
             'Cgonads'= Cgonads, 'Cskin'= Cskin
@@ -999,7 +995,7 @@ create.inits <- function(parameters){
   with(as.list(parameters),{
     
     MBart <- 0; MBven <-0;  MLN <-0; MBK <-0; MKF <-0; MKT <-0; MFil <-0; Murine <-0; MBL <-0
-    MLF <-0; MLT <-0; Mbile <-0;
+    MLF <-0; MLT <-0; 
     MSTL <-0;  MINL <-0;
     Mfeces <-0; MBST <-0; MSTF <-0; MSTT <-0; MBIN <-0; MINF <-0; MINT <-0;
     MBM <-0; MMF <-0; MMT <-0; MBA <-0; MAF <-0
@@ -1009,7 +1005,7 @@ create.inits <- function(parameters){
     MBSK <-0; MSKF <-0; MSKT <-0; Vurine <-0; Vfeces <-0
     
     return(c('MBart'=MBart, 'MBven'=MBven, 'MLN'=MLN, 'MBK'=MBK, 'MKF'=MKF, 'MKT'=MKT,
-             'MFil'=MFil, 'Murine'=Murine, 'MBL'=MBL, 'MLF'=MLF, 'MLT'=MLT, 'Mbile'=Mbile,
+             'MFil'=MFil, 'Murine'=Murine, 'MBL'=MBL, 'MLF'=MLF, 'MLT'=MLT,
              'MSTL'=MSTL, 'MINL'=MINL, 'Mfeces'=Mfeces, 
              
              'MBST'=MBST, 'MSTF'=MSTF, 'MSTT'=MSTT,
@@ -2637,8 +2633,8 @@ obj.func <- function(x, dataset){
 
 ################################################################################
 
-#setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
-setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
+setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
+#setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
 MW <- 414.07 #g/mol
 
 # Read data
@@ -2684,7 +2680,7 @@ dzi_OR_Fserum_high$Concentration_microM <- dzi_OR_Fserum_high$Concentration_micr
 kim_OR_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_ORAL_kim_2016.xlsx")
 kim_IV_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_IV_kim_2016.xlsx")
 
-setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/test_periklis")
+#setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/test_periklis")
 
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
@@ -2709,12 +2705,12 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 #Parameter names:
 # Male RAFOatp_k, Male RAFOat1, Male RAFOat3, Male RAFOatp_l,Male RAFNtcp
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
-#  CF_Peff, kabs, kbileLT
+#  CF_Peff, kabs
 
-N_pars <- 10 # Number of parameters to be fitted
+N_pars <- 8 # Number of parameters to be fitted
 fit <- rep(0,N_pars)
-lb	= c(rep(log(1e-20), 6),log(1e-3),log(1e-2),  log(1e-20),log(1e-5))
-ub = c(rep(log(1e8), 6),log(1e8),log(1e8),log(1e10),log(1e5) )
+lb	= c(rep(log(1e-20), 6),log(1e-3),log(1e-2))
+ub = c(rep(log(1e8), 6),log(1e8),log(1e8))
 # Run the optimization algorithmm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,
