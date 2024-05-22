@@ -3001,7 +3001,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0 ,
-              "maxeval" = 200, 
+              "maxeval" = 1000, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
@@ -3011,9 +3011,9 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 #  CF_Peff, kabs, kbileLT
 
 N_pars <- 13 # Number of parameters to be fitted
-fit <- rep(0,N_pars)
-lb	= c(rep(log(1e-20), 6),log(1e-3),log(1e-2),  log(1e-20),log(1e-5), rep(log(1e-4),3))
-ub = c(rep(log(1e5), 6),log(1e5),log(1e5),log(1e10),log(1e5), rep(log(1e1),3))
+fit <- c(rep(0,6),0, log(1e1), log(1e2), log(1e1), log(1e-2), log(1e-2), log(1e-2))
+lb	= c(rep(log(1e-20), 6),log(1e-3),log(1e-2),  log(1e-20),log(1e-5), rep(log(1e-5),3))
+ub = c(rep(log(1e5), 6),log(1e5),log(1e5),log(1e10),log(1e6), rep(log(1e2),3))
 # Run the optimization algorithmm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,
