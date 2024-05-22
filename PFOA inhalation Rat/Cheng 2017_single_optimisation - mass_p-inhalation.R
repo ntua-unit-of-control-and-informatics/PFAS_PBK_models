@@ -34,7 +34,7 @@ create.params <- function(user.input){
     # Absorption rate per area
     kabs <- 1
     # Bile correction factor
-    bile_correction_factor <- 1
+    #bile_correction_factor <- 1
     
     kabsUA <- estimated_params[1]
     kCLEal <- estimated_params[2]
@@ -54,8 +54,8 @@ create.params <- function(user.input){
     #======Table S1=======#    
     
     #Blood
+    VB <- (0.06*(BW*1000)+0.77)/1000 # Total blood volume (l), from Lee & Blaufox (1985), https://pubmed.ncbi.nlm.nih.gov/3965655/
     PVB <- 54e-3 #13.5 mL/244 g=0.055 mL/g~55e-3 mL/g (kg=L), Brown et al. 1997
-    VB <- PVB * BW #blood volume kg=L
     PVplasma <- 31.2e-3 
     Vplasma <- PVplasma * BW #plasma volume kg=L
     Vven <- BW*11.3/250 	#volume of venous plasma (L); from doi:10.1007/bf02353860
@@ -79,8 +79,8 @@ create.params <- function(user.input){
     PVLF <- 0.049  #Blouin et al. 1977
     VLF <- PVLF * PVL* BW #liver interstitial fluid volume kg=L
     VLT <- VL - VLF #liver tissue volume kg=L
-    PVbile <- 0.004 #Blouin et al. 1977
-    Vbile <- PVbile * PVL * BW #bile volume kg=L
+    # PVbile <- 0.004 #Blouin et al. 1977
+    # Vbile <- 0.001 #PVbile * VL #bile volume kg=L
    
     #Intestine (small and large)
     PVIN <- 2.24e-2 #Brown et al. 1997, p 416, Table 5: 1.4+0.84
@@ -136,6 +136,11 @@ create.params <- function(user.input){
     PVUA <- 257e-3/288 #mm^3/g, for a 16-wk old male 288 g, Gross et al., 1982, https://pubmed.ncbi.nlm.nih.gov/7130058/
     VUA <- PVUA * BW  #total volume of nasal cavity 
     
+    #respiratory area of nasal cavity
+    RA_area = 623 #mm^2
+    RA_capillary_density = 362 #capillaries/mm^2
+    capillary_area = RA_area/(RA_area*RA_capillary_density) #mm^2, area of one capillary
+    
     #Lung
     PVLu <- 0.48e-2 #Brown et al. 1997, p 418-19 mean of values for male rat
     VLu <- PVLu * BW
@@ -151,7 +156,6 @@ create.params <- function(user.input){
     IVR=0
     EC=0
     Dua=0
-    
     
     
     #Spleen
@@ -213,20 +217,37 @@ create.params <- function(user.input){
     #or weight of corresponding tissue (PAi, m^2/g) and surface area (m^2)
     
     PAK <- 350e-4 #cm2/g  --> *e-4 --> m^2/g  https://doi.org/10.1111/j.1748-1716.1963.tb02652.x
-    AK <- PAK * VK * 1e3 #kidney surface area (m^2)
+    AK <- PAK * VK * 1e3 #kidney capillary surface area (m^2)
     PAKG <- 68.90e-4 
     AKG <- PAKG * VK * 1e3 #the surface area of glomerular capillary (m^2)
     PAL <- 250e-4 
-    AL <- PAL * VL * 1e3 #liver surface area (m^2)
+    AL <- PAL * VL * 1e3 #liver capillary surface area (m^2)
     
     PAST <- 100e-4 #Cheng et al., 2017 value for gut
-    AST <- PAST * VST * 1e3 #stomach surface area (m^2)
+    AST <- PAST * VST * 1e3 #stomach capillary surface area (m^2)
     PASTL<- 100e-4 #Cheng et al., 2017 value for gut
-    ASTL<- PASTL * VSTL #stomach lumen surface area (m^2)
+    ASTL<- PASTL * VSTL #stomach lumen capillary surface area (m^2)
     PAIN <- 100e-4 #Cheng et al., 2017 value for gut
-    AIN <- PAIN * VIN * 1e3 #intestine surface area (m^2)
-    PAINL<- 100e-4 #Cheng et al., 2017 value for gut
-    AINL<- PAINL * VINL * 1e3 #intestine lumen surface area (m^2)
+    AIN <- PAIN * VIN * 1e3 #intestine capillary surface area (m^2)
+    # PAINL<- 100e-4 #Cheng et al., 2017 value for gut
+    # AINL<- PAINL * VINL * 1e3 #intestine lumen capillary surface area (m^2)
+    
+    
+    #Calculations of rat intestinal lumen surface area based on Kothari et al. (2020),https://doi.org/10.1002/btm2.10146
+    # Lengths
+    L_duodenum <- 9.6# cm
+    L_jejunum <- 26 #cm
+    L_ileum <- 34.4# cm
+    # Inner diameters
+    d_duodenum <- 2.21 #cm
+    d_jejunum <- 2.56 #cm
+    d_ileum <- 3.36 #cm
+    
+    SA_ref <- 2*pi*(d_duodenum/2)*L_duodenum + 2*pi*(d_jejunum/2)*L_jejunum + 2*pi*(d_ileum/2)*L_ileum #cm^2
+    #Allometric scaling
+    SA <- SA_ref* (BW/0.19)^(2/3) # O.19 kg is the BW of rats used in Kothari et al. (2020)
+    n <- 5 #enlargement factor of apical membrane of proximal tubule or enterocytes
+    AINL <- n * SA * 1e-4 #m^2
     
     PAM <- 70e-4 #m2/g tissue
     AM <- PAM * VM *1e03 #muscle surface area (m^2)
@@ -235,9 +256,6 @@ create.params <- function(user.input){
     PAR <- 100e-4#m2/g tissue
     AR <- PAR * VR *1e03 #surface area of rest of body (m^2)
     
-    PAUA <- (1343.5+76.8)*1e-06/0.288 #m2/kg BW, total surface area 1343.5 mm^2 for a 16-wk old male 288 g, Gross et al., 1982, https://pubmed.ncbi.nlm.nih.gov/7130058/
-                                      #plus nasopharynx area 76.8 mm^2 calculated by Ménache et al., 1997, https://doi.org/10.1080/00984109708984003
-    AUA <- PAUA * BW #total surface area of upper airways (m^2) !think of separate nose in different areas of absorption
     
     PLu <- 250e-4  #m2/g tissue      #https://doi.org/10.1111/j.1748-1716.1963.tb02652.x
     ALu <- PLu* VLu*1e03 #lung surface area (m^2)
@@ -252,6 +270,15 @@ create.params <- function(user.input){
     PSK <- 70e-4#m2/g tissue
     ASK <- PSK* VSK*1e03 #skin surface area (m^2), same as muscle #assumption
     
+    #Organ surface area
+    
+    PAUA <- ((1343.5+76.8)*1e-06)/((156+257)*1e-03) #m2/g tissue, total surface area 1343.5 mm^2 for a 16-wk old male 288 g, Gross et al., 1982, https://pubmed.ncbi.nlm.nih.gov/7130058/
+    #plus nasopharynx area 76.8 mm^2 calculated by Ménache et al., 1997, https://doi.org/10.1080/00984109708984003
+    AUA <- PAUA * VUA*1e03 #total surface area of upper airways (m^2) !think of separate nose in different areas of absorption
+    PALF <- 1.1529e-8/173e-10 #11,529 μm2/173e3 μm3--> 1.1529e-8 m2/g tissue, Mercer et al.,  https://doi.org/10.1152/jappl.1987.62.4.1480
+    ALF <- PALF* VLF*1e03 #alveolar lining fluid area (m^2)
+      
+    
     
     #Effective permeability (Peff, in m/h) for blood (B), liver(L), kidney(K),
     #stomach(ST),intestine (IN), adipose(A), muscle(M), spleen (SP), heart (H), 
@@ -260,20 +287,20 @@ create.params <- function(user.input){
     #PeffB <- 4.98e-8*3600*CF_Peff1
     #PeffK <- 4.38e-8*3600*CF_Peff1
     #PeffL <- 5.15e-8*3600*CF_Peff1
-    PeffK <-2.65e-8*3600*CF_Peff
-    PeffL <-2.65e-8*3600*CF_Peff
+    PeffK <- 5e-8*3600*CF_Peff
+    PeffL <- 5e-8*3600*CF_Peff
     #PeffG <- 2.65e-8*3600
-    PeffST <- 2.65e-8*3600*CF_Peff #assumption
-    PeffIN <- 2.65e-8*3600*CF_Peff#assumption
-    PeffA <- 2.65e-8*3600*CF_Peff
-    PeffM <- 2.65e-8*3600*CF_Peff
-    PeffR <- 2.65e-8*3600*CF_Peff
-    PeffLu <- 2.65e-8*3600*CF_Peff #assumption
-    PeffSP <- 2.65e-8*3600*CF_Peff #assumption
-    PeffH <- 2.65e-8*3600*CF_Peff #assumption
-    PeffBr <- 2.65e-8*3600*CF_Peff #assumption
-    PeffT <- 2.65e-8*3600*CF_Peff #assumption
-    PeffSK <- 2.65e-8*3600*CF_Peff #assumption
+    PeffST <- 5e-8*3600*CF_Peff #assumption
+    PeffIN <- 5e-8*3600*CF_Peff#assumption
+    PeffA <- 5e-8*3600*CF_Peff
+    PeffM <- 5e-8*3600*CF_Peff
+    PeffR <- 5e-8*3600*CF_Peff
+    PeffLu <- 5e-8*3600*CF_Peff #assumption
+    PeffSP <- 5e-8*3600*CF_Peff #assumption
+    PeffH <- 5e-8*3600*CF_Peff #assumption
+    PeffBr <- 5e-8*3600*CF_Peff #assumption
+    PeffT <- 5e-8*3600*CF_Peff #assumption
+    PeffSK <- 5e-8*3600*CF_Peff #assumption
     
     
     #Blood flow rates (QBi, in L/h) to different tissues (i=L, K, G, A, M, R)
@@ -312,7 +339,7 @@ create.params <- function(user.input){
     
     QBLtot <- QBL+QBSP+QBIN+QBST
     
-    PQBR = 1 - PQBK - PQBST - PQBIN - PQBL - PQBM - PQBA - PQBL - PQBH - PQBSK - PQBSP - PQBT - PQBBr
+    PQBR = 1 - PQBK - PQBST - PQBIN - PQBL - PQBM - PQBA - PQBH - PQBSK - PQBSP - PQBT - PQBBr
     QBR <- PQBR * Qcardiac #L/h
     
     #Flow rate of fluids including feces, bile, urine and glomerular filtration rate (GFR), in L/h
@@ -347,37 +374,45 @@ create.params <- function(user.input){
     #======Table S2=======#
     #Albumin concentration in blood and interstitial fluid compartments(mol/m^3 = 1e-6* nmol/g)
 
-    CalbB <- 281e-3*7.8 #n=7.8 binding sites (mol/m3)
-    CalbKF <- 243e-3*7.8 #n=7.8 binding sites (mol/m3)
-    CalbLF <- 243e-3*7.8 #n=7.8 binding sites (mol/m3)
+    CalbB <- 486*1e-6 # #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
+    CalbKF <- 243*1e-6 # #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
+    CalbLF <- 243*1e-6 # #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
     
-    CalbGF <- 146e-3*7.8 #n=7.8 binding sites (mol/m3)
+    CalbGF <- 146*1e-6 #[umol/L]*1e-6 -->(mol/m3), from Cheng et al. (2017)
     
-    CalbSTF <- 146e-3*7.8 #n=7.8 binding sites (mol/m3) #assumption same as Gut
-    CalbINF <- 146e-3*7.8 #n=7.8 binding sites (mol/m3) #assumption same as Gut
+    CalbSTF <- 146*1e-6 # [umol/L]*1e-6 -->(mol/L), same as Gut (assumption)
+    CalbINF <- 146*1e-6 #[umol/L]*1e-6 -->(mol/L), same as Gut (assumption)
     
-    CalbMF <- 146e-3*7.8 #n=7.8 binding sites (mol/m3)
-    CalbAF <- 73e-3*7.8 #n=7.8 binding sites (mol/m3)
-    CalbRF <- 73e-3*7.8 #n=7.8 binding sites (mol/m3)
+    CalbMF <- 146*1e-6 #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
+    CalbAF <- 73*1e-6 #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
+    CalbRF <- 73*1e-6 #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
     
     CalbLN <- CalbGF #assumption based on https://doi.org/10.1016/j.jconrel.2020.07.046
     CalbLuF <- CalbGF #assumption 
     CalbLuAF <- 10/100 * CalbB #based on Woods et al. 2015 statement https://doi.org/10.1016/j.jconrel.2015.05.269
     
-    CalbSPF <- 243e-3 #n=7.8 binding sites (mol/m3)
-    CalbTF <- 41/65 #n=7.8 binding sites (mol/m3) https://doi.org/10.1210/endo-116-5-1983 --> 41 mg/mL, MW=65 kg/mol (check again calculations)
-    CalbHF <- 65/65 #n=7.8 binding sites (mol/m3) https://doi.org/10.1007/s12291-010-0042-x --> 6.5 g/100 g tissue, MW=65 kg/mol (check again calculations)
-    CalbBrF <- 8e-2/65  #n=7.8 binding sites (mol/m3) https://doi.org/10.1016/0014-4886(90)90158-O --> 0.08 g/L, MW=65 kg/mol (check again calculations)
-    CalbSKF <- 21/65 #n=7.8 binding sites (mol/m3) https://doi.org/10.1111/j.1748-1716.1973.tb05464.x -->Table 2: 2.1 g/100 mL
+    MW_albumin <- 66500#g/mol
     
-    #Alpha2mu-globulin concentration in kidney tissue (mol/m3)
-    Ca2uKT <- 110e-3
-
-    #LFABP concentration in kidney and liver tissue (mol/m^3)
-    CLfabpKT <- 2.65e-3 * 3 #n=3 binding sites (mol/m3)
-    CLfabpLT <- 133e-3 * 3 #n=3 binding sites (mol/m3)
-  
-
+    CalbSPF <- 243e-3 #[umol/L]*1e-6 -->(mol/L), same as liver (assumption)
+    CalbTF <- 41/MW_albumin #mg/mL-->  (mol/L) from https://doi.org/10.1210/endo-116-5-1983 --> 41 mg/mL, MW=65 kg/mol
+    CalbHF <- 65/MW_albumin##mg/mL--> (mol/L) https://doi.org/10.1007/s12291-010-0042-x --> 6.5 g/100 g tissue, MW=65 kg/mol
+    CalbBrF <- 8e-2/MW_albumin  ##mg/mL--> (mol/L) https://doi.org/10.1016/0014-4886(90)90158-O --> 0.08 g/L, MW=65 kg/mol 
+    CalbSKF <- 21/MW_albumin ##mg/mL-->  (mol/L) https://doi.org/10.1111/j.1748-1716.1973.tb05464.x -->Table 2: 2.1 g/100 mL
+    
+    
+    #Alpha2mu-globulin concentration in kidney tissue (mol/L)
+    if (sex == "M"){
+      Ca2uKT <- 110e-3 #mol/m3
+    }else if(sex == "F"){
+      Ca2uKT <- 0 #mol/m3
+    }
+    
+    
+    #FABP concentration in kidney and liver tissue (mol/m^3)
+    CLfabpKT <- 2.65*1e-6  #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
+    CLfabpLT <- 133*1e-6  #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
+    
+    
     #======Table S2=======#
     #Equilibrium association constant (m^3/mol= 10^-3*M-1) for albumin(Ka), LFABP(KL_fabp),
     #and alpha2mu-globulin(Ka2u). See SI section S2-2 for details
@@ -436,19 +471,19 @@ create.params <- function(user.input){
     
     #Oatp kidney
     VmK_Oatp_in_vitro <- 9.3 #nmol/mg protein/min (Weaver et al. 2010)
-    VmK_Oatp_scaled <- 60*VmK_Oatp_in_vitro*MW*kidney_protein_per_gram/1000  #physiologically scaled to in vivo, ug/L/h
+    VmK_Oatp_scaled <- 60*VmK_Oatp_in_vitro*MW*kidney_protein_total/1000  #physiologically scaled to in vivo, ug/L/h
     VmK_Oatp <- VmK_Oatp_scaled*RAFOatp_k #in vivo value, in  ug/L/h
     KmK_Oatp=  126.4*MW#umol/L (Weaver et al. 2010) --> ug/L
     
     #oat1 kidney
     VmK_Oat1_in_vitro= 2.6 #nmol/mg protein/min (Weaver et al. 2010)
-    VmK_Oat1_scaled = 60*VmK_Oat1_in_vitro*MW*kidney_protein_per_gram/1000  #physiologically scaled to in vivo, ug/L/h
+    VmK_Oat1_scaled = 60*VmK_Oat1_in_vitro*MW*kidney_protein_total/1000  #physiologically scaled to in vivo, ug/L/h
     VmK_Oat1= VmK_Oat1_scaled*RAFOat1 #in vivo value, in  ug/L/h
     KmK_Oat1= 43.2 * MW #umol/L (Weaver et al. 2010) --> ug/L
     
     #oat3 kidney
     VmK_Oat3_in_vitro= 3.8 #nmol/mg protein/min  (Weaver et al. 2010)
-    VmK_Oat3_scaled = 60*VmK_Oat3_in_vitro*MW*kidney_protein_per_gram/1000  #physiologically scaled to in vivo, ug/L/h
+    VmK_Oat3_scaled = 60*VmK_Oat3_in_vitro*MW*kidney_protein_total/1000  #physiologically scaled to in vivo, ug/L/h
     VmK_Oat3 = VmK_Oat3_scaled*RAFOat3 #in vivo value, in  ug/L/h
     KmK_Oat3= 65.7 * MW #umol/L (Weaver et al. 2010) --> ug/L
 
@@ -462,17 +497,17 @@ create.params <- function(user.input){
     ClLFT <- ClLFT_unscaled*(liver_cells/(10^6))*(VLT*1000) #uL/min for the whole liver
     kLFLT <-  (60*ClLFT)/1e06 #L/h
     
-    kbileLT <- PeffL * AL * bile_correction_factor
+    #kbileLT <- PeffL * AL * bile_correction_factor
     
     # oatp-liver
     VmL_Oatp_in_vitro= 9.3 #nmol/mg protein/min  (Weaver et al. 2010)
-    VmL_Oatp_scaled = 60*VmL_Oatp_in_vitro*MW*liver_protein_per_gram/1000  #physiologically scaled to in vivo, ug/L/h
+    VmL_Oatp_scaled = 60*VmL_Oatp_in_vitro*MW*liver_protein_per_gram*(VL*1000)/1000  #physiologically scaled to in vivo, ug/L/h
     VmL_Oatp = VmL_Oatp_scaled*RAFOatp_l #in vivo value, in  ug/L/h
     KmL_Oatp = KmK_Oatp #same as kidney
     
     #Ntcp liver
     VmL_Ntcp_in_vitro= 3#nmol/mg protein/min  (Weaver et al. 2010)
-    VmL_Ntcp_scaled = 60*VmL_Ntcp_in_vitro*MW*liver_protein_per_gram/1000  #physiologically scaled to in vivo, ug/L/h
+    VmL_Ntcp_scaled = 60*VmL_Ntcp_in_vitro*MW*liver_protein_per_gram*(VL*1000)/1000  #physiologically scaled to in vivo, ug/L/h
     VmL_Ntcp = VmL_Ntcp_scaled*RAFNtcp #in vivo value, in  ug/L/h
     KmL_Ntcp= 20 * MW #umol/L, Ruggiero et al. 2021 --> ug/L
     
@@ -502,7 +537,7 @@ create.params <- function(user.input){
     kSTFSTT <-  (60*ClSTFT)/1e06 #L/h
     # For identifiability reasons we assume that absorption is realised only through the intestines
     #kabST <- kabs * ASTL
-    kabST <- 0
+    kabST <- (kabs* ASTL)*1000
     
     #Adipose
     adipose_cells = NA
@@ -525,10 +560,10 @@ create.params <- function(user.input){
     Lung_protein_total <- Lung_protein * (1000* VRT)
     ClLuFT <- ClLuFT_unscaled * Lung_protein_total#uL/min
     kLuTLuF <-  (60*ClLuFT)/1e06 #L/h
-    kUAB <- kabsUA * 0.5 #transport rate from upper airways to blood, 0.5 assumption
-    CLEal <- kCLEal * ALu #clearance rate from alveolar lining fluid, ALu in m^2/h
-    CLEua <- kCLEua * AUA #clearance rate rate from upper airways to blood, AUA in m^2/h
-    kLuAFLuT <- kLuAF * 0.8 #transport rate from alveolar lining fluid to lung tissue, 0.8 assumption
+    kUAB <- kabsUA * RA_area #transport rate from upper airways to blood
+    CLEal <- kCLEal * ALF #clearance rate from alveolar lining fluid, ALf in m^2
+    CLEua <- kCLEua * AUA #clearance rate rate from upper airways to stomach, AUA in m^2
+    kLuAFLuT <- kLuAF * ALF #transport rate from alveolar lining fluid to lung tissue, ALF in m^2
     
     
     #Spleen
@@ -573,7 +608,7 @@ create.params <- function(user.input){
     
     return(list('VB'=VB, 'Vplasma'=Vplasma, 'VK'=VK, 'VKB'=VKB, 
                 'VKF'=VKF, 'VKT'=VKT, 'VFil'=VFil,
-                'VL'=VL, 'VLB'=VLB, 'VLF'=VLF, 'VLT'=VLT, 'Vbile'=Vbile,
+                'VL'=VL, 'VLB'=VLB, 'VLF'=VLF, 'VLT'=VLT, 
                 'VM'=VM, 'VMB'=VMB, 'VMF'=VMF, 'VMT'=VMT, 'VA'=VA, 'VAB'=VAB, 
                 'VAF'=VAF, 'VAT'=VAT, 'VR'=VR, 'VRB'=VRB, 
                 'VRF'=VRF, 'VRT'=VRT, 'VLN' = VLN, 'VUA'=VUA, 'Vven' = Vven,
@@ -593,7 +628,7 @@ create.params <- function(user.input){
                 'AM'=AM, 'AA'=AA, 'AR'=AR, 'AUA'=AUA, 'ALu'= ALu, 
                 'ASP'=ASP, 'AH'=AH, 'ABr'=ABr, 'AST'= AST,
                 'AIN'=AIN, 'AT'=AT,
-                'ASK'= ASK,
+                'ASK'= ASK, 'ALF'=ALF,
                 
                 #'PeffB'=PeffB, 
                 'PeffK'=PeffK, 'PeffL'=PeffL, 
@@ -640,7 +675,7 @@ create.params <- function(user.input){
                   
                 
                 'kKFKT'=kKFKT, 'kFKT'=kFKT,  
-                'kLFLT'=kLFLT, 'kbileLT'=kbileLT,  'kAFAT'=kAFAT, 
+                'kLFLT'=kLFLT, 'kAFAT'=kAFAT, 
                 'kRFRT'=kRFRT,
                 'kabST'=kabST, 'kabIN'=kabIN,
                 'kMFMT'=kMFMT, 'kLuTLuF' =kLuTLuF,
@@ -650,7 +685,7 @@ create.params <- function(user.input){
                 'kSKFSKT' =kSKFSKT,
                 
                 "admin.time" = admin.time, "admin.dose" = admin.dose,
-                "admin.type" = admin.type, "MW"=MW
+                "admin.type" = admin.type, "MW"=MW, "capillary_area"=capillary_area
                 ))
   
   })
@@ -702,7 +737,7 @@ ode.func <- function(time, inits, params){
     CLB = MBL/VLB # blood concentration
     CLF = MLF/VLF #interstitial fluid concentration
     CLT = MLT/VLT # tissue concentration
-    Cbile = Mbile/Vbile 
+    
     
     #Stomach
     CSTB = MBST/VSTB # blood concentration
@@ -823,19 +858,18 @@ ode.func <- function(time, inits, params){
     dMBart = (QBLu-QBLu/500)*CLuBf - CBfart*(QBK+QBL+QBM+QBA+QBR+QBSP+QBH+QBBr+QBST+QBIN+QBT+QBSK)-QGFR*CBfart
     
     #Venous Blood
-    dMBven = kUAB * (CUA - CBven) - CBfven *QBLu +  CLNf*(QBK/500+QBLtot/500+QBM/500+QBA/500+QBR/500+QBLu/500+QBH/500+QBBr/500+QBT/500+QBSK/500+
+    dMBven = kUAB * CUA - CBfven *QBLu +  CLNf*(QBK/500+QBLtot/500+QBM/500+QBA/500+QBR/500+QBLu/500+QBH/500+QBT/500+QBSK/500+
                                        QBST/500+QBSP/500+QBIN/500)+
                                     (QBK-QBK/500)*CKBf + (QBLtot-QBLtot/500)*CLBf + 
                                     (QBM-QBM/500)*CMBf + (QBA-QBA/500)*CABf + (QBR-QBR/500)*CRBf+
-                                    (QBH-QBH/500)*CHBf + (QBBr-QBBr/500)*CBrBf+
-                                    (QBT-QBT/500)*CTBf + (QBSK-QBSK/500)*CSKBf
+                                    (QBH-QBH/500)*CHBf + QBBr*CBrBf+ (QBT-QBT/500)*CTBf + (QBSK-QBSK/500)*CSKBf
     
     
     #Lymph nodes
     dMLN = CKFf*QBK/500 + CLFf*QBLtot/500 + CMFf*QBM/500 + CAFf*QBA/500+
-           CRFf*QBR/500 + CLuFf*QBLu/500 + CHFf*QBH/500 + CBrFf*QBBr/500+
+           CRFf*QBR/500 + CLuFf*QBLu/500 + CHFf*QBH/500 + 
            CTFf*QBT/500 + CSKFf*QBSK/500 + CSTFf*QBST/500 + CINFf*QBIN/500 + CSPFf*QBSP/500-
-           CLNf*(QBK/500+QBLtot/500+QBM/500+QBA/500+QBR/500+QBLu/500+QBH/500+QBBr/500+QBT/500+QBSK/500+
+           CLNf*(QBK/500+QBLtot/500+QBM/500+QBA/500+QBR/500+QBLu/500+QBH/500+QBT/500+QBSK/500+
                  QBST/500+QBSP/500+QBIN/500)
    
     
@@ -845,11 +879,11 @@ ode.func <- function(time, inits, params){
     dMBK = QBK*CBfart - (QBK-QBK/500)*CKBf - PeffK*AK*(CKBf-CKFf) - CKBf*QBK/500 
     #interstitial fluid subcompartment
     dMKF = CKBf*QBK/500 - CKFf*QBK/500 + PeffK*AK*(CKBf-CKFf) - kKFKT*(CKFf-CKTf) -
-            (VmK_Oat1*CKFf/KmK_Oat1+CKFf)*VKF - (VmK_Oat3*CKFf/KmK_Oat3+CKFf)*VKF #+ (VmK_Osta*CKTf/KmK_Osta+CKTf)
+            (VmK_Oat1*CKFf/KmK_Oat1+CKFf) - (VmK_Oat3*CKFf/KmK_Oat3+CKFf) #+ (VmK_Osta*CKTf/KmK_Osta+CKTf)
     #Kidney proximal tubule cells subcompartment
-    dMKT = kKFKT*(CKFf-CKTf) - kFKT*(CKTf - CFil) + (VmK_Oatp*CFil/KmK_Oatp+CFil)*VFil +
-            (VmK_Oat1*CKFf/KmK_Oat1+CKFf)*VKF + (VmK_Oat3*CKFf/KmK_Oat3+CKFf)*VKF # + (VmK_Osta*CKTf/KmK_Osta+CKTf)
-    dMFil =  QGFR*CBfart+ kFKT*(CKTf - CFil) - (VmK_Oatp*CFil/KmK_Oatp+CFil)*VFil - (Qurine*CFil)
+    dMKT = kKFKT*(CKFf-CKTf) - kFKT*(CKTf - CFil) + (VmK_Oatp*CFil/KmK_Oatp+CFil) +
+            (VmK_Oat1*CKFf/KmK_Oat1+CKFf) + (VmK_Oat3*CKFf/KmK_Oat3+CKFf) # + (VmK_Osta*CKTf/KmK_Osta+CKTf)
+    dMFil =  QGFR*CBfart+ kFKT*(CKTf - CFil) - (VmK_Oatp*CFil/KmK_Oatp+CFil) - (Qurine*CFil)
     dMurine = Qurine*CFil
     
     #Liver
@@ -858,12 +892,10 @@ ode.func <- function(time, inits, params){
     dMBL = QBL*CBfart + (QBSP-QBSP/500)*CSPBf + (QBIN-QBIN/500)*CINBf + (QBST-QBST/500)*CSTBf - PeffL*AL*(CLBf-CLFf) - CLBf*QBLtot/500 - (QBLtot-QBLtot/500)*CLBf
     #interstitial fluid subcompartment 
     dMLF = CLBf*QBLtot/500 - CLFf*QBLtot/500 + PeffL*AL*(CLBf-CLFf) - kLFLT*(CLFf-CLTf) - 
-          (VmL_Oatp*CLFf/KmL_Oatp+CLFf)*VLF - (VmL_Ntcp*CLFf/KmL_Ntcp+CLFf)*VLF
+          (VmL_Oatp*CLFf/KmL_Oatp+CLFf) - (VmL_Ntcp*CLFf/KmL_Ntcp+CLFf)
     #Liver tissue subcompartment
-    dMLT = kLFLT*(CLFf-CLTf) + (VmL_Oatp*CLFf/KmL_Oatp+CLFf)*VLF + 
-                     (VmL_Ntcp*CLFf/KmL_Ntcp+CLFf)*VLF - kbileLT*(CLTf-Cbile)
-    dMbile = kbileLT*(CLTf-Cbile) - Qbile*Cbile
-    
+    dMLT = kLFLT*(CLFf-CLTf) + (VmL_Oatp*CLFf/KmL_Oatp+CLFf) + 
+                     (VmL_Ntcp*CLFf/KmL_Ntcp+CLFf) - Qbile*CLTf
     
     # Feces
     dMfeces = Qfeces*CINL
@@ -886,7 +918,7 @@ ode.func <- function(time, inits, params){
     #Intestine tissue subcompartment
     dMINT = kINFINT*(CINFf-CINT) + kabIN*CINL
     #Intestine lumen
-    dMINL = QGE*CSTL - (Qfeces*CINL) - kabIN*CINL + Qbile*Cbile
+    dMINL = QGE*CSTL - (Qfeces*CINL) - kabIN*CINL + Qbile*CLTf
 
     
     #Muscle
@@ -918,7 +950,7 @@ ode.func <- function(time, inits, params){
     
     #Upper airways
     
-    dMUA = IVR*EC*Dua - CLEua*CUA  - kUAB * (CUA - CBven)
+    dMUA = IVR*EC*Dua - CLEua*CUA  - kUAB * CUA 
     
     
     #Lung
@@ -953,9 +985,9 @@ ode.func <- function(time, inits, params){
     #Brain
     
     #blood subcompartment
-    dMBBr = QBBr*CBfart - (QBBr-QBBr/500)*CBrBf - PeffBr*ABr*(CBrBf-CBrFf) - CBrBf*QBBr/500
+    dMBBr = QBBr*CBfart - QBBr*CBrBf - PeffBr*ABr*(CBrBf-CBrFf)
     #interstitial fluid subcompartment 
-    dMBrF = CBrBf*QBBr/500 - CBrFf*QBBr/500 + PeffBr*ABr*(CBrBf-CBrFf) - kBrFBrT*(CBrFf -CBrT) 
+    dMBrF = PeffBr*ABr*(CBrBf-CBrFf) - kBrFBrT*(CBrFf -CBrT) 
     #Brain tissue subcompartment 
     dMBrT = kBrFBrT*(CBrFf -CBrT) 
     
@@ -984,7 +1016,7 @@ ode.func <- function(time, inits, params){
     #Concentration calculation in each compartment 
     Cven <- CBven
     Cart <- CBart
-    Cblood <- (MBven + MBart)/ (Vven+Vart)
+    Cblood <- (MBven + MBart)/(Vven+Vart)
     Mblood <- MBven + MBart
     Cplasma <- (MBven + MBart)/ Vplasma
     
@@ -1006,7 +1038,6 @@ ode.func <- function(time, inits, params){
     Crest <-  (MBR + MRF+ MRT)/(VRB+VRF+VRT)
     Ccarcass <- (MBM + MMF+ MMT+MBA + MAF+ MAT +MBR + MRF+ MRT)/(VM+VA+VR)
     Cfeces <- Mfeces/(Vfeces*feces_density)
-    Cbile <- Cbile
     Curine <- Murine/Vurine
     Cspleen <-  (MBSP + MSPF+ MSPT)/(VSPB+VSPF+VSPT)
     Cheart <-  (MBH + MHF+ MHT)/(VHB+VHF+VHT)
@@ -1020,7 +1051,7 @@ ode.func <- function(time, inits, params){
     list(c( 'dMBart'=dMBart, 'dMBven'=dMBven, 'dMLN'=dMLN, 'dMBK'=dMBK, 
             'dMKF'=dMKF, 'dMKT'=dMKT,
             'dMFil'=dMFil, 'dMurine'=dMurine, 'dMBL'=dMBL, 
-            'dMLF'=dMLF, 'dMLT'=dMLT, 'dMbile'=dMbile,
+            'dMLF'=dMLF, 'dMLT'=dMLT, 
             'dMSTL'=dMSTL,'dMINL'=dMINL,'dMfeces'=dMfeces,
             
             'dMBST'=dMBST, 'dMSTF'=dMSTF, 'dMSTT'=dMSTT,
@@ -1054,7 +1085,7 @@ ode.func <- function(time, inits, params){
             'Cstomach'= Cstomach, 'Cintestine'= Cintestine, 'CUpperair'= CUpperair, 'CalveolarLF'=CalveolarLF,
             'Cmuscle'= Cmuscle, 'Cadipose'= Cadipose, 
             'Clungs' = Clungs, 'Crest'= Crest,'Ccarcass' = Ccarcass,
-            'Cfeces'= Cfeces, 'Cbile'= Cbile, 'Curine'= Curine,
+            'Cfeces'= Cfeces, 'Curine'= Curine,
             'Cspleen'= Cspleen, 'Cheart'= Cheart,
             'Cbrain'= Cbrain, 'Mbrain'= Mbrain,
             'Ctestis'= Ctestis, 'Cskin'= Cskin
@@ -1069,18 +1100,18 @@ ode.func <- function(time, inits, params){
 create.inits <- function(parameters){
   with(as.list(parameters),{
     
-    MBart <- 0; MBven <-0;  MLN <-0; MBK <-0; MKF <-0; MKT <-0; MFil <-0; Murine <-0; MBL <-0
-    MLF <-0; MLT <-0; Mbile <-0;
+    MBart <- 0; MBven <-0;  MLN <-0; MBK <-0; MKF <-0; MKT <-0; MFil <-0; Murine <-0; MBL <-0;
+    MLF <-0; MLT <-0; 
     MSTL <-0;  MINL <-0;
     Mfeces <-0; MBST <-0; MSTF <-0; MSTT <-0; MBIN <-0; MINF <-0; MINT <-0;
     MBM <-0; MMF <-0; MMT <-0; MBA <-0; MAF <-0
     MAT <-0; MBR <-0; MRF <-0; MRT <-0; MUA <-0; MBLu <- 0; MLuF <- 0; MLuT <- 0;MLuAF <- 0;
     MBSP <-0; MSPF <-0; MSPT <-0; MBH <-0; MHF <-0; MHT <-0; 
-    MBBr <-0; MBrF <-0; MBrT <-0; MBT <-0; MTF <-0; MTT <-0
+    MBBr <-0; MBrF <-0; MBrT <-0; MBT <-0; MTF <-0; MTT <-0;
     MBSK <-0; MSKF <-0; MSKT <-0; Vurine <-0; Vfeces <-0
     
     return(c('MBart'=MBart, 'MBven'=MBven, 'MLN'=MLN, 'MBK'=MBK, 'MKF'=MKF, 'MKT'=MKT,
-             'MFil'=MFil, 'Murine'=Murine, 'MBL'=MBL, 'MLF'=MLF, 'MLT'=MLT, 'Mbile'=Mbile,
+             'MFil'=MFil, 'Murine'=Murine, 'MBL'=MBL, 'MLF'=MLF, 'MLT'=MLT, 
              'MSTL'=MSTL, 'MINL'=MINL, 'Mfeces'=Mfeces, 
              
              'MBST'=MBST, 'MSTF'=MSTF, 'MSTT'=MSTT,
@@ -1125,6 +1156,9 @@ create.events <- function(parameters){
         
       }else if (admin.type == "inh"){
         events <- list(data = rbind(data.frame(var = c("MLuAF"),  time = admin.time, 
+                                               value = admin.dose, method = c("add")) ))
+      }else if (admin.type == "nasal"){
+        events <- list(data = rbind(data.frame(var = c("MUA"),  time = admin.time, 
                                                value = admin.dose, method = c("add")) ))
       }
     }
@@ -1209,7 +1243,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-07, atol = 1e-07))
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -1272,7 +1306,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-07, atol = 1e-07))
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -1336,7 +1370,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-07, atol = 1e-07))
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -1404,7 +1438,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-07, atol = 1e-07))
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -1451,7 +1485,7 @@ obj.func <- function(x, dataset){
   admin.dose_per_g <- 1.2 # administered dose in mg/m^3
   admin.dose <- admin.dose_per_g*6*BF*TV #ug PFOA, for 6h inhalation
   admin.time <- 0 #time when doses are administered, in hours
-  admin.type <- "inh"
+  admin.type <- "nasal"
   
   
   user_input <- list('BW'=BW,
@@ -1474,7 +1508,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-07, atol = 1e-07))
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -1517,7 +1551,7 @@ obj.func <- function(x, dataset){
   admin.dose_per_g <- 9.8 # administered dose in mg/m^3
   admin.dose <- admin.dose_per_g*6*BF*TV #ug PFOA, for 6h inhalation
   admin.time <- 0 #time when doses are administered, in hours
-  admin.type <- "inh"
+  admin.type <- "nasal"
   
   
   user_input <- list('BW'=BW,
@@ -1539,7 +1573,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-07, atol = 1e-07))
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -1583,7 +1617,7 @@ obj.func <- function(x, dataset){
   admin.dose_per_g <- 27 # administered dose in mg/m^3
   admin.dose <- admin.dose_per_g*6*BF*TV #ug PFOA, for 6h inhalation
   admin.time <- 0 #time when doses are administered, in hours
-  admin.type <- "inh"
+  admin.type <- "nasal"
  
   
   user_input <- list('BW'=BW,
@@ -1605,7 +1639,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-07, atol = 1e-07))
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -1649,7 +1683,7 @@ obj.func <- function(x, dataset){
   admin.dose_per_g <- 1.2 # administered dose in mg/m^3
   admin.dose <- admin.dose_per_g*6*BF*TV #ug PFOA, for 6h inhalation
   admin.time <- 0 #time when doses are administered, in hours
-  admin.type <- "inh"
+  admin.type <- "nasal"
   
   
   user_input <- list('BW'=BW,
@@ -1671,7 +1705,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-07, atol = 1e-07))
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -1714,7 +1748,7 @@ obj.func <- function(x, dataset){
   admin.dose_per_g <- 9.8 # administered dose in mg/m^3
   admin.dose <- admin.dose_per_g*6*BF*TV #ug PFOA, for 6h inhalation
   admin.time <- 0 #time when doses are administered, in hours
-  admin.type <- "inh"
+  admin.type <- "nasal"
   
   
   user_input <- list('BW'=BW,
@@ -1736,7 +1770,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-07, atol = 1e-07))
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -1779,7 +1813,7 @@ obj.func <- function(x, dataset){
   admin.dose_per_g <- 27 # administered dose in mg/m^3
   admin.dose <- admin.dose_per_g*6*BF*TV #ug PFOA, for 6h inhalation
   admin.time <- 0 #time when doses are administered, in hours
-  admin.type <- "inh"
+  admin.type <- "nasal"
   
   
   user_input <- list('BW'=BW,
@@ -1801,7 +1835,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-07, atol = 1e-07))
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -1871,7 +1905,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0 ,
-              "maxeval" = 100, 
+              "maxeval" = 1, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
@@ -1931,7 +1965,7 @@ user_input <- list('BW'=BW,
  sample_time=seq(0,48,0.2)
  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                      y = inits, parms = params,events = events,
-                                     method="lsodes",rtol = 1e-07, atol = 1e-07))
+                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
  
  preds_gus_INH_Mblood <-  solution[, c("time", "Cplasma")]
  
@@ -1969,7 +2003,7 @@ user_input <- list('BW'=BW,
  sample_time=seq(0,48,0.2)
  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                      y = inits, parms = params,events = events,
-                                     method="lsodes",rtol = 1e-07, atol = 1e-07))
+                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
  
  preds_gus_OR_Mblood <-  solution[, c("time", "Cplasma")]
  
@@ -2007,7 +2041,7 @@ user_input <- list('BW'=BW,
  sample_time=seq(0,48,0.2)
  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                      y = inits, parms = params,events = events,
-                                     method="lsodes",rtol = 1e-07, atol = 1e-07))
+                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
  
   preds_gus_INH_Mtissues <-  solution[, c("time", "CalveolarLF","Cliver", "Clungs", "Ckidney")]
   
@@ -2045,7 +2079,7 @@ user_input <- list('BW'=BW,
   sample_time=seq(0,48,0.2)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,events = events,
-                                      method="lsodes",rtol = 1e-07, atol = 1e-07))
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
   
   preds_gus_OR_Mtissues <-  solution[, c("time", "CalveolarLF","Cliver", "Clungs", "Ckidney")]
   
@@ -2065,7 +2099,7 @@ user_input <- list('BW'=BW,
   admin.dose_per_g <- 1.2 # administered dose in mg/m^3
   admin.dose <- admin.dose_per_g*6*BF*TV #ug PFOA, for 6h inhalation
   admin.time <- 0 #time when doses are administered, in hours
-  admin.type <- "inh"
+  admin.type <- "nasal"
    
   
   user_input <- list('BW'=BW,
@@ -2085,7 +2119,7 @@ user_input <- list('BW'=BW,
   sample_time= seq(0,9,0.04)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,events = events,
-                                      method="lsodes",rtol = 1e-07, atol = 1e-07))
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
   
   preds_hind_INH_Mblood_low <-  solution[, c("time", "Cplasma")]
   
@@ -2104,7 +2138,7 @@ user_input <- list('BW'=BW,
   admin.dose_per_g <- 9.8 # administered dose in mg/m^3
   admin.dose <- admin.dose_per_g*6*BF*TV #ug PFOA, for 6h inhalation
   admin.time <- 0 #time when doses are administered, in hours
-  admin.type <- "inh"
+  admin.type <- "nasal"
   
   
   user_input <- list('BW'=BW,
@@ -2124,7 +2158,7 @@ user_input <- list('BW'=BW,
   sample_time= seq(0,30,0.1)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,events = events,
-                                      method="lsodes",rtol = 1e-07, atol = 1e-07))
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
   
   preds_hind_INH_Mblood_medium <-  solution[, c("time", "Cplasma")]
   
@@ -2143,7 +2177,7 @@ user_input <- list('BW'=BW,
   admin.dose_per_g <- 27 # administered dose in mg/m^3
   admin.dose <- admin.dose_per_g*6*BF*TV #ug PFOA, for 6h inhalation
   admin.time <- 0 #time when doses are administered, in hours
-  admin.type <- "inh"
+  admin.type <- "nasal"
    
   
   user_input <- list('BW'=BW,
@@ -2163,7 +2197,7 @@ user_input <- list('BW'=BW,
   sample_time= seq(0,30,0.1)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,events = events,
-                                      method="lsodes",rtol = 1e-07, atol = 1e-07))
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
   
   preds_hind_INH_Mblood_high <-  solution[, c("time", "Cplasma")]
   
@@ -2183,7 +2217,7 @@ user_input <- list('BW'=BW,
   admin.dose_per_g <- 1.2 # administered dose in mg/m^3
   admin.dose <- admin.dose_per_g*6*BF*TV #ug PFOA, for 6h inhalation
   admin.time <- 0 #time when doses are administered, in hours
-  admin.type <- "inh"
+  admin.type <- "nasal"
   
   
   user_input <- list('BW'=BW,
@@ -2203,7 +2237,7 @@ user_input <- list('BW'=BW,
   sample_time= seq(0,9,0.04)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,events = events,
-                                      method="lsodes",rtol = 1e-07, atol = 1e-07))
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
   
   preds_hind_INH_Fblood_low <-  solution[, c("time", "Cplasma")]
   
@@ -2222,7 +2256,7 @@ user_input <- list('BW'=BW,
   admin.dose_per_g <- 9.8 # administered dose in mg/m^3
   admin.dose <- admin.dose_per_g*6*BF*TV #ug PFOA, for 6h inhalation
   admin.time <- 0 #time when doses are administered, in hours
-  admin.type <- "inh"
+  admin.type <- "nasal"
   
   
   user_input <- list('BW'=BW,
@@ -2242,7 +2276,7 @@ user_input <- list('BW'=BW,
   sample_time= seq(0,30,0.1)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,events = events,
-                                      method="lsodes",rtol = 1e-07, atol = 1e-07))
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
   
   preds_hind_INH_Fblood_medium <-  solution[, c("time", "Cplasma")]
   
@@ -2261,7 +2295,7 @@ user_input <- list('BW'=BW,
   admin.dose_per_g <- 27 # administered dose in mg/m^3
   admin.dose <- admin.dose_per_g*6*BF*TV #ug PFOA, for 6h inhalation
   admin.time <- 0 #time when doses are administered, in hours
-  admin.type <- "inh"
+  admin.type <- "nasal"
   
   
   user_input <- list('BW'=BW,
@@ -2281,7 +2315,7 @@ user_input <- list('BW'=BW,
   sample_time= seq(0,30,0.1)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,events = events,
-                                      method="lsodes",rtol = 1e-07, atol = 1e-07))
+                                      method="lsodes",rtol = 1e-3, atol = 1e-3))
   
   preds_hind_INH_Fblood_high <-  solution[, c("time", "Cplasma")]
   
