@@ -15,24 +15,35 @@ create.params <- function(user.input){
       RAFOatp_k <- estimated_params[1]
       RAFOat1 <- estimated_params[2]
       RAFOat3 <- RAFOat1
+      RAFUrat <- RAFOat1
       #RAFOat3 <-  estimated_params[3]
       RAFOatp_l <- estimated_params[3] 
+      RAFOatp2_l <- RAFOatp_l
       RAFNtcp <- RAFOatp_l
       #RAFNtcp <- estimated_params[5]
+      KmK_baso <- estimated_params[4]
+      VmK_baso <- estimated_params[5]
+      
+      
     }else if(sex == "F"){
-      RAFOatp_k <- estimated_params[4]
-      RAFOat1 <- estimated_params[5] 
+      RAFOatp_k <- estimated_params[6]
+      RAFOat1 <- estimated_params[7] 
       RAFOat3 <- RAFOat1
+      RAFUrat <- RAFOat1
       #RAFOat3 <-  estimated_params[8]
-      RAFOatp_l <- estimated_params[6] 
+      RAFOatp_l <- estimated_params[8] 
+      RAFOatp2_l <- RAFOatp_l
       RAFNtcp <- RAFOatp_l
       #RAFNtcp <- estimated_params[10]
+      KmK_baso <- estimated_params[9]
+      VmK_baso <- estimated_params[10]
+      
     }
     
     #permeabilities correction factor
-    CF_Peff <- estimated_params[7] 
+    CF_Peff <- estimated_params[11] 
     # Absorption rate per area
-    kabs <- estimated_params[8] #m/h
+    kabs <- estimated_params[12] #m/h
    
     #units conversion from Cheng 2017R, time-> h, PFOA mass->ng, tissues mass-> g
     Hct <- 0.41 #hematocrit for rats, https://doi.org/10.1080/13685538.2017.1350156 mean value for both males and females
@@ -370,8 +381,6 @@ create.params <- function(user.input){
     ClLFT_unscaled= 67.8 #uL/min/10^6 cells, Han et al. 2008
     ClKFT_unscaled= 17.5 #uL/min/mg protein, Yang et al. 2010
     
-    ClGFT_unscaled= 18.1 #uL/min/mg protein, Kimura et al. 2017
-    
     ClSTFT_unscaled= 18.1 #uL/min/mg protein, Kimura et al. 2017
     ClINFT_unscaled= 18.1 #uL/min/mg protein, Kimura et al. 2017
     
@@ -423,6 +432,12 @@ create.params <- function(user.input){
     VmK_Oat3_scaled = 60*VmK_Oat3_in_vitro*MW*kidney_protein_total/1000 #physiologically scaled to in vivo, ug/L/h
     VmK_Oat3 = VmK_Oat3_scaled*RAFOat3 #in vivo value, in   ug/h
     KmK_Oat3= 65.7 * MW #umol/L (Weaver et al. 2010) --> ug/L
+    
+    #Urat1 kidney
+    VmK_Urat_in_vitro= 1520e-3 #nmol/mg protein/min  (Lin et al. 2023)
+    VmK_Urat_scaled = 60*VmK_Urat_in_vitro*MW*kidney_protein_total/1000 #physiologically scaled to in vivo, ug/L/h
+    VmK_Urat = VmK_Urat_scaled*RAFUrat #in vivo value, in   ug/h
+    KmK_Urat = 820.04 * MW #umol/L (Lin et al. 2023) --> ug/L
 
     #Liver
     liver_protein_per_rat <- 1000*(1.52+1.53+1.52)/3#mg of protein per rat  (Addis 1936)
@@ -434,11 +449,17 @@ create.params <- function(user.input){
     ClLFT <- ClLFT_unscaled*(liver_cells/(10^6))*(VLT*1000) #uL/min for the whole liver
     kLFLT <-  (60*ClLFT)/1e06 #L/h
     
-    # oatp-liver
+    #oatp1-liver
     VmL_Oatp_in_vitro= 9.3 #nmol/mg protein/min  (Weaver et al. 2010)
     VmL_Oatp_scaled = 60*VmL_Oatp_in_vitro*MW*liver_protein_per_gram*(VL*1000)/1000   #physiologically scaled to in vivo, ug/h
     VmL_Oatp = VmL_Oatp_scaled*RAFOatp_l #in vivo value, in  ug/h
     KmL_Oatp = KmK_Oatp #same as kidney
+    
+    #oatp2b1-liver
+    VmL_Oatp2_in_vitro= 1493e-3 #nmol/mg protein/min  (Lin et al. 2023)
+    VmL_Oatp2_scaled = 60*VmL_Oatp2_in_vitro*MW*liver_protein_per_gram*(VL*1000)/1000   #physiologically scaled to in vivo, ug/h
+    VmL_Oatp2 = VmL_Oatp2_scaled*RAFOatp2_l #in vivo value, in  ug/h
+    KmL_Oatp2 = 148.68*MW #umol/L (Lin et al. 2023) --> ug/L
     
     #Ntcp liver
     VmL_Ntcp_in_vitro= 3#nmol/mg protein/min   Ruggiero et al. 2021
@@ -448,7 +469,6 @@ create.params <- function(user.input){
     
     #Muscle
     muscle_cells= NA
-    Cmedium_M = 1*MW# Kimura et al. 2017 1uM umol/L -->  ug/L
     muscle_protein <- 158.45 #mg/g muscle (protein data from Cheek et al.,1971 and muscle mass from Caster et al.,1956)
     muscle_protein_tot <- muscle_protein * (VMT*1000)
     ClMFT <- ClMFT_unscaled * muscle_protein_tot#uL/min for the whole muscle comp
@@ -456,16 +476,21 @@ create.params <- function(user.input){
     
     #Intestine
     intestine_cells = 93.1 * 2.365e6 # https://doi.org/10.1152/ajpgi.00290.2013 cells per crypt Figure 3B, number of crypts: Figure 1, https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1271340/ (mean value of rat 300 and 400 g)
-    Cmedium_G = 1*MW# Kimura et al. 2017 1uM umol/L -->  ug/L
     intestine_protein <- muscle_protein#NA#5034
     intestine_protein_total <- intestine_protein*(1000*VINT)
     ClINFT <- ClINFT_unscaled *intestine_protein_total#uL/min for the whole gut compartment
     kINFINT <-  (60*ClINFT)/1e06 #L/h
     kabIN <- (kabs * AINL)*1000 #L/h
     
+    #oatp2b1-intestine
+    VmIn_Oatp2_in_vitro= 456.63e-3 #nmol/mg protein/min  (Kimura et al., 2017), assuming that the mediated transport 
+                                                                               #is performed only by this transporter
+    VmIn_Oatp2_scaled = 60*VmIn_Oatp2_in_vitro*MW*(VL*1000)/1000   #physiologically scaled to in vivo, ug/h
+    VmIn_Oatp2 = VmIn_Oatp2_scaled*RAFOatp2_l #in vivo value, in  ug/h, same RAF as in liver
+    KmIn_Oatp2 = 8.3*MW #umol/L (Kimura et al., 2017) --> ug/L
+    
     #Stomach
     stomach_cells = NA
-    Cmedium_G = 1*MW# Kimura et al. 2017 1uM umol/L -->  ug/L
     stomach_protein <- muscle_protein#NA#5034
     stomach_protein_total <- stomach_protein*(1000*VSTT)
     ClSTFT <- ClSTFT_unscaled *stomach_protein_total #uL/min for the whole gut compartment
@@ -477,7 +502,6 @@ create.params <- function(user.input){
     
     #Adipose
     adipose_cells = NA
-    Cmedium_A = 1*MW# Kimura et al. 2017 1uM umol/L -->  ug/L
     adipose_protein <- muscle_protein#NA#5034
     adipose_protein_total <- adipose_protein * (1000*VAT)
     ClAFT <- ClAFT_unscaled * adipose_protein_total#uL/min
@@ -485,7 +509,6 @@ create.params <- function(user.input){
     
     #Rest of body
     RoB_cells = NA
-    Cmedium_R = 1*MW# Kimura et al. 2017 1uM umol/L -->  ug/L
     RoB_protein <- muscle_protein#18456
     RoB_protein_total <- RoB_protein * (1000* VRT)
     ClRFT <- ClRFT_unscaled * RoB_protein_total#uL/min
@@ -499,7 +522,6 @@ create.params <- function(user.input){
     
     #Spleen
     spleen_cells = 1.76e8 #cells/g tissue https://doi.org/10.1371/journal.pone.0059602 --> Figure 5C
-    Cmedium_SP = 1*MW# Kimura et al. 2017 1uM umol/L -->  ug/L
     spleen_protein <- muscle_protein#NA#5034
     spleen_protein_total <- spleen_protein * (1000*VSPT)
     ClSPFT <- ClSPFT_unscaled * spleen_protein_total#uL/min
@@ -507,7 +529,6 @@ create.params <- function(user.input){
     
     #Heart
     heart_cells = 3.3e8 #cells/g tissue  https://doi.org/10.1620/tjem.95.177 
-    Cmedium_H = 1*MW# Kimura et al. 2017 1uM umol/L -->  ug/L
     heart_protein <- muscle_protein#NA#5034
     heart_protein_total <- heart_protein * (1000*VHT)
     ClHFT <- ClHFT_unscaled * heart_protein_total#uL/min
@@ -515,7 +536,6 @@ create.params <- function(user.input){
     
     #Brain
     brain_cells = 3.3e8/1.8 #cells/g tissue https://doi.org/10.1523/JNEUROSCI.4526-04.2005 --> Table 1
-    Cmedium_Br = 1*MW# Kimura et al. 2017 1uM umol/L -->  ug/L
     brain_protein <- muscle_protein#NA#5034
     brain_protein_total <- brain_protein * (1000*VBrT)
     ClBrFT <- ClBrFT_unscaled * brain_protein_total#uL/min
@@ -523,7 +543,6 @@ create.params <- function(user.input){
     
     #gonads
     gonads_cells = 1.85e7+1.58e7 #Sertoli and Leydig cells/g tissue  https://doi.org/10.1007/BF00297504 --> Figure 2, LC and SC cells
-    Cmedium_T = 1*MW# Kimura et al. 2017 1uM umol/L -->  ug/L
     gonads_protein <- muscle_protein#NA#5034
     gonads_protein_total <- gonads_protein * (1000*VTT)
     ClTFT <- ClTFT_unscaled * gonads_protein_total#uL/min
@@ -531,7 +550,6 @@ create.params <- function(user.input){
 
     #Skin
     skin_cells = NA
-    Cmedium_SK = 1*MW# Kimura et al. 2017 1uM umol/L -->  ug/L
     skin_protein <- muscle_protein#NA#5034
     skin_protein_total <- skin_protein * (1000*VSKT)
     ClSKFT <- ClSKFT_unscaled * skin_protein_total#uL/min
@@ -596,12 +614,17 @@ create.params <- function(user.input){
                 
                 
                 'VmL_Oatp'=VmL_Oatp, 'KmL_Oatp'= KmL_Oatp, 'VmL_Ntcp'= VmL_Ntcp,
+                'VmL_Oatp2'=VmL_Oatp2, 'KmL_Oatp2'= KmL_Oatp2, 
+                'VmIn_Oatp2'=VmIn_Oatp2, 'KmIn_Oatp2'= KmIn_Oatp2,
                 'KmL_Ntcp'= KmL_Ntcp,'VmK_Oatp'= VmK_Oatp, 
                 'KmK_Oatp'=KmK_Oatp,
                 #'VmK_Osta'=VmK_Osta,'KmK_Osta'=KmK_Osta, 
                 'VmK_Oat1'=VmK_Oat1, 'KmK_Oat1'=KmK_Oat1, 'KmK_Oat1'=KmK_Oat1, 
                 'VmK_Oat3'=VmK_Oat3, 'KmK_Oat3'=KmK_Oat3, 
+                'VmK_Urat'=VmK_Urat, 'KmK_Urat'=KmK_Urat, 
                   
+                'KmK_baso' = KmK_baso,
+                'VmK_baso' = VmK_baso,
                 
                 'kKFKT'=kKFKT, 'kFKT'=kFKT,  
                 'kLFLT'=kLFLT, 'kAFAT'=kAFAT, 
@@ -779,14 +802,14 @@ ode.func <- function(time, inits, params){
     #Kidney
     
     #blood subcompartment
-    dMBK = QBK*CBfart - (QBK-QBK/500)*CKBf - PeffK*AK*(CKBf-CKFf) - CKBf*QBK/500 
+    dMBK = QBK*CBfart - (QBK-QBK/500)*CKBf - PeffK*AK*(CKBf-CKFf) - CKBf*QBK/500 + (VmK_baso*CKFf/KmK_baso+CKFf)
     #interstitial fluid subcompartment
     dMKF = CKBf*QBK/500 - CKFf*QBK/500 + PeffK*AK*(CKBf-CKFf) - kKFKT*(CKFf-CKTf) -
-            (VmK_Oat1*CKFf/KmK_Oat1+CKFf) - (VmK_Oat3*CKFf/KmK_Oat3+CKFf) #+ (VmK_Osta*CKTf/KmK_Osta+CKTf)
+            (VmK_Oat1*CKFf/KmK_Oat1+CKFf) - (VmK_Oat3*CKFf/KmK_Oat3+CKFf) -  (VmK_baso*CKFf/KmK_baso+CKFf)
     #Kidney proximal tubule cells subcompartment
     dMKT = kKFKT*(CKFf-CKTf) - kFKT*(CKTf - CFil) + (VmK_Oatp*CFil/KmK_Oatp+CFil) +
-            (VmK_Oat1*CKFf/KmK_Oat1+CKFf) + (VmK_Oat3*CKFf/KmK_Oat3+CKFf) # + (VmK_Osta*CKTf/KmK_Osta+CKTf)
-    dMFil =  QGFR*CBfart+ kFKT*(CKTf - CFil) - (VmK_Oatp*CFil/KmK_Oatp+CFil) - (Qurine*CFil)
+            (VmK_Oat1*CKFf/KmK_Oat1+CKFf) + (VmK_Oat3*CKFf/KmK_Oat3+CKFf) + (VmK_Urat*CKFf/KmK_Urat+CKFf) 
+    dMFil =  QGFR*CBfart+ kFKT*(CKTf - CFil) - (VmK_Oatp*CFil/KmK_Oatp+CFil) - (VmK_Urat*CKFf/KmK_Urat+CKFf)- (Qurine*CFil)
     dMurine = Qurine*CFil
     
     #Liver
@@ -795,9 +818,9 @@ ode.func <- function(time, inits, params){
     dMBL = QBL*CBfart + (QBSP-QBSP/500)*CSPBf + (QBIN-QBIN/500)*CINBf + (QBST-QBST/500)*CSTBf - PeffL*AL*(CLBf-CLFf) - CLBf*QBLtot/500 - (QBLtot-QBLtot/500)*CLBf
     #interstitial fluid subcompartment 
     dMLF = CLBf*QBLtot/500 - CLFf*QBLtot/500 + PeffL*AL*(CLBf-CLFf) - kLFLT*(CLFf-CLTf) - 
-          (VmL_Oatp*CLFf/KmL_Oatp+CLFf) - (VmL_Ntcp*CLFf/KmL_Ntcp+CLFf)
+          (VmL_Oatp*CLFf/KmL_Oatp+CLFf) - (VmL_Oatp2*CLFf/KmL_Oatp2+CLFf) - (VmL_Ntcp*CLFf/KmL_Ntcp+CLFf)
     #Liver tissue subcompartment
-    dMLT = kLFLT*(CLFf-CLTf) + (VmL_Oatp*CLFf/KmL_Oatp+CLFf) + 
+    dMLT = kLFLT*(CLFf-CLTf) + (VmL_Oatp*CLFf/KmL_Oatp+CLFf) + (VmL_Oatp2*CLFf/KmL_Oatp2+CLFf)
                      (VmL_Ntcp*CLFf/KmL_Ntcp+CLFf) - Qbile*CLTf
    
     # Feces
@@ -819,9 +842,9 @@ ode.func <- function(time, inits, params){
     #interstitial fluid subcompartment 
     dMINF = CINBf*QBIN/500 - CINFf*QBIN/500 + PeffIN*AIN*(CINBf-CINFf) - kINFINT*(CINFf-CINT) 
     #Intestine tissue subcompartment
-    dMINT = kINFINT*(CINFf-CINT) + kabIN*CINL
+    dMINT = kINFINT*(CINFf-CINT) + kabIN*CINL + (VmIn_Oatp2*CLFf/KmIn_Oatp2+CLFf)
     #Intestine lumen
-    dMINL = QGE*CSTL - (Qfeces*CINL) - kabIN*CINL + Qbile*CLTf
+    dMINL = QGE*CSTL - (Qfeces*CINL) - kabIN*CINL + Qbile*CLTf - (VmIn_Oatp2*CLFf/KmIn_Oatp2+CLFf)
 
     
     #Muscle
@@ -2707,10 +2730,13 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
 #  CF_Peff, kabs
 
-N_pars <- 8 # Number of parameters to be fitted
+N_pars <- 12 # Number of parameters to be fitted
 fit <- rep(0,N_pars)
-lb	= c(rep(log(1e-20), 6),log(1e-3),log(1e-2))
-ub = c(rep(log(1e8), 6),log(1e8),log(1e8))
+# lb	= rep(log(1e-20), N_pars)
+# ub = rep(log(1e8), N_pars)
+lb	= c(rep(log(1e-2), 3),log(1e-3),log(1e-2),rep(log(1e-2),3),log(1e-3),log(1e-2),log(1e-3),log(1e-2))
+ub = c(rep(log(1e2), 3), log(1e8),log(1e8),rep(log(1e2),3),log(1e8),log(1e8),log(1e8),log(1e8))
+
 # Run the optimization algorithmm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,
