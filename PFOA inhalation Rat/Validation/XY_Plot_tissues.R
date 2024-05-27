@@ -44,8 +44,8 @@ scatter_plot <- ggplot()+
         axis.title = element_text(size = 14),
         )
 
-print(scatter_plot)
+#print(scatter_plot)
 
-#ggsave("validation_plot_PFOA.png", scatter_plot, width = 11, height = 7, units = "in", dpi = 300)
+ggsave("validation_plot_PFOA_tissues.png", scatter_plot, width = 11, height = 7, units = "in", dpi = 300)
 
 
