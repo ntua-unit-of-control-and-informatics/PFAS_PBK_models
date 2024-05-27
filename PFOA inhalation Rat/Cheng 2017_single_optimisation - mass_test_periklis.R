@@ -2623,7 +2623,7 @@ obj.func <- function(x, dataset){
   
   ##########################
   #-------------------------
-  # Kim IV male blood
+  # Kim IV female blood
   #-------------------------
   ##########################
   # Set up simulations for the 27th case, i.e. Kim (2016) IV male blood
@@ -3864,7 +3864,7 @@ experiments <- list(experiment1 = experiment1, experiment2 = experiment2, experi
                     experiment13 = experiment13,  experiment14 = experiment14, experiment15 = experiment15, experiment16 = experiment16,
                     experiment17 = experiment17, experiment18 = experiment18, experiment19 = experiment19, experiment20 = experiment20,
                     experiment21 = experiment21, experiment22 = experiment22, experiment23 = experiment23, experiment24 = experiment24,
-                    experiment25 = experiment25, experiment25 = experiment26, experiment25 = experiment27)
+                    experiment25 = experiment25, experiment26 = experiment26, experiment27 = experiment27)
 
 
 # Rename predictions so that they share the same name as the names of the experimental data dataframe

@@ -25,6 +25,8 @@ Model experiments list
 23.Dzierlenga (2021) ORAL female serum low
 24.Dzierlenga (2021) ORAL female serum medium
 25.Dzierlenga (2021) ORAL female serum high
+26.Kim (2016) ORAL female blood
+27.Kim (2016) IV female blood
 
 
 
