@@ -39,12 +39,7 @@ create.params <- function(user.input){
     # Absorption rate per area
     kabs <- estimated_params[8] #m/h
     # Liver to Bile rate 
-    kbileLT <-estimated_params[9]
-    # Absorption rate of stomach
-    kabs_st <- estimated_params[10] #m/h
-    koff_alb <- estimated_params[11] #1/s
-    koff_a2u <- estimated_params[12] #1/s
-    koff_fabp <- estimated_params[13] #1/s
+    P_liver_bile <-estimated_params[9]
     
     #units conversion from Cheng 2017R, time-> h, PFOA mass->ng, tissues mass-> g
     Hct <- 0.41 #hematocrit for rats, https://doi.org/10.1080/13685538.2017.1350156 mean value for both males and females
@@ -77,9 +72,7 @@ create.params <- function(user.input){
     PVLF <- 0.049  #Blouin et al. 1977
     VLiF <- PVLF * PVLi* BW #liver interstitial fluid volume kg=L
     VLiT <- VLi - VLiF #liver tissue volume kg=L
-    PVbile <- 0.004 #Blouin et al. 1977
-    Vbile <- 0.001#PVbile * VLi #bile volume kg=L
-    
+
     #Intestine (small and large)
     PVIn <- 2.24e-2 #Brown et al. 1997, p 416, Table 5: 1.4+0.84
     VIn <- PVIn * BW #intestine volume kg=L
@@ -373,12 +366,13 @@ create.params <- function(user.input){
     Ka2u <- 5*1e02 #[L/mol], value from Cheng et al. (2017)
     Kfabp <- (1.2e5+4e4+1.9e4)  #[L/mol], value from Cheng et al. (2017)
     
-    
+    koff_alb <- 0.01 #1/s
+    koff_a2u <-  0.01 #1/s
+    koff_fabp <-  0.01 #1/s
     
     kon_alb <- Ka * koff_alb #1/M/s
     kon_a2u <- Ka2u * koff_a2u#1/M/s
     kon_fabp <- Kfabp * koff_fabp #1/M/s
-    
     
     ##########################################################
     #--------------------------------------------------------#
@@ -514,7 +508,7 @@ create.params <- function(user.input){
     ClStFT <- ClStFT_unscaled *stomach_protein_total #uL/min for the whole gut compartment
     kStFSTT <-  (60*ClStFT)/1e06 #L/h
     # For identifiability reasons we assume that absorption is realised only through the intestines
-    #kabST <- kabs * AStL
+    kabs_st <- 0
     kabST <- (kabs_st* AStL)*1000 #L/h
     
     #Adipose
@@ -581,7 +575,7 @@ create.params <- function(user.input){
     
     return(list('VB'=VB, 'Vplasma'=Vplasma, 'VK'=VK, 'VKiB'=VKiB, 
                 'VKiF'=VKiF, 'VKiT'=VKiT, 'VFil'=VFil,
-                'VLi'=VLi, 'VLiB'=VLiB, 'VLiF'=VLiF, 'VLiT'=VLiT, 'Vbile'=Vbile,
+                'VLi'=VLi, 'VLiB'=VLiB, 'VLiF'=VLiF, 'VLiT'=VLiT, 
                 'VMu'=VMu, 'VMuB'=VMuB, 'VMuF'=VMuF, 'VMuT'=VMuT, 'VAd'=VAd, 'VAdB'=VAdB, 
                 'VAdF'=VAdF, 'VAdT'=VAdT, 'VRe'=VRe, 'VReB'=VReB, 
                 'VReF'=VReF, 'VReT'=VReT, 'VLy' = VLy, 'VVen' = VVen,
@@ -639,6 +633,7 @@ create.params <- function(user.input){
                 'ClTFT'=ClTFT,
                 'ClSKFT'=ClSKFT,
                 
+                'P_liver_bile' = P_liver_bile,
                 
                 'VmL_Oatp'=VmL_Oatp, 'KmL_Oatp'= KmL_Oatp, 'VmL_Ntcp'= VmL_Ntcp,
                 'KmL_Ntcp'= KmL_Ntcp,'VmK_Oatp'= VmK_Oatp, 
@@ -649,7 +644,7 @@ create.params <- function(user.input){
                 
                 
                 'kKFKT'=kKFKT, 'kFKT'=kFKT,  
-                'kLFLT'=kLFLT, 'kbileLT'=kbileLT,  'kAFAGo'=kAFAGo, 
+                'kLFLT'=kLFLT,  'kAFAGo'=kAFAGo, 
                 'kRFRT'=kRFRT,
                 'kabST'=kabST, 'kabIN'=kabIN,
                 'kMFMT'=kMFMT, 'kLuFLuT' =kLuFLuT, 'kSPFSPT' =kSPFSPT,
@@ -717,8 +712,7 @@ ode.func <- function(time, inits, params){
     CLiT <- MLiT/VLiT # tissue concentration
     CLiTf <- MLiTf/VLiT
     CLiTb <- MLiTb/VLiT
-    Cbile <- Mbile/Vbile 
-    
+
     #Stomach
     MStB <- MStBf + MStBb
     MStF <- MStFf + MStFb
@@ -1045,9 +1039,8 @@ ode.func <- function(time, inits, params){
               (VmL_Oatp*CLiFf/KmL_Oatp+CLiFf) - (VmL_Ntcp*CLiFf/KmL_Ntcp+CLiFf) + koff_alb*CLiFb*VLiF/MW/1e6
     #Liver tissue subcompartment
     dMLiTf <- kLFLT*(CLiFf-CLiTf) + (VmL_Oatp*CLiFf/KmL_Oatp+CLiFf) + 
-             (VmL_Ntcp*CLiFf/KmL_Ntcp+CLiFf) - kbileLT*CLiTf + koff_fabp*CLiTb*VLiT/MW/1e6
-    dMbile <- kbileLT*CLiTf - Qbile*Cbile
-    
+             (VmL_Ntcp*CLiFf/KmL_Ntcp+CLiFf) - P_liver_bile*Qbile*CLiTf + koff_fabp*CLiTb*VLiT/MW/1e6
+
     
     #Stomach#
     #blood subcompartment
@@ -1071,7 +1064,7 @@ ode.func <- function(time, inits, params){
     #Intestine tissue subcompartment
     dMInTf <- kINFINT*(CInFf-CInT) + kabIN*CInL
     #Intestine lumen
-    dMInL <- QGE*CStL - Qfeces*CInL - kabIN*CInL + Qbile*Cbile
+    dMInL <- QGE*CStL - Qfeces*CInL - kabIN*CInL 
     
     
     #Muscle#
@@ -1166,7 +1159,7 @@ ode.func <- function(time, inits, params){
     dMSkTf <- kSKFSKT*(CSkFf -CSkT)
     
     #Excreta#
-    dMfeces <- Qfeces*CInL 
+    dMfeces <- Qfeces*CInL + P_liver_bile*Qbile*CLiTf
     dMurine <- Qurine*CFil
     dVfeces <- Qfeces
     dVurine <- Qurine
@@ -1186,7 +1179,6 @@ ode.func <- function(time, inits, params){
     Crest <-  (MReB + MReF+ MReT)/(VReB+VReF+VReT)
     Ccarcass <- (MMuB + MMuF+ MMuT+MAdB + MAdF+ MAdT +MReB + MReF+ MReT)/(VMu+VAd+VRe)
     Cfeces <- Mfeces/(Vfeces*feces_density)
-    Cbile <- Cbile
     Curine <- Murine/Vurine
     Cspleen <-  (MSpB + MSpF+ MSpT)/(VSpB+VSpF+VSpT)
     Cheart <-  (MHtB + MHtF+ MHtT)/(VHtB+VHtF+VHtT)
@@ -1220,7 +1212,7 @@ ode.func <- function(time, inits, params){
             'dMArtf'=dMArtf, 'dMVenf'=dMVenf, 'dMLyf'=dMLyf, 'dMKiBf'=dMKiBf, 
             'dMKiFf'=dMKiFf, 'dMKiTf'=dMKiTf,
             'dMFil'=dMFil,  'dMLiBf'=dMLiBf, 
-            'dMLiFf'=dMLiFf, 'dMLiTf'=dMLiTf, 'dMbile'=dMbile,
+            'dMLiFf'=dMLiFf, 'dMLiTf'=dMLiTf,
            
             
             'dMStBf'=dMStBf, 'dMStFf'=dMStFf, 'dMStTf'=dMStTf, 'dMStL'=dMStL,
@@ -1245,7 +1237,7 @@ ode.func <- function(time, inits, params){
     'Cstomach'= Cstomach, 'Cintestine'= Cintestine,
     'Cmuscle'= Cmuscle, 'Cadipose'= Cadipose, 
     'Clungs' = Clungs, 'Crest'= Crest,'Ccarcass' = Ccarcass,
-    'Cfeces'= Cfeces, 'Cbile'= Cbile, 'Curine'= Curine,
+    'Cfeces'= Cfeces,  'Curine'= Curine,
     'Cspleen'= Cspleen, 'Cheart'= Cheart,
     'Cbrain'= Cbrain, 'Cgonads'= Cgonads, 'Cskin'= Cskin
     
@@ -1281,7 +1273,7 @@ create.inits <- function(parameters){
     MStTf <- 0; MInTf <- 0; MMuTf <- 0; MAdTf <- 0; MReTf <- 0; MLuTf <- 0;MLuAFf <- 0; MSpTf <- 0; 
     MHtTf <- 0; MBrTf <- 0; MGoTf <- 0; MSkTf <- 0;  
     
-    MFil <-0; Murine <-0; Mbile <-0;MStL <-0;  MInL <-0;
+    MFil <-0; Murine <-0;MStL <-0;  MInL <-0;
     Mfeces <-0;  Vurine <-0; Vfeces <-0
     
     return(c('CalbVenf' = CalbVenf, 'CalbArtf' = CalbArtf,'CalbLyf' = CalbLyf,  
@@ -1310,7 +1302,7 @@ create.inits <- function(parameters){
              'MArtf'=MArtf, 'MVenf'=MVenf, 'MLyf'=MLyf, 'MKiBf'=MKiBf, 
              'MKiFf'=MKiFf, 'MKiTf'=MKiTf,
              'MFil'=MFil,  'MLiBf'=MLiBf, 
-             'MLiFf'=MLiFf, 'MLiTf'=MLiTf, 'Mbile'=Mbile,
+             'MLiFf'=MLiFf, 'MLiTf'=MLiTf, 
              
              'MStBf'=MStBf, 'MStFf'=MStFf, 'MStTf'=MStTf,'MStL'=MStL,
              'MInBf'=MInBf, 'MInFf'=MInFf, 'MInTf'=MInTf,'MInL'=MInL,
@@ -3008,12 +3000,12 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 #Parameter names:
 # Male RAFOatp_k, Male RAFOat1, Male RAFOat3, Male RAFOatp_l,Male RAFNtcp
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
-#  CF_Peff, kabs, kbileLT
+#  CF_Peff, kabs, P_liver_bile
 
-N_pars <- 13 # Number of parameters to be fitted
-fit <- c(rep(0,6),0, log(1e1), log(1e2), log(1e1), log(1e-2), log(1e-2), log(1e-2))
-lb	= c(rep(log(1e-20), 6),log(1e-3),log(1e-2),  log(1e-20),log(1e-5), rep(log(1e-5),3))
-ub = c(rep(log(1e5), 6),log(1e5),log(1e5),log(1e10),log(1e6), rep(log(1e2),3))
+N_pars <- 9 # Number of parameters to be fitted
+fit <- c(rep(0,6),0, 0.01, 0)
+lb	= c(rep(log(1e-20), 6),log(1e-3),log(1e-4),  log(1e-4))
+ub = c(rep(log(1e5), 6),log(1e5),log(1e3),log(1e4))
 # Run the optimization algorithmm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,
