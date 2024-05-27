@@ -3922,6 +3922,6 @@ experiment2 <- reshape(kudo_low_dose[c("Tissue" ,"Time_hours",
           units = "in")
  }
 
- 
+ save.image("Enterohepatic_only.RData")
  
  

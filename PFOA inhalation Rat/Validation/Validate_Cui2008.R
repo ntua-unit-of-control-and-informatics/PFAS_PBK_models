@@ -4,7 +4,7 @@ setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Valid
 #===============
 # Generate predictions
 #===============
-load("model.RData")
+#load("model.RData")
 # Body weight 
 BW <- 0.2 #kg
 sex <- "M"

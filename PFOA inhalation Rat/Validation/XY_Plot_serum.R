@@ -49,10 +49,10 @@ Kemper_oral_M_25$Experiment <- "Kemper | 25mg/kg | oral | M"
 
 Experiment <- scales::hue_pal()(8)
 
-names(Experiment) <- unique(c( Kemper_iv_F_1, Kemper_iv_M_1,
-                              Kemper_oral_F_1,Kemper_oral_M_1, Kemper_oral_F_5, 
+names(Experiment) <- unique(c( Kemper_iv_F_1$Experiment, Kemper_iv_M_1$Experiment,
+                              Kemper_oral_F_1$Experiment,Kemper_oral_M_1$Experiment, Kemper_oral_F_5$Experiment, 
                                
-                               Kemper_oral_M_5,  Kemper_oral_F_25, Kemper_oral_M_25))
+                               Kemper_oral_M_5$Experiment,  Kemper_oral_F_25$Experiment, Kemper_oral_M_25$Experiment))
 
 
 

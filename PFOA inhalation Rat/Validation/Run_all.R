@@ -1,6 +1,8 @@
 path <- "C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation"
-
 setwd(path)
+
+load("No_saturable_binding.RData")
+
 source("Validate_Cui2008.R")
 setwd(path)
 source("XY_Plot_tissues.R")

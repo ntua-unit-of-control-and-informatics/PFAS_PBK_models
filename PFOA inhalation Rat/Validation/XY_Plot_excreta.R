@@ -34,8 +34,8 @@ Kemper_Feces_M_25$Experiment <- "Kemper | 25mg/kg | Feces | M"
 
 Experiment <- scales::hue_pal()(4)
 
-names(Experiment) <- unique(c( Kemper_Urine_F_25, Kemper_Feces_F_25,
-                               Kemper_Urine_M_25,Kemper_Feces_M_25))
+names(Experiment) <- unique(c( Kemper_Urine_F_25$Experiment, Kemper_Feces_F_25$Experiment,
+                               Kemper_Urine_M_25$Experiment,Kemper_Feces_M_25$Experiment))
 
 
 
