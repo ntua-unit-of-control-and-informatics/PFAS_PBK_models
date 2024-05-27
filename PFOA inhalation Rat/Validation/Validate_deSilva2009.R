@@ -27,7 +27,7 @@ solution_5 <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
 
 # Carefully select the order so that it matches the experimental data presented in the xlsx file
 pred_comps <- c( "Cart", "Cliver", "Ckidney","Clungs","Cheart",
-                  "Cspleen", "Ctestis", "Cbrain" )
+                 "Cspleen", "Ctestis", "Cbrain" )
 solution_5 <- solution_5[solution_5$time == 28*24,pred_comps]/1000 #[ug/L]/1000-->[ug/g]
 
 
@@ -63,14 +63,14 @@ results_df_5<- data.frame("Study" = "Cui_2010", "Dose" =  tissues_5$Dose_mg_per_
                           "Tissue" = tissues_5$Tissue ,
                           "Type" = "oral",
                           "Observed" =tissues_5$`Concentration_ug/g`,
-                          "Predicted" = unname(t(solution_5)), "Time" = tissues_5$Time_h )
+                          "Predicted" = unname(t(solution_5)))
 
 
 results_df_20<- data.frame("Study" = "Cui_2010", "Dose" =  tissues_20$Dose_mg_per_kg,
                            "Tissue" = tissues_20$Tissue,
                            "Type" = "oral",
                            "Observed" = tissues_20$`Concentration_ug/g`,
-                           "Predicted" = unname(t(solution_20)), "Time" = tissues_20$Time_h)
+                           "Predicted" = unname(t(solution_20)))
 
 
 results_df <- rbind(results_df_5, results_df_20)
