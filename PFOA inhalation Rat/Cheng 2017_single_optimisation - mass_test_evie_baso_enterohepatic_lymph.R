@@ -44,7 +44,11 @@ create.params <- function(user.input){
     CF_Peff <- estimated_params[11] 
     # Absorption rate per area
     kabs <- estimated_params[12] #m/h
-   
+    
+    P_liver_bile <- estimated_params[13] 
+    K_efflux_liver <- estimated_params[14] 
+    K_efflux_kidney <- estimated_params[15]
+    
     #units conversion from Cheng 2017R, time-> h, PFOA mass->ng, tissues mass-> g
     Hct <- 0.41 #hematocrit for rats, https://doi.org/10.1080/13685538.2017.1350156 mean value for both males and females
     
@@ -612,6 +616,8 @@ create.params <- function(user.input){
                 'ClTFT'=ClTFT,
                 'ClSKFT'=ClSKFT,
                 
+                'K_efflux_liver' = K_efflux_liver, 'K_efflux_kidney' = K_efflux_kidney,
+                'P_liver_bile' = P_liver_bile,
                 
                 'VmL_Oatp'=VmL_Oatp, 'KmL_Oatp'= KmL_Oatp, 'VmL_Ntcp'= VmL_Ntcp,
                 'VmL_Oatp2'=VmL_Oatp2, 'KmL_Oatp2'= KmL_Oatp2, 
@@ -802,14 +808,14 @@ ode.func <- function(time, inits, params){
     #Kidney
     
     #blood subcompartment
-    dMBK = QBK*CBfart - (QBK-QBK/500)*CKBf - PeffK*AK*(CKBf-CKFf) - CKBf*QBK/500 + (VmK_baso*CKFf/KmK_baso+CKFf)
+    dMBK = QBK*CBfart - (QBK-QBK/500)*CKBf - PeffK*AK*(CKBf-CKFf) - CKBf*QBK/500 
     #interstitial fluid subcompartment
     dMKF = CKBf*QBK/500 - CKFf*QBK/500 + PeffK*AK*(CKBf-CKFf) - kKFKT*(CKFf-CKTf) -
-            (VmK_Oat1*CKFf/KmK_Oat1+CKFf) - (VmK_Oat3*CKFf/KmK_Oat3+CKFf) -  (VmK_baso*CKFf/KmK_baso+CKFf)
+            (VmK_Oat1*CKFf/(KmK_Oat1+CKFf)) - (VmK_Oat3*CKFf/(KmK_Oat3+CKFf)) +  (VmK_baso*CKFf/(KmK_baso+CKFf))
     #Kidney proximal tubule cells subcompartment
-    dMKT = kKFKT*(CKFf-CKTf) - kFKT*(CKTf - CFil) + (VmK_Oatp*CFil/KmK_Oatp+CFil) +
-            (VmK_Oat1*CKFf/KmK_Oat1+CKFf) + (VmK_Oat3*CKFf/KmK_Oat3+CKFf) + (VmK_Urat*CKFf/KmK_Urat+CKFf) 
-    dMFil =  QGFR*CBfart+ kFKT*(CKTf - CFil) - (VmK_Oatp*CFil/KmK_Oatp+CFil) - (VmK_Urat*CKFf/KmK_Urat+CKFf)- (Qurine*CFil)
+    dMKT = kKFKT*(CKFf-CKTf) - kFKT*(CKTf - CFil) + (VmK_Oatp*CFil/(KmK_Oatp+CFil)) - (VmK_baso*CKFf/(KmK_baso+CKFf)) +
+            (VmK_Oat1*CKFf/(KmK_Oat1+CKFf)) + (VmK_Oat3*CKFf/(KmK_Oat3+CKFf)) + (VmK_Urat*CFil/(KmK_Urat+CFil)) 
+    dMFil =  QGFR*CBfart+ kFKT*(CKTf - CFil) - (VmK_Oatp*CFil/(KmK_Oatp+CFil)) - (VmK_Urat*CFil/(KmK_Urat+CFil))- (Qurine*CFil)
     dMurine = Qurine*CFil
     
     #Liver
@@ -818,13 +824,13 @@ ode.func <- function(time, inits, params){
     dMBL = QBL*CBfart + (QBSP-QBSP/500)*CSPBf + (QBIN-QBIN/500)*CINBf + (QBST-QBST/500)*CSTBf - PeffL*AL*(CLBf-CLFf) - CLBf*QBLtot/500 - (QBLtot-QBLtot/500)*CLBf
     #interstitial fluid subcompartment 
     dMLF = CLBf*QBLtot/500 - CLFf*QBLtot/500 + PeffL*AL*(CLBf-CLFf) - kLFLT*(CLFf-CLTf) - 
-          (VmL_Oatp*CLFf/KmL_Oatp+CLFf) - (VmL_Oatp2*CLFf/KmL_Oatp2+CLFf) - (VmL_Ntcp*CLFf/KmL_Ntcp+CLFf)
+          (VmL_Oatp*CLFf/(KmL_Oatp+CLFf)) - (VmL_Oatp2*CLFf/(KmL_Oatp2+CLFf)) - (VmL_Ntcp*CLFf/(KmL_Ntcp+CLFf)) + K_efflux_liver*CLTf
     #Liver tissue subcompartment
-    dMLT = kLFLT*(CLFf-CLTf) + (VmL_Oatp*CLFf/KmL_Oatp+CLFf) + (VmL_Oatp2*CLFf/KmL_Oatp2+CLFf)
-                     (VmL_Ntcp*CLFf/KmL_Ntcp+CLFf) - Qbile*CLTf
+    dMLT = kLFLT*(CLFf-CLTf) + (VmL_Oatp*CLFf/(KmL_Oatp+CLFf)) + (VmL_Oatp2*CLFf/(KmL_Oatp2+CLFf))
+                               (VmL_Ntcp*CLFf/(KmL_Ntcp+CLFf)) -  P_liver_bile*Qbile*CLTf - K_efflux_liver*CLTf
    
     # Feces
-    dMfeces = Qfeces*CINL 
+    dMfeces = Qfeces*CINL + P_liver_bile*Qbile*CLTf
     
     #Stomach
     #blood subcompartment
@@ -837,16 +843,16 @@ ode.func <- function(time, inits, params){
     dMSTL = - QGE*CSTL -kabST*CSTL 
     
     #Intestine
+    
     #blood subcompartment
     dMBIN = QBIN*CBfart - (QBIN-QBIN/500)*CINBf - PeffIN*AIN*(CINBf-CINFf) - CINBf*QBIN/500
     #interstitial fluid subcompartment 
     dMINF = CINBf*QBIN/500 - CINFf*QBIN/500 + PeffIN*AIN*(CINBf-CINFf) - kINFINT*(CINFf-CINT) 
     #Intestine tissue subcompartment
-    dMINT = kINFINT*(CINFf-CINT) + kabIN*CINL + (VmIn_Oatp2*CLFf/KmIn_Oatp2+CLFf)
+    dMINT = kINFINT*(CINFf-CINT) + kabIN*CINL + (VmIn_Oatp2*CINL/(KmIn_Oatp2+CINL))
     #Intestine lumen
-    dMINL = QGE*CSTL - (Qfeces*CINL) - kabIN*CINL + Qbile*CLTf - (VmIn_Oatp2*CLFf/KmIn_Oatp2+CLFf)
+    dMINL = QGE*CSTL - (Qfeces*CINL) - kabIN*CINL - (VmIn_Oatp2*CINL/(KmIn_Oatp2+CINL))
 
-    
     #Muscle
     
     #blood subcompartment
@@ -1075,6 +1081,64 @@ create.events <- function(parameters){
   })
 }
 
+# SODI function the returns the SODI index described in Tsiros et al.2024
+# predictions: list of vectors containing the predicted data
+# names of the compartments
+SODI <- function(observations, predictions, comp.names =NULL){
+  # Check if the user provided the correct input format
+  if (!is.list(observations) || !is.list(predictions)){
+    stop(" The observations and predictions must be lists")
+  }
+  # Check if the user provided equal length lists
+  if (length(observations) != length(predictions)){
+    stop(" The observations and predictions must have the same compartments")
+  }
+  Ncomp <- length(observations) # Number of compartments
+  I <- rep(NA, Ncomp) # Compartment discrepancy index
+  N_obs <- rep(NA, Ncomp) #Number of observations per compartment
+  #loop over the compartments
+  for (i in 1:Ncomp){
+    Et <- 0 #relative error with observations
+    St <- 0  #relative error with simulations
+    N <- length(observations[[i]]) # number of observations for compartment i
+    # Check if observations and predictions have equal length
+    if(N != length(predictions[[i]])){
+      stop(paste0("Compartment ",i," had different length in the observations and predictions"))
+    }
+    N_obs[i] <- N # populate the N_obs vector
+    for (j in 1:N){
+      # sum of relative squared errors (error = observations - predictions)
+      Et <- Et + ( abs(observations[[i]][j] - predictions[[i]][j])  / observations[[i]][j] )  ^2
+      St <- St + ( abs(observations[[i]][j] - predictions[[i]][j])  / predictions[[i]][j] )  ^2
+    }
+    
+    # root mean of the square of observed values
+    RMEt <- sqrt(Et/N)
+    # root mean of the square of simulated values
+    RMSt <- sqrt( St/N)
+    
+    I[i] <- (RMEt + RMSt)/2   
+  }
+  # Total number of observations
+  Ntot <- sum(N_obs)
+  # Initialise the consolidated discrepancy index
+  Ic <-0
+  for (i in 1:Ncomp){
+    # Give weight to compartments with more observations (more information)
+    Ic <- Ic +  I[i]* N_obs[i]/Ntot
+  }
+  # Name the list of compartment discrepancy indices
+  if ( !is.null(comp.names)){
+    names(I) <- comp.names
+  }else if (!is.null(names(observations))){
+    names(I) <- names(observations)
+  } else if (!is.null(names(predictions)) && is.null(comp.names) ){
+    names(I) <- names(predictions)
+  }
+  return(Ic)
+  #return(list(Total_index = Ic, Compartment_index= I))
+}
+
 
 #  absolute average fold error
 AAFE <- function(predictions, observations, times=NULL){
@@ -1162,10 +1226,10 @@ obj.func <- function(x, dataset){
                                                   "Clungs", "Cspleen", "Cheart",
                                                   "Cbrain", "Cgonads", "Cstomach", "Cintestine")]
   
-  preds_kudo_high <- preds_kudo_high /1000 #convert ug/kg to ug/g
+  preds_kudo_high <- as.data.frame(preds_kudo_high /1000) #convert ug/kg to ug/g
  
   
-  obs_kudo_high <- c(exp_data[exp_data$Tissue == "Blood", "concentration"],
+  obs_kudo_high <- list(exp_data[exp_data$Tissue == "Blood", "concentration"],
                      exp_data[exp_data$Tissue == "Liver", "concentration"],
                      exp_data[exp_data$Tissue == "Kidney", "concentration"],
                      exp_data[exp_data$Tissue == "Carcass", "concentration"],
@@ -1224,10 +1288,10 @@ obj.func <- function(x, dataset){
                                                                          "Cliver","Ckidney", "Ccarcass",
                                                                          "Clungs", "Cspleen", "Cheart",
                                                                          "Cbrain", "Cgonads", "Cstomach", "Cintestine")]
-  preds_kudo_low<- preds_kudo_low /1000 #convert ug/kg to ug/g
+  preds_kudo_low<- as.data.frame(preds_kudo_low /1000) #convert ug/kg to ug/g
 
   
-  obs_kudo_low <- c(exp_data[exp_data$Tissue == "Blood", "concentration"],
+  obs_kudo_low <- list(exp_data[exp_data$Tissue == "Blood", "concentration"],
                     exp_data[exp_data$Tissue == "Liver", "concentration"],
                     exp_data[exp_data$Tissue == "Kidney", "concentration"],
                     exp_data[exp_data$Tissue == "Carcass", "concentration"],
@@ -1284,10 +1348,10 @@ obj.func <- function(x, dataset){
   preds_kim_IV_Mtissues <- solution[solution$time %in% unique(exp_data$time), c("Cliver","Ckidney", 
                                                                          "Clungs", "Cspleen", "Cheart"
                                                                          )]
-  preds_kim_IV_Mtissues<- preds_kim_IV_Mtissues /1000 #convert ug/kg to ug/g
+  preds_kim_IV_Mtissues<- as.data.frame(preds_kim_IV_Mtissues /1000) #convert ug/kg to ug/g
   
   
-  obs_kim_IV_Mtissues <- c(exp_data[exp_data$Tissue == "Liver", "concentration"],
+  obs_kim_IV_Mtissues <- list(exp_data[exp_data$Tissue == "Liver", "concentration"],
                            exp_data[exp_data$Tissue == "Kidney", "concentration"],
                            exp_data[exp_data$Tissue == "Lung", "concentration"],
                            exp_data[exp_data$Tissue == "Spleen", "concentration"],
@@ -1338,10 +1402,10 @@ obj.func <- function(x, dataset){
   preds_kim_OR_Mtissues <- solution[solution$time %in% unique(exp_data$time), c("Cliver","Ckidney", 
                                                                                 "Clungs", "Cspleen", "Cheart" )]
  
-  preds_kim_OR_Mtissues<- preds_kim_OR_Mtissues /1000 #convert ug/kg to ug/g
+  preds_kim_OR_Mtissues<- as.data.frame(preds_kim_OR_Mtissues /1000) #convert ug/kg to ug/g
   
   
-  obs_kim_OR_Mtissues <- c(exp_data[exp_data$Tissue == "Liver", "concentration"],
+  obs_kim_OR_Mtissues <- list(exp_data[exp_data$Tissue == "Liver", "concentration"],
                            exp_data[exp_data$Tissue == "Kidney", "concentration"],
                            exp_data[exp_data$Tissue == "Lung", "concentration"],
                            exp_data[exp_data$Tissue == "Spleen", "concentration"],
@@ -1391,10 +1455,10 @@ obj.func <- function(x, dataset){
   preds_kim_IV_Ftissues <- solution[solution$time %in% unique(exp_data$time), c("Cliver","Ckidney", 
                                                                                 "Clungs", "Cspleen", "Cheart" )]
   
-  preds_kim_IV_Ftissues<- preds_kim_IV_Ftissues /1000 #convert ug/kg to ug/g
+  preds_kim_IV_Ftissues<- as.data.frame(preds_kim_IV_Ftissues /1000) #convert ug/kg to ug/g
   
   
-  obs_kim_IV_Ftissues <- c(exp_data[exp_data$Tissue == "Liver", "concentration"],
+  obs_kim_IV_Ftissues <- list(exp_data[exp_data$Tissue == "Liver", "concentration"],
                            exp_data[exp_data$Tissue == "Kidney", "concentration"],
                            exp_data[exp_data$Tissue == "Lung", "concentration"],
                            exp_data[exp_data$Tissue == "Spleen", "concentration"],
@@ -1445,10 +1509,10 @@ obj.func <- function(x, dataset){
   preds_kim_OR_Ftissues <- solution[solution$time %in% unique(exp_data$time), c("Cliver","Ckidney", 
                                                                                 "Clungs", "Cspleen", "Cheart" )]
   
-  preds_kim_OR_Ftissues<- preds_kim_OR_Ftissues /1000 #convert ug/kg to ug/g
+  preds_kim_OR_Ftissues<- as.data.frame(preds_kim_OR_Ftissues /1000) #convert ug/kg to ug/g
   
   
-  obs_kim_OR_Ftissues <- c(exp_data[exp_data$Tissue == "Liver", "concentration"],
+  obs_kim_OR_Ftissues <- list(exp_data[exp_data$Tissue == "Liver", "concentration"],
                            exp_data[exp_data$Tissue == "Kidney", "concentration"],
                            exp_data[exp_data$Tissue == "Lung", "concentration"],
                            exp_data[exp_data$Tissue == "Spleen", "concentration"],
@@ -1505,12 +1569,11 @@ obj.func <- function(x, dataset){
   #Retrieve time points at which measurements are available for compartment i
   exp_time <- exp_data[exp_data$Tissue == compartment, 2]
   
-  preds_dzi_OR_Mtissues[[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+  preds_dzi_OR_Mtissues[[i]] <- solution[solution$time %in% exp_time, column_names[i]]/1000
   }
   
-  preds_dzi_OR_Mtissues<- unlist(preds_dzi_OR_Mtissues)/1000 
   
-  obs_dzi_OR_Mtissues <- c( exp_data[exp_data$Tissue == "Liver", "concentration"],
+  obs_dzi_OR_Mtissues <- list( exp_data[exp_data$Tissue == "Liver", "concentration"],
                             exp_data[exp_data$Tissue == "Kidney", "concentration"],
                             exp_data[exp_data$Tissue == "Brain", "concentration"]) 
   
@@ -1566,13 +1629,11 @@ obj.func <- function(x, dataset){
     #Retrieve time points at which measurements are available for compartment i
     exp_time <- exp_data[exp_data$Tissue == compartment, 2]
     
-    preds_dzi_OR_Ftissues[[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+    preds_dzi_OR_Ftissues[[i]] <- solution[solution$time %in% exp_time, column_names[i]]/1000
   }
   
-  preds_dzi_OR_Ftissues <- unlist(preds_dzi_OR_Ftissues)/1000
-  
-  
-  obs_dzi_OR_Ftissues <- c( exp_data[exp_data$Tissue == "Liver", "concentration"],
+ 
+  obs_dzi_OR_Ftissues <- list( exp_data[exp_data$Tissue == "Liver", "concentration"],
                             exp_data[exp_data$Tissue == "Kidney", "concentration"],
                             exp_data[exp_data$Tissue == "Brain", "concentration"]) 
   
@@ -1627,13 +1688,10 @@ obj.func <- function(x, dataset){
     #Retrieve time points at which measurements are available for compartment i
     exp_time <- exp_data[exp_data$Tissue == compartment, 2]
     
-    preds_kim_OR_Mblood [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+    preds_kim_OR_Mblood [[i]] <- solution[solution$time %in% exp_time, column_names[i]]/1000
   }
   
-  preds_kim_OR_Mblood <- unlist(preds_kim_OR_Mblood) /1000 #convert ug/kg to ug/g
-  
-  
-  obs_kim_OR_Mblood <- c(exp_data[exp_data$Tissue == "Blood", "concentration"])
+   obs_kim_OR_Mblood <- list(exp_data[exp_data$Tissue == "Blood", "concentration"])
   
   score[9] <- AAFE(predictions = preds_kim_OR_Mblood, observations = obs_kim_OR_Mblood)
   
@@ -1687,13 +1745,11 @@ obj.func <- function(x, dataset){
     #Retrieve time points at which measurements are available for compartment i
     exp_time <- exp_data[exp_data$Tissue == compartment, 2]
     
-    preds_kim_IV_Mblood [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+    preds_kim_IV_Mblood [[i]] <- solution[solution$time %in% exp_time, column_names[i]]/1000
   }
   
-  preds_kim_IV_Mblood <- unlist(preds_kim_IV_Mblood) /1000 #convert ug/kg to ug/g
   
-  
-  obs_kim_IV_Mblood <- c(exp_data[exp_data$Tissue == "Blood", "concentration"])
+  obs_kim_IV_Mblood <- list(exp_data[exp_data$Tissue == "Blood", "concentration"])
   
   score[10] <- AAFE(predictions = preds_kim_IV_Mblood, observations = obs_kim_IV_Mblood)
   
@@ -1740,12 +1796,10 @@ obj.func <- function(x, dataset){
   exp_data <- dataset$df11 # retrieve data of Lupton (2020) ORAL female tissues
   colnames(exp_data)[c(2,3)] <- c("time", "concentration")
   preds_Lup_OR_Ftissues <- solution[solution$time %in% unique(exp_data$time), c("Cliver","Ckidney", 
-                                                                                "Cblood", "Cskin")]
-  
-  preds_Lup_OR_Ftissues <- preds_Lup_OR_Ftissues /1000 #convert ug/kg to ug/g
+                                                                                "Cblood", "Cskin")]/1000
   
   
-  obs_Lup_OR_Ftissues <- c(exp_data[exp_data$Tissue == "Liver", "concentration"],
+  obs_Lup_OR_Ftissues <- list(exp_data[exp_data$Tissue == "Liver", "concentration"],
                            exp_data[exp_data$Tissue == "Kidney", "concentration"],
                            exp_data[exp_data$Tissue == "Blood", "concentration"],
                            exp_data[exp_data$Tissue == "Skin", "concentration"])
@@ -1777,7 +1831,7 @@ obj.func <- function(x, dataset){
     
     preds_Lup_OR_Ffeces [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
   }
-  preds_Lup_OR_Ffeces <- unlist(preds_Lup_OR_Ffeces) #ug
+  #preds_Lup_OR_Ffeces <- unlist(preds_Lup_OR_Ffeces) #ug
   
   #Estimate fecal dry mass 
   Mfeces_wet <- (8.18/0.21)*BW #g
@@ -1786,7 +1840,7 @@ obj.func <- function(x, dataset){
   # Estimate the mass of feces by multiplying concentration by dry mass
   obs_Lup_OR_Ffeces <- c(exp_data[exp_data$Tissue == "Feces", "concentration"])*Mfeces_dry
   # Estimate cumulative fecal mass
-  obs_Lup_OR_Ffeces_cum <- cumsum(obs_Lup_OR_Ffeces)
+  obs_Lup_OR_Ffeces_cum <- list(cumsum(obs_Lup_OR_Ffeces))
   
   score[12] <- AAFE(predictions = preds_Lup_OR_Ffeces, observations = obs_Lup_OR_Ffeces_cum)
   
@@ -1816,12 +1870,12 @@ obj.func <- function(x, dataset){
     preds_Lup_OR_Furine [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
   }
   
-  preds_Lup_OR_Furine <- unlist(preds_Lup_OR_Furine) #ug
+  #preds_Lup_OR_Furine <- unlist(preds_Lup_OR_Furine) #ug
   
   Qurine_daily <- 85 * BW#  (ml/d/kg)*BW  --> mL/d, Schmidt et al., 2001, doi:10.1002/nau.1006
   obs_Lup_OR_Furine <- c(exp_data[exp_data$Tissue == "Urine", "concentration"])*Qurine_daily
   # Estimate cumulative fecal mass
-  obs_Lup_OR_Furine_cum <- cumsum(obs_Lup_OR_Furine)
+  obs_Lup_OR_Furine_cum <- list(cumsum(obs_Lup_OR_Furine))
   
   score[13] <- AAFE(predictions = preds_Lup_OR_Furine, observations = obs_Lup_OR_Furine_cum)
   
@@ -1890,10 +1944,10 @@ obj.func <- function(x, dataset){
     preds_Cui_OR_MurineL [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
   }
   
-  preds_Cui_OR_MurineL <- unlist(preds_Cui_OR_MurineL) 
+  #preds_Cui_OR_MurineL <- unlist(preds_Cui_OR_MurineL) 
   
   
-  obs_Cui_OR_MurineL <- c(exp_data[exp_data$Tissue == "Urine", "mass"])
+  obs_Cui_OR_MurineL <- list(exp_data[exp_data$Tissue == "Urine", "mass"])
   
   score[14] <- AAFE(predictions = preds_Cui_OR_MurineL, observations = obs_Cui_OR_MurineL)
   
@@ -1918,9 +1972,9 @@ obj.func <- function(x, dataset){
     preds_Cui_OR_MfecesL [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
   }
   
-  preds_Cui_OR_MfecesL <- unlist(preds_Cui_OR_MfecesL) 
+  #preds_Cui_OR_MfecesL <- unlist(preds_Cui_OR_MfecesL) 
   
-  obs_Cui_OR_MfecesL <- c(exp_data[exp_data$Tissue == "Feces", "mass"])
+  obs_Cui_OR_MfecesL <- list(exp_data[exp_data$Tissue == "Feces", "mass"])
   
   score[15] <- AAFE(predictions = preds_Cui_OR_MfecesL, observations = obs_Cui_OR_MfecesL)
   
@@ -1989,10 +2043,10 @@ obj.func <- function(x, dataset){
     preds_Cui_OR_MurineH [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
   }
   
-  preds_Cui_OR_MurineH <- unlist(preds_Cui_OR_MurineH) 
+  #preds_Cui_OR_MurineH <- unlist(preds_Cui_OR_MurineH) 
   
   
-  obs_Cui_OR_MurineH <- c(exp_data[exp_data$Tissue == "Urine", "mass"])
+  obs_Cui_OR_MurineH <- list(exp_data[exp_data$Tissue == "Urine", "mass"])
   
   score[16] <- AAFE(predictions = preds_Cui_OR_MurineH, observations = obs_Cui_OR_MurineH)
   
@@ -2020,10 +2074,10 @@ obj.func <- function(x, dataset){
     preds_Cui_OR_MfecesH [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
   }
   
-  preds_Cui_OR_MfecesH <- unlist(preds_Cui_OR_MfecesH) 
+  #preds_Cui_OR_MfecesH <- unlist(preds_Cui_OR_MfecesH) 
   
   
-  obs_Cui_OR_MfecesH <- c(exp_data[exp_data$Tissue == "Feces", "mass"])
+  obs_Cui_OR_MfecesH <- list(exp_data[exp_data$Tissue == "Feces", "mass"])
   
   score[17] <- AAFE(predictions = preds_Cui_OR_MfecesH, observations = obs_Cui_OR_MfecesH)
   
@@ -2078,14 +2132,14 @@ obj.func <- function(x, dataset){
     #Retrieve time points at which measurements are available for compartment i
     exp_time <- exp_data[exp_data$Tissue == compartment, 2]
     
-    preds_dzi_IV_Mserum [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+    preds_dzi_IV_Mserum [[i]] <- solution[solution$time %in% exp_time, column_names[i]] /1000
   }
   
-  preds_dzi_IV_Mserum <- unlist(preds_dzi_IV_Mserum) /1000
+  #preds_dzi_IV_Mserum <- unlist(preds_dzi_IV_Mserum) /1000
   
   #we assume that clotting factors are negligible amount
   
-  obs_dzi_IV_Mserum <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])
+  obs_dzi_IV_Mserum <- list(exp_data[exp_data$Tissue == "Serum", "concentration"])
  
   score[18] <- AAFE(predictions = preds_dzi_IV_Mserum, observations = obs_dzi_IV_Mserum)
   
@@ -2140,14 +2194,14 @@ obj.func <- function(x, dataset){
     #Retrieve time points at which measurements are available for compartment i
     exp_time <- exp_data[exp_data$Tissue == compartment, 2]
     
-    preds_dzi_OR_Mserum_low [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+    preds_dzi_OR_Mserum_low [[i]] <- solution[solution$time %in% exp_time, column_names[i]]/1000 
   }
   
-  preds_dzi_OR_Mserum_low <- unlist(preds_dzi_OR_Mserum_low)/1000 
+  #preds_dzi_OR_Mserum_low <- unlist(preds_dzi_OR_Mserum_low)/1000 
   
   #we assume that clotting factors are negligible amount
   
-  obs_dzi_OR_Mserum_low <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])
+  obs_dzi_OR_Mserum_low <- list(exp_data[exp_data$Tissue == "Serum", "concentration"])
   
   score[19] <- AAFE(predictions = preds_dzi_OR_Mserum_low, observations = obs_dzi_OR_Mserum_low)
   
@@ -2202,14 +2256,14 @@ obj.func <- function(x, dataset){
     #Retrieve time points at which measurements are available for compartment i
     exp_time <- exp_data[exp_data$Tissue == compartment, 2]
     
-    preds_dzi_OR_Mserum_medium [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+    preds_dzi_OR_Mserum_medium [[i]] <- solution[solution$time %in% exp_time, column_names[i]]/1000 
   }
   
-  preds_dzi_OR_Mserum_medium <- unlist(preds_dzi_OR_Mserum_medium)/1000 
+  #preds_dzi_OR_Mserum_medium <- unlist(preds_dzi_OR_Mserum_medium)/1000 
   
   #we assume that clotting factors are negligible amount
   
-  obs_dzi_OR_Mserum_medium <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])
+  obs_dzi_OR_Mserum_medium <- list(exp_data[exp_data$Tissue == "Serum", "concentration"])
   
   score[20] <- AAFE(predictions = preds_dzi_OR_Mserum_medium, observations = obs_dzi_OR_Mserum_medium)
   
@@ -2265,14 +2319,14 @@ obj.func <- function(x, dataset){
     #Retrieve time points at which measurements are available for compartment i
     exp_time <- exp_data[exp_data$Tissue == compartment, 2]
     
-    preds_dzi_OR_Mserum_high [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+    preds_dzi_OR_Mserum_high [[i]] <- solution[solution$time %in% exp_time, column_names[i]]/1000 
   }
   
-  preds_dzi_OR_Mserum_high <- unlist(preds_dzi_OR_Mserum_high)/1000 
+  #preds_dzi_OR_Mserum_high <- unlist(preds_dzi_OR_Mserum_high)/1000 
   
   #we assume that clotting factors are negligible amount
   
-  obs_dzi_OR_Mserum_high <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])
+  obs_dzi_OR_Mserum_high <- list(exp_data[exp_data$Tissue == "Serum", "concentration"])
  
    score[21] <- AAFE(predictions = preds_dzi_OR_Mserum_high, observations = obs_dzi_OR_Mserum_high)
   
@@ -2328,14 +2382,14 @@ obj.func <- function(x, dataset){
     #Retrieve time points at which measurements are available for compartment i
     exp_time <- exp_data[exp_data$Tissue == compartment, 2]
     
-    preds_dzi_IV_Fserum [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+    preds_dzi_IV_Fserum [[i]] <- solution[solution$time %in% exp_time, column_names[i]]/1000 
   }
   
-  preds_dzi_IV_Fserum <- unlist(preds_dzi_IV_Fserum)/1000 
+  #preds_dzi_IV_Fserum <- unlist(preds_dzi_IV_Fserum)/1000 
   
   #we assume that clotting factors are negligible amount
   
-  obs_dzi_IV_Fserum <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])
+  obs_dzi_IV_Fserum <- list(exp_data[exp_data$Tissue == "Serum", "concentration"])
   
   score[22] <- AAFE(predictions = preds_dzi_IV_Fserum, observations = obs_dzi_IV_Fserum)
   
@@ -2391,14 +2445,14 @@ obj.func <- function(x, dataset){
     #Retrieve time points at which measurements are available for compartment i
     exp_time <- exp_data[exp_data$Tissue == compartment, 2]
     
-    preds_dzi_OR_Fserum_low [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+    preds_dzi_OR_Fserum_low [[i]] <- solution[solution$time %in% exp_time, column_names[i]]/1000 
   }
   
-  preds_dzi_OR_Fserum_low <- unlist(preds_dzi_OR_Fserum_low)/1000 
+  #preds_dzi_OR_Fserum_low <- unlist(preds_dzi_OR_Fserum_low)/1000 
   
   #we assume that clotting factors are negligible amount
   
-  obs_dzi_OR_Fserum_low <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])
+  obs_dzi_OR_Fserum_low <- list(exp_data[exp_data$Tissue == "Serum", "concentration"])
   
   score[23] <- AAFE(predictions = preds_dzi_OR_Fserum_low, observations = obs_dzi_OR_Fserum_low)
   
@@ -2453,14 +2507,14 @@ obj.func <- function(x, dataset){
     #Retrieve time points at which measurements are available for compartment i
     exp_time <- exp_data[exp_data$Tissue == compartment, 2]
     
-    preds_dzi_OR_Fserum_medium [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+    preds_dzi_OR_Fserum_medium [[i]] <- solution[solution$time %in% exp_time, column_names[i]]/1000 
   }
   
-  preds_dzi_OR_Fserum_medium <- unlist(preds_dzi_OR_Fserum_medium)/1000 
+  #preds_dzi_OR_Fserum_medium <- unlist(preds_dzi_OR_Fserum_medium)/1000 
   
   #we assume that clotting factors are negligible amount
   
-  obs_dzi_OR_Fserum_medium <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])
+  obs_dzi_OR_Fserum_medium <- list(exp_data[exp_data$Tissue == "Serum", "concentration"])
   
   score[24] <- AAFE(predictions = preds_dzi_OR_Fserum_medium, observations = obs_dzi_OR_Fserum_medium)
   
@@ -2516,14 +2570,14 @@ obj.func <- function(x, dataset){
     #Retrieve time points at which measurements are available for compartment i
     exp_time <- exp_data[exp_data$Tissue == compartment, 2]
     
-    preds_dzi_OR_Fserum_high [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+    preds_dzi_OR_Fserum_high [[i]] <- solution[solution$time %in% exp_time, column_names[i]]/1000 
   }
   
-  preds_dzi_OR_Fserum_high <- unlist(preds_dzi_OR_Fserum_high)/1000 
+  #preds_dzi_OR_Fserum_high <- unlist(preds_dzi_OR_Fserum_high)/1000 
   
   #we assume that clotting factors are negligible amount
   
-  obs_dzi_OR_Fserum_high <- c(exp_data[exp_data$Tissue == "Serum", "concentration"])
+  obs_dzi_OR_Fserum_high <- list(exp_data[exp_data$Tissue == "Serum", "concentration"])
   
   score[25] <- AAFE(predictions = preds_dzi_OR_Fserum_high, observations = obs_dzi_OR_Fserum_high)
   
@@ -2576,13 +2630,13 @@ obj.func <- function(x, dataset){
     #Retrieve time points at which measurements are available for compartment i
     exp_time <- exp_data[exp_data$Tissue == compartment, 2]
     
-    preds_kim_OR_Fblood [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+    preds_kim_OR_Fblood [[i]] <- solution[solution$time %in% exp_time, column_names[i]]/1000
   }
   
-  preds_kim_OR_Fblood <- unlist(preds_kim_OR_Fblood) /1000 #convert ug/kg to ug/g
+  #preds_kim_OR_Fblood <- unlist(preds_kim_OR_Fblood) /1000 #convert ug/kg to ug/g
   
   
-  obs_kim_OR_Fblood <- c(exp_data[exp_data$Tissue == "Blood", "concentration"])
+  obs_kim_OR_Fblood <- list(exp_data[exp_data$Tissue == "Blood", "concentration"])
   
   score[26] <- AAFE(predictions = preds_kim_OR_Fblood, observations = obs_kim_OR_Fblood)
   
@@ -2636,13 +2690,13 @@ obj.func <- function(x, dataset){
     #Retrieve time points at which measurements are available for compartment i
     exp_time <- exp_data[exp_data$Tissue == compartment, 2]
     
-    preds_kim_IV_Fblood [[i]] <- solution[solution$time %in% exp_time, column_names[i]]
+    preds_kim_IV_Fblood [[i]] <- solution[solution$time %in% exp_time, column_names[i]]/1000
   }
   
-  preds_kim_IV_Fblood <- unlist(preds_kim_IV_Fblood) /1000 #convert ug/kg to ug/g
+  #preds_kim_IV_Fblood <- unlist(preds_kim_IV_Fblood) /1000 #convert ug/kg to ug/g
   
   
-  obs_kim_IV_Fblood <- c(exp_data[exp_data$Tissue == "Blood", "concentration"])
+  obs_kim_IV_Fblood <- list(exp_data[exp_data$Tissue == "Blood", "concentration"])
   
   score[27] <- AAFE(predictions = preds_kim_IV_Fblood, observations = obs_kim_IV_Fblood)
   
@@ -3832,7 +3886,7 @@ experiment2 <- reshape(kudo_low_dose[c("Tissue" ,"Time_hours",
                      experiment13 = experiment13,  experiment14 = experiment14, experiment15 = experiment15, experiment16 = experiment16,
                      experiment17 = experiment17, experiment18 = experiment18, experiment19 = experiment19, experiment20 = experiment20,
                      experiment21 = experiment21, experiment22 = experiment22, experiment23 = experiment23, experiment24 = experiment24,
-                     experiment25 = experiment25, experiment25 = experiment26, experiment25 = experiment27)
+                     experiment25 = experiment25, experiment26 = experiment26, experiment27 = experiment27)
  
 
   # Rename predictions so that they share the same name as the names of the experimental data dataframe
