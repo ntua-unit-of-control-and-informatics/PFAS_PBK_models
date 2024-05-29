@@ -269,7 +269,7 @@ create.params <- function(user.input){
     # For carboxyl group we assume 0.13nm, So the total size is around 1.2 nm
     np_size <- 1.2/2 #nm, PFOA equivalent radius
     
-    for (i in 1:length(reflection)){
+    for (i in 1:length(s_r)){
       a_r <- np_size/(Dps[i]/2)
       Phi = (1-a_r)^2
       F_r <- (((1-a_r^2)^(3/2))*Phi)/(1+0.2*(a_r^2)*(1-a_r^2)^16)
@@ -697,6 +697,11 @@ create.params <- function(user.input){
                 'QBIN'=QBIN, 'QGE'=QGE,
                 'QBGo'=QBGo,
                 'QBSK'=QBSK,
+                
+                "QparaKi" = QparaKi,"QparaLi" = QparaLi,"QparaSt" = QparaSt,"QparaIn" = QparaIn,
+                "QparaMu" = QparaMu,"QparaAd" = QparaAd,"QparaRe" = QparaRe,"QparaLu" = QparaLu,
+                "QparaSp" = QparaSp,"QparaHt" = QparaHt,"QparaBr" = QparaBr,"QparaGo" = QparaGo,
+                "QparaSk" = QparaSk,
                 
                 'CalbB'= CalbB, 'CalbKF'=CalbKF, 'CalbLF'=CalbLF,
                 'CalbMF'=CalbMF, 'CalbAF'=CalbAF, 'CalbRF'=CalbRF,
@@ -2717,7 +2722,7 @@ obj.func <- function(x, dataset){
 setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
 #setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
 MW <- 414.07 #g/mol
-source(Goodness-of-fit-metrics.R)
+source("Goodness-of-fit-metrics.R")
 
 # Read data
 kudo_high_dose <- openxlsx::read.xlsx("Data/IV_male_rats_tissues_high_kudo_2007.xlsx")
@@ -2780,7 +2785,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0 ,
-              "maxeval" = 1000, 
+              "maxeval" = 100, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
@@ -2791,11 +2796,8 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 
 N_pars <- 13 # Number of parameters to be fitted
 fit <- rep(0,N_pars)
-# lb	= rep(log(1e-20), N_pars)
-# ub = rep(log(1e8), N_pars)
 lb	= c(rep(log(1e-3), 3),log(1e-5),log(1e-5),rep(log(1e-3),3),log(1e-5),log(1e-5),log(1e-3),log(1e-5),log(1e-5))
 ub = c(rep(log(1e3), 3), log(1e8),log(1e8),rep(log(1e3),3),log(1e8),log(1e8),log(1e3),log(1e8),log(1e8))
-
 # Run the optimization algorithmm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,
