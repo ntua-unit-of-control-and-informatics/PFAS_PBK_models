@@ -46,8 +46,7 @@ create.params <- function(user.input){
     kabs <- estimated_params[12] #m/h
     
     P_liver_bile <- estimated_params[13] 
-    K_efflux_liver <- estimated_params[14] 
-    K_efflux_kidney <- estimated_params[15]
+    
     
     #units conversion from Cheng 2017R, time-> h, PFOA mass->ng, tissues mass-> g
     Hct <- 0.41 #hematocrit for rats, https://doi.org/10.1080/13685538.2017.1350156 mean value for both males and females
@@ -387,7 +386,7 @@ create.params <- function(user.input){
     
     ClSTFT_unscaled= 18.1 #uL/min/mg protein, Kimura et al. 2017
     ClINFT_unscaled= 18.1 #uL/min/mg protein, Kimura et al. 2017
-    
+   
     ClMFT_unscaled= 18.1 #same as ClGFT
     ClAFT_unscaled= 18.1 #same as ClGFT
     ClRFT_unscaled= 18.1 #same as ClGFT
@@ -482,9 +481,15 @@ create.params <- function(user.input){
     intestine_cells = 93.1 * 2.365e6 # https://doi.org/10.1152/ajpgi.00290.2013 cells per crypt Figure 3B, number of crypts: Figure 1, https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1271340/ (mean value of rat 300 and 400 g)
     intestine_protein <- muscle_protein#NA#5034
     intestine_protein_total <- intestine_protein*(1000*VINT)
-    ClINFT <- ClINFT_unscaled *intestine_protein_total#uL/min for the whole gut compartment
-    kINFINT <-  (60*ClINFT)/1e06 #L/h
-    kabIN <- (kabs * AINL)*1000 #L/h
+    ClINFT= 18.1*60 #uL/min/mg protein--> uL/h/mg protein, Kimura et al. 2017
+    Awell = 9 #cm^2 (for a 35 mm culture dish)
+    Swell = 1.12 #cm^2
+    well_protein = 0.346 #mg protein
+    P = (well_protein * Awell)/Swell #mg protein/well
+    Papp = (ClINFT*1e-5 * P)/(Awell *2) #m/h
+    P_passive = (Papp * AINL)*1000 #L/h
+    kINFINT <-  ClINFT/1e06 #L/h
+    
     
     #oatp2b1-intestine
     VmIn_Oatp2_in_vitro= 456.63e-3 #nmol/mg protein/min  (Kimura et al., 2017), assuming that the mediated transport 
@@ -616,7 +621,6 @@ create.params <- function(user.input){
                 'ClTFT'=ClTFT,
                 'ClSKFT'=ClSKFT,
                 
-                'K_efflux_liver' = K_efflux_liver, 'K_efflux_kidney' = K_efflux_kidney,
                 'P_liver_bile' = P_liver_bile,
                 
                 'VmL_Oatp'=VmL_Oatp, 'KmL_Oatp'= KmL_Oatp, 'VmL_Ntcp'= VmL_Ntcp,
@@ -624,7 +628,6 @@ create.params <- function(user.input){
                 'VmIn_Oatp2'=VmIn_Oatp2, 'KmIn_Oatp2'= KmIn_Oatp2,
                 'KmL_Ntcp'= KmL_Ntcp,'VmK_Oatp'= VmK_Oatp, 
                 'KmK_Oatp'=KmK_Oatp,
-                #'VmK_Osta'=VmK_Osta,'KmK_Osta'=KmK_Osta, 
                 'VmK_Oat1'=VmK_Oat1, 'KmK_Oat1'=KmK_Oat1, 'KmK_Oat1'=KmK_Oat1, 
                 'VmK_Oat3'=VmK_Oat3, 'KmK_Oat3'=KmK_Oat3, 
                 'VmK_Urat'=VmK_Urat, 'KmK_Urat'=KmK_Urat, 
@@ -636,9 +639,8 @@ create.params <- function(user.input){
                 'kLFLT'=kLFLT, 'kAFAT'=kAFAT, 
                 'kRFRT'=kRFRT,
                 'kabST'=kabST, 
-                'kabIN'=kabIN,
                 'kMFMT'=kMFMT, 'kLuTLuF' =kLuTLuF, 'kSPFSPT' =kSPFSPT,
-                'kSTFSTT' =kSTFSTT, 'kINFINT' =kINFINT, 'kHFHT' =kHFHT,
+                'kSTFSTT' =kSTFSTT, 'P_passive'=P_passive, 'kINFINT' =kINFINT, 'kHFHT' =kHFHT,
                 'kBrFBrT' =kBrFBrT, 'kTFTT' =kTFTT,
                 'kSKFSKT' =kSKFSKT,
                 
@@ -811,9 +813,9 @@ ode.func <- function(time, inits, params){
     dMBK = QBK*CBfart - (QBK-QBK/500)*CKBf - PeffK*AK*(CKBf-CKFf) - CKBf*QBK/500 
     #interstitial fluid subcompartment
     dMKF = CKBf*QBK/500 - CKFf*QBK/500 + PeffK*AK*(CKBf-CKFf) - kKFKT*(CKFf-CKTf) -
-            (VmK_Oat1*CKFf/(KmK_Oat1+CKFf)) - (VmK_Oat3*CKFf/(KmK_Oat3+CKFf)) +  (VmK_baso*CKFf/(KmK_baso+CKFf))
+            (VmK_Oat1*CKFf/(KmK_Oat1+CKFf)) - (VmK_Oat3*CKFf/(KmK_Oat3+CKFf)) +  (VmK_baso*CKTf/(KmK_baso+CKTf))
     #Kidney proximal tubule cells subcompartment
-    dMKT = kKFKT*(CKFf-CKTf) - kFKT*(CKTf - CFil) + (VmK_Oatp*CFil/(KmK_Oatp+CFil)) - (VmK_baso*CKFf/(KmK_baso+CKFf)) +
+    dMKT = kKFKT*(CKFf-CKTf) - kFKT*(CKTf - CFil) + (VmK_Oatp*CFil/(KmK_Oatp+CFil)) - (VmK_baso*CKTf/(KmK_baso+CKTf)) +
             (VmK_Oat1*CKFf/(KmK_Oat1+CKFf)) + (VmK_Oat3*CKFf/(KmK_Oat3+CKFf)) + (VmK_Urat*CFil/(KmK_Urat+CFil)) 
     dMFil =  QGFR*CBfart+ kFKT*(CKTf - CFil) - (VmK_Oatp*CFil/(KmK_Oatp+CFil)) - (VmK_Urat*CFil/(KmK_Urat+CFil))- (Qurine*CFil)
     dMurine = Qurine*CFil
@@ -824,13 +826,13 @@ ode.func <- function(time, inits, params){
     dMBL = QBL*CBfart + (QBSP-QBSP/500)*CSPBf + (QBIN-QBIN/500)*CINBf + (QBST-QBST/500)*CSTBf - PeffL*AL*(CLBf-CLFf) - CLBf*QBLtot/500 - (QBLtot-QBLtot/500)*CLBf
     #interstitial fluid subcompartment 
     dMLF = CLBf*QBLtot/500 - CLFf*QBLtot/500 + PeffL*AL*(CLBf-CLFf) - kLFLT*(CLFf-CLTf) - 
-          (VmL_Oatp*CLFf/(KmL_Oatp+CLFf)) - (VmL_Oatp2*CLFf/(KmL_Oatp2+CLFf)) - (VmL_Ntcp*CLFf/(KmL_Ntcp+CLFf)) + K_efflux_liver*CLTf
+          (VmL_Oatp*CLFf/(KmL_Oatp+CLFf)) - (VmL_Oatp2*CLFf/(KmL_Oatp2+CLFf)) - (VmL_Ntcp*CLFf/(KmL_Ntcp+CLFf))
     #Liver tissue subcompartment
     dMLT = kLFLT*(CLFf-CLTf) + (VmL_Oatp*CLFf/(KmL_Oatp+CLFf)) + (VmL_Oatp2*CLFf/(KmL_Oatp2+CLFf))
-                               (VmL_Ntcp*CLFf/(KmL_Ntcp+CLFf)) -  P_liver_bile*Qbile*CLTf - K_efflux_liver*CLTf
+                               (VmL_Ntcp*CLFf/(KmL_Ntcp+CLFf)) -  P_liver_bile*Qbile*CLTf 
    
     # Feces
-    dMfeces = Qfeces*CINL + P_liver_bile*Qbile*CLTf
+    dMfeces = Qfeces*CINL
     
     #Stomach
     #blood subcompartment
@@ -849,9 +851,9 @@ ode.func <- function(time, inits, params){
     #interstitial fluid subcompartment 
     dMINF = CINBf*QBIN/500 - CINFf*QBIN/500 + PeffIN*AIN*(CINBf-CINFf) - kINFINT*(CINFf-CINT) 
     #Intestine tissue subcompartment
-    dMINT = kINFINT*(CINFf-CINT) + kabIN*CINL + (VmIn_Oatp2*CINL/(KmIn_Oatp2+CINL))
+    dMINT = kINFINT*(CINFf-CINT) + P_passive*CINL + (VmIn_Oatp2*CINL/(KmIn_Oatp2+CINL))
     #Intestine lumen
-    dMINL = QGE*CSTL - (Qfeces*CINL) - kabIN*CINL - (VmIn_Oatp2*CINL/(KmIn_Oatp2+CINL))
+    dMINL = QGE*CSTL - (Qfeces*CINL) - P_passive*CINL - (VmIn_Oatp2*CINL/(KmIn_Oatp2+CINL)) + P_liver_bile*Qbile*CLTf
 
     #Muscle
     
@@ -2784,12 +2786,12 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
 #  CF_Peff, kabs
 
-N_pars <- 12 # Number of parameters to be fitted
+N_pars <- 13 # Number of parameters to be fitted
 fit <- rep(0,N_pars)
 # lb	= rep(log(1e-20), N_pars)
 # ub = rep(log(1e8), N_pars)
-lb	= c(rep(log(1e-2), 3),log(1e-3),log(1e-2),rep(log(1e-2),3),log(1e-3),log(1e-2),log(1e-3),log(1e-2))
-ub = c(rep(log(1e2), 3), log(1e8),log(1e8),rep(log(1e2),3),log(1e8),log(1e8),log(1e8),log(1e8))
+lb	= c(rep(log(1e-2), 3),log(1e-3),log(1e-2),rep(log(1e-2),3),log(1e-3),log(1e-2),log(1e-3),log(1e-2),log(1e-3))
+ub = c(rep(log(1e2), 3), log(1e8),log(1e8),rep(log(1e2),3),log(1e8),log(1e8),log(1e8),log(1e8),log(1e8))
 
 # Run the optimization algorithmm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
