@@ -79,8 +79,7 @@ create.params <- function(user.input){
     PVLF <- 0.049  #Blouin et al. 1977
     VLF <- PVLF * PVL* BW #liver interstitial fluid volume kg=L
     VLT <- VL - VLF #liver tissue volume kg=L
-    # PVbile <- 0.004 #Blouin et al. 1977
-    # Vbile <- 0.001#PVbile * VL #bile volume kg=L
+    
    
     #Intestine (small and large)
     PVIN <- 2.24e-2 #Brown et al. 1997, p 416, Table 5: 1.4+0.84
@@ -189,6 +188,15 @@ create.params <- function(user.input){
     VSKF <- PVSKF * PVSK * BW #gonads interstitial fluid volume kg=L
     VSKT <- VSK - VSKF #gonads tissue volume kg=L
     
+    #Bones
+    PVBN <- 0.06 #Brown et al. 1997, p 424, relative bone weight range from 5-7%
+    VBN <- PVBN * BW
+    PVBNB <- 0.04 #Brown et al. 1997, p 458, Table 3, pkSim
+    VBNB <-PVBNB * PVBN * BW #volume of the blood of bones kg=L
+    PVBNF <- 0.1 #pkSim
+    VBNF <- PVBNF * PVBN * BW #bones interstitial fluid volume kg=L
+    VBNT <- VBN - VBNF #bones tissue volume kg=L
+    
     #RoB
     PVR <- 1 - PVB - PVK - PVL - PVM - PVA - PVSP - PVH - PVBr - PVT - PVST - PVIN - PVSK
     #PVR <- 1 - PVB - PVK - PVL - PVM - PVA - PVSP - PVH - PVBr - PVT - PVST - PVIN
@@ -251,6 +259,9 @@ create.params <- function(user.input){
     PSK <- 70e-4#m2/g tissue
     #ASK <- PSK* VSK * 1e7 #skin surface area (m^2), same as muscle #assumption
     ASK <- PSK* VSK*1e03 #skin surface area (m^2), same as muscle #assumption
+    PBN <- 3498.12e-4/VBN #m2/g tissue
+    ASK <- PBN* VBN*1e03 #skin surface area (m^2), same as muscle #assumption
+    
     
     #Effective permeability (Peff, in m/h) for blood (B), liver(L), kidney(K),
     #stomach(ST),intestine (IN), adipose(A), muscle(M), spleen (SP), heart (H), 
@@ -270,6 +281,7 @@ create.params <- function(user.input){
     PeffBr <- 5e-8*3600*CF_Peff #assumption
     PeffT <- 5e-8*3600*CF_Peff #assumption
     PeffSK <- 5e-8*3600*CF_Peff #assumption
+    PeffBN <- 5e-8*3600*CF_Peff #assumption
     
     #Blood flow rates (QBi, in L/h) to different tissues (i=L, K, G, A, M, R)
     #as a percentage of cardiac output (Qcardiac L/h), which itself is a function
@@ -580,6 +592,7 @@ create.params <- function(user.input){
                 'VST'=VST, 'VSTB'=VSTB, 'VSTF'=VSTF, 'VSTT'=VSTT,
                 'VSTL'=VSTL, 'VINL'=VINL,
                 'VSK'=VSK,'VSKB'=VSKB, 'VSKF'=VSKF, 'VSKT'=VSKT,
+                'VBN'=VBN,'VBNB'=VBNB, 'VBNF'=VBNF, 'VBNT'=VBNT,
                 
                 'AK'=AK, 'AKG'=AKG, 'AL'=AL, 
                 'AM'=AM, 'AA'=AA, 'AR'=AR, 'ALu'= ALu, 

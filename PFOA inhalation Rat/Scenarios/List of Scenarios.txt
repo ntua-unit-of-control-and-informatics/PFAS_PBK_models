@@ -1,11 +1,11 @@
 List of Scenarios
 
-1. Enterohepatic circulation only
-2. Basolateral efflux only
-3. Enterohepatic circulation + Basolateral efflux
-4. Same RAF among the transporters of the same organ (without Enterohepatic circulation, Basolateral efflux)
-5. Same RAF among the transporters of the same organ + Enterohepatic circulation
-6. Same RAF among the transporters of the same organ + Basolateral efflux)
-7. Different RAF among the transporters of the same organ (without Enterohepatic circulation, Basolateral efflux)
-8. Different RAF among the transporters of the same organ + Enterohepatic circulation
-9. Different RAF among the transporters of the same organ + Basolateral efflux
+1.Enterohepatic same for F&M - Basolateral Efflux same for F&M
+2.Enterohepatic same for F&M - Basolateral Efflux different for F&M
+3.Enterohepatic same for F&M - No Basolateral Efflux 
+4.No Enterohepatic Basolateral - Efflux same for F&M 
+5.Enterohepatic different for F&M - Basolateral Efflux same for F&M
+6.Enterohepatic different for F&M - Basolateral Efflux different for F&M
+7.Enterohepatic different for F&M - No Basolateral Efflux
+8.No Enterohepatic - Basolateral Efflux different for F&M 
+9.No Enterohepatic - No Basolateral Efflux
