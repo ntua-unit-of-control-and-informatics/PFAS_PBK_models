@@ -42,7 +42,7 @@ create.params <- function(user.input){
     #permeabilities correction factor
     CF_Peff <- estimated_params[12] 
     P_liver_bile <- estimated_params[13] 
-    
+    kabs_st <- estimated_params[14]  #m/h
     #units conversion from Cheng 2017R, time-> h, PFOA mass->ng, tissues mass-> g
     Hct <- 0.41 #hematocrit for rats, https://doi.org/10.1080/13685538.2017.1350156 mean value for both males and females
     
@@ -573,12 +573,13 @@ create.params <- function(user.input){
     intestine_protein_total <- intestine_protein*(1000*VINT)
     ClINFT <- ClINFT_unscaled *intestine_protein_total#uL/min for the whole gut compartment
     kINFINT <-  (60*ClINFT)/1e06 #L/h
+    # Following the calculations of Lin et al. (2023)
     Awell = 9 #cm^2 (for a 35 mm culture dish)
     Swell = 1.12 #cm^2
     well_protein = 0.346 #mg protein
     P = (well_protein * Awell)/Swell #mg protein/well
-    Papp = (ClINFT*1e-5 * P)/(Awell *2) #m/h
-    P_passive = (Papp * AINL)*1000 #L/h
+    Papp = (ClINFT_unscaled*60*1e-03*P)/(Awell *2) #cm/h
+    P_passive = ( (Papp/100) * AINL)*1000 #L/h
     
     #oatp2b1-intestine
     VmIn_Oatp2_in_vitro= 456.63e-3 #nmol/mg protein/min  (Kimura et al., 2017), 
@@ -594,8 +595,6 @@ create.params <- function(user.input){
     ClSTFT <- ClSTFT_unscaled *stomach_protein_total #uL/min for the whole gut compartment
     kSTFSTT <-  (60*ClSTFT)/1e06 #L/h
     # For identifiability reasons we assume that absorption is realised only through the intestines
-    #kabST <- kabs * ASTL
-    kabs_st=0 #m/h
     kabST <- (kabs_st* ASTL)*1000 #L/h
     
     #Adipose
@@ -2785,7 +2784,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0 ,
-              "maxeval" = 100, 
+              "maxeval" = 50, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
@@ -2794,10 +2793,10 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
 #  CF_Peff
 
-N_pars <- 13 # Number of parameters to be fitted
+N_pars <- 14 # Number of parameters to be fitted
 fit <- rep(0,N_pars)
-lb	= c(rep(log(1e-3), 3),log(1e-5),log(1e-5),rep(log(1e-3),3),log(1e-5),log(1e-5),log(1e-3),log(1e-5),log(1e-5))
-ub = c(rep(log(1e3), 3), log(1e8),log(1e8),rep(log(1e3),3),log(1e8),log(1e8),log(1e3),log(1e8),log(1e8))
+lb	= c(rep(log(1e-3), 3),log(1e-5),log(1e-5),rep(log(1e-3),3),log(1e-5),log(1e-5),log(1e-3),log(1e-5),log(1e-5),log(1e-5))
+ub = c(rep(log(1e3), 3), log(1e8),log(1e8),rep(log(1e3),3),log(1e8),log(1e8),log(1e3),log(1e8),log(1e8),log(1e8))
 # Run the optimization algorithmm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,
