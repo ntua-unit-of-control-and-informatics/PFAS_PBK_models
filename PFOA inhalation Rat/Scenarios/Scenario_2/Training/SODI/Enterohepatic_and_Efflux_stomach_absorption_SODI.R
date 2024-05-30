@@ -42,7 +42,7 @@ create.params <- function(user.input){
     #permeabilities correction factor
     CF_Peff <- estimated_params[12] 
     P_liver_bile <- estimated_params[13] 
-    kabs_st <- 0 #m/h
+    kabs_st <- estimated_params[14]  #m/h
     #units conversion from Cheng 2017R, time-> h, PFOA mass->ng, tissues mass-> g
     Hct <- 0.41 #hematocrit for rats, https://doi.org/10.1080/13685538.2017.1350156 mean value for both males and females
     
@@ -2766,7 +2766,7 @@ dzi_OR_Fserum_high$Concentration_microM <- dzi_OR_Fserum_high$Concentration_micr
 kim_OR_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_ORAL_kim_2016.xlsx")
 kim_IV_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_IV_kim_2016.xlsx")
 
-setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_2/Training/AAFE/NoStomachAbs")
+setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_2/Training/AAFE/StomachAbs")
 
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
@@ -2793,11 +2793,10 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
 #  CF_Peff
 
-N_pars <- 13 # Number of parameters to be fitted
-fit <-  c(rep(log(1), 3),log(1e4),log(1e4),log(0.001), log(1), log(0.1),log(1e4),log(1e4),log(1e2),log(1e2),log(1))
-
-lb	= c(rep(log(1e-2), 3),log(1e3),log(1e3),log(1e-04), log(1e-2),log(1e-2),log(1e3),log(1e3),log(1e-2),log(1e-5),log(1e-5))
-ub = c(rep(log(1e2), 3), log(1e6),log(1e6),log(1e2),log(1e2),log(1e1),log(1e6),log(1e6),log(1e2),log(1e8),log(1e8))
+N_pars <- 14 # Number of parameters to be fitted
+fit <-  c(rep(log(1), 3),log(1e4),log(1e4),log(0.001), log(1), log(0.1),log(1e4),log(1e4),log(1e2),log(1e2),log(1),log(1))
+lb	= c(rep(log(1e-2), 3),log(1e3),log(1e3),log(1e-04), log(1e-2),log(1e-2),log(1e3),log(1e3),log(1e-2),log(1e-5),log(1e-5),log(1e-5))
+ub = c(rep(log(1e2), 3), log(1e6),log(1e6),log(1e2),log(1e2),log(1e1),log(1e6),log(1e6),log(1e2),log(1e8),log(1e8),log(1e8))
 # Run the optimization algorithmm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,
@@ -2809,6 +2808,7 @@ optimizer <- nloptr::nloptr( x0= fit,
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
 
+save.image("test_periklis.RData")
 
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
 BW <- 0.29  # body weight (kg)
