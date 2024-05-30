@@ -5,7 +5,7 @@ Model experiments list
 3.kim (2016) IV male tissues
 4.kim (2016) ORAL male tissues
 5.kim (2016) IV female tissues
-6.kim (2016) IV female tissues
+6.kim (2016) ORAL female tissues
 7.Dzierlenga (2021) ORAL male tissues
 8.Dzierlenga (2021) ORAL female tissues
 9.Kim (2016) ORAL male blood
@@ -27,9 +27,5 @@ Model experiments list
 25.Dzierlenga (2021) ORAL female serum high
 26.Kim (2016) ORAL female blood
 27.Kim (2016) IV female blood
-
-
-
-
 
 

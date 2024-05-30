@@ -42,7 +42,7 @@ create.params <- function(user.input){
     #permeabilities correction factor
     CF_Peff <- estimated_params[12] 
     P_liver_bile <- estimated_params[13] 
-    kabs_st <- estimated_params[14]  #m/h
+    kabs_st <- 0 #m/h
     #units conversion from Cheng 2017R, time-> h, PFOA mass->ng, tissues mass-> g
     Hct <- 0.41 #hematocrit for rats, https://doi.org/10.1080/13685538.2017.1350156 mean value for both males and females
     
@@ -584,7 +584,7 @@ create.params <- function(user.input){
     #oatp2b1-intestine
     VmIn_Oatp2_in_vitro= 456.63e-3 #nmol/mg protein/min  (Kimura et al., 2017), 
     #assuming that the mediated transport is performed only by this transporter
-    VmIn_Oatp2_scaled = 60*VmIn_Oatp2_in_vitro*MW*(VL*1000)/1000   #physiologically scaled to in vivo, ug/h
+    VmIn_Oatp2_scaled = 60*VmIn_Oatp2_in_vitro*MW*intestine_protein_total/1000   #physiologically scaled to in vivo, ug/h
     VmIn_Oatp2 = VmIn_Oatp2_scaled*RAFOatp2_Int #in vivo value, in  ug/h, same RAF as in liver
     KmIn_Oatp2 = 8.3*MW #umol/L (Kimura et al., 2017) --> ug/L
     
@@ -2718,7 +2718,7 @@ obj.func <- function(x, dataset){
 
 ################################################################################
 
-setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
+setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
 #setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
 MW <- 414.07 #g/mol
 source("Goodness-of-fit-metrics.R")
@@ -2766,7 +2766,7 @@ dzi_OR_Fserum_high$Concentration_microM <- dzi_OR_Fserum_high$Concentration_micr
 kim_OR_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_ORAL_kim_2016.xlsx")
 kim_IV_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_IV_kim_2016.xlsx")
 
-setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_1/Training/AAFE")
+setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_2/Training/AAFE/NoStomachAbs")
 
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
@@ -2784,7 +2784,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0 ,
-              "maxeval" = 50, 
+              "maxeval" = 300, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
@@ -2793,10 +2793,11 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
 #  CF_Peff
 
-N_pars <- 14 # Number of parameters to be fitted
-fit <- rep(0,N_pars)
-lb	= c(rep(log(1e-3), 3),log(1e-5),log(1e-5),rep(log(1e-3),3),log(1e-5),log(1e-5),log(1e-3),log(1e-5),log(1e-5),log(1e-5))
-ub = c(rep(log(1e3), 3), log(1e8),log(1e8),rep(log(1e3),3),log(1e8),log(1e8),log(1e3),log(1e8),log(1e8),log(1e8))
+N_pars <- 13 # Number of parameters to be fitted
+fit <-  c(rep(log(1), 3),log(1e4),log(1e4),log(0.001), log(1), log(0.1),log(1e4),log(1e4),log(1e2),log(1e2),log(1))
+
+lb	= c(rep(log(1e-2), 3),log(1e3),log(1e3),log(1e-04), log(1e-2),log(1e-2),log(1e3),log(1e3),log(1e-2),log(1e-5),log(1e-5))
+ub = c(rep(log(1e2), 3), log(1e6),log(1e6),log(1e2),log(1e2),log(1e1),log(1e6),log(1e6),log(1e2),log(1e8),log(1e8))
 # Run the optimization algorithmm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,
@@ -2808,7 +2809,6 @@ optimizer <- nloptr::nloptr( x0= fit,
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
 
-save.image("test_periklis.RData")
 
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
 BW <- 0.29  # body weight (kg)
@@ -3892,7 +3892,7 @@ experiment2 <- reshape(kudo_low_dose[c("Tissue" ,"Time_hours",
                      experiment13 = experiment13,  experiment14 = experiment14, experiment15 = experiment15, experiment16 = experiment16,
                      experiment17 = experiment17, experiment18 = experiment18, experiment19 = experiment19, experiment20 = experiment20,
                      experiment21 = experiment21, experiment22 = experiment22, experiment23 = experiment23, experiment24 = experiment24,
-                     experiment25 = experiment25, experiment25 = experiment26, experiment25 = experiment27)
+                     experiment25 = experiment25, experiment26 = experiment26, experiment26 = experiment27)
  
 
   # Rename predictions so that they share the same name as the names of the experimental data dataframe
@@ -3981,7 +3981,7 @@ experiment2 <- reshape(kudo_low_dose[c("Tissue" ,"Time_hours",
           height = 10,
           units = "in")
  }
-save.image("Pore_size_model_AAFE.RData")
+save.image("Enterohepatic_Same_Efflux_Different_NoStomachAbs.RData")
  
  
  
