@@ -3891,7 +3891,7 @@ experiment2 <- reshape(kudo_low_dose[c("Tissue" ,"Time_hours",
                      experiment13 = experiment13,  experiment14 = experiment14, experiment15 = experiment15, experiment16 = experiment16,
                      experiment17 = experiment17, experiment18 = experiment18, experiment19 = experiment19, experiment20 = experiment20,
                      experiment21 = experiment21, experiment22 = experiment22, experiment23 = experiment23, experiment24 = experiment24,
-                     experiment25 = experiment25, experiment25 = experiment26, experiment25 = experiment27)
+                     experiment25 = experiment25, experiment26 = experiment26, experiment27 = experiment27)
  
 
   # Rename predictions so that they share the same name as the names of the experimental data dataframe
