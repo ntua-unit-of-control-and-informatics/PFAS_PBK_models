@@ -692,6 +692,11 @@ create.params <- function(user.input){
                 'QBGo'=QBGo,
                 'QBSK'=QBSK,
                 
+                "QparaKi" = QparaKi,"QparaLi" = QparaLi,"QparaSt" = QparaSt,"QparaIn" = QparaIn,
+                "QparaMu" = QparaMu,"QparaAd" = QparaAd,"QparaRe" = QparaRe,"QparaLu" = QparaLu,
+                "QparaSp" = QparaSp,"QparaHt" = QparaHt,"QparaBr" = QparaBr,"QparaGo" = QparaGo,
+                "QparaSk" = QparaSk,
+                
                 'CalbB'= CalbB, 'CalbKF'=CalbKF, 'CalbLF'=CalbLF,
                 'CalbMF'=CalbMF, 'CalbAF'=CalbAF, 'CalbRF'=CalbRF,
                 'CalbLuF' =CalbLuF, 'CalbSPF' =CalbSPF, 'CalbTF' =CalbTF, 'CalbHF' =CalbHF,

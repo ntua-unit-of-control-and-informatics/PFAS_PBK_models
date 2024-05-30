@@ -693,6 +693,13 @@ create.params <- function(user.input){
                 'QBGo'=QBGo,
                 'QBSK'=QBSK,
                 
+                
+                "QparaKi" = QparaKi,"QparaLi" = QparaLi,"QparaSt" = QparaSt,"QparaIn" = QparaIn,
+                "QparaMu" = QparaMu,"QparaAd" = QparaAd,"QparaRe" = QparaRe,"QparaLu" = QparaLu,
+                "QparaSp" = QparaSp,"QparaHt" = QparaHt,"QparaBr" = QparaBr,"QparaGo" = QparaGo,
+                "QparaSk" = QparaSk,
+                
+                
                 'CalbB'= CalbB, 'CalbKF'=CalbKF, 'CalbLF'=CalbLF,
                 'CalbMF'=CalbMF, 'CalbAF'=CalbAF, 'CalbRF'=CalbRF,
                 'CalbLuF' =CalbLuF, 'CalbSPF' =CalbSPF, 'CalbTF' =CalbTF, 'CalbHF' =CalbHF,
@@ -2711,7 +2718,7 @@ obj.func <- function(x, dataset){
 setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
 
 MW <- 414.07 #g/mol
-source(Goodness-of-fit-metrics.R)
+source("Goodness-of-fit-metrics.R")
 
 # Read data
 kudo_high_dose <- openxlsx::read.xlsx("Data/IV_male_rats_tissues_high_kudo_2007.xlsx")
