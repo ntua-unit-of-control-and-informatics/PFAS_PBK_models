@@ -1,6 +1,7 @@
 library(ggplot2)
 
-setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_results")
+#setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_results")
+setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_results")
 
 # Load Results 
 Cui_results <- read.csv("Cui_2008_results.csv", header = T)
