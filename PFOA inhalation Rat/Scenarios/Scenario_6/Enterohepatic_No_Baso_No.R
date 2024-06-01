@@ -924,7 +924,7 @@ ode.func <- function(time, inits, params){
     #interstitial fluid subcompartment 
     dMINF = QparaIn*(1-SIn)*CINBf + PeffIN*AIN*(CINBf-CINFf) - kINFINT*(CINFf-CINT) 
     #Intestine tissue subcompartment
-    dMINT = kINFINT*(CINFf-CINT) + P_passive*CINL + 
+    dMINT = kINFINT*(CINFf-CINT) + P_passive*CINL 
     #Intestine lumen
     dMINL = QGE*CSTL - (Qfeces*CINL) - P_passive*CINL + P_liver_bile*Qbile*CLTf 
 
@@ -2709,7 +2709,7 @@ obj.func <- function(x, dataset){
 setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
 
 MW <- 414.07 #g/mol
-source(Goodness-of-fit-metrics.R)
+source("Goodness-of-fit-metrics.R")
 
 # Read data
 kudo_high_dose <- openxlsx::read.xlsx("Data/IV_male_rats_tissues_high_kudo_2007.xlsx")
@@ -2772,7 +2772,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0 ,
-              "maxeval" = 1000, 
+              "maxeval" = 300, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
