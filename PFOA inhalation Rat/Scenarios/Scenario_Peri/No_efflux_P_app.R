@@ -633,19 +633,19 @@ create.params <- function(user.input){
     #brain (Br), gonads (T), rest of body(R)
     
     #PeffB <- 4.98e-8*3600*CF_Peff1
-    PeffK <- Papp
-    PeffL <- Papp
-    PeffST <- Papp
-    PeffIN <- Papp
-    PeffA <- Papp
-    PeffM <- Papp
-    PeffR <- Papp
-    PeffLu <- Papp
-    PeffSP <- Papp
-    PeffH <- Papp
-    PeffBr <- Papp
-    PeffT <- Papp
-    PeffSK <- Papp
+    PeffK <- Papp*10
+    PeffL <- Papp*10
+    PeffST <- Papp*10
+    PeffIN <- Papp*10
+    PeffA <- Papp*10
+    PeffM <- Papp*10
+    PeffR <- Papp*10
+    PeffLu <- Papp*10
+    PeffSP <- Papp*10
+    PeffH <- Papp*10
+    PeffBr <- Papp*10
+    PeffT <- Papp*10
+    PeffSK <- Papp*10
     kFKT <- PeffK * AK * n
     
     return(list('VB'=VB, 'Vplasma'=Vplasma, 'VK'=VK, 'VKB'=VKB, 

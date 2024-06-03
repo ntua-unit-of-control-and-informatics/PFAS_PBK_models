@@ -2789,10 +2789,10 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 #  CF_Peff
 
 N_pars <- 10 # Number of parameters to be fitted
-fit <-  c(log(1),log(1),log(1), log(0.001), log(1), log(0.1),log(1),log(1e2),log(1e2),log(1))
+fit <-  c(log(1),log(1),log(1), log(1), log(0.001),  log(0.1),log(1),log(1),log(1e2),log(1))
 
-lb	= c(log(1e-2),log(1e-2),log(1e-2),log(1e-04), log(1e-2),log(1e-2),log(1e-2),log(1e-5),log(1e-5),log(1e-2))
-ub = c(log(1e2), log(1e2),log(1e2),log(1e2),log(1e2),log(1e2),log(1e2),log(1e8),log(1e8),log(1e2))
+lb	= c(log(1e-2),log(1e-2),log(1e-2),log(1e-2), log(1e-20),log(1e-2),log(1e-2),log(1e-2),log(1e-5),log(1e-2))
+ub = c(log(1e2), log(1e2),log(1e2),log(1e2),log(1e2),log(1e2),log(1e2),log(1e2),log(1e8),log(1e2))
 # Run the optimization algorithmm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,
