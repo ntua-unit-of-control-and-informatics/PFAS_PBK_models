@@ -1,5 +1,6 @@
 library(deSolve)
-setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation")
+#setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation")
+setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation")
 
 #===============
 # Generate predictions
@@ -268,5 +269,6 @@ results_df <- rbind(results_serum_F_iv_1, results_serum_F_oral_1, results_serum_
 AAFE_Kemper_serum <- mean(score)
 print(paste0("The AAFE on the serum data of Kemper et al. (2003) was ", AAFE_Kemper_serum))
 write.csv(results_df,
-          "C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_results/Kemper_2003_serum_results.csv",
+          #"C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_results/Kemper_2003_serum_results.csv",
+          "C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_results/Cui_2008_results.csv",
           row.names =F)
