@@ -134,7 +134,7 @@ create.params <- function(user.input){
     VUA <- PVUA * BW  #total volume of nasal cavity 
     
     #respiratory area of nasal cavity
-    RA_area = 623 #mm^2 Gross et al., 1982, https://pubmed.ncbi.nlm.nih.gov/7130058/
+    RA_area = 623 #mm^2
     RA_capillary_density = 362 #capillaries/mm^2
     capillary_area = RA_area/(RA_area*RA_capillary_density) #mm^2, area of one capillary
     
@@ -150,9 +150,9 @@ create.params <- function(user.input){
     PVLuT <- VLu - VLuF - VLuAF 
     VLuT <- PVLuT * PVLu* BW #lung tissue volume kg=L
     
-    # IVR=0
-    # EC=0
-    # Dua=0
+    IVR=0
+    EC=0
+    Dua=0
     
     
     #Spleen
@@ -653,7 +653,7 @@ create.params <- function(user.input){
     ClLuFT <- ClLuFT_unscaled * Lung_protein_total#uL/min
     kLuTLuF <-  (60*ClLuFT)/1e06 #L/h
     kUAB <- kabsUA * RA_area #transport rate from upper airways to blood
-    CLEal <- kCLEal * ALF #clearance rate from alveolar lining fluid to stomach, ALF in m^2
+    CLEal <- kCLEal * ALF #clearance rate from alveolar lining fluid, ALf in m^2
     CLEua <- kCLEua * AUA #clearance rate rate from upper airways to stomach, AUA in m^2
     kLuAFLuT <- kLuAF * ALF #transport rate from alveolar lining fluid to lung tissue, ALF in m^2
     
@@ -702,7 +702,7 @@ create.params <- function(user.input){
                 'VRF'=VRF, 'VRT'=VRT, 'Vven' = Vven,
                 'Vart' = Vart, 'VLu'=VLu, 'VLuB'=VLuB, 'VLuF'=VLuF,
                 'VLuAF'=VLuAF, 'VLuT'=VLuT, 
-                #'IVR'=IVR, 'EC'=EC, 'Dua'=Dua,
+                'IVR'=IVR, 'EC'=EC, 'Dua'=Dua,
                 'VSP'=VSP, 'VSPB'=VSPB, 'VSPF'=VSPF, 'VSPT'=VSPT,
                 'VH'=VH, 'VHB'=VHB, 'VHF'=VHF, 'VHT'=VHT,
                 'VBr'=VBr, 'VBrB'=VBrB, 'VBrF'=VBrF, 'VBrT'=VBrT,
@@ -1071,7 +1071,7 @@ ode.func <- function(time, inits, params){
     
     
     #Upper airways
-    dMUA = - CLEua*CUA  - kUAB * CUA #+ IVR*EC*Dua 
+    dMUA = IVR*EC*Dua - CLEua*CUA  - kUAB * CUA 
     
     
     #Lung
@@ -1082,7 +1082,7 @@ ode.func <- function(time, inits, params){
     #Lung tissue subcompartment
     dMLuT = - kLuTLuF*(CLuT-CLuFf) + kLuAFLuT*CLuAFf  
     #Alveolar lining fluid
-    dMLuAF = - CLEal*CLuAFf - kLuAFLuT*CLuAFf#+ IVR*EC*Dal 
+    dMLuAF = - CLEal*CLuAFf - kLuAFLuT*CLuAFf #+ IVR*EC*Dal 
     
     
     #Spleen
@@ -1559,11 +1559,11 @@ obj.func <- function(x, dataset){
   sex <- "M"
   inhalation_params=estimate_BFn_TVn(sex)
   BFn = inhalation_params["BFn"]# 1/h
-  TVn = inhalation_params["TVn"]# L
+  TVn = inhalation_params["TVn"]# 1/h
   duration <- 6 #hours
   admin.dose_per_g <- 1.2 # administered dose in mg/m^3
-  admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration*6), 6*duration) #ug PFOA, for 6h inhalation
-  admin.time <- seq(0,duration,0.1666667) #time when doses are administered, in hours
+  admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration), duration) #ug PFOA, for 6h inhalation
+  admin.time <- seq(1,duration,1) #time when doses are administered, in hours
   admin.type <- "nasal"
   
   
@@ -1625,11 +1625,11 @@ obj.func <- function(x, dataset){
   sex <- "M"
   inhalation_params=estimate_BFn_TVn(sex)
   BFn = inhalation_params["BFn"]# 1/h
-  TVn = inhalation_params["TVn"]# L
+  TVn = inhalation_params["TVn"]# 1/h
   duration <- 6 #hours
-  admin.dose_per_g <- 1.2 # administered dose in mg/m^3
-  admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration*6), 6*duration) #ug PFOA, for 6h inhalation
-  admin.time <- seq(0,duration,0.1666667) #time when doses are administered, in hours
+  admin.dose_per_g <- 9.8 # administered dose in mg/m^3
+  admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration), duration) #ug PFOA, for 6h inhalation
+  admin.time <- seq(1,duration,1) #time when doses are administered, in hours
   admin.type <- "nasal"
   
   user_input <- list('BW'=BW,
@@ -1690,11 +1690,11 @@ obj.func <- function(x, dataset){
   sex <- "M"
   inhalation_params=estimate_BFn_TVn(sex)
   BFn = inhalation_params["BFn"]# 1/h
-  TVn = inhalation_params["TVn"]# L
+  TVn = inhalation_params["TVn"]# 1/h
   duration <- 6 #hours
-  admin.dose_per_g <- 1.2 # administered dose in mg/m^3
-  admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration*6), 6*duration) #ug PFOA, for 6h inhalation
-  admin.time <- seq(0,duration,0.1666667) #time when doses are administered, in hours
+  admin.dose_per_g <- 27 # administered dose in mg/m^3
+  admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration), duration) #ug PFOA, for 6h inhalation
+  admin.time <- seq(1,duration,1) #time when doses are administered, in hours
   admin.type <- "nasal"
   
  
@@ -1755,11 +1755,11 @@ obj.func <- function(x, dataset){
   sex <- "F"
   inhalation_params=estimate_BFn_TVn(sex)
   BFn = inhalation_params["BFn"]# 1/h
-  TVn = inhalation_params["TVn"]# L
+  TVn = inhalation_params["TVn"]# 1/h
   duration <- 6 #hours
   admin.dose_per_g <- 1.2 # administered dose in mg/m^3
-  admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration*6), 6*duration) #ug PFOA, for 6h inhalation
-  admin.time <- seq(0,duration,0.1666667) #time when doses are administered, in hours
+  admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration), duration) #ug PFOA, for 6h inhalation
+  admin.time <- seq(1,duration,1) #time when doses are administered, in hours
   admin.type <- "nasal"
   
 
@@ -1820,12 +1820,12 @@ obj.func <- function(x, dataset){
   BW <- 0.25  #kg, not reported in the study
   sex <- "F"
   inhalation_params=estimate_BFn_TVn(sex)
-  BFn = inhalation_params["BFn"]# 1/h
-  TVn = inhalation_params["TVn"]# L
+  BFn = inhalation_params["BFn"]
+  TVn = inhalation_params["TVn"]
   duration <- 6 #hours
-  admin.dose_per_g <- 1.2 # administered dose in mg/m^3
-  admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration*6), 6*duration) #ug PFOA, for 6h inhalation
-  admin.time <- seq(0,duration,0.1666667) #time when doses are administered, in hours
+  admin.dose_per_g <- 9.8 # administered dose in mg/m^3
+  admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration), duration) #ug PFOA, for 6h inhalation
+  admin.time <- seq(1,duration,1) #time when doses are administered, in hours
   admin.type <- "nasal"
   
   
@@ -1885,12 +1885,12 @@ obj.func <- function(x, dataset){
   BW <- 0.25  #kg, not reported in the study
   sex <- "F"
   inhalation_params=estimate_BFn_TVn(sex)
-  BFn = inhalation_params["BFn"]# 1/h
-  TVn = inhalation_params["TVn"]# L
+  BFn = inhalation_params["BFn"]
+  TVn = inhalation_params["TVn"]
   duration <- 6 #hours
-  admin.dose_per_g <- 1.2 # administered dose in mg/m^3
-  admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration*6), 6*duration) #ug PFOA, for 6h inhalation
-  admin.time <- seq(0,duration,0.1666667) #time when doses are administered, in hours
+  admin.dose_per_g <- 27 # administered dose in mg/m^3
+  admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration), duration) #ug PFOA, for 6h inhalation
+  admin.time <- seq(1,duration,1) #time when doses are administered, in hours
   admin.type <- "nasal"
   
   
@@ -1983,7 +1983,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0 ,
-              "maxeval" = 100, 
+              "maxeval" = 200, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
@@ -1998,7 +1998,6 @@ fit <-  c(log(1e2), log(1),log(1),log(1e2))
 
 lb	= c(log(1e-2), log(1e-4),log(1e-3),log(1e-2))
 ub = c(log(1e3), log(1e2),log(1e2),log(1e3))
-
 
 # Run the optimization algorithmm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
@@ -2168,12 +2167,12 @@ preds_gus_OR_Mtissues <-  solution[, c("time", "CalveolarLF","Cliver", "Clungs",
 BW <- 0.25  #kg, not reported in the study
 sex <- "M"
 inhalation_params=estimate_BFn_TVn(sex)
-BFn = inhalation_params["BFn"]# 1/h
-TVn = inhalation_params["TVn"]# L
-duration <- 6 #hours
+BFn = inhalation_params["BFn"]
+TVn = inhalation_params["TVn"]
+duration <- 6*60 #hours
 admin.dose_per_g <- 1.2 # administered dose in mg/m^3
-admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration*6), 6*duration) #ug PFOA, for 6h inhalation
-admin.time <- seq(0,duration,0.1666667) #time when doses are administered, in hours
+admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration), duration) #ug PFOA, for 6h inhalation
+admin.time <- seq(1,duration,1) #time when doses are administered, in hours
 admin.type <- "nasal"
 
 
@@ -2191,7 +2190,7 @@ inits <- create.inits(params)
 events <- create.events(params)
 
 
-sample_time= seq(0,30,0.1)
+sample_time= seq(0,30,0.04)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
@@ -2209,12 +2208,12 @@ preds_hind_INH_Mblood_low <-  solution[, c("time", "Cplasma")]
 BW <- 0.25  #kg, not reported in the study
 sex <- "M" 
 inhalation_params=estimate_BFn_TVn(sex)
-BFn = inhalation_params["BFn"]# 1/h
-TVn = inhalation_params["TVn"]# L
+BFn = inhalation_params["BFn"]
+TVn = inhalation_params["TVn"]
 duration <- 6 #hours
-admin.dose_per_g <- 1.2 # administered dose in mg/m^3
-admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration*6), 6*duration) #ug PFOA, for 6h inhalation
-admin.time <- seq(0,duration,0.1666667) #time when doses are administered, in hours
+admin.dose_per_g <- 9.8 # administered dose in mg/m^3
+admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration), duration) #ug PFOA, for 6h inhalation
+admin.time <- seq(1,duration,1) #time when doses are administered, in hours
 admin.type <- "nasal"
 
 
@@ -2250,12 +2249,12 @@ preds_hind_INH_Mblood_medium <-  solution[, c("time", "Cplasma")]
 BW <- 0.25  #kg, not reported in the study
 sex <- "M"
 inhalation_params=estimate_BFn_TVn(sex)
-BFn = inhalation_params["BFn"]# 1/h
-TVn = inhalation_params["TVn"]# L
+BFn = inhalation_params["BFn"]
+TVn = inhalation_params["TVn"]
 duration <- 6 #hours
-admin.dose_per_g <- 1.2 # administered dose in mg/m^3
-admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration*6), 6*duration) #ug PFOA, for 6h inhalation
-admin.time <- seq(0,duration,0.1666667) #time when doses are administered, in hours
+admin.dose_per_g <- 27 # administered dose in mg/m^3
+admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration), duration) #ug PFOA, for 6h inhalation
+admin.time <- seq(1,duration,1) #time when doses are administered, in hours
 admin.type <- "nasal"
 
 
@@ -2292,12 +2291,12 @@ preds_hind_INH_Mblood_high <-  solution[, c("time", "Cplasma")]
 BW <- 0.25  #kg, not reported in the study
 sex <- "F" 
 inhalation_params=estimate_BFn_TVn(sex)
-BFn = inhalation_params["BFn"]# 1/h
-TVn = inhalation_params["TVn"]# L
+BFn = inhalation_params["BFn"]
+TVn = inhalation_params["TVn"]
 duration <- 6 #hours
 admin.dose_per_g <- 1.2 # administered dose in mg/m^3
-admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration*6), 6*duration) #ug PFOA, for 6h inhalation
-admin.time <- seq(0,duration,0.1666667) #time when doses are administered, in hours
+admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration), duration) #ug PFOA, for 6h inhalation
+admin.time <- seq(1,duration,1) #time when doses are administered, in hours
 admin.type <- "nasal"
 
 
@@ -2333,12 +2332,12 @@ preds_hind_INH_Fblood_low <-  solution[, c("time", "Cplasma")]
 BW <- 0.25  #kg, not reported in the study
 sex <- "F" 
 inhalation_params=estimate_BFn_TVn(sex)
-BFn = inhalation_params["BFn"]# 1/h
-TVn = inhalation_params["TVn"]# L
+BFn = inhalation_params["BFn"]
+TVn = inhalation_params["TVn"]
 duration <- 6 #hours
-admin.dose_per_g <- 1.2 # administered dose in mg/m^3
-admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration*6), 6*duration) #ug PFOA, for 6h inhalation
-admin.time <- seq(0,duration,0.1666667) #time when doses are administered, in hours
+admin.dose_per_g <- 9.8 # administered dose in mg/m^3
+admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration), duration) #ug PFOA, for 6h inhalation
+admin.time <- seq(1,duration,1) #time when doses are administered, in hours
 admin.type <- "nasal"
 
 
@@ -2374,12 +2373,12 @@ preds_hind_INH_Fblood_medium <-  solution[, c("time", "Cplasma")]
 BW <- 0.25  #kg, not reported in the study
 sex <- "F" 
 inhalation_params=estimate_BFn_TVn(sex)
-BFn = inhalation_params["BFn"]# 1/h
-TVn = inhalation_params["TVn"]# L
+BFn = inhalation_params["BFn"]
+TVn = inhalation_params["TVn"]
 duration <- 6 #hours
-admin.dose_per_g <- 1.2 # administered dose in mg/m^3
-admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration*6), 6*duration) #ug PFOA, for 6h inhalation
-admin.time <- seq(0,duration,0.1666667) #time when doses are administered, in hours
+admin.dose_per_g <- 27 # administered dose in mg/m^3
+admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration), duration) #ug PFOA, for 6h inhalation
+admin.time <- seq(1,duration,1) #time when doses are administered, in hours
 admin.type <- "nasal"
 
 
