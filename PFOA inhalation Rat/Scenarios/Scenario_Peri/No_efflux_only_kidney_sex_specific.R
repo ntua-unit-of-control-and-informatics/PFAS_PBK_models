@@ -14,21 +14,23 @@ create.params <- function(user.input){
     # Estimated parameters
     if (sex == "M"){
       RAFOatp_k <- estimated_params[1]
-  
+      RAFOat1 <- estimated_params[2]
     }else if(sex == "F"){
-      RAFOatp_k <- estimated_params[2]
+      RAFOatp_k <- estimated_params[3]
+      RAFOat1 <- estimated_params[4]
     }
-    RAFOat1 <- estimated_params[3]
+   
     RAFOat3 <- RAFOat1
     RAFUrat <- RAFOat1
-    RAFOatp_l <- estimated_params[4] 
+    RAFOatp_l <- estimated_params[5] 
     RAFOatp2_l <- RAFOatp_l
     RAFNtcp <- RAFOatp_l
-    RAFOatp2_Int <- estimated_params[5]
+    RAFOatp2_Int <- estimated_params[6]
     
     #permeabilities correction factor
-    CF_Peff <- estimated_params[6] 
-    P_liver_bile <- estimated_params[7] 
+    P_liver_bile <- estimated_params[7]
+    Ka <-  estimated_params[8] *1e-3 #[L/mol]*1e-3--->m3/mol
+    
     kabs_st <- 0 #m/h
     #units conversion from Cheng 2017R, time-> h, PFOA mass->ng, tissues mass-> g
     Hct <- 0.41 #hematocrit for rats, https://doi.org/10.1080/13685538.2017.1350156 mean value for both males and females
@@ -277,25 +279,6 @@ create.params <- function(user.input){
     SGo <- s_r[12]
     SSk <- s_r[13]
     
-    #Effective permeability (Peff, in m/h) for blood (B), liver(L), kidney(K),
-    #stomach(ST),intestine (IN), adipose(A), muscle(M), spleen (SP), heart (H), 
-    #brain (Br), gonads (T), rest of body(R)
-    
-    #PeffB <- 4.98e-8*3600*CF_Peff1
-    PeffK <-5e-8*3600*CF_Peff
-    PeffL <- 5e-8*3600*CF_Peff
-    PeffST <- 5e-8*3600*CF_Peff #assumption
-    PeffIN <- 5e-8*3600*CF_Peff#assumption
-    PeffA <-5e-8*3600*CF_Peff
-    PeffM <- 5e-8*3600*CF_Peff
-    PeffR <- 5e-8*3600*CF_Peff
-    PeffLu <- 5e-8*3600*CF_Peff #assumption
-    PeffSP <- 5e-8*3600*CF_Peff #assumption
-    PeffH <- 5e-8*3600*CF_Peff #assumption
-    PeffBr <- 5e-8*3600*CF_Peff #assumption
-    PeffT <- 5e-8*3600*CF_Peff #assumption
-    PeffSK <- 5e-8*3600*CF_Peff #assumption
-    
     ####################################
     #----------------------------------#
     #             Flow Rates           #
@@ -444,7 +427,6 @@ create.params <- function(user.input){
     #and alpha2mu-globulin(Ka2u). See SI section S2-2 for details
     
     #Ka <-  24.18 #3.1*7.8 m3/mol multiplying by number of binding sites (Cheng et al. 2021)
-    Ka <-  1e05*1e-3 #[L/mol]*1e-3--->m3/mol
     KLfabp <- (1.2e5+4e4+1.9e4)*1e-3  #[L/mol]*1e-3--->m3/mol, value from Cheng et al. (2017)
     Ka2u <- 5*1e02*1e-3 #[L/mol]*1e-3--->m3/mol, value from Cheng et al. (2017)
     
@@ -488,7 +470,6 @@ create.params <- function(user.input){
     # Uptake for the whole kidney tissue 
     kKFKT <- (60*ClKFT)/1e06 #L/h
     
-    kFKT <- PeffK * AK * n
     
     #Oatp kidney
     VmK_Oatp_in_vitro <- 9.3 #nmol/mg protein/min (Weaver et al. 2010)
@@ -638,6 +619,26 @@ create.params <- function(user.input){
     skin_protein_total <- skin_protein * (1000*VSKT)
     ClSKFT <- ClSKFT_unscaled * skin_protein_total#uL/min
     kSKFSKT <-  (60*ClSKFT)/1e06 #L/h
+    
+    #Effective permeability (Peff, in m/h) for blood (B), liver(L), kidney(K),
+    #stomach(ST),intestine (IN), adipose(A), muscle(M), spleen (SP), heart (H), 
+    #brain (Br), gonads (T), rest of body(R)
+    
+    #PeffB <- 4.98e-8*3600*CF_Peff1
+    PeffK <- Papp
+    PeffL <-Papp
+    PeffST <- Papp
+    PeffIN <-Papp
+    PeffA <-Papp
+    PeffM <- Papp
+    PeffR <- Papp
+    PeffLu <- Papp
+    PeffSP <- Papp
+    PeffH <- Papp
+    PeffBr <- Papp
+    PeffT <- Papp
+    PeffSK <- Papp
+    kFKT <- PeffK * AK * n
     
     return(list('VB'=VB, 'Vplasma'=Vplasma, 'VK'=VK, 'VKB'=VKB, 
                 'VKF'=VKF, 'VKT'=VKT, 'VFil'=VFil,
@@ -2705,7 +2706,7 @@ obj.func <- function(x, dataset){
 
 ################################################################################
 
-setwd("C:/Users/peri/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
+setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
 #setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
 MW <- 414.07 #g/mol
 source("Goodness-of-fit-metrics.R")
@@ -2753,7 +2754,7 @@ dzi_OR_Fserum_high$Concentration_microM <- dzi_OR_Fserum_high$Concentration_micr
 kim_OR_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_ORAL_kim_2016.xlsx")
 kim_IV_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_IV_kim_2016.xlsx")
 
-setwd("C:/Users/peri/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_Peri/Training/AAFE/No_Efflux_Only_Oatp")
+setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_Peri/Training/AAFE/No_Efflux_Only_Oatp")
 
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
@@ -2781,10 +2782,10 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 #  CF_Peff
 
 N_pars <- 7 # Number of parameters to be fitted
-fit <-  c(log(1),log(0.001), log(1), log(0.1),log(1e2),log(1e2),log(1))
+fit <-  c(log(1),log(1), log(0.0001), log(1),log(0.1),log(1),log(1), log(1e4))
 
-lb	= c(log(1e-2),log(1e-020), log(1e-2),log(1e-2),log(1e-2),log(1e-5),log(1e-5))
-ub = c(log(1e4), log(1e2),log(1e2),log(1e2),log(1e2),log(1e8),log(1e8))
+lb	= c(log(1e-3),log(1e-3), log(1e-20),log(1e-3),log(1e-2),log(1e-2),log(1e-5),log(1e3))
+ub =  c(log(1e3), log(1e3),  log(1e2),   log(1e3),log(1e2),log(1e2),log(1e8),log(1e6))
 # Run the optimization algorithmm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,
@@ -3968,7 +3969,7 @@ for(i in 1:length(experiments)){
          height = 10,
          units = "in")
 }
-save.image("No_Efflux_Only_Oatp.RData")
+save.image("No_Efflux_Only_Kidney.RData")
 
 
 
