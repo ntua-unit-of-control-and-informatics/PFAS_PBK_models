@@ -146,7 +146,7 @@ create.params <- function(user.input){
     PVLuF <- 0.263/280 #0.263 ml, Shah & Betts, 2012. https://doi.org/10.1007/s10928-011-9232-2
     VLuF <- PVLuF * PVLu * BW #lung interstitial fluid volume
     PVLuAF <- 0.4/275 #0.4 mL Leslie et al, 1989 https://doi.org/10.1164/ajrccm/139.2.360 --> Watkins & Rannels 1979 https://doi.org/10.1152/jappl.1979.47.2.325  
-    VLuAF <- PVLuAF * PVLu * BW #lung alveolar lining fluid volume kg=LL
+    VLuAF <- PVLuAF * PVLu * BW #lung alveolar lining fluid volume kg=L
     PVLuT <- VLu - VLuF - VLuAF 
     VLuT <- PVLuT * PVLu* BW #lung tissue volume kg=L
     
@@ -215,7 +215,7 @@ create.params <- function(user.input){
     
     PAK <- 350e-4 #[cm2/g]*1e-4--> m^2/g  https://doi.org/10.1111/j.1748-1716.1963.tb02652.x
     AK <- PAK * VK * 1e3 #kidney surface area (m^2)
-    PAKG <- 68.90e-4 
+    PAKG <- 68.90e-4 #Kirkman and Stowell, 1942, https://doi.org/10.1002/ar.1090820310
     AKG <- PAKG * VK * 1e3 #the surface area of glomerular capillary (m^2)
     PAL <- 250e-4 
     AL <- PAL * VL * 1e3 #liver surface area (m^2)
@@ -240,7 +240,8 @@ create.params <- function(user.input){
     
     SA <- 2*pi*(d_duodenum/2)*L_duodenum + 2*pi*(d_jejunum/2)*L_jejunum + 2*pi*(d_ileum/2)*L_ileum #cm^2
     n <- 5 #enlargement factor of apical membrane of proximal tubule or enterocytes
-    AINL <- n * SA * 1e-4 #m^2
+    PAINL <- n * SA * 1e-4/0.195 #m^2/kg
+    AINL <- PAINL*BW #m^2
     
     PAM <- 70*1e-4 #m2/g tissue
     AM <- PAM * VM *1e03 #muscle surface area (m^2)
@@ -265,11 +266,11 @@ create.params <- function(user.input){
     
     #Organ surface area
     
-    PAUA <- ((1343.5+76.8)*1e-06)/((156+257)*1e-03) #m2/g tissue, total surface area 1343.5 mm^2 for a 16-wk old male 288 g, Gross et al., 1982, https://pubmed.ncbi.nlm.nih.gov/7130058/
+    PAUA <- ((1343.5+76.8)*1e-06)/0.288 #m2/kg, total surface area 1343.5 mm^2 for a 16-wk old male 288 g, Gross et al., 1982, https://pubmed.ncbi.nlm.nih.gov/7130058/
     #plus nasopharynx area 76.8 mm^2 calculated by Ménache et al., 1997, https://doi.org/10.1080/00984109708984003
-    AUA <- PAUA * VUA*1e03 #total surface area of upper airways (m^2) !think of separate nose in different areas of absorption
-    PALF <- 1.1529e-8/173e-10 #11,529 μm2/173e3 μm3--> 1.1529e-8 m2/g tissue, Mercer et al.,  https://doi.org/10.1152/jappl.1987.62.4.1480
-    ALF <- PALF* VLF*1e03 #alveolar lining fluid area (m^2)
+    AUA <- PAUA*BW
+    PALF <- 27.2e-4/0.3 #27.2 cm2, BW=0.3 in the study--> 27.2e-4 m2/kg, Mercer et al., 1994 https://doi.org/10.1152/jappl.1987.62.4.1480
+    ALF <- PALF*BW
     
     ###############################
     #-----------------------------#
@@ -789,14 +790,15 @@ create.params <- function(user.input){
                 'kSKFSKT' =kSKFSKT,
                 
                 "admin.time" = admin.time, "admin.dose" = admin.dose,
-                "admin.type" = admin.type, "MW"=MW, "capillary_area"=capillary_area
+                "admin.type" = admin.type, "MW"=MW, "capillary_area"=capillary_area,
+                "depfr_head" = depfr_head, "depfr_AF" = depfr_AF
                 
                 ))
   
   })
 }  
 
-estimate_BFn_TVn <- function(sex){
+estimate_BFn_TVn <- function(sex, BW){
   
   #Nose-only Breathing frequency
   if (sex == "M"){
@@ -819,28 +821,28 @@ estimate_BFn_TVn <- function(sex){
 }
 
 
-# estimate_BFi_TVi <- function(sex){
-#   
-#   #Inhalation Breathing frequency
-#   if (sex == "M"){
-#     PBFi <- 86*60/0.387  #1/min -->  1/h/kg, inhalation, Moss et al., 2006, https://doi.org/10.1203/01.pdr.0000203104.45807.23
-#     #(95 in the study of Walker et al., 1997), https://doi.org/10.1016/S0034-5687(96)02520-0
-#     BFi <- PBFi * BW  # 1/h
-#   }else if(sex == "F"){
-#     PBFi <- 79*60/0.223  #1/min -->  1/h/kg, inhalation, Mauderly et al., 1986, https://doi.org/10.1002/jat.2550060106
-#     BFi <- PBFi * BW  # 1/h
-#   }
-#   
-#   #Inhalation Tidal Volume
-#   if (sex == "M"){
-#     PTVi <- 7.2/1e3   #mL/kg --> mL=g, unitless,inhalation, Walker et al., 1997, https://doi.org/10.1016/S0034-5687(96)02520-0
-#     TVi <- PTVi * BW  #L
-#   }else if(sex == "F"){
-#     PTVi <- 7.2/1e3   #mL/g --> mL=g, unitless,need to change
-#     TVi <- PTVi * BW  #L
-#   }
-#   return(c("BFi"=BFi, "TVi"=TVi))
-# }
+estimate_BFi_TVi <- function(sex, BW){
+
+  #Inhalation Breathing frequency
+  if (sex == "M"){
+    PBFi <- 86*60/0.387  #1/min -->  1/h/kg, inhalation, Moss et al., 2006, https://doi.org/10.1203/01.pdr.0000203104.45807.23
+    #(95 in the study of Walker et al., 1997), https://doi.org/10.1016/S0034-5687(96)02520-0
+    BFi <- PBFi * BW  # 1/h
+  }else if(sex == "F"){
+    PBFi <- 79*60/0.223  #1/min -->  1/h/kg, inhalation, Mauderly et al., 1986, https://doi.org/10.1002/jat.2550060106
+    BFi <- PBFi * BW  # 1/h
+  }
+
+  #Inhalation Tidal Volume
+  if (sex == "M"){
+    PTVi <- 7.2/1e3   #mL/kg --> mL=g, unitless,inhalation, Walker et al., 1997, https://doi.org/10.1016/S0034-5687(96)02520-0
+    TVi <- PTVi * BW  #L
+  }else if(sex == "F"){
+    PTVi <- 1.61/230   #mL/g --> mL=g, unitless,inhalation, Deng et al., 2023,  https://doi.org/10.1111/os.13630
+    TVi <- PTVi * BW  #L
+  }
+  return(c("BFi"=BFi, "TVi"=TVi))
+}
 
 
 
@@ -1082,7 +1084,7 @@ ode.func <- function(time, inits, params){
     #Lung tissue subcompartment
     dMLuT = - kLuTLuF*(CLuT-CLuFf) + kLuAFLuT*CLuAFf  
     #Alveolar lining fluid
-    dMLuAF = - CLEal*CLuAFf - kLuAFLuT*CLuAFf#+ IVR*EC*Dal 
+    dMLuAF = - CLEal*CLuAFf - kLuAFLuT*CLuAFf #+ IVR*EC*Dal 
     
     
     #Spleen
@@ -1278,10 +1280,14 @@ create.events <- function(parameters){
         
       }else if (admin.type == "inh"){
         events <- list(data = rbind(data.frame(var = c("MLuAF"),  time = admin.time, 
-                                               value = admin.dose, method = c("add")) ))
+                                               value = admin.dose*depfr_AF, method = c("add")) ))
       }else if (admin.type == "nasal"){
         events <- list(data = rbind(data.frame(var = c("MUA"),  time = admin.time, 
-                                               value = admin.dose, method = c("add")) ))
+                                               value = c(admin.dose*depfr_head), method = c("add")),
+                                    data.frame(var = c("MLuAF"),  time = admin.time, 
+                                               value = c(admin.dose*depfr_AF), method = c("add")) ))
+                       
+                       
       }
     }
     return(events)
@@ -1301,7 +1307,7 @@ obj.func <- function(x, dataset){
   # from the odes!!!)
   estimated_params <- exp(x)
   
-  
+  depfr_head <- 0
   ##########################
   #-------------------------
   # Gustafsson Inhalation male blood
@@ -1310,18 +1316,24 @@ obj.func <- function(x, dataset){
   # Set up simulations for the 1st case, i.e. Gustafsson (2022) Inhalation male blood
   BW <- 0.5125  #kg, from Gustafsson et al., 2022
   sex <- "M"
+  inhalation_params=estimate_BFi_TVi(sex, BW)
+  BFi = inhalation_params["BFi"]# 1/h
+  TVi = inhalation_params["TVi"]# L
+  duration <- 0.375 #hours, 22.5 min
   admin.dose_per_g <- 0.164 # administered dose in mg PFOA/kg BW 
-  admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
-  admin.time <- 0 #time when doses are administered, in hours
+  admin.dose_mg_per_m3 <- 300 # administered dose in mg/m^3 0.25-0.35 mg/L
+  depfr_AF <- (0.6107+0.0543)
+  k = duration*24 #partition of administration packages
+  admin.dose <- rep((admin.dose_mg_per_m3*duration*BFi*TVi)/k, length.out = k) #ug PFOA, for 22.5 min inhalation
+  admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
   admin.type <- "inh"
-  
   
   user_input <- list('BW'=BW,
                      "admin.dose"= admin.dose,
                      "admin.time" = admin.time, 
                      "admin.type" = admin.type,
                      "estimated_params" = estimated_params,
-                     "sex" = sex)
+                     "sex" = sex, "depfr_head" = depfr_head, "depfr_AF" = depfr_AF )
   
   params <- create.params(user_input)
   inits <- create.inits(params)
@@ -1380,7 +1392,7 @@ obj.func <- function(x, dataset){
                      "admin.time" = admin.time, 
                      "admin.type" = admin.type,
                      "estimated_params" = estimated_params,
-                     "sex" = sex)
+                     "sex" = sex, "depfr_head" = depfr_head, "depfr_AF" = depfr_AF )
   
   params <- create.params(user_input)
   inits <- create.inits(params)
@@ -1428,18 +1440,24 @@ obj.func <- function(x, dataset){
   # Set up simulations for the 3rd case, i.e. Gustafsson (2022) Inhalation male tissues
   BW <- 0.5125  #kg, from Gustafsson et al., 2022
   sex <- "M"
+  inhalation_params=estimate_BFi_TVi(sex, BW)
+  BFi = inhalation_params["BFi"]# 1/h
+  TVi = inhalation_params["TVi"]# L
+  duration <- 0.375 #hours, 22.5 min
   admin.dose_per_g <- 0.164 # administered dose in mg PFOA/kg BW 
-  admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
-  admin.time <- 0 #time when doses are administered, in hours
+  admin.dose_mg_per_m3 <- 300 # administered dose in mg/m^3 0.25-0.35 mg/L
+  depfr_AF <- (0.6107+0.0543)
+  k = duration*24 #partition of administration packages
+  admin.dose <- rep((admin.dose_mg_per_m3*duration*BFi*TVi)/k, length.out = k) #ug PFOA, for 22.5 min inhalation
+  admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
   admin.type <- "inh"
-  
   
   user_input <- list('BW'=BW,
                      "admin.dose"= admin.dose,
                      "admin.time" = admin.time, 
                      "admin.type" = admin.type,
                      "estimated_params" = estimated_params,
-                     "sex" = sex)
+                     "sex" = sex,  "depfr_head" = depfr_head, "depfr_AF" = depfr_AF )
   
   params <- create.params(user_input)
   inits <- create.inits(params)
@@ -1504,7 +1522,7 @@ obj.func <- function(x, dataset){
                      "admin.time" = admin.time, 
                      "admin.type" = admin.type,
                      "estimated_params" = estimated_params,
-                     "sex" = sex)
+                     "sex" = sex, "depfr_head" = depfr_head, "depfr_AF" = depfr_AF )
   
   params <- create.params(user_input)
   inits <- create.inits(params)
@@ -1557,13 +1575,16 @@ obj.func <- function(x, dataset){
   # Set up simulations for the 5th case, i.e. Hinderliter Inhalation male single low
   BW <- 0.25  #kg, not reported in the study
   sex <- "M"
-  inhalation_params=estimate_BFn_TVn(sex)
+  inhalation_params=estimate_BFn_TVn(sex, BW)
   BFn = inhalation_params["BFn"]# 1/h
   TVn = inhalation_params["TVn"]# L
   duration <- 6 #hours
-  admin.dose_per_g <- 1.2 # administered dose in mg/m^3
-  admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration*6), 6*duration) #ug PFOA, for 6h inhalation
-  admin.time <- seq(0,duration,0.1666667) #time when doses are administered, in hours
+  admin.dose_mg_per_m3 <- 1.2 # administered dose in mg/m^3
+  depfr_head <- 0.2864
+  depfr_AF <- (0.1440+0.0254)
+  k = 6*duration
+  admin.dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn)/k,length.out = k) #ug PFOA, for 6h inhalation
+  admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
   admin.type <- "nasal"
   
   
@@ -1572,7 +1593,7 @@ obj.func <- function(x, dataset){
                      "admin.time" = admin.time, 
                      "admin.type" = admin.type,
                      "estimated_params" = estimated_params,
-                     "sex" = sex)
+                     "sex" = sex, "depfr_head" = depfr_head, "depfr_AF" = depfr_AF )
   
   
   
@@ -1620,16 +1641,19 @@ obj.func <- function(x, dataset){
   # Hinderliter Inhalation male single medium
   #-------------------------
   ##########################
-  # Set up simulations for the 6th case, i.e. Hinderliter Inhalation male single low
+  # Set up simulations for the 6th case, i.e. Hinderliter Inhalation male single medium
   BW <- 0.25  #kg, not reported in the study
   sex <- "M"
-  inhalation_params=estimate_BFn_TVn(sex)
+  inhalation_params=estimate_BFn_TVn(sex, BW)
   BFn = inhalation_params["BFn"]# 1/h
   TVn = inhalation_params["TVn"]# L
   duration <- 6 #hours
-  admin.dose_per_g <- 1.2 # administered dose in mg/m^3
-  admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration*6), 6*duration) #ug PFOA, for 6h inhalation
-  admin.time <- seq(0,duration,0.1666667) #time when doses are administered, in hours
+  admin.dose_mg_per_m3 <- 10 # administered dose in mg/m^3
+  depfr_head <- 0.3057
+  depfr_AF <- (0.1195+0.0243)
+  k = 6*duration
+  admin.dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn)/k,length.out = k) #ug PFOA, for 6h inhalation
+  admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
   admin.type <- "nasal"
   
   user_input <- list('BW'=BW,
@@ -1637,7 +1661,7 @@ obj.func <- function(x, dataset){
                      "admin.time" = admin.time, 
                      "admin.type" = admin.type,
                      "estimated_params" = estimated_params,
-                     "sex" = sex)
+                     "sex" = sex, "depfr_head" = depfr_head, "depfr_AF" = depfr_AF )
   
   
   params <- create.params(user_input)
@@ -1688,13 +1712,16 @@ obj.func <- function(x, dataset){
   # Set up simulations for the 7th case, i.e. Hinderliter Inhalation male single high
   BW <- 0.25  #kg, not reported in the study
   sex <- "M"
-  inhalation_params=estimate_BFn_TVn(sex)
+  inhalation_params=estimate_BFn_TVn(sex, BW)
   BFn = inhalation_params["BFn"]# 1/h
   TVn = inhalation_params["TVn"]# L
   duration <- 6 #hours
-  admin.dose_per_g <- 1.2 # administered dose in mg/m^3
-  admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration*6), 6*duration) #ug PFOA, for 6h inhalation
-  admin.time <- seq(0,duration,0.1666667) #time when doses are administered, in hours
+  admin.dose_mg_per_m3 <- 25 # administered dose in mg/m^3
+  depfr_head <- 0.3573
+  depfr_AF <- (0.1618+0.0241)
+  k = 6*duration
+  admin.dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn)/k,length.out = k) #ug PFOA, for 6h inhalation
+  admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
   admin.type <- "nasal"
   
  
@@ -1703,7 +1730,7 @@ obj.func <- function(x, dataset){
                      "admin.time" = admin.time, 
                      "admin.type" = admin.type,
                      "estimated_params" = estimated_params,
-                     "sex" = sex)
+                     "sex" = sex, "depfr_head" = depfr_head, "depfr_AF" = depfr_AF )
   
   
   params <- create.params(user_input)
@@ -1753,13 +1780,16 @@ obj.func <- function(x, dataset){
   # Set up simulations for the 8th case, i.e. Hinderliter Inhalation female single low
   BW <- 0.25  #kg, not reported in the study
   sex <- "F"
-  inhalation_params=estimate_BFn_TVn(sex)
+  inhalation_params=estimate_BFn_TVn(sex, BW)
   BFn = inhalation_params["BFn"]# 1/h
   TVn = inhalation_params["TVn"]# L
   duration <- 6 #hours
-  admin.dose_per_g <- 1.2 # administered dose in mg/m^3
-  admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration*6), 6*duration) #ug PFOA, for 6h inhalation
-  admin.time <- seq(0,duration,0.1666667) #time when doses are administered, in hours
+  admin.dose_mg_per_m3 <- 1.2 # administered dose in mg/m^3
+  depfr_head <- 0.2822
+  depfr_AF <- (0.1148+0.0177)
+  k = 6*duration
+  admin.dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn)/k,length.out = k) #ug PFOA, for 6h inhalation
+  admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
   admin.type <- "nasal"
   
 
@@ -1769,7 +1799,7 @@ obj.func <- function(x, dataset){
                      "admin.time" = admin.time, 
                      "admin.type" = admin.type,
                      "estimated_params" = estimated_params,
-                     "sex" = sex)
+                     "sex" = sex, "depfr_head" = depfr_head, "depfr_AF" = depfr_AF )
   
   
   params <- create.params(user_input)
@@ -1819,22 +1849,24 @@ obj.func <- function(x, dataset){
   # Set up simulations for the 9th case, i.e. Hinderliter Inhalation female single low
   BW <- 0.25  #kg, not reported in the study
   sex <- "F"
-  inhalation_params=estimate_BFn_TVn(sex)
+  inhalation_params=estimate_BFn_TVn(sex, BW)
   BFn = inhalation_params["BFn"]# 1/h
   TVn = inhalation_params["TVn"]# L
   duration <- 6 #hours
-  admin.dose_per_g <- 1.2 # administered dose in mg/m^3
-  admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration*6), 6*duration) #ug PFOA, for 6h inhalation
-  admin.time <- seq(0,duration,0.1666667) #time when doses are administered, in hours
+  admin.dose_mg_per_m3 <- 10 # administered dose in mg/m^3
+  depfr_head <- 0.3101
+  depfr_AF <- (0.0939+0.0165)
+  k = 6*duration
+  admin.dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn)/k,length.out = k) #ug PFOA, for 6h inhalation
+  admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
   admin.type <- "nasal"
-  
   
   user_input <- list('BW'=BW,
                      "admin.dose"= admin.dose,
                      "admin.time" = admin.time, 
                      "admin.type" = admin.type,
                      "estimated_params" = estimated_params,
-                     "sex" = sex)
+                     "sex" = sex, "depfr_head" = depfr_head, "depfr_AF" = depfr_AF )
   
   
   params <- create.params(user_input)
@@ -1884,13 +1916,16 @@ obj.func <- function(x, dataset){
   # Set up simulations for the 10th case, i.e. Hinderliter Inhalation female single high
   BW <- 0.25  #kg, not reported in the study
   sex <- "F"
-  inhalation_params=estimate_BFn_TVn(sex)
+  inhalation_params=estimate_BFn_TVn(sex, BW)
   BFn = inhalation_params["BFn"]# 1/h
   TVn = inhalation_params["TVn"]# L
   duration <- 6 #hours
-  admin.dose_per_g <- 1.2 # administered dose in mg/m^3
-  admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration*6), 6*duration) #ug PFOA, for 6h inhalation
-  admin.time <- seq(0,duration,0.1666667) #time when doses are administered, in hours
+  admin.dose_mg_per_m3 <- 25 # administered dose in mg/m^3
+  depfr_head <- 0.3372
+  depfr_AF <- (0.1327+0.0177)
+  k = 6*duration
+  admin.dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn)/k,length.out = k) #ug PFOA, for 6h inhalation
+  admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
   admin.type <- "nasal"
   
   
@@ -1899,7 +1934,7 @@ obj.func <- function(x, dataset){
                      "admin.time" = admin.time, 
                      "admin.type" = admin.type,
                      "estimated_params" = estimated_params,
-                     "sex" = sex)
+                     "sex" = sex, "depfr_head" = depfr_head, "depfr_AF" = depfr_AF )
   
   
   params <- create.params(user_input)
@@ -1983,7 +2018,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0 ,
-              "maxeval" = 100, 
+              "maxeval" = 600, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
@@ -1996,8 +2031,8 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 N_pars <- 4 # Number of parameters to be fitted
 fit <-  c(log(1e2), log(1),log(1),log(1e2))
 
-lb	= c(log(1e-2), log(1e-4),log(1e-3),log(1e-2))
-ub = c(log(1e3), log(1e2),log(1e2),log(1e3))
+lb	= c(log(1e-3), log(1e-5),log(1e-5),log(1e-5))
+ub = c(log(1e5), log(1e5),log(1e5),log(1e3))
 
 
 # Run the optimization algorithmm to estimate the parameter values
@@ -2019,12 +2054,20 @@ estimated_params <- exp(optimizer$solution)
 #-------------------------------------------------------------------------------
 #################################################################################
 
+depfr_head <- 0
 # Set up simulations for the 1st case, i.e. Gustafsson Inhalation male blood
 BW <- 0.5125  #kg, from Gustafsson et al., 2022
 sex <- "M"
+inhalation_params=estimate_BFi_TVi(sex, BW)
+BFi = inhalation_params["BFi"]# 1/h
+TVi = inhalation_params["TVi"]# L
+duration <- 0.375 #hours, 22.5 min
 admin.dose_per_g <- 0.164 # administered dose in mg PFOA/kg BW 
-admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
-admin.time <- 0 #time when doses are administered, in hours
+admin.dose_mg_per_m3 <- 300 # administered dose in mg/m^3 0.25-0.35 mg/L
+depfr_AF <- (0.6107+0.0543)
+k = duration*24 #partition of administration packages
+admin.dose <- rep((admin.dose_mg_per_m3*duration*BFi*TVi)/k, length.out = k) #ug PFOA, for 22.5 min inhalation
+admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
 admin.type <- "inh"
 
 
@@ -2033,7 +2076,7 @@ user_input <- list('BW'=BW,
                    "admin.time" = admin.time, 
                    "admin.type" = admin.type,
                    "estimated_params" = estimated_params,
-                   "sex" = sex)
+                   "sex" = sex, "depfr_head" = depfr_head, "depfr_AF" = depfr_AF )
 
 
 params <- create.params(user_input)
@@ -2069,7 +2112,7 @@ user_input <- list('BW'=BW,
                    "admin.time" = admin.time, 
                    "admin.type" = admin.type,
                    "estimated_params" = estimated_params,
-                   "sex" = sex)
+                   "sex" = sex, "depfr_head" = depfr_head, "depfr_AF" = depfr_AF )
 
 
 params <- create.params(user_input)
@@ -2094,18 +2137,24 @@ preds_gus_OR_Mblood <-  solution[, c("time", "Cplasma")]
 # Set up simulations for the 3rd case, i.e. Gustafsson Inhalation male tissues
 BW <- 0.5125  #kg, from Gustafsson et al., 2022
 sex <- "M"
+inhalation_params=estimate_BFi_TVi(sex, BW)
+BFi = inhalation_params["BFi"]# 1/h
+TVi = inhalation_params["TVi"]# L
+duration <- 0.375 #hours, 22.5 min
 admin.dose_per_g <- 0.164 # administered dose in mg PFOA/kg BW 
-admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
-admin.time <- 0 #time when doses are administered, in hours
+admin.dose_mg_per_m3 <- 300 # administered dose in mg/m^3 0.25-0.35 mg/L
+depfr_AF <- (0.6107+0.0543)
+k = duration*24 #partition of administration packages
+admin.dose <- rep((admin.dose_mg_per_m3*duration*BFi*TVi)/k, length.out = k) #ug PFOA, for 22.5 min inhalation
+admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
 admin.type <- "inh"
-
 
 user_input <- list('BW'=BW,
                    "admin.dose"= admin.dose,
                    "admin.time" = admin.time, 
                    "admin.type" = admin.type,
                    "estimated_params" = estimated_params,
-                   "sex" = sex)
+                   "sex" = sex, "depfr_head" = depfr_head, "depfr_AF" = depfr_AF )
 
 
 params <- create.params(user_input)
@@ -2141,7 +2190,7 @@ user_input <- list('BW'=BW,
                    "admin.time" = admin.time, 
                    "admin.type" = admin.type,
                    "estimated_params" = estimated_params,
-                   "sex" = sex)
+                   "sex" = sex, "depfr_head" = depfr_head, "depfr_AF" = depfr_AF )
 
 
 params <- create.params(user_input)
@@ -2167,13 +2216,16 @@ preds_gus_OR_Mtissues <-  solution[, c("time", "CalveolarLF","Cliver", "Clungs",
 # Set up simulations for the 5th case, i.e. Hinderliter Inhalation male single low
 BW <- 0.25  #kg, not reported in the study
 sex <- "M"
-inhalation_params=estimate_BFn_TVn(sex)
+inhalation_params=estimate_BFn_TVn(sex, BW)
 BFn = inhalation_params["BFn"]# 1/h
 TVn = inhalation_params["TVn"]# L
 duration <- 6 #hours
-admin.dose_per_g <- 1.2 # administered dose in mg/m^3
-admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration*6), 6*duration) #ug PFOA, for 6h inhalation
-admin.time <- seq(0,duration,0.1666667) #time when doses are administered, in hours
+admin.dose_mg_per_m3 <- 1.2 # administered dose in mg/m^3
+depfr_head <- 0.2864
+depfr_AF <- (0.1440+0.0254)
+k = 6*duration
+admin.dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn)/k,length.out = k) #ug PFOA, for 6h inhalation
+admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
 admin.type <- "nasal"
 
 
@@ -2182,7 +2234,7 @@ user_input <- list('BW'=BW,
                    "admin.time" = admin.time, 
                    "admin.type" = admin.type,
                    "estimated_params" = estimated_params,
-                   "sex" = sex)
+                   "sex" = sex, "depfr_head" = depfr_head, "depfr_AF" = depfr_AF )
 
 
 
@@ -2208,13 +2260,16 @@ preds_hind_INH_Mblood_low <-  solution[, c("time", "Cplasma")]
 # Set up simulations for the 6th case, i.e. Hinderliter Inhalation male single medium
 BW <- 0.25  #kg, not reported in the study
 sex <- "M" 
-inhalation_params=estimate_BFn_TVn(sex)
+inhalation_params=estimate_BFn_TVn(sex, BW)
 BFn = inhalation_params["BFn"]# 1/h
 TVn = inhalation_params["TVn"]# L
 duration <- 6 #hours
-admin.dose_per_g <- 1.2 # administered dose in mg/m^3
-admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration*6), 6*duration) #ug PFOA, for 6h inhalation
-admin.time <- seq(0,duration,0.1666667) #time when doses are administered, in hours
+admin.dose_mg_per_m3 <- 10 # administered dose in mg/m^3
+depfr_head <- 0.3057
+depfr_AF <- (0.1195+0.0243)
+k = 6*duration
+admin.dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn)/k,length.out = k) #ug PFOA, for 6h inhalation
+admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
 admin.type <- "nasal"
 
 
@@ -2223,7 +2278,7 @@ user_input <- list('BW'=BW,
                    "admin.time" = admin.time, 
                    "admin.type" = admin.type,
                    "estimated_params" = estimated_params,
-                   "sex" = sex)
+                   "sex" = sex, "depfr_head" = depfr_head, "depfr_AF" = depfr_AF )
 
 
 
@@ -2249,13 +2304,16 @@ preds_hind_INH_Mblood_medium <-  solution[, c("time", "Cplasma")]
 # Set up simulations for the 7th case, i.e. Hinderliter Inhalation male single high
 BW <- 0.25  #kg, not reported in the study
 sex <- "M"
-inhalation_params=estimate_BFn_TVn(sex)
+inhalation_params=estimate_BFn_TVn(sex, BW)
 BFn = inhalation_params["BFn"]# 1/h
 TVn = inhalation_params["TVn"]# L
 duration <- 6 #hours
-admin.dose_per_g <- 1.2 # administered dose in mg/m^3
-admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration*6), 6*duration) #ug PFOA, for 6h inhalation
-admin.time <- seq(0,duration,0.1666667) #time when doses are administered, in hours
+admin.dose_mg_per_m3 <- 25 # administered dose in mg/m^3
+depfr_head <- 0.3573
+depfr_AF <- (0.1618+0.0241)
+k = 6*duration
+admin.dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn)/k,length.out = k) #ug PFOA, for 6h inhalation
+admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
 admin.type <- "nasal"
 
 
@@ -2264,7 +2322,7 @@ user_input <- list('BW'=BW,
                    "admin.time" = admin.time, 
                    "admin.type" = admin.type,
                    "estimated_params" = estimated_params,
-                   "sex" = sex)
+                   "sex" = sex, "depfr_head" = depfr_head, "depfr_AF" = depfr_AF )
 
 
 
@@ -2291,13 +2349,16 @@ preds_hind_INH_Mblood_high <-  solution[, c("time", "Cplasma")]
 # Set up simulations for the 8th case, i.e. Hinderliter Inhalation male single low
 BW <- 0.25  #kg, not reported in the study
 sex <- "F" 
-inhalation_params=estimate_BFn_TVn(sex)
+inhalation_params=estimate_BFn_TVn(sex, BW)
 BFn = inhalation_params["BFn"]# 1/h
 TVn = inhalation_params["TVn"]# L
 duration <- 6 #hours
-admin.dose_per_g <- 1.2 # administered dose in mg/m^3
-admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration*6), 6*duration) #ug PFOA, for 6h inhalation
-admin.time <- seq(0,duration,0.1666667) #time when doses are administered, in hours
+admin.dose_mg_per_m3 <- 1.2 # administered dose in mg/m^3
+depfr_head <- 0.2822
+depfr_AF <- (0.1148+0.0177)
+k = 6*duration
+admin.dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn)/k,length.out = k) #ug PFOA, for 6h inhalation
+admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
 admin.type <- "nasal"
 
 
@@ -2306,7 +2367,7 @@ user_input <- list('BW'=BW,
                    "admin.time" = admin.time, 
                    "admin.type" = admin.type,
                    "estimated_params" = estimated_params,
-                   "sex" = sex)
+                   "sex" = sex, "depfr_head" = depfr_head, "depfr_AF" = depfr_AF )
 
 
 
@@ -2332,13 +2393,16 @@ preds_hind_INH_Fblood_low <-  solution[, c("time", "Cplasma")]
 # Set up simulations for the 9th case, i.e. Hinderliter Inhalation female single medium
 BW <- 0.25  #kg, not reported in the study
 sex <- "F" 
-inhalation_params=estimate_BFn_TVn(sex)
+inhalation_params=estimate_BFn_TVn(sex, BW)
 BFn = inhalation_params["BFn"]# 1/h
 TVn = inhalation_params["TVn"]# L
 duration <- 6 #hours
-admin.dose_per_g <- 1.2 # administered dose in mg/m^3
-admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration*6), 6*duration) #ug PFOA, for 6h inhalation
-admin.time <- seq(0,duration,0.1666667) #time when doses are administered, in hours
+admin.dose_mg_per_m3 <- 10 # administered dose in mg/m^3
+depfr_head <- 0.3101
+depfr_AF <- (0.0939+0.0165)
+k = 6*duration
+admin.dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn)/k,length.out = k) #ug PFOA, for 6h inhalation
+admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
 admin.type <- "nasal"
 
 
@@ -2347,7 +2411,7 @@ user_input <- list('BW'=BW,
                    "admin.time" = admin.time, 
                    "admin.type" = admin.type,
                    "estimated_params" = estimated_params,
-                   "sex" = sex)
+                   "sex" = sex, "depfr_head" = depfr_head, "depfr_AF" = depfr_AF )
 
 
 
@@ -2373,13 +2437,16 @@ preds_hind_INH_Fblood_medium <-  solution[, c("time", "Cplasma")]
 # Set up simulations for the 10th case, i.e. Hinderliter Inhalation female single high
 BW <- 0.25  #kg, not reported in the study
 sex <- "F" 
-inhalation_params=estimate_BFn_TVn(sex)
+inhalation_params=estimate_BFn_TVn(sex, BW)
 BFn = inhalation_params["BFn"]# 1/h
 TVn = inhalation_params["TVn"]# L
 duration <- 6 #hours
-admin.dose_per_g <- 1.2 # administered dose in mg/m^3
-admin.dose <- rep((admin.dose_per_g*duration*BFn*TVn)/(duration*6), 6*duration) #ug PFOA, for 6h inhalation
-admin.time <- seq(0,duration,0.1666667) #time when doses are administered, in hours
+admin.dose_mg_per_m3 <- 25 # administered dose in mg/m^3
+depfr_head <- 0.3372
+depfr_AF <- (0.1327+0.0177)
+k = 6*duration
+admin.dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn)/k,length.out = k) #ug PFOA, for 6h inhalation
+admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
 admin.type <- "nasal"
 
 
@@ -2388,7 +2455,7 @@ user_input <- list('BW'=BW,
                    "admin.time" = admin.time, 
                    "admin.type" = admin.type,
                    "estimated_params" = estimated_params,
-                   "sex" = sex)
+                   "sex" = sex, "depfr_head" = depfr_head, "depfr_AF" = depfr_AF )
 
 
 
