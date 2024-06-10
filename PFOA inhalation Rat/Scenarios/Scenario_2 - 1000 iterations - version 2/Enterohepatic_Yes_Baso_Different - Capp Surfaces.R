@@ -227,7 +227,7 @@ create.params <- function(user.input){
     
     SA <- 2*pi*(d_duodenum/2)*L_duodenum + 2*pi*(d_jejunum/2)*L_jejunum + 2*pi*(d_ileum/2)*L_ileum #cm^2
     n <- 5 #enlargement factor of apical membrane of proximal tubule or enterocytes
-    PAINL <- n * SA * 1e-4/0.195 #m^2/kg
+    PAINL <- n * SA * 1e-4/0.195 #m^2/kg, scaled to reference body weight
     AINL <- PAINL*BW #m^2
     
     PAM <- 3042e-4/0.23 #m2/kg
@@ -258,7 +258,7 @@ create.params <- function(user.input){
     #   Reflection Coefficients   #
     #-----------------------------#
     ###############################
-    # Pore diameters from Price & Gesquiere (2020)
+    # Pore diameters from Price & Gesquiere (2020), doi:10.1126/sciadv.aax2642
     DpKi <- 200 #nm
     DpLi <- 280 #nm
     DpSt <- 80 #nm, assumption
@@ -272,7 +272,7 @@ create.params <- function(user.input){
     DpBr <- 0.99 #nm
     DpGo <- 80 #nm, assumption
     DpSk <- 60 #nm
-    DpBo <- 60 #nm, assumption ???
+    DpBo <- 40000 #nm
     
     Dps <- c(DpKi, DpLi, DpSt, DpIn, DpMu, DpAd, DpRe, DpLu, DpSp, DpHt, DpBr, DpGo, DpSk, DpBo)
     s_r <- rep(NA, length(Dps))
@@ -463,20 +463,20 @@ create.params <- function(user.input){
     #diffusion rate constants. See SI section S3-1 for details
     
     #Surface areas Interstitial - Intracellualr PKSim (m^2)
-    
-    AcK= 437.16
-    AcL= 84.45
-    AcST= 1007.31
-    AcIN= 400.94 #only small intestine
-    AcM= 8.2
-    AcA= 3.87
-    AcLu= 0.05
-    AcSP= 564.05
-    AcH= 5.60
-    AcBr= 6.12e-4
-    AcGo= 2.01
-    AcSK= 0.11
-    AcBo= 6.52
+    BW_ref <- 0.23
+    AcK= 437.16*BW/BW_ref
+    AcL= 84.45*BW/BW_ref
+    AcST= 1007.31*BW/BW_ref
+    AcIN= (400.94+152.39) *BW/BW_ref # small+large intestine
+    AcM= 8.2*BW/BW_ref
+    AcA= 3.87*BW/BW_ref
+    AcLu= 0.05*BW/BW_ref
+    AcSP= 564.05*BW/BW_ref
+    AcH= 5.60*BW/BW_ref
+    AcBr= 6.12e-4*BW/BW_ref
+    AcGo= 2.01*BW/BW_ref
+    AcSK= 0.11*BW/BW_ref
+    AcBo= 6.52*BW/BW_ref
     AcR= (AcK+AcL+AcST+AcIN+AcM+AcA+AcLu+AcSP+AcH+AcBr+AcGo+AcSK+AcBo)/13
     
     # Following the calculations of Lin et al. (2023) for Caco-2 cells
@@ -497,20 +497,21 @@ create.params <- function(user.input){
     
     #passive diffusion rates
    
-    kKFKT = Papp/10 * AcK/1000 #m^3/h / 1000 --> L/h
-    kLFLT = Papp/10 * AcL/1000 #m^3/h / 1000 --> L/h
-    kMFMT = Papp/10 * AcM/1000 #m^3/h / 1000 --> L/h
-    kSTFSTT = Papp/10 * AcST/1000 #m^3/h / 1000 --> L/h 
-    kINFINT = Papp/10 * AcIN/1000 #m^3/h / 1000 --> L/h 
-    kAFAT = Papp/10 * AcA/1000 #m^3/h / 1000 --> L/h 
-    kLuTLuF = Papp/10 * AcLu/1000 #m^3/h / 1000 --> L/h 
-    kSPFSPT = Papp/10 * AcSP/1000 #m^3/h / 1000 --> L/h 
-    kHFHT = Papp/10 * AcH/1000 #m^3/h / 1000 --> L/h 
-    kBrFBrT = Papp/10 * AcBr/1000 #m^3/h / 1000 --> L/h 
-    kGoFGoT = Papp/10 * AcGo/1000 #m^3/h / 1000 --> L/h 
-    kSKFSKT = Papp/10 * AcSK/1000 #m^3/h / 1000 --> L/h
-    kBoFBoT = Papp/10 * AcBo/1000 #m^3/h / 1000 --> L/h
-    kRFRT = Papp/10 * AcR/1000 #m^3/h / 1000 --> L/h 
+    kKFKT = ((Papp/100) * AcK)*1000 #m^3/h * 1000 --> L/h
+    kLFLT = ((Papp/100) * AcL)*1000 #m^3/h * 1000 --> L/h
+    kMFMT = ((Papp/100) * AcM)*1000 #m^3/h * 1000 --> L/h
+    kSTFSTT = ((Papp/100) * AcST)*1000 #m^3/h * 1000 --> L/h 
+    kINFINT = ((Papp/100) * AcIN)*1000 #m^3/h * 1000 --> L/h 
+    kAFAT = ((Papp/100) * AcA)*1000 #m^3/h * 1000 --> L/h 
+    kLuTLuF = ((Papp/100) * AcLu)*1000 #m^3/h * 1000 --> L/h 
+    kSPFSPT = ((Papp/100) * AcSP)*1000 #m^3/h * 1000 --> L/h 
+    kHFHT = ((Papp/100) * AcH)*1000 #m^3/h * 1000 --> L/h 
+    kBrFBrT = ((Papp/100) * AcBr)*1000 #m^3/h * 1000 --> L/h 
+    kGoFGoT = ((Papp/100) * AcGo)*1000 #m^3/h * 1000 --> L/h 
+    kSKFSKT = ((Papp/100) * AcSK)*1000 #m^3/h * 1000 --> L/h
+    kBoFBoT = ((Papp/100) * AcBo)*1000 #m^3/h * 1000 --> L/h
+    kRFRT = ((Papp/100) * AcR)*1000 #m^3/h*1000 --> L/h 
+    kFKT <- ((Papp/100) * AK) * n*1000 #m^3/h *1000 ---> L/h
     
     
     #For all CMTs
@@ -594,21 +595,20 @@ create.params <- function(user.input){
     #brain (Br), gonads (Go), rest of body(R)
     
     #PeffB <- Papp/10 #m/h
-    PeffK <- Papp/10 #m/h
-    PeffL <- Papp/10 #m/h
-    PeffST <- Papp/10 #m/h
-    PeffIN <- Papp/10 #m/h
-    PeffA <- Papp/10 #m/h
-    PeffM <- Papp/10 #m/h
-    PeffR <- Papp/10 #m/h
-    PeffLu <- Papp/10 #m/h
-    PeffSP <- Papp/10 #m/h
-    PeffH <- Papp/10 #m/h
-    PeffBr <- Papp/10 #m/h
-    PeffGo <- Papp/10 #m/h
-    PeffSK <- Papp/10 #m/h
-    PeffBo <- Papp/10 #m/h
-    kFKT <- PeffK * AK * n/1000 #m^3/h /1000 ---> L/h
+    PeffK <- Papp*10 #mm/h
+    PeffL <- Papp*10 #mm/h
+    PeffST <- Papp*10 #mm/h
+    PeffIN <- Papp*10 #mm/h
+    PeffA <- Papp*10 #mm/h
+    PeffM <- Papp*10 #mm/h
+    PeffR <- Papp*10 #mm/h
+    PeffLu <- Papp*10 #mm/h
+    PeffSP <- Papp*10 #mm/h
+    PeffH <- Papp*10 #mm/h
+    PeffBr <- Papp*10 #mm/h
+    PeffGo <- Papp*10 #mm/h
+    PeffSK <- Papp*10 #mm/h
+    PeffBo <- Papp*10 #mm/h
     
     
     return(list('VB'=VB, 'Vplasma'=Vplasma, 'VK'=VK, 'VKB'=VKB, 
