@@ -67,7 +67,7 @@ create.params <- function(user.input){
     VK <- PVK * BW #kidney volume kg=L
     PVKB <- 0.16 #Brown et al. 1997
     VKB <- PVKB * PVK * BW #kidney blood volume kg=L
-    PVKF <- 0.13 #Larson et al., 1984
+    PVKF <- 0.2 #pkSim
     VKF <- PVKF * PVK * BW #kidney interstitial fluid volume kg=L
     VKT <- VK - VKF - VKB #kidney tissue volume kg=L
     VFil <- 0.25/1000 #renal filtrate volume in L,  from Cheng et al., 2017 (from Arthur, 1986; Bonvalet, 1981)
@@ -77,36 +77,31 @@ create.params <- function(user.input){
     VL <- PVL * BW #liver volume kg=L
     PVLB <- 0.21  #Brown et al. 1997
     VLB <- PVLB * PVL * BW #liver blood volume kg=L
-    PVLF <- 0.049  #Blouin et al. 1977
+    PVLF <- 0.16  #pkSim
     VLF <- PVLF * PVL* BW #liver interstitial fluid volume kg=L
     VLT <- VL - VLF #liver tissue volume kg=L
-    # PVbile <- 0.004 #Blouin et al. 1977
-    # Vbile <- 0.001#PVbile * VL #bile volume kg=L
-   
+    
     #Intestine (small and large)
     PVIN <- 2.24e-2 #Brown et al. 1997, p 416, Table 5: 1.4+0.84
     VIN <- PVIN * BW #intestine volume kg=L
     # In the following we add the plasma and blood cell volumes of the small and large intestine from Shah and betts, (2012)
-    PVINB <- ((0.0795+0.0651)+(0.0458+0.0375))/280 # From https://doi.org/10.2170/jjphysiol.33.1019
-    VINB <- PVINB * VIN #intestine  blood volume kg=L
-    PVINF <- (0.867+0.5)/280 # From https://doi.org/10.2170/jjphysiol.33.1019
-    VINF <- PVINF * PVIN * BW #intestine interstitial fluid volume kg=L
+    PVINB <- ((0.0795+0.0651)+(0.0458+0.0375))/280 #mL/g BW weight
+    VINB <- PVINB * BW #intestine  blood volume kg=L
+    PVINF <- (0.867+0.5)/280 #mL/g BW weight
+    VINF <- PVINF * BW #intestine interstitial fluid volume kg=L
     VINT <- VIN - VINF #intestine tissue volume kg=L
     
     #Stomach
     PVST <- 0.46e-2 #Brown et al. 1997, p 416, Table 5
     VST <- PVST * BW #stomach volume kg=L
-    #In the next calculations, Nose et al. (1983) provide plasma volume per organ and we convert to blood by taking into account the hematocrit 
-    #VSTB <- (0.089/(1-Hct))*((0.98*(1000*BW/100))/1000) - VINB # GI (stomach + small + large) blood volume in ml/g of dry tissue, dry tissue mass = 0.98 g/100g BW, https://doi.org/10.2170/jjphysiol.33.1019
-    #VSTF <- 0.62*((0.98*(1000*BW/100))/1000) - VINF # GI (stomach + small + large) IF volume in ml/g of dry tissue, dry tissue mass = 0.98 g/100g BW, https://doi.org/10.2170/jjphysiol.33.1019
     PVSTB <- 0.032 #from pkSim
-    VSTB <- PVSTB * VST
+    VSTB <- PVSTB * PVST * BW 
     PVSTF <-  0.10 # from pkSim
-    VSTF <- PVSTF * VST
+    VSTF <- PVSTF * PVST * BW 
     VSTT <- VST - VSTF #stomach tissue volume kg=L
     
     #Stomach and intestine lumen
-    PVSTL <- 3.4/175 # Connell et al., 2008, https://doi.org/10.1211/jpp.60.1.0008
+    PVSTL <- 3.4/175 #mL/g BW, Connell et al., 2008, https://doi.org/10.1211/jpp.60.1.0008
     VSTL <- PVSTL * BW #stomach lumen volume kg=L
     PVINL <- (0.894+0.792+0.678+0.598+0.442)/230 #Funai et al., 2023 https://doi.org/10.1038/s41598-023-44742-y --> Figure 3C
     VINL <- PVINL * BW #intestine lumen volume kg=L
@@ -116,7 +111,7 @@ create.params <- function(user.input){
     VM <- PVM * BW #muscle volume kg=L
     PVMB <- 0.04 #Brown et al. 1997
     VMB <- PVMB * PVM * BW #muscle blood volume kg=L
-    PVMF <- 0.054 #Ng, 2013
+    PVMF <- 0.12 #pkSim
     VMF <- PVMF * PVM * BW #muscle interstitial fluid volume kg=L
     VMT <- VM - VMF #muscle tissue volume kg=L
     
@@ -141,27 +136,21 @@ create.params <- function(user.input){
     #Lung
     PVLu <- 0.48e-2 #Brown et al. 1997, p 418-19 mean of values for male rat
     VLu <- PVLu * BW
-    PVLuB <- 0.09*VLu #Brown et al. 1997, p 459 --> capillary blood occupied 9% of the lung volume
-    VLuB <- PVLuB * PVLu * BW #volume of the blood of lung kg=L
+    PVLuB <- 9/100*PVLu
+    VLuB <- PVLuB*BW #Brown et al. 1997, p 459 --> capillary blood occupied 9% of the lung volume
     PVLuF <- 0.263/280 #0.263 ml, Shah & Betts, 2012. https://doi.org/10.1007/s10928-011-9232-2
-    VLuF <- PVLuF * PVLu * BW #lung interstitial fluid volume
+    VLuF <- PVLuF * BW #lung interstitial fluid volume
     PVLuAF <- 0.4/275 #0.4 mL Leslie et al, 1989 https://doi.org/10.1164/ajrccm/139.2.360 --> Watkins & Rannels 1979 https://doi.org/10.1152/jappl.1979.47.2.325  
-    VLuAF <- PVLuAF * PVLu * BW #lung alveolar lining fluid volume kg=L
-    PVLuT <- VLu - VLuF - VLuAF 
-    VLuT <- PVLuT * PVLu* BW #lung tissue volume kg=L
-    
-    # IVR=0
-    # EC=0
-    # Dua=0
-    
+    VLuAF <- PVLuAF * BW #lung alveolar lining fluid volume kg=LL
+    VLuT <- VLu - VLuF - VLuAF #lung tissue volume kg=L
     
     #Spleen
     PVSP <- 0.2e-2  #Brown et al. 1997, p 416, Table 5
     VSP <- PVSP * BW
     PVSPB <- 0.22 #Brown et al. 1997, p 458, Table 30
     VSPB <- PVSPB * PVSP * BW #volume of the blood of spleen kg=L
-    PVSPF <- 0.554/280 #ml/g -> Shah & Betts, 2012. https://doi.org/10.1007/s10928-011-9232-2
-    VSPF <- PVSPF * PVSP * BW #spleen interstitial fluid volume kg=L
+    PVSPF <- 0.554/280 #ml/g BW-> Shah & Betts, 2012. https://doi.org/10.1007/s10928-011-9232-2
+    VSPF <- PVSPF * BW #spleen interstitial fluid volume kg=L
     VSPT <- VSP - VSPF #spleen tissue volume kg=L
     
     #Heart
@@ -169,7 +158,7 @@ create.params <- function(user.input){
     VH <- PVH * BW
     PVHB <- 0.26 #Brown et al. 1997, p 458, Table 30
     VHB <- PVHB * PVH * BW #volume of the blood of heart kg=L
-    PVHF <- PVH * 0.22 #https://doi.org/10.1016/S0022-2828(87)80559-X --> IS 22% of dry tissue
+    PVHF <- 0.1 #pkSim
     VHF <- PVHF * PVH * BW #heart interstitial fluid volume kg=L
     VHT <- VH - VHF #heart tissue volume kg=L
     
@@ -178,55 +167,65 @@ create.params <- function(user.input){
     VBr <- PVBr * BW
     PVBrB <- 0.03 #Brown et al. 1997, p 458, Table 30
     VBrB <- PVBrB * PVBr * BW #volume of the blood of brain kg=L
-    PVBrF <- 17.5 * VBrB #https://doi.org/10.1016/j.pneurobio.2015.12.007 --> The ISS occupies 15% to 20% of the total brain volume 
-    VBrF <- PVBrF * PVBr * BW #brain interstitial fluid volume kg=L
+    PVBrF <- 17.5/100 * PVBr
+    VBrF <- PVBrF * BW #https://doi.org/10.1016/j.pneurobio.2015.12.007 --> The IS occupies 15% to 20% of the total brain volume, brain IF volume kg=L 
     VBrT <- VBr - VBrF #brain tissue volume kg=L
     
     #gonads
-    PVT <- 1.24/239.03 #Table 01 https://doi.org/10.1590/S1516-89132012000100013
-    VT <- PVT * BW
-    PVTB <- 4.75e-2/1.49/243 #Figure 2 https://doi.org/10.1007/BF00410278 --> blood weight/g of gonads/BW
-    VTB <-PVTB * PVT * BW #volume of the blood of gonads kg=L
-    PVTF <- 0.16/239.03 #Table 02 https://doi.org/10.1590/S1516-89132012000100013
-    VTF <- PVTF * PVT * BW #gonads interstitial fluid volume kg=L
-    VTT <- VT - VTF #gonads tissue volume kg=L
+    PVGo <- 0.25e-2/0.230 #pKsim, L/kg
+    VGo <- PVGo * BW
+    PVGoB <- 0.14 #pKsim
+    VGoB <-PVGoB * PVGo * BW #volume of the blood of gonads kg=L
+    PVGoF <- 0.07 #pKsim
+    VGoF <- PVGoF * PVGo * BW #gonads interstitial fluid volume kg=L
+    VGoT <- VGo - VGoF #gonads tissue volume kg=L
 
     #Skin
-    PVSK <- 19.03/100 #Brown et al. 1997, p 416, Table 5
+    PVSK <- 19.03e-2 #Brown et al. 1997, p 416, Table 5
     VSK <- PVSK * BW
     PVSKB <- 0.02 #Brown et al. 1997, p 458, Table 3
-    VSKB <-PVSKB * PVSK * BW #volume of the blood of gonads kg=L
-    PVSKF <- 40*VSK/100/0.225 # https://doi.org/10.1111/j.1748-1716.1981.tb06901.x 40 mL/100 g tissue, BW = 200-250 g
-    VSKF <- PVSKF * PVSK * BW #gonads interstitial fluid volume kg=L
-    VSKT <- VSK - VSKF #gonads tissue volume kg=L
+    VSKB <-PVSKB * PVSK * BW #volume of the blood of skin kg=L
+    PVSKF <- 0.4  #https://doi.org/10.1111/j.1748-1716.1981.tb06901.x 40 mL/100 g tissue, BW = 200-250 g
+    VSKF <- PVSKF * PVSK * BW #skin interstitial fluid volume kg=L
+    VSKT <- VSK - VSKF #skin tissue volume kg=L
+    
+    #Bones
+    PVBo <-0.0159/0.230 #pkSim
+    VBo <- PVBo * BW
+    PVBoB <- 0.04 #pkSim
+    VBoB <-PVBoB * PVBo * BW #volume of the blood of bones kg=L
+    PVBoF <- 0.1 #pkSim
+    VBoF <- PVBoF * PVBo * BW #bones interstitial fluid volume kg=L
+    VBoT <- VBo - VBoF #bones tissue volume kg=L
+    
     
     #RoB
-    PVR <- 1 - PVB - PVK - PVL - PVM - PVA - PVSP - PVH - PVBr - PVT - PVST - PVIN - PVSK - PVUA
+    PVR <- 1 - PVB - PVK - PVL - PVM - PVA - PVSP - PVH - PVBr - PVGo - PVST - PVIN - PVSK - PVBo - PVUA
     #PVR <- 1 - PVB - PVK - PVL - PVM - PVA - PVSP - PVH - PVBr - PVT - PVST - PVIN
     VR <- PVR * BW #volume of the rest of the body kg=LL
-    PVRB <- 0.036 
-    VRB <- PVRB * PVR * BW #volume of the blood of the rest of body kg=L
-    PVRF <- 0.18  
-    VRF <- PVRF * PVR * BW #interstitial fluid volume of the rest of body kg=L
+    PVRB <-(PVKB+PVLB+PVLuB+PVMB+PVAB+PVSPB+PVHB+PVBrB+PVGoB+PVSTB+PVINB+PVSKB+PVBoB)/13 # average VF of all the included organs (kg=L)
+    VRB <- PVRB * PVR * BW #volume of the blood of RoB kg=L
+    PVRF <-(PVKF+PVLF+PVLuF+PVMF+PVAF+PVSPF+PVHF+PVBrF+PVGoF+PVSTF+PVINF+PVSKF+PVBoF)/13 # average VF of all the included organs (kg=L)
+    VRF <- PVRF * PVR * BW #RoB of the blood of rest of body kg=L
     VRT <- VR - VRF #tissue volume of the rest of body kg=L
     
-    #Capillary surface area for each tissue (Ai) as percentage of body weight
-    #or weight of corresponding tissue (PAi, m^2/g) and surface area (m^2)
+    ##Capillary surface area for each tissue (Ai) as percentage of body weight (m^2/kg),
+    #values from pkSim "Endothelial Surface area", Niederalt et al., 2018, https://doi.org/10.1007/s10928-017-9559-4
     
-    PAK <- 350e-4 #[cm2/g]*1e-4--> m^2/g  https://doi.org/10.1111/j.1748-1716.1963.tb02652.x
-    AK <- PAK * VK * 1e3 #kidney surface area (m^2)
+    PAK <- 231.7e-4/0.23 #m^2/kg
+    AK <- PAK * BW #kidney surface area (m^2)
     PAKG <- 68.90e-4 #Kirkman and Stowell, 1942, https://doi.org/10.1002/ar.1090820310
     AKG <- PAKG * VK * 1e3 #the surface area of glomerular capillary (m^2)
-    PAL <- 250e-4 
-    AL <- PAL * VL * 1e3 #liver surface area (m^2)
+    PAL <- 1136e-4/0.23 #m^2/kg
+    AL <- PAL * BW #liver surface area (m^2)
     
-    PAST <- 100e-4 #Cheng et al., 2017 value for gut
-    AST <- PAST * VST * 1e3 #stomach surface area (m^2)
-    PASTL<- 100e-4 #Cheng et al., 2017 value for gut
+    PAST <- 33.77e-4/0.23 #m^2/kg
+    AST <- PAST * BW #stomach surface area (m^2)
+    PASTL<- 33.77e-4/0.23 #m^2/kg
     ASTL<- PASTL * VSTL #stomach lumen surface area (m^2)
     
-    PAIN <- 100e-4 #Cheng et al., 2017 value for gut
-    AIN <- PAIN * VIN * 1e3 #intestine surface area (m^2)
+    PAIN <- 74.82e-4/0.23 #m^2/kg
+    AIN <- PAIN * BW #intestine surface area (m^2)
     
     #Calculations of rat intestinal lumen surface area based on Kothari et al. (2020),https://doi.org/10.1002/btm2.10146
     # Lengths
@@ -240,29 +239,31 @@ create.params <- function(user.input){
     
     SA <- 2*pi*(d_duodenum/2)*L_duodenum + 2*pi*(d_jejunum/2)*L_jejunum + 2*pi*(d_ileum/2)*L_ileum #cm^2
     n <- 5 #enlargement factor of apical membrane of proximal tubule or enterocytes
-    PAINL <- n * SA * 1e-4/0.195 #m^2/kg
+    PAINL <- n * SA * 1e-4/0.195 #m^2/kg, scaled to reference body weight
     AINL <- PAINL*BW #m^2
     
-    PAM <- 70*1e-4 #m2/g tissue
-    AM <- PAM * VM *1e03 #muscle surface area (m^2)
-    PAA <- 70e-4 #m2/g tissue
-    AA <- PAA * VA *1e03#adipose surface area (m^2)
-    PAR <- 100e-4#m2/g tissue
+    PAM <- 3042e-4/0.23 #m2/kg
+    AM <- PAM * BW #muscle surface area (m^2)
+    PAA <- 95.93e-4/0.23 #m2/kg
+    AA <- PAA * BW #adipose surface area (m^2)
+    
+    PAR <- 100e-4#m2/g tissue, assumption
     AR <- PAR * VR *1e03#surface area of rest of body (m^2)
-    PLu <- 250e-4  #m2/g tissue      #https://doi.org/10.1111/j.1748-1716.1963.tb02652.x
-    ALu <- PLu* VLu*1e03 #lung surface area (m^2)
-    PSP <- 70e-4 #m2/g tissue
-    ASP <- PSP* VSP *1e03 #spleen surface area (m^2), same as muscle #assumption
-    #PH <- 50.3e-3/302 #50313 mm^2/kg --> *e-6 --> m^2/kg  https://doi.org/10.1007/BF00410278 
-    PH <-  67.8# mm^2/mm^3 <--> m2/L of tissue, from group III in https://doi.org/10.1016/S0022-2828(87)80533-3
-    AH <- PH* VH #heart surface area (m^2)
-    PBr <- 240e-4#m2/g tissue     #https://doi.org/10.1111/j.1748-1716.1963.tb02652.x 
-    ABr <- PBr* VBr *1e03 #brain surface area (m^2)
-    PT <- 70e-4#m2/g tissue
-    AT <- PT* VT *1e03 #gonads surface area (m^2), same as muscle #assumption
-    PSK <- 70e-4#m2/g tissue
-    #ASK <- PSK* VSK * 1e7 #skin surface area (m^2), same as muscle #assumption
-    ASK <- PSK* VSK*1e03 #skin surface area (m^2), same as muscle #assumption
+    
+    PLu <- 600.5e-4/0.23 #m2/kg 
+    ALu <- PLu * BW #lung surface area (m^2)
+    PSP <- 162.3e-4/0.23 #m2/kg
+    ASP <- PSP * BW #spleen surface area (m^2)
+    PH <-  201.1e-4/0.23 #m2/kg 
+    AH <- PH * BW #heart surface area (m^2)
+    PBr <- 60.34e-4/0.23 #m2/kg
+    ABr <- PBr * BW #brain surface area (m^2)
+    PGo <- 335.8e-4/0.23#m2/kg
+    AGo <- PGo * BW #gonads surface area (m^2)
+    PSK <- 729.1e-4/0.23#m2/kg
+    ASK <- PSK * BW #skin surface area (m^2)
+    PBo <- 621.4e-4/0.23#m2/kg
+    ABo <- PBo * BW #skin surface area (m^2)
     
     #Organ surface area
     
@@ -277,7 +278,8 @@ create.params <- function(user.input){
     #   Reflection Coefficients   #
     #-----------------------------#
     ###############################
-    # Pore diameters from Price & Gesquiere (2020)
+    # Pore diameters from Price & Gesquiere (2020), doi:10.1126/sciadv.aax2642
+    
     DpKi <- 200 #nm
     DpLi <- 280 #nm
     DpSt <- 80 #nm, assumption
@@ -291,9 +293,10 @@ create.params <- function(user.input){
     DpBr <- 0.99 #nm
     DpGo <- 80 #nm, assumption
     DpSk <- 60 #nm
+    DpBo <- 40000 #nm
     DpUa <- 27 #nm ???, assumption
     
-    Dps <- c(DpKi, DpLi, DpSt, DpIn, DpMu, DpAd, DpRe, DpLu, DpSp, DpHt, DpBr, DpGo, DpSk, DpUa)
+    Dps <- c(DpKi, DpLi, DpSt, DpIn, DpMu, DpAd, DpRe, DpLu, DpSp, DpHt, DpBr, DpGo, DpSk, DpBo, DpUa)
     s_r <- rep(NA, length(Dps))
     # (C-C) bond length is 0.154 nm ==> 7*0.154 = 1.078nm
     # For carboxyl group we assume 0.13nm, So the total size is around 1.2 nm
@@ -319,27 +322,9 @@ create.params <- function(user.input){
     SBr <- 1
     SGo <- s_r[12]
     SSk <- s_r[13]
-    SUa <- s_r[14]
+    SBo <- s_r[14]
+    SUa <- s_r[15]
     
-    #Effective permeability (Peff, in m/h) for blood (B), liver(L), kidney(K),
-    #stomach(ST),intestine (IN), adipose(A), muscle(M), spleen (SP), heart (H), 
-    #brain (Br), gonads (T), rest of body(R)
-
-    #PeffB <- 4.98e-8*3600*CF_Peff1
-    PeffK <-5e-8*3600*CF_Peff
-    PeffL <- 5e-8*3600*CF_Peff
-    PeffST <- 5e-8*3600*CF_Peff #assumption
-    PeffIN <- 5e-8*3600*CF_Peff#assumption
-    PeffA <-5e-8*3600*CF_Peff
-    PeffM <- 5e-8*3600*CF_Peff
-    PeffR <- 5e-8*3600*CF_Peff
-    PeffLu <- 5e-8*3600*CF_Peff #assumption
-    PeffSP <- 5e-8*3600*CF_Peff #assumption
-    PeffH <- 5e-8*3600*CF_Peff #assumption
-    PeffBr <- 5e-8*3600*CF_Peff #assumption
-    PeffT <- 5e-8*3600*CF_Peff #assumption
-    PeffSK <- 5e-8*3600*CF_Peff #assumption
-    PeffUA <- 5e-8*3600*CF_Peff #assumption
     
     ####################################
     #----------------------------------#
@@ -369,27 +354,27 @@ create.params <- function(user.input){
     QBM <- PQBM * Qcardiac #L/h
     PQBA <- 7/100 #Brown et al. 1997, p 438, Table 23
     QBA <- PQBA * Qcardiac #L/h
-    
     PQBLu <- 1 
     QBLu <- PQBLu * Qcardiac #L/h
-   
-    
     PQBSP <- 0.75/100 #https://doi.org/10.3390/pharmaceutics6010097 Qcard=0.235*(0.250^0.75)*60 (L/h) and PQBSP = (37.5/1000)/Qcard *100
     QBSP <- PQBSP * Qcardiac #L/h
     PQBH <- 5.1/100 #Brown et al. 1997, p 438, Table 23
     QBH <- PQBH * Qcardiac #L/h
     PQBBr <- 2.0/100 #Brown et al. 1997, p 438, Table 23
     QBBr <- PQBBr * Qcardiac #L/h 
-    PQBT <- 0.28/100 #https://doi.org/10.1152/ajpregu.1987.253.2.R228 Qcard=0.235*(0.335^0.75)*60 (L/h) and PQBT = (0.295*60/1000)/Qcard *100
-    QBGo <- PQBT * Qcardiac #L/h
+    PQBGo <- 0.28/100 #https://doi.org/10.1152/ajpregu.1987.253.2.R228 Qcard=0.235*(0.335^0.75)*60 (L/h) and PQBT = (0.295*60/1000)/Qcard *100
+    QBGo <- PQBGo * Qcardiac #L/h
     PQBSK <- 1.35/100 #https://doi.org/10.1111/1523-1747.ep12277181 Qcard=0.235*(0.2^0.75)*60 (L/h) and PQBSK = (0.95*60/1000)/Qcard *100
     QBSK <- PQBSK * Qcardiac #L/h
+    PBBo <- 12.2/100 #Brown et al. 1997, p 438, Table 23
+    QBBo <- PBBo * Qcardiac #L/h
     
     # Total blood outflow from liver
     QBLtot <- QBL+QBSP+QBIN+QBST
-
-    PQBR = 1 - PQBK - PQBST - PQBIN - PQBL - PQBM - PQBA - PQBH - PQBSK - PQBSP - PQBT - PQBBr
+    
+    PQBR = 1 - PQBK - PQBST - PQBIN - PQBL - PQBM - PQBA - PQBH - PQBSK - PQBSP - PQBGo - PQBBr - PBBo
     QBR <- PQBR * Qcardiac #L/h
+    
     
     #############################################
     #               Lymph flow rates            #
@@ -401,7 +386,7 @@ create.params <- function(user.input){
     fQparaSt <- 2.04E-3
     fQparaIn <- (1.95E-3+1.44E-2)/2
     fQparaMu <- 2.01E-3
-    fQparaAd <- 2.0E-3 # Assumption based on 1/500 of flow (Dosgra et al. 2020, https://doi.org/10.1016/j.csbj.2020.02.014)
+    fQparaAd <- 7.54E-3 
     fQparaRe <- 2.0E-3 # Assumption based on 1/500 of flow (Dosgra et al. 2020, https://doi.org/10.1016/j.csbj.2020.02.014)
     fQparaLu <- 3.56E-5
     fQparaSp <- 1.99E-2
@@ -409,6 +394,7 @@ create.params <- function(user.input){
     fQparaBr <- 7.27E-5
     fQparaGo <- 1.11E-2
     fQparaSk <- 3.52E-3
+    fQparaBo <- 6.62E-4 
     #fQparaUa <- 2.0E-3 # Assumption based on 1/500 of flow (Dosgra et al. 2020, https://doi.org/10.1016/j.csbj.2020.02.014)
     
     #Estimation of lymph flow rates:
@@ -425,6 +411,7 @@ create.params <- function(user.input){
     QparaBr <- fQparaBr*QBBr
     QparaGo <- fQparaGo*QBGo
     QparaSk <- fQparaSk*QBSK
+    QparaBo <- fQparaBo*QBBo
 
     
     ##################################
@@ -432,11 +419,9 @@ create.params <- function(user.input){
     ##################################
     
     #Flow rate of fluids including feces, bile, urine and glomerular filtration rate (GFR), in L/h
-    #Qfeces <- 5.63/1000/24 #mL water/d --> L/h
+    
     PQbile <- 90/1000/24 # [mL/d/kg BW]/1000/24 --> L/h/kg BW
     Qbile <- PQbile * BW #L/h
-    #PQurine <- 200/1000/24 #mL/d/kg BW --> L/h/kg
-    #Qurine <- PQurine * BW #L/h
     Qfeces <- (8.18/0.21)*BW #g/kg BW, based on Cui et al.(2010)
     feces_density <- 1.29 #g/cm^3 --> g/mL from Lupton 1986, Fig 1. Fiber free control diet, https://doi.org/10.1093/jn/116.1.164
 
@@ -450,33 +435,66 @@ create.params <- function(user.input){
       Qurine <- (85/1000)*BW/24 #([ml/d/kg]/1000)*BW/24 --> L/h, from Schmidt et al., 2001, 10.1002/nau.1006  
     }
     QGE<- 0.54/BW^0.25 #gastric emptying time (1/(h*BW^0.25)); from Yang, 2013
-    #QGE<- VSTL * 2.03 #L/h https://doi.org/10.1124/dmd.118.085902, Table 5   
+   
     
     
     #Albumin concentration in blood and interstitial fluid compartments(mol/m^3 = 1e-6* nmol/g)
-
+    
     CalbB <- 486*1e-03 # #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
+    
+    
     CalbKF <- 243*1e-3 # #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
     CalbLF <- 243*1e-3 # #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
-    
-    CalbGF <- 146*1e-3 #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
-    
     CalbSTF <- 146*1e-3 # [umol/L]*1e-3 -->(mol/m3), same as Gut (assumption)
     CalbINF <- 146*1e-3 #[umol/L]*1e-3 -->(mol/m3), same as Gut (assumption)
-    
     CalbMF <- 146*1e-3 #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
     CalbAF <- 73*1e-3 #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
     CalbRF <- 73*1e-3 #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
-    
-    CalbLuF <- CalbGF #assumption 
+    CalbBoF <- 73*1e-3 #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
+    CalbLuF <- CalbINF #assumption 
     CalbLuAF <- 10/100 * CalbB #based on Woods et al. 2015 statement https://doi.org/10.1016/j.jconrel.2015.05.269
     
     MW_albumin <- 66.5#kg/mol
     CalbSPF <- 243e-3 #[umol/L]*1e-3 -->(mol/m3), same as liver (assumption)
-    CalbTF <- 41/MW_albumin #mg/mL-->  (mol/m3) from https://doi.org/10.1210/endo-116-5-1983 --> 41 mg/mL, MW=65 kg/mol
+    CalbGoF <- 41/MW_albumin #mg/mL-->  (mol/m3) from https://doi.org/10.1210/endo-116-5-1983 --> 41 mg/mL, MW=65 kg/mol
     CalbHF <- 65/MW_albumin##mg/mL--> (mol/m3) https://doi.org/10.1007/s12291-010-0042-x --> 6.5 g/100 g tissue, MW=65 kg/mol 
     CalbBrF <- 8e-2/MW_albumin  ##mg/mL--> (mol/m3) https://doi.org/10.1016/0014-4886(90)90158-O --> 0.08 g/L, MW=65 kg/mol 
     CalbSKF <- 21/MW_albumin ##mg/mL-->  (mol/m3) https://doi.org/10.1111/j.1748-1716.1973.tb05464.x -->Table 2: 2.1 g/100 mL
+    
+    #Interstitial/plasma concentration ratio (IPR)
+    #values from Kawai et al., 1994, Table C-I
+    
+    IPR_K = 0.5
+    IPR_L = 0.5
+    IPR_ST = 0.5
+    IPR_IN = 0.9
+    IPR_M = 0.6
+    IPR_A = 0.5
+    IPR_Lu = 0.5
+    IPR_Sp = 0.5
+    IPR_H = 0.5
+    IPR_SK = 1
+    IPR_Br = 0.5
+    IPR_Go = 0.5 #assumption
+    IPR_Bo = 0.5 #assumption
+    IPR_R = (IPR_K+IPR_L+IPR_ST+IPR_IN+IPR_M+IPR_A+IPR_Lu+IPR_Sp+IPR_H+IPR_SK+IPR_Br+IPR_Go+IPR_Bo)/13 #average IPR of all the included organs (kg=L)
+    
+    
+    CalbKB <- CalbKF*1/IPR_K 
+    CalbLB <- CalbLF*1/IPR_L 
+    CalbSTB <- CalbLF*1/IPR_ST
+    CalbINB <- CalbINF*1/IPR_IN
+    CalbMB <- CalbMF*1/IPR_M
+    CalbAB <- CalbAF*1/IPR_A
+    CalbRB <- CalbRF*1/IPR_R
+    CalbBoB <- CalbBoF*1/IPR_Bo
+    CalbLuB <- CalbLuF*1/IPR_Lu
+    CalbSPB <- CalbSPF*1/IPR_Sp
+    CalbGoB <- CalbGoF*1/IPR_Go
+    CalbHB <- CalbHF*1/IPR_H
+    CalbBrB <- CalbBrF*1/IPR_Br
+    CalbSKB <- CalbSKF*1/IPR_SK
+    
     
     #Alpha2mu-globulin concentration in kidney tissue (mol/m3)
     if (sex == "M"){
@@ -501,30 +519,61 @@ create.params <- function(user.input){
     #Overall mass transfer coefficients between subcompartments and passive
     #diffusion rate constants. See SI section S3-1 for details
     
+    #Surface areas Interstitial - Intracellualr PKSim (m^2)
+    BW_ref <- 0.23
+    AcK= 437.16*BW/BW_ref
+    AcL= 84.45*BW/BW_ref
+    AcST= 1007.31*BW/BW_ref
+    AcIN= (400.94+152.39) *BW/BW_ref # small+large intestine
+    AcM= 8.2*BW/BW_ref
+    AcA= 3.87*BW/BW_ref
+    AcLu= 0.05*BW/BW_ref
+    AcSP= 564.05*BW/BW_ref
+    AcH= 5.60*BW/BW_ref
+    AcBr= 6.12e-4*BW/BW_ref
+    AcGo= 2.01*BW/BW_ref
+    AcSK= 0.11*BW/BW_ref
+    AcBo= 6.52*BW/BW_ref
+    AcR= (AcK+AcL+AcST+AcIN+AcM+AcA+AcLu+AcSP+AcH+AcBr+AcGo+AcSK+AcBo)/13
+    
+    # Following the calculations of Lin et al. (2023) for Caco-2 cells
+    ClINFT_unscaled= 18.1 #uL/min/mg protein, Kimura et al. 2017
+    muscle_protein <- 158.45 #mg/g muscle (protein data from Cheek et al.,1971 
+    #and muscle mass from Caster et al.,1956)
+    intestine_protein <- muscle_protein
+    intestine_protein_total <- intestine_protein*(1000*VINT)
+    muscle_protein <- 158.45 #mg/g muscle (protein data from Cheek et al.,1971 
+    #and muscle mass from Caster et al.,1956)
+    Awell = 9 #cm^2 (for a 35 mm culture dish)
+    Swell = 1.12 #cm^2
+    well_protein = 0.346 #mg protein
+    P = (well_protein * Awell)/Swell #mg protein/well
+    Papp = (ClINFT_unscaled*60*1e-03*P)/(Awell *2) #cm/h
+    P_passive = ( (Papp/100) * AINL)*1000 #L/h
+    
+    
     #passive diffusion rates
     
-    ClLFT_unscaled= 67.8 #uL/min/10^6 cells, Han et al. 2008
-    ClKFT_unscaled= 17.5 #uL/min/mg protein, Yang et al. 2010
-    
-    ClSTFT_unscaled= 18.1 #uL/min/mg protein, Kimura et al. 2017
-    ClINFT_unscaled= 18.1 #uL/min/mg protein, Kimura et al. 2017
-    
-    ClMFT_unscaled= 18.1 #same as ClGFT
-    ClAFT_unscaled= 18.1 #same as ClGFT
-    ClRFT_unscaled= 18.1 #same as ClGFT
-    ClLuFT_unscaled= 18.1 #same as ClGFT
-    
-    ClSPFT_unscaled= 18.1 #same as ClGFT
-    ClHFT_unscaled= 18.1 #same as ClGFT
-    ClBrFT_unscaled= 18.1 #same as ClGFT
-    ClTFT_unscaled= 18.1 #same as ClGFT
-    ClSKFT_unscaled= 18.1 #same as ClGFT
+    kKFKT = ((Papp/100) * AcK)*1000 #m^3/h * 1000 --> L/h
+    kLFLT = ((Papp/100) * AcL)*1000 #m^3/h * 1000 --> L/h
+    kMFMT = ((Papp/100) * AcM)*1000 #m^3/h * 1000 --> L/h
+    kSTFSTT = ((Papp/100) * AcST)*1000 #m^3/h * 1000 --> L/h 
+    kINFINT = ((Papp/100) * AcIN)*1000 #m^3/h * 1000 --> L/h 
+    kAFAT = ((Papp/100) * AcA)*1000 #m^3/h * 1000 --> L/h 
+    kLuTLuF = ((Papp/100) * AcLu)*1000 #m^3/h * 1000 --> L/h 
+    kSPFSPT = ((Papp/100) * AcSP)*1000 #m^3/h * 1000 --> L/h 
+    kHFHT = ((Papp/100) * AcH)*1000 #m^3/h * 1000 --> L/h 
+    kBrFBrT = ((Papp/100) * AcBr)*1000 #m^3/h * 1000 --> L/h 
+    kGoFGoT = ((Papp/100) * AcGo)*1000 #m^3/h * 1000 --> L/h 
+    kSKFSKT = ((Papp/100) * AcSK)*1000 #m^3/h * 1000 --> L/h
+    kBoFBoT = ((Papp/100) * AcBo)*1000 #m^3/h * 1000 --> L/h
+    kRFRT = ((Papp/100) * AcR)*1000 #m^3/h*1000 --> L/h 
+    kFKT <- ((Papp/100) * AK) * n*1000 #m^3/h *1000 ---> L/h
     
     
     #For all CMTs
     MW = 414.07 #g/mol, PFOA molecular weight
     Acell = 4000 #um^2/cell
-    
     #Kidney
     kidney_protein_per_rat <- 1000*(0.218+0.225+0.212)/3#mg of protein per rat  (Addis 1936)
     rat_weight_addis <- 200 #g, average rat weight in Addis, 1936
@@ -534,11 +583,6 @@ create.params <- function(user.input){
     kidney_cells = 1.47e07 #cells/g https://doi.org/10.1038/s41598-024-53270-2
     kidney_cells_total <- kidney_cells* (1000*VKT)
     kidney_protein_total <- kidney_protein_per_gram* (1000*VKT) #mg
-    ClKFT <- ClKFT_unscaled * kidney_protein_total #uL/min for the whole kidney
-    # Uptake for the whole kidney tissue 
-    kKFKT <- (60*ClKFT)/1e06 #L/h
-    
-    kFKT <- PeffK * AK * n
     
     #Oatp kidney
     VmK_Oatp_in_vitro <- 9.3 #nmol/mg protein/min (Weaver et al. 2010)
@@ -563,15 +607,13 @@ create.params <- function(user.input){
     VmK_Urat_scaled = 60*VmK_Urat_in_vitro*MW*kidney_protein_total/1000 #physiologically scaled to in vivo, ug/h
     VmK_Urat = VmK_Urat_scaled*RAFUrat #in vivo value, in   ug/h
     KmK_Urat = 820.04 * MW #umol/L (Lin et al. 2023) --> ug/L
-
+    
     #Liver
     liver_protein_per_rat <- 1000*(1.52+1.53+1.52)/3#mg of protein per rat  (Addis 1936)
     rat_weight_addis <- 200 #g, average rat weight in Addis, 1936
     rat_liver_weight_addis <- rat_weight_addis*0.0366 # liver fraction to BW, Brown (1997)
     liver_protein_per_gram <- liver_protein_per_rat/rat_liver_weight_addis #mg or protein/g liver
     liver_cells = 117*10^6 #hepatocytes per g of liver (Sohlenius-Sternbeck et al. 2006) (2e09 cells: https://bionumbers.hms.harvard.edu/bionumber.aspx?s=n&v=4&id=110895)
-    ClLFT <- ClLFT_unscaled*(liver_cells/(10^6))*(VLT*1000) #uL/min for the whole liver
-    kLFLT <-  (60*ClLFT)/1e06 #L/h
     
     #oatp1-liver
     VmL_Oatp_in_vitro= 9.3 #nmol/mg protein/min  (Weaver et al. 2010)
@@ -593,105 +635,45 @@ create.params <- function(user.input){
     VmL_Ntcp = VmL_Ntcp_scaled*RAFNtcp #in vivo value, in  ug/h
     KmL_Ntcp= 20 * MW #umol/L, Ruggiero et al. 2021 --> ug/L
     
-    #Muscle
-    muscle_cells= NA
-    muscle_protein <- 158.45 #mg/g muscle (protein data from Cheek et al.,1971 
-                             #and muscle mass from Caster et al.,1956)
-    muscle_protein_tot <- muscle_protein * (VMT*1000)
-    ClMFT <- ClMFT_unscaled * muscle_protein_tot#uL/min for the whole muscle comp
-    kMFMT <-  (60*ClMFT)/1e06 #L/h
-    
     #Intestine
-    intestine_cells = 93.1 * 2.365e6 #https://doi.org/10.1152/ajpgi.00290.2013 
-                                     #cells per crypt Figure 3B, number of crypts: 
-                                     #Figure 1, https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1271340/ 
-                                     #(mean value of rat 300 and 400 g)
-    intestine_protein <- muscle_protein#NA#5034
-    intestine_protein_total <- intestine_protein*(1000*VINT)
-    ClINFT <- ClINFT_unscaled *intestine_protein_total#uL/min for the whole gut compartment
-    kINFINT <-  (60*ClINFT)/1e06 #L/h
-    # Following the calculations of Lin et al. (2023)
-    Awell = 9 #cm^2 (for a 35 mm culture dish)
-    Swell = 1.12 #cm^2
-    well_protein = 0.346 #mg protein
-    P = (well_protein * Awell)/Swell #mg protein/well
-    Papp = (ClINFT_unscaled*60*1e-03*P)/(Awell *2) #cm/h
-    P_passive = ( (Papp/100) * AINL)*1000 #L/h
-    
     #oatp2b1-intestine
-    VmIn_Oatp2_in_vitro= 456.63e-3 #nmol/mg protein/min  (Kimura et al., 2017), 
+    VmIn_Oatp2_in_vitro= 456.63e-3 #nmol/mg protein/min  (Kimura et al., 2017) 
     #assuming that the mediated transport is performed only by this transporter
     VmIn_Oatp2_scaled = 60*VmIn_Oatp2_in_vitro*MW*intestine_protein_total/1000   #physiologically scaled to in vivo, ug/h
     VmIn_Oatp2 = VmIn_Oatp2_scaled*RAFOatp2_Int #in vivo value, in  ug/h, same RAF as in liver
     KmIn_Oatp2 = 8.3*MW #umol/L (Kimura et al., 2017) --> ug/L
     
     #Stomach
-    stomach_cells = NA
-    stomach_protein <- muscle_protein#NA#5034
-    stomach_protein_total <- stomach_protein*(1000*VSTT)
-    ClSTFT <- ClSTFT_unscaled *stomach_protein_total #uL/min for the whole gut compartment
-    kSTFSTT <-  (60*ClSTFT)/1e06 #L/h
-    # For identifiability reasons we assume that absorption is realised only through the intestines
+    # For identifiability reasons we assume that absorption takes place only through the intestines
     kabST <- (kabs_st* ASTL)*1000 #L/h
     
-    #Adipose
-    adipose_cells = NA
-    adipose_protein <- muscle_protein#NA#5034
-    adipose_protein_total <- adipose_protein * (1000*VAT)
-    ClAFT <- ClAFT_unscaled * adipose_protein_total#uL/min
-    kAFAT <-  (60*ClAFT)/1e06 #L/h
-    
-    #Rest of body
-    RoB_cells = NA
-    RoB_protein <- muscle_protein#18456
-    RoB_protein_total <- RoB_protein * (1000* VRT)
-    ClRFT <- ClRFT_unscaled * RoB_protein_total#uL/min
-    kRFRT <-  (60*ClRFT)/1e06 #L/h
-    
     #Lung
-    Lung_protein <- muscle_protein#18456
-    Lung_protein_total <- Lung_protein * (1000* VRT)
-    ClLuFT <- ClLuFT_unscaled * Lung_protein_total#uL/min
-    kLuTLuF <-  (60*ClLuFT)/1e06 #L/h
+    
     kUAB <- kabsUA * RA_area #transport rate from upper airways to blood
     CLEal <- kCLEal * ALF #clearance rate from alveolar lining fluid to stomach, ALF in m^2
     CLEua <- kCLEua * AUA #clearance rate rate from upper airways to stomach, AUA in m^2
     kLuAFLuT <- kLuAF * ALF #transport rate from alveolar lining fluid to lung tissue, ALF in m^2
     
-    #Spleen
-    spleen_cells = 1.76e8 #cells/g tissue https://doi.org/10.1371/journal.pone.0059602 --> Figure 5C
-    spleen_protein <- muscle_protein#NA#5034
-    spleen_protein_total <- spleen_protein * (1000*VSPT)
-    ClSPFT <- ClSPFT_unscaled * spleen_protein_total#uL/min
-    kSPFSPT <-  (60*ClSPFT)/1e06 #L/h
+    #Effective permeability (Peff, in m/h) for blood (B), liver(L), kidney(K),
+    #stomach(ST),intestine (IN), adipose(A), muscle(M), spleen (SP), heart (H), 
+    #brain (Br), gonads (Go), rest of body(R)
     
-    #Heart
-    heart_cells = 3.3e8 #cells/g tissue  https://doi.org/10.1620/tjem.95.177 
-    heart_protein <- muscle_protein#NA#5034
-    heart_protein_total <- heart_protein * (1000*VHT)
-    ClHFT <- ClHFT_unscaled * heart_protein_total#uL/min
-    kHFHT <-  (60*ClHFT)/1e06 #L/h
-    
-    #Brain
-    brain_cells = 3.3e8/1.8 #cells/g tissue https://doi.org/10.1523/JNEUROSCI.4526-04.2005 --> Table 1
-    brain_protein <- muscle_protein#NA#5034
-    brain_protein_total <- brain_protein * (1000*VBrT)
-    ClBrFT <- ClBrFT_unscaled * brain_protein_total#uL/min
-    kBrFBrT <-  (60*ClBrFT)/1e06 #L/h
-    
-    #gonads
-    gonads_cells = 1.85e7+1.58e7 #Sertoli and Leydig cells/g tissue  https://doi.org/10.1007/BF00297504 --> Figure 2, LC and SC cells
-    gonads_protein <- muscle_protein#NA#5034
-    gonads_protein_total <- gonads_protein * (1000*VTT)
-    ClTFT <- ClTFT_unscaled * gonads_protein_total#uL/min
-    kTFTT <-  (60*ClTFT)/1e06 #L/h
-
-    #Skin
-    skin_cells = NA
-    skin_protein <- muscle_protein#NA#5034
-    skin_protein_total <- skin_protein * (1000*VSKT)
-    ClSKFT <- ClSKFT_unscaled * skin_protein_total#uL/min
-    kSKFSKT <-  (60*ClSKFT)/1e06 #L/h
+    #PeffB <- Papp/10 #m/h
+    PeffK <- Papp*10 #mm/h
+    PeffL <- Papp*10 #mm/h
+    PeffST <- Papp*10 #mm/h
+    PeffIN <- Papp*10 #mm/h
+    PeffA <- Papp*10 #mm/h
+    PeffM <- Papp*10 #mm/h
+    PeffR <- Papp*10 #mm/h
+    PeffLu <- Papp*10 #mm/h
+    PeffSP <- Papp*10 #mm/h
+    PeffH <- Papp*10 #mm/h
+    PeffBr <- Papp*10 #mm/h
+    PeffGo <- Papp*10 #mm/h
+    PeffSK <- Papp*10 #mm/h
+    PeffBo <- Papp*10 #mm/h
+    PeffUA <- Papp*10 #mm/h
     
     return(list('VB'=VB, 'Vplasma'=Vplasma, 'VK'=VK, 'VKB'=VKB, 
                 'VKF'=VKF, 'VKT'=VKT, 'VFil'=VFil,
@@ -703,33 +685,34 @@ create.params <- function(user.input){
                 'VRF'=VRF, 'VRT'=VRT, 'Vven' = Vven,
                 'Vart' = Vart, 'VLu'=VLu, 'VLuB'=VLuB, 'VLuF'=VLuF,
                 'VLuAF'=VLuAF, 'VLuT'=VLuT, 
-                #'IVR'=IVR, 'EC'=EC, 'Dua'=Dua,
+                
                 'VSP'=VSP, 'VSPB'=VSPB, 'VSPF'=VSPF, 'VSPT'=VSPT,
                 'VH'=VH, 'VHB'=VHB, 'VHF'=VHF, 'VHT'=VHT,
                 'VBr'=VBr, 'VBrB'=VBrB, 'VBrF'=VBrF, 'VBrT'=VBrT,
-                'VT'=VT, 'VTB'=VTB, 'VTF'=VTF, 'VTT'=VTT,
+                'VGo'=VGo, 'VGoB'=VGoB, 'VGoF'=VGoF, 'VGoT'=VGoT,
                 'VIN'=VIN, 'VINB'=VINB, 'VINF'=VINF, 'VINT'=VINT,
                 'VST'=VST, 'VSTB'=VSTB, 'VSTF'=VSTF, 'VSTT'=VSTT,
                 'VSTL'=VSTL, 'VINL'=VINL,
                 'VSK'=VSK,'VSKB'=VSKB, 'VSKF'=VSKF, 'VSKT'=VSKT,
+                'VBo'=VBo,'VBoB'=VBoB, 'VBoF'=VBoF, 'VBoT'=VBoT,
                 
                 'AK'=AK, 'AKG'=AKG, 'AL'=AL, 
                 'AM'=AM, 'AA'=AA, 'AR'=AR,'AUA'=AUA, 'ALu'= ALu, 
                 'ASP'=ASP, 'AH'=AH, 'ABr'=ABr, 'AST'= AST,
-                'AIN'=AIN, 'AT'=AT,
-                'ASK'= ASK,
+                'AIN'=AIN, 'AGo'=AGo,
+                'ASK'= ASK, 'ABo'=ABo,
                 
                 "SKi" = SKi,"SLi" = SLi,"SSt" = SSt,"SIn" = SIn,
                 "SMu" = SMu,"SAd" = SAd,"SRe" = SRe,"SLu" = SLu,
                 "SSp" = SSp,"SHt" = SHt,"SBr" = SBr,"SGo" = SGo,
-                "SSk" = SSk, "SUa" =SUa,
+                "SSk" = SSk,"SBo" = SBo, "SUa" =SUa,
                 
-                #'PeffB'=PeffB, 
+                
                 'PeffK'=PeffK, 'PeffL'=PeffL, 
                 'PeffA'=PeffA, 'PeffM'=PeffM, 'PeffR'=PeffR, 'PeffLu' = PeffLu,
                 'PeffSP'=PeffSP, 'PeffH'=PeffH, 'PeffBr'=PeffBr, 'PeffST' = PeffST,
-                'PeffIN'=PeffIN, 'PeffT'=PeffT,
-                'PeffSK' = PeffSK,  'PeffUA'=PeffUA,  "P_liver_bile" = P_liver_bile,
+                'PeffIN'=PeffIN, 'PeffGo'=PeffGo,
+                'PeffSK' = PeffSK, 'PeffBo' = PeffBo, 'PeffUA'=PeffUA,  "P_liver_bile" = P_liver_bile,
                 
                 'Qcardiac'=Qcardiac, 'QBK'=QBK, 
                 'QBL'=QBL, 'QBLtot'=QBLtot,
@@ -739,30 +722,27 @@ create.params <- function(user.input){
                 'QBSP'=QBSP, 'QBH'=QBH, 'QBBr'=QBBr, 'QBST'=QBST,
                 'QBIN'=QBIN, 'QGE'=QGE,
                 'QBGo'=QBGo,
-                'QBSK'=QBSK,
+                'QBSK'=QBSK, 'QBBo'=QBBo,
                 
                 "QparaKi" = QparaKi,"QparaLi" = QparaLi,"QparaSt" = QparaSt,"QparaIn" = QparaIn,
                 "QparaMu" = QparaMu,"QparaAd" = QparaAd,"QparaRe" = QparaRe,"QparaLu" = QparaLu,
                 "QparaSp" = QparaSp,"QparaHt" = QparaHt,"QparaBr" = QparaBr,"QparaGo" = QparaGo,
-                "QparaSk" = QparaSk,
-                #"QparaUa"=QparaUa,
+                "QparaSk" = QparaSk,"QparaBo" = QparaBo,
                 
                 'CalbB'= CalbB, 'CalbKF'=CalbKF, 'CalbLF'=CalbLF,
-                'CalbMF'=CalbMF, 'CalbAF'=CalbAF, 'CalbRF'=CalbRF,
-                'CalbLuF' =CalbLuF, 'CalbLuAF' =CalbLuAF, 'CalbSPF' =CalbSPF, 'CalbTF' =CalbTF, 'CalbHF' =CalbHF,
+                'CalbMF'=CalbMF, 'CalbAF'=CalbAF, 'CalbRF'=CalbRF, 'CalbBoF'=CalbBoF,
+                'CalbLuF' =CalbLuF, 'CalbLuAF'=CalbLuAF, 'CalbSPF' =CalbSPF, 'CalbGoF' =CalbGoF, 'CalbHF' =CalbHF,
                 'CalbBrF' =CalbBrF, 'CalbSTF' =CalbSTF, 'CalbINF' =CalbINF,
                 'CalbSKF' =CalbSKF, 
+                
+                'CalbKB'=CalbKB,'CalbLB'=CalbLB,'CalbSTB'=CalbSTB,'CalbINB'=CalbINB,                
+                'CalbMB'=CalbMB,'CalbAB'=CalbAB,'CalbRB'=CalbRB,'CalbBoB'=CalbBoB,
+                'CalbLuB'=CalbLuB, 'CalbSPB'=CalbSPB,'CalbGoB'=CalbGoB,
+                'CalbHB'=CalbHB,'CalbBrB'=CalbBrB,'CalbSKB'=CalbSKB,
                 
                 'Ca2uKT'=Ca2uKT,'CLfabpKT'=CLfabpKT,'CLfabpLT'=CLfabpLT, 
                 
                 'Ka'=Ka, 'Ka2u'=Ka2u, 'KLfabp'=KLfabp,
-                
-                'ClLFT'=ClLFT, 'ClKFT'=ClKFT,
-                'ClMFT'=ClMFT,
-                'ClAFT'=ClAFT, 'ClRFT'=ClRFT, 'ClLuFT'=ClLuFT, 'ClSTFT'=ClSTFT,
-                'ClINFT'=ClINFT, 'ClSPFT'=ClSPFT, 'ClHFT'=ClHFT, 'ClBrFT'=ClBrFT, 
-                'ClTFT'=ClTFT,
-                'ClSKFT'=ClSKFT,
                 
                 
                 'VmL_Oatp'=VmL_Oatp, 'KmL_Oatp'= KmL_Oatp, 'VmL_Ntcp'= VmL_Ntcp,
@@ -770,7 +750,7 @@ create.params <- function(user.input){
                 'VmIn_Oatp2'=VmIn_Oatp2, 'KmIn_Oatp2'= KmIn_Oatp2,
                 'KmL_Ntcp'= KmL_Ntcp,'VmK_Oatp'= VmK_Oatp, 
                 'KmK_Oatp'=KmK_Oatp,
-                #'VmK_Osta'=VmK_Osta,'KmK_Osta'=KmK_Osta, 
+                 
                 'VmK_Oat1'=VmK_Oat1, 'KmK_Oat1'=KmK_Oat1, 'KmK_Oat1'=KmK_Oat1, 
                 'VmK_Oat3'=VmK_Oat3, 'KmK_Oat3'=KmK_Oat3, 
                 'VmK_Urat'=VmK_Urat, 'KmK_Urat'=KmK_Urat, 
@@ -778,16 +758,16 @@ create.params <- function(user.input){
                 'KmK_baso' = KmK_baso,
                 'VmK_baso' = VmK_baso,
                 
-                'P_passive' = P_passive,
+                'Papp' = Papp, 'P_passive' = P_passive,
                 'kKFKT'=kKFKT, 'kFKT'=kFKT,  
                 'kLFLT'=kLFLT, 'kAFAT'=kAFAT, 
                 'kRFRT'=kRFRT,
                 'kabST'=kabST, 
                 'kMFMT'=kMFMT, 'kLuTLuF' =kLuTLuF, 'kSPFSPT' =kSPFSPT,
-                'kUAB'= kUAB, 'CLEal'=CLEal, 'CLEua'=CLEua, 'kLuAFLuT'=kLuAFLuT,
                 'kSTFSTT' =kSTFSTT, 'kINFINT' =kINFINT, 'kHFHT' =kHFHT,
-                'kBrFBrT' =kBrFBrT, 'kTFTT' =kTFTT,
-                'kSKFSKT' =kSKFSKT,
+                'kBrFBrT' =kBrFBrT, 'kGoFGoT' =kGoFGoT,
+                'kSKFSKT' =kSKFSKT, 'kBoFBoT'=kBoFBoT,
+                'kUAB'= kUAB, 'CLEal'=CLEal, 'CLEua'=CLEua, 'kLuAFLuT'=kLuAFLuT,
                 
                 "admin.time" = admin.time, "admin.dose" = admin.dose,
                 "admin.type" = admin.type, "MW"=MW, "capillary_area"=capillary_area,
@@ -884,7 +864,7 @@ ode.func <- function(time, inits, params){
     CSTL = MSTL/VSTL # Stomach Lumen concentration
     CINL = MINL/VINL # Intestine Lumen concentration
     
-    # Muscle
+    #Muscle
     CMB = MBM/VMB # blood concentration
     CMF = MMF/VMF  #interstitial fluid concentration
     CMT = MMT/VMT # tissue concentration
@@ -924,56 +904,57 @@ ode.func <- function(time, inits, params){
     CBrT = MBrT/VBrT # tissue concentration
     
     #gonads
-    CTB = MBT/VTB # blood concentration
-    CTF = MTF/VTF  #interstitial fluid concentration
-    CTT = MTT/VTT # tissue concentration
+    CGoB = MBGo/VGoB # blood concentration
+    CGoF = MGoF/VGoF  #interstitial fluid concentration
+    CGoT = MGoT/VGoT # tissue concentration
     
     #Skin
     CSKB = MBSK/VSKB # blood concentration
     CSKF = MSKF/VSKF  #interstitial fluid concentration
     CSKT = MSKT/VSKT # tissue concentration
     
+    #Bones
+    CBoB = MBBo/VBoB # blood concentration
+    CBoF = MBoF/VBoF  #interstitial fluid concentration
+    CBoT = MBoT/VBoT # tissue concentration
+    
     #Cfree calculation using the expression of free fraction ff
     CBfart = CBart * 1.0 / (1.0 + CalbB * Ka)
     CBfven= CBven * 1.0 / (1.0 + CalbB * Ka)
 
     #Calculation of free concentrations in organ blood
-    CKBf = CKB * 1.0 / (1.0 + CalbB * Ka)
-    CLBf = CLB * 1.0 / (1.0 + CalbB * Ka)
     
-    CSTBf = CSTB * 1.0 / (1.0 + CalbB * Ka)
-    CINBf = CINB * 1.0 / (1.0 + CalbB * Ka)
-    
-    CMBf = CMB * 1.0 / (1.0 + CalbB * Ka)
-    CABf = CAB * 1.0 / (1.0 + CalbB * Ka)
-    CRBf = CRB * 1.0 / (1.0 + CalbB * Ka)
-    CLuBf = CLuB * 1.0 / (1.0 + CalbB * Ka)
-   
-    CSPBf = CSPB * 1.0 / (1.0 + CalbB * Ka)
-    CHBf = CHB * 1.0 / (1.0 + CalbB * Ka)
-    CBrBf = CBrB * 1.0 / (1.0 + CalbB * Ka)
-    CTBf = CTB * 1.0 / (1.0 + CalbB * Ka)
-    CSKBf = CSKB * 1.0 / (1.0 + CalbB * Ka)
-   
+    CKBf = CKB * 1.0 / (1.0 + CalbKB * Ka)
+    CLBf = CLB * 1.0 / (1.0 + CalbLB * Ka)
+    CSTBf = CSTB * 1.0 / (1.0 + CalbSTB * Ka)
+    CINBf = CINB * 1.0 / (1.0 + CalbINB * Ka)
+    CMBf = CMB * 1.0 / (1.0 + CalbMB * Ka)
+    CABf = CAB * 1.0 / (1.0 + CalbAB * Ka)
+    CRBf = CRB * 1.0 / (1.0 + CalbRB * Ka)
+    CLuBf = CLuB * 1.0 / (1.0 + CalbLuB * Ka)
+    CSPBf = CSPB * 1.0 / (1.0 + CalbSPB * Ka)
+    CHBf = CHB * 1.0 / (1.0 + CalbHB * Ka)
+    CBrBf = CBrB * 1.0 / (1.0 + CalbBrB * Ka)
+    CGoBf = CGoB * 1.0 / (1.0 + CalbGoB * Ka)
+    CSKBf = CSKB * 1.0 / (1.0 + CalbSKB * Ka)
+    CBoBf = CBoB * 1.0 / (1.0 + CalbBoB * Ka)
     
     #Calculation of free concentrations in organ interstitial fluid
+    
     CKFf = CKF * 1.0 / (1.0 + CalbKF * Ka)
     CLFf = CLF * 1.0 / (1.0 + CalbLF * Ka)
-    
     CSTFf = CSTF * 1.0 / (1.0 + CalbSTF * Ka)
     CINFf = CINF * 1.0 / (1.0 + CalbINF * Ka)
-    
     CMFf = CMF * 1.0 / (1.0 + CalbMF * Ka)
     CAFf = CAF * 1.0 / (1.0 + CalbAF * Ka)
     CRFf = CRF * 1.0 / (1.0 + CalbRF * Ka)
     CLuFf = CLuF * 1.0 / (1.0 + CalbLuF * Ka)
-    
     CSPFf = CSPF * 1.0 / (1.0 + CalbSPF * Ka)
     CHFf = CHF * 1.0 / (1.0 + CalbHF * Ka)
     CBrFf = CBrF * 1.0 / (1.0 + CalbBrF * Ka)
-    CTFf = CTF * 1.0 / (1.0 + CalbTF * Ka)
-    
+    CGoFf = CGoF * 1.0 / (1.0 + CalbGoF * Ka)
     CSKFf = CSKF * 1.0 / (1.0 + CalbSKF * Ka)
+    CBoFf = CBoF * 1.0 / (1.0 + CalbBoF * Ka)
     
     #Calculation of free concentrations in alveolar lining fluid 
     CLuAFf = CLuAF * 1.0 / (1.0 + CalbLuAF * Ka)
@@ -988,7 +969,7 @@ ode.func <- function(time, inits, params){
     
     #Venous Blood
     dMBven = kUAB * CUA - CBfven*QBLu + QBK*CKBf + QBLtot*CLBf + QBM*CMBf + QBA*CABf + QBR*CRBf+
-               QBH*CHBf + QBBr*CBrBf+ QBGo*CTBf + QBSK*CSKBf
+               QBH*CHBf + QBBr*CBrBf+ QBGo*CGoBf + QBSK*CSKBf
     
     #Kidney
     #blood subcompartment
@@ -1079,7 +1060,7 @@ ode.func <- function(time, inits, params){
     #Lung
     #blood subcompartment
     dMBLu = CBfven*QBLu - QBLu*CLuBf - QparaLu*(1-SLu)*CLuBf - PeffLu*ALu*(CLuBf-CLuFf)
-    #interstitial fluid subcompartment (it has albumin???)
+    #interstitial fluid subcompartment
     dMLuF = QparaLu*(1-SLu)*CLuBf + PeffLu*ALu*(CLuBf-CLuFf) + kLuTLuF*(CLuT-CLuFf)
     #Lung tissue subcompartment
     dMLuT = - kLuTLuF*(CLuT-CLuFf) + kLuAFLuT*CLuAFf  
@@ -1095,7 +1076,6 @@ ode.func <- function(time, inits, params){
     #Spleen tissue subcompartment 
     dMSPT = kSPFSPT*(CSPFf -CSPT) 
     
-    
     #Heart
     #blood subcompartment
     dMBH = QBH*CBfart - QBH*CHBf - PeffH*AH*(CHBf-CHFf) - QparaHt*(1-SHt)*CHBf
@@ -1103,7 +1083,6 @@ ode.func <- function(time, inits, params){
     dMHF = QparaHt*(1-SHt)*CHBf + PeffH*AH*(CHBf-CHFf) - kHFHT*(CHFf -CHT) 
     #Heart tissue subcompartment 
     dMHT = kHFHT*(CHFf -CHT) 
-    
     
     #Brain
     #blood subcompartment
@@ -1113,15 +1092,13 @@ ode.func <- function(time, inits, params){
     #Brain tissue subcompartment 
     dMBrT = kBrFBrT*(CBrFf -CBrT) 
     
-    
     #Gonads
     #blood subcompartment
-    dMBT = QBGo*CBfart - QBGo*CTBf - PeffT*AT*(CTBf-CTFf) - QparaGo*(1-SGo)*CTBf
+    dMBGo = QBGo*CBfart - QBGo*CGoBf - PeffGo*AGo*(CGoBf-CGoFf) - QparaGo*(1-SGo)*CGoBf
     #interstitial fluid subcompartment 
-    dMTF = QparaGo*(1-SGo)*CTBf + PeffT*AT*(CTBf-CTFf) - kTFTT*(CTFf -CTT) 
+    dMGoF = QparaGo*(1-SGo)*CGoBf + PeffGo*AGo*(CGoBf-CGoFf) - kGoFGoT*(CGoFf -CGoT) 
     #gonads tissue subcompartment 
-    dMTT = kTFTT*(CTFf -CTT) 
-    
+    dMGoT = kGoFGoT*(CGoFf -CGoT) 
     
     #Skin
     #blood subcompartment
@@ -1130,6 +1107,14 @@ ode.func <- function(time, inits, params){
     dMSKF = QparaSk*(1-SSk)*CSKBf + PeffSK*ASK*(CSKBf-CSKFf) - kSKFSKT*(CSKFf -CSKT)
     #Skin tissue subcompartment
     dMSKT = kSKFSKT*(CSKFf -CSKT)
+    
+    #Bones
+    #blood subcompartment
+    dMBBo = QBBo*CBfart - QBBo*CBoBf - PeffBo*ABo*(CBoBf-CBoFf) - QparaBo*(1-SBo)*CBoBf 
+    #interstitial fluid subcompartment
+    dMBoF = QparaBo*(1-SBo)*CBoBf + PeffBo*ABo*(CBoBf-CBoFf) - kBoFBoT*(CBoFf -CBoT)
+    #Bones tissue subcompartment
+    dMBoT = kBoFBoT*(CBoFf -CBoT)
     
     #Vurine, Vfeces
     dVurine = Qurine
@@ -1145,7 +1130,7 @@ ode.func <- function(time, inits, params){
     Ckidney <- (MBK + MKF+ MKT)/(VKB+VKF+VKT)
     Mkidney <- MBK + MKF+ MKT
     
-    Cliver <- (MBL + MLF+ MLT)/(VLB+VLF+VKT)
+    Cliver <- (MBL + MLF+ MLT)/(VLB+VLF+VLT)
     Mliver <- MBL + MLF+ MLT
     
     Cstomach <-  (MBST + MSTF+ MSTT)/(VSTB+VSTF+VSTT)
@@ -1158,7 +1143,7 @@ ode.func <- function(time, inits, params){
     Clungs <-  (MBLu + MLuF+ MLuAF+ MLuT)/(VLuB+VLuF+VLuAF+VLuT)
     
     Crest <-  (MBR + MRF+ MRT)/(VRB+VRF+VRT)
-    Ccarcass <- (MBM + MMF+ MMT+MBA + MAF+ MAT +MBR + MRF+ MRT)/(VM+VA+VR)
+    Ccarcass <- (MBM+MMF+MMT+MBA+MAF+MAT+MBR+MRF+MRT+MBBo+MBoF+MBoT+MBSK+MSKF+MSKT)/(VM+VA+VR+VBo+VSK)
     Cfeces <- Mfeces/(Vfeces*feces_density)
     Curine <- Murine/Vurine
     Cspleen <-  (MBSP + MSPF+ MSPT)/(VSPB+VSPF+VSPT)
@@ -1167,28 +1152,27 @@ ode.func <- function(time, inits, params){
     Cbrain <-  (MBBr + MBrF+ MBrT)/(VBrB+VBrF+VBrT)
     Mbrain <- MBBr + MBrF+ MBrT
     
-    Cgonads <-  (MBT + MTF+ MTT)/(VTB+VTF+VTT)
+    Cgonads <-  (MBGo + MGoF+ MGoT)/(VGoB+VGoF+VGoT)
     Cskin <-  (MBSK + MSKF+ MSKT)/(VSKB+VSKF+VSKT)
    
-    list(c( 'dMBart'=dMBart, 'dMBven'=dMBven,  'dMBK'=dMBK, 
-            'dMKF'=dMKF, 'dMKT'=dMKT,
-            'dMFil'=dMFil, 'dMurine'=dMurine, 'dMBL'=dMBL, 
-            'dMLF'=dMLF, 'dMLT'=dMLT, 
-            'dMfeces'=dMfeces,
+    list(c( 'dMBart'=dMBart, 'dMBven'=dMBven,'dMBK'=dMBK, 'dMKF'=dMKF, 'dMKT'=dMKT,
+            'dMFil'=dMFil, 'dMurine'=dMurine, 'dMBL'=dMBL, 'dMLF'=dMLF, 'dMLT'=dMLT,
+            'dMSTL'=dMSTL,'dMINL'=dMINL,
+            'dMfeces'=dMfeces, 
+            'dMBST'=dMBST, 'dMSTF'=dMSTF, 'dMSTT'=dMSTT, 
+            'dMBIN'=dMBIN, 'dMINF'=dMINF, 'dMINT'=dMINT, 
             
-            'dMBST'=dMBST, 'dMSTF'=dMSTF, 'dMSTT'=dMSTT,  'dMSTL'=dMSTL,
-            'dMBIN'=dMBIN, 'dMINF'=dMINF, 'dMINT'=dMINT,'dMINL'=dMINL,
-           
             'dMBM'=dMBM, 'dMMF'=dMMF, 'dMMT'=dMMT,
-            'dMBA'=dMBA, 'dMAF'=dMAF, 
-            'dMAT'=dMAT, 'dMBR'=dMBR, 'dMRF'=dMRF,'dMRT'=dMRT,
-            'dMUA'=dMUA, 'dMBLu'=dMBLu, 'dMLuF'=dMLuF,'dMLuT'=dMLuT,'dMLuAF' = dMLuAF,
-           
+            'dMBA'=dMBA, 'dMAF'=dMAF, 'dMAT'=dMAT,
+            'dMBR'=dMBR, 'dMRF'=dMRF, 'dMRT'=dMRT,
+            'dMUA'=dMUA,'dMBLu'=dMBLu, 'dMLuF'=dMLuF,'dMLuT'=dMLuT, 'dMLuAF' =dMLuAF,
+            
             'dMBSP'=dMBSP, 'dMSPF'=dMSPF, 'dMSPT'=dMSPT,
             'dMBH'=dMBH, 'dMHF'=dMHF, 'dMHT'=dMHT,
             'dMBBr'=dMBBr, 'dMBrF'=dMBrF, 'dMBrT'=dMBrT,
-            'dMBT'=dMBT, 'dMTF'=dMTF, 'dMTT'=dMTT,
+            'dMBGo'=dMBGo, 'dMGoF'=dMGoF, 'dMGoT'=dMGoT,
             'dMBSK'=dMBSK, 'dMSKF'=dMSKF, 'dMSKT'=dMSKT,
+            'dMBBo'=dMBBo, 'dMBoF'=dMBoF, 'dMBoT'=dMBoT,
             'dVurine'=dVurine, 'dVfeces'=dVfeces
             
             ),
@@ -1224,33 +1208,42 @@ ode.func <- function(time, inits, params){
 create.inits <- function(parameters){
   with(as.list(parameters),{
     
-    MBart <- 0; MBven <-0;  MBK <-0; MKF <-0; MKT <-0; MFil <-0; Murine <-0; MBL <-0;
-    MLF <-0; MLT <-0; 
+    MBart <- 0; MBven <-0;
+    MBK <-0; MKF <-0; MKT <-0; MFil <-0;
+    Murine <-0; MBL <-0;MLF <-0; MLT <-0; 
     MSTL <-0;  MINL <-0;
     Mfeces <-0; MBST <-0; MSTF <-0; MSTT <-0; MBIN <-0; MINF <-0; MINT <-0;
-    MBM <-0; MMF <-0; MMT <-0; MBA <-0; MAF <-0;
-    MAT <-0; MBR <-0; MRF <-0; MRT <-0; MUA <-0; MBLu <- 0; MLuF <- 0; MLuT <- 0;MLuAF <- 0;
-    MBSP <-0; MSPF <-0; MSPT <-0; MBH <-0; MHF <-0; MHT <-0; 
-    MBBr <-0; MBrF <-0; MBrT <-0; MBT <-0; MTF <-0; MTT <-0;
-    MBSK <-0; MSKF <-0; MSKT <-0; Vurine <-0; Vfeces <-0
+    MBM <-0; MMF <-0; MMT <-0;
+    MBA <-0; MAF <-0; MAT <-0;
+    MBR <-0; MRF <-0; MRT <-0;
+    MUA <-0; MBLu <- 0; MLuF <- 0;MLuT <- 0;MLuAF<- 0;
+    MBSP <-0; MSPF <-0; MSPT <-0;
+    MBH <-0; MHF <-0; MHT <-0; 
+    MBBr <-0; MBrF <-0; MBrT <-0;
+    MBGo <-0; MGoF <-0; MGoT <-0
+    MBSK <-0; MSKF <-0; MSKT <-0; 
+    MBBo <-0; MBoF <-0; MBoT <-0;
+    Vurine <-0; Vfeces <-0
+    
     
     return(c('MBart'=MBart, 'MBven'=MBven,'MBK'=MBK, 'MKF'=MKF, 'MKT'=MKT,
              'MFil'=MFil, 'Murine'=Murine, 'MBL'=MBL, 'MLF'=MLF, 'MLT'=MLT,
+             'MSTL'=MSTL,'MINL'=MINL,
              'Mfeces'=Mfeces, 
-             
-             'MBST'=MBST, 'MSTF'=MSTF, 'MSTT'=MSTT, 'MSTL'=MSTL,
-             'MBIN'=MBIN, 'MINF'=MINF, 'MINT'=MINT, 'MINL'=MINL,
+             'MBST'=MBST, 'MSTF'=MSTF, 'MSTT'=MSTT, 
+             'MBIN'=MBIN, 'MINF'=MINF, 'MINT'=MINT, 
              
              'MBM'=MBM, 'MMF'=MMF, 'MMT'=MMT,
              'MBA'=MBA, 'MAF'=MAF, 'MAT'=MAT,
              'MBR'=MBR, 'MRF'=MRF, 'MRT'=MRT,
-             'MUA'=MUA, 'MBLu'=MBLu, 'MLuF'=MLuF,'MLuT' = MLuT,'MLuAF'=MLuAF, 
+             'MUA'=MUA, 'MBLu'=MBLu, 'MLuF'=MLuF,'MLuT'=MLuT, 'MLuAF' =MLuAF,
              
              'MBSP'=MBSP, 'MSPF'=MSPF, 'MSPT'=MSPT,
              'MBH'=MBH, 'MHF'=MHF, 'MHT'=MHT,
              'MBBr'=MBBr, 'MBrF'=MBrF, 'MBrT'=MBrT,
-             'MBT'=MBT, 'MTF'=MTF, 'MTT'=MTT,
+             'MBGo'=MBGo, 'MGoF'=MGoF, 'MGoT'=MGoT,
              'MBSK'=MBSK, 'MSKF'=MSKF, 'MSKT'=MSKT,
+             'MBBo'=MBBo, 'MBoF'=MBoF, 'MBoT'=MBoT,
              'Vurine'=Vurine, 'Vfeces'=Vfeces
              
     ))
@@ -1353,7 +1346,7 @@ obj.func <- function(x, dataset){
   
   #======================================df1=========================================================
   
-  exp_data <- dataset$df1 # retrieve data of Gustafsson (2022) Inhalation male blood
+  exp_data <- dataset$df1 # retrieve data of Gustafsson (2022)
   colnames(exp_data)[c(2,3)] <- c("time", "concentration")
   column_names <- c("Cplasma")
   
@@ -1378,7 +1371,7 @@ obj.func <- function(x, dataset){
   # Gustafsson Oral male blood
   #-------------------------
   ##########################
-  # Set up simulations for the 2nd case, i.e. Gustafsson (2022) Inhalation male blood
+  # Set up simulations for the 2nd case, i.e. Gustafsson (2022) oral male blood
   BW <- 0.5125  #kg, from Gustafsson et al., 2022
   sex <- "M" 
   admin.dose_per_g <- 0.364 # administered dose in mg PFOA/kg BW 
@@ -2018,7 +2011,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0 ,
-              "maxeval" = 600, 
+              "maxeval" = 300, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
