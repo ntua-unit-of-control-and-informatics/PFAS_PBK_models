@@ -42,6 +42,7 @@ create.params <- function(user.input){
     RAFOatp2_Int <- estimated_params[11]
     #permeabilities correction factor
     P_liver_bile <- estimated_params[12] 
+    Ka <- estimated_params[13]*1e-3 #mol/m^3
     kabs_st <- 0 #m/h
     #units conversion from Cheng 2017R, time-> h, PFOA mass->ng, tissues mass-> g
     Hct <- 0.41 #hematocrit for rats, https://doi.org/10.1080/13685538.2017.1350156 mean value for both males and females
@@ -479,7 +480,7 @@ create.params <- function(user.input){
     #and alpha2mu-globulin(Ka2u). See SI section S2-2 for details
 
     #Ka <-  24.18 #3.1*7.8 m3/mol multiplying by number of binding sites (Cheng et al. 2021)
-    Ka <-  1e05*1e-3 #[L/mol]*1e-3--->m3/mol
+    #Ka <-  1e05*1e-3 #[L/mol]*1e-3--->m3/mol
     KLfabp <- (1.2e5+4e4+1.9e4)*1e-3  #[L/mol]*1e-3--->m3/mol, value from Cheng et al. (2017)
     Ka2u <- 5*1e02*1e-3 #[L/mol]*1e-3--->m3/mol, value from Cheng et al. (2017)
 
@@ -2800,11 +2801,11 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
 
 
-N_pars <- 12 # Number of parameters to be fitted
-fit <-  c(rep(log(1),3),log(1e4),log(1e4),log(0.001),log(1),log(0.1),log(1e4),log(1e4),log(1e2),log(1))
+N_pars <- 13 # Number of parameters to be fitted
+fit <-  c(rep(log(1),3),log(1e4),log(1e4),log(0.001),log(1),log(0.1),log(1e4),log(1e4),log(1e2),log(1),log(1e5))
 
-lb	= c(rep(log(1e-2),3),log(1e3),log(1e3),log(1e-04),log(1e-2),log(1e-2),log(1e3),log(1e3),log(1e-2),log(1e-5))
-ub = c(rep(log(1e2),3),log(1e6),log(1e6),log(1e2),log(1e2),log(1e1),log(1e6),log(1e6),log(1e2),log(1e8))
+lb	= c(rep(log(1e-2),3),log(1e3),log(1e3),log(1e-04),log(1e-2),log(1e-2),log(1e3),log(1e3),log(1e-2),log(1e-5),log(1e3))
+ub = c(rep(log(1e2),3),log(1e6),log(1e6),log(1e2),log(1e2),log(1e1),log(1e6),log(1e6),log(1e2),log(1e8),log(1e6))
 # Run the optimization algorithmm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,
