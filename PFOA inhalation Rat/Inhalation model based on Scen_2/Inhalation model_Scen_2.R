@@ -11,38 +11,38 @@ create.params <- function(user.input){
     #assuming the density of tissue is 1 g/mL.
     # Estimated parameters
     if (sex == "M"){
-      RAFOatp_k <- 1.000000e+02
-      RAFOat1 <- 9.778311e+00
+      RAFOatp_k <- 3.360748e-01
+      RAFOat1 <- 1.015929e-02
       RAFOat3 <- RAFOat1
       RAFUrat <- RAFOat1
       
-      RAFOatp_l <- 6.308075e-01
+      RAFOatp_l <- 1.000034e-02
       RAFOatp2_l <- RAFOatp_l
       RAFNtcp <- RAFOatp_l
       
-      KmK_baso <- 9.297172e+03
-      VmK_baso <- 7.541167e+03
+      KmK_baso <- 4.851338e+05
+      VmK_baso <- 1.763982e+03
       
       
     }else if(sex == "F"){
-      RAFOatp_k <- 1.613936e-03
-      RAFOat1 <- 1.000000e+02 
+      RAFOatp_k <- 1.000207e-04
+      RAFOat1 <- 1.000473e-02
       RAFOat3 <- RAFOat1
       RAFUrat <- RAFOat1
       
-      RAFOatp_l <- 1.430072e-01
+      RAFOatp_l <- 1.000000e+01
       RAFOatp2_l <- RAFOatp_l
       RAFNtcp <- RAFOatp_l
      
-      KmK_baso <- 1.000000e+03
-      VmK_baso <- 1.370572e+03
+      KmK_baso <- 9.998978e+05
+      VmK_baso <- 1.001839e+03
       
     }
-    RAFOatp2_Int <- 4.104426e+01
+    RAFOatp2_Int <- 8.111441e+01
     #permeabilities correction factor
-    CF_Peff <- 2.602230e+06 
-    P_liver_bile <- 2.000878e+00 
     
+    P_liver_bile <- 4.308081e+00  
+    Ka <-4.262705e+03
     kabsUA <- estimated_params[1]
     kCLEal <- estimated_params[2]
     kCLEua <- estimated_params[3]
@@ -512,7 +512,7 @@ create.params <- function(user.input){
     #and alpha2mu-globulin(Ka2u). See SI section S2-2 for details
 
     #Ka <-  24.18 #3.1*7.8 m3/mol multiplying by number of binding sites (Cheng et al. 2021)
-    Ka <-  1e05*1e-3 #[L/mol]*1e-3--->m3/mol
+    #Ka <-  1e05*1e-3 #[L/mol]*1e-3--->m3/mol
     KLfabp <- (1.2e5+4e4+1.9e4)*1e-3  #[L/mol]*1e-3--->m3/mol, value from Cheng et al. (2017)
     Ka2u <- 5*1e02*1e-3 #[L/mol]*1e-3--->m3/mol, value from Cheng et al. (2017)
 
@@ -2011,7 +2011,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0 ,
-              "maxeval" = 300, 
+              "maxeval" = 600, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
@@ -2024,8 +2024,8 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 N_pars <- 4 # Number of parameters to be fitted
 fit <-  c(log(1e2), log(1),log(1),log(1e2))
 
-lb	= c(log(1e-3), log(1e-5),log(1e-5),log(1e-5))
-ub = c(log(1e5), log(1e5),log(1e5),log(1e3))
+lb	= c(log(1e-5), log(1e-5),log(1e-5),log(1e-5))
+ub = c(log(1e5), log(1e5),log(1e5),log(1e5))
 
 
 # Run the optimization algorithmm to estimate the parameter values

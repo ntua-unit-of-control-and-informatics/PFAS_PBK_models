@@ -2775,7 +2775,7 @@ kim_OR_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_ORAL_kim_2016.xlsx"
 kim_IV_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_IV_kim_2016.xlsx")
 
 #setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_2/Training/AAFE/NoStomachAbs")
-setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_2 - 1000 iterations - version 2/Training/AAFE")
+setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_2 - 1000 iterations - version 2/Training 2/AAFE")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -2792,7 +2792,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0 ,
-              "maxeval" = 2, 
+              "maxeval" = 600, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
@@ -2802,10 +2802,10 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 
 
 N_pars <- 13 # Number of parameters to be fitted
-fit <-  c(rep(log(1),3),log(1e4),log(1e4),log(0.001),log(1),log(0.1),log(1e4),log(1e4),log(1e2),log(1),log(1e5))
+fit <-  c(rep(log(1),3),log(1e4),log(1e4),log(1),log(1),log(0.1),log(1e4),log(1e4),log(1e2),log(1),log(1e5))
 
-lb	= c(rep(log(1e-2),3),log(1e3),log(1e3),log(1e-04),log(1e-2),log(1e-2),log(1e3),log(1e3),log(1e-2),log(1e-5),log(1e3))
-ub = c(rep(log(1e2),3),log(1e6),log(1e6),log(1e2),log(1e2),log(1e1),log(1e6),log(1e6),log(1e2),log(1e8),log(1e6))
+lb	= c(rep(log(1e-6),3),log(1e2),log(1e2),log(1e-06),log(1e-6),log(1e-6),log(1e2),log(1e2),log(1e-2),log(1e-5),log(1e3))
+ub = c(rep(log(1e5),3),log(1e6),log(1e6),log(1e5),log(1e5),log(1e5),log(1e6),log(1e6),log(1e2),log(1e8),log(1e6))
 # Run the optimization algorithmm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,
@@ -3989,7 +3989,7 @@ experiment2 <- reshape(kudo_low_dose[c("Tissue" ,"Time_hours",
           height = 10,
           units = "in")
  }
-save.image("Scenario_2_version_2.RData")
+save.image("Scenario_2_version_2_600_it.RData")
  
  
  
