@@ -1,59 +1,41 @@
 library(ggplot2)
 
 #setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_results")
-setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_results")
+setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Inhalation model based on Scen_2/Validation/Validation_results")
 
 # Load Results 
 
 # 
-Kemper_serum_results <- read.csv("Kemper_2003_serum_results.csv", header = T)
-Kemper_iv_F_1 <- Kemper_serum_results[Kemper_serum_results$Dose == 1 & Kemper_serum_results$Type == "iv" &
-                               Kemper_serum_results$sex == "F", ]
-Kemper_iv_F_1$Experiment <- "Kemper | 1mg/kg | iv | F"
+Hinderliter_serum_results <- read.csv("Hinderliter_2006_results.csv", header = T)
+Hinderliter_nasal_M_1 <- Hinderliter_2006_results[Hinderliter_2006_results$Dose == 1 & Hinderliter_2006_results$Type == "nasal" &
+                               Hinderliter_2006_results$sex == "M", ]
+Hinderliter_nasal_M_1$Experiment <- "Hinderliter | 1mg/m3 | nasal | M"
 
-Kemper_oral_F_1 <- Kemper_serum_results[Kemper_serum_results$Dose == 1 & Kemper_serum_results$Type == "oral" &
-                                 Kemper_serum_results$sex == "F", ]
-Kemper_oral_F_1$Experiment <- "Kemper | 1mg/kg | oral | F"
+Hinderliter_nasal_F_1 <- Hinderliter_2006_results[Hinderliter_2006_results$Dose == 1 & Hinderliter_2006_results$Type == "nasal" &
+                                                    Hinderliter_2006_results$sex == "F", ]
+Hinderliter_nasal_F_1$Experiment <- "Hinderliter | 1mg/m3 | nasal | F"
 
-Kemper_oral_F_5 <- Kemper_serum_results[Kemper_serum_results$Dose == 5 & Kemper_serum_results$Type == "oral" &
-                                 Kemper_serum_results$sex == "F", ]
-Kemper_oral_F_5$Experiment <- "Kemper | 5mg/kg | oral | F"
-Kemper_oral_F_25 <- Kemper_serum_results[Kemper_serum_results$Dose == 25 & Kemper_serum_results$Type == "oral" &
-                                  Kemper_serum_results$sex == "F", ]
-Kemper_oral_F_25$Experiment <- "Kemper | 25mg/kg | oral | F"
+Hinderliter_nasal_M_10 <- Hinderliter_2006_results[Hinderliter_2006_results$Dose == 10 & Hinderliter_2006_results$Type == "nasal" &
+                                                    Hinderliter_2006_results$sex == "M", ]
+Hinderliter_nasal_M_10$Experiment <- "Hinderliter | 10mg/m3 | nasal | M"
 
-Kemper_iv_M_1 <- Kemper_serum_results[Kemper_serum_results$Dose == 1 & Kemper_serum_results$Type == "iv" &
-                               Kemper_serum_results$sex == "M", ]
-Kemper_iv_M_1$Experiment <- "Kemper | 1mg/kg | iv | M"
+Hinderliter_nasal_F_10 <- Hinderliter_2006_results[Hinderliter_2006_results$Dose == 10 & Hinderliter_2006_results$Type == "nasal" &
+                                                    Hinderliter_2006_results$sex == "F", ]
+Hinderliter_nasal_F_10$Experiment <- "Hinderliter | 10mg/m3 | nasal | F"
 
-Kemper_oral_M_1 <- Kemper_serum_results[Kemper_serum_results$Dose == 1 & Kemper_serum_results$Type == "oral" &
-                                 Kemper_serum_results$sex == "M", ]
-Kemper_oral_M_1$Experiment <- "Kemper | 1mg/kg | oral | M"
+Hinderliter_nasal_M_25 <- Hinderliter_2006_results[Hinderliter_2006_results$Dose == 25 & Hinderliter_2006_results$Type == "nasal" &
+                                                     Hinderliter_2006_results$sex == "M", ]
+Hinderliter_nasal_M_25$Experiment <- "Hinderliter | 25mg/m3 | nasal | M"
 
-Kemper_oral_M_5 <- Kemper_serum_results[Kemper_serum_results$Dose == 5 & Kemper_serum_results$Type == "oral" &
-                                 Kemper_serum_results$sex == "M", ]
-Kemper_oral_M_5$Experiment <- "Kemper | 5mg/kg | oral | M"
-Kemper_oral_M_25 <- Kemper_serum_results[Kemper_serum_results$Dose == 25 & Kemper_serum_results$Type == "oral" &
-                                  Kemper_serum_results$sex == "M", ]
-Kemper_oral_M_25$Experiment <- "Kemper | 25mg/kg | oral | M"
-# 
-# Kudo_high <- Kudo_results[Kudo_results$Dose == 16.560, ] 
-# Kudo_high$Experiment <-  "Kudo | 16mg/kg | iv"
-# 
-# Kim_results <- read.csv("Kim_results.csv", header = T)
-# Kim_iv <- Kim_results[Kim_results$Type == "iv",]
-# Kim_iv$Experiment <-  "Kim | 1mg/kg | iv"
-# 
-# Kim_oral <- Kim_results[Kim_results$Type == "oral",]
-# Kim_oral$Experiment <-  "Kim | 1mg/kg | oral"
+Hinderliter_nasal_F_25 <- Hinderliter_2006_results[Hinderliter_2006_results$Dose == 25 & Hinderliter_2006_results$Type == "nasal" &
+                                                     Hinderliter_2006_results$sex == "F", ]
+Hinderliter_nasal_F_25$Experiment <- "Hinderliter | 25mg/m3 | nasal | F"
 
+Experiment <- scales::hue_pal()(6)
 
-Experiment <- scales::hue_pal()(8)
-
-names(Experiment) <- unique(c( Kemper_iv_F_1$Experiment, Kemper_iv_M_1$Experiment,
-                              Kemper_oral_F_1$Experiment,Kemper_oral_M_1$Experiment, Kemper_oral_F_5$Experiment, 
-                               
-                               Kemper_oral_M_5$Experiment,  Kemper_oral_F_25$Experiment, Kemper_oral_M_25$Experiment))
+names(Experiment) <- unique(c( Hinderliter_nasal_M_1$Experiment, Hinderliter_nasal_F_1$Experiment,
+                               Hinderliter_nasal_M_10$Experiment,Hinderliter_nasal_F_10$Experiment,
+                               Hinderliter_nasal_M_25$Experiment, Hinderliter_nasal_F_25))
 
 
 
@@ -63,14 +45,12 @@ scatter_plot <- ggplot()+
   geom_abline(intercept = log10(1/3), slope = 1, linetype = "dotted", color = "red", linewidth = 1.5, alpha = 0.7) +  # -3-fold error line
   geom_abline(intercept = log10(10), slope = 1, linetype = "dotdash", color = "blue", linewidth = 1.5, alpha = 0.7) +  # +10-fold error line
   geom_abline(intercept = log10(1/10), slope = 1, linetype = "dotdash", color = "blue", linewidth = 1.5, alpha = 0.7) +  # -10-fold error line
-  geom_point(data = Kemper_iv_F_1, aes(x=Observed, y=Predicted, color = Experiment, shape = Tissue), size=4, stroke = 1.5)+
-  geom_point(data = Kemper_oral_F_1, aes(x=Observed, y=Predicted, color = Experiment, shape = Tissue), size=4, stroke = 1.5)+
-  geom_point(data = Kemper_oral_F_5, aes(x=Observed, y=Predicted, color = Experiment, shape = Tissue), size=4, stroke = 1.5)+
-  geom_point(data = Kemper_oral_F_25, aes(x=Observed, y=Predicted, color = Experiment, shape = Tissue), size=4, stroke = 1.5)+
-  geom_point(data = Kemper_iv_M_1, aes(x=Observed, y=Predicted, color = Experiment, shape = Tissue), size=4, stroke = 1.5)+
-  geom_point(data = Kemper_oral_M_1, aes(x=Observed, y=Predicted, color = Experiment, shape = Tissue), size=4, stroke = 1.5)+
-  geom_point(data = Kemper_oral_M_5, aes(x=Observed, y=Predicted, color = Experiment, shape = Tissue), size=4, stroke = 1.5)+
-  geom_point(data = Kemper_oral_M_25, aes(x=Observed, y=Predicted, color = Experiment, shape = Tissue), size=4, stroke = 1.5)+
+  geom_point(data = Hinderliter_nasal_M_1, aes(x=Observed, y=Predicted, color = Experiment, shape = Tissue), size=4, stroke = 1.5)+
+  geom_point(data = Hinderliter_nasal_F_1, aes(x=Observed, y=Predicted, color = Experiment, shape = Tissue), size=4, stroke = 1.5)+
+  geom_point(data = Hinderliter_nasal_M_10, aes(x=Observed, y=Predicted, color = Experiment, shape = Tissue), size=4, stroke = 1.5)+
+  geom_point(data = Hinderliter_nasal_F_10, aes(x=Observed, y=Predicted, color = Experiment, shape = Tissue), size=4, stroke = 1.5)+
+  geom_point(data = Hinderliter_nasal_M_25, aes(x=Observed, y=Predicted, color = Experiment, shape = Tissue), size=4, stroke = 1.5)+
+  geom_point(data = Hinderliter_nasal_F_25, aes(x=Observed, y=Predicted, color = Experiment, shape = Tissue), size=4, stroke = 1.5)+
   scale_y_log10()+
   scale_x_log10()+
   scale_color_manual(values = Experiment)+
