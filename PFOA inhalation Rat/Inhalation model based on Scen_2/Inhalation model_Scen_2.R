@@ -42,7 +42,7 @@ create.params <- function(user.input){
     #permeabilities correction factor
     
     P_liver_bile <- 4.308081e+00  
-    Ka <-4.262705e+03
+    Ka <-4.262705e+03*1e-3 #mol/m^3
     kabsUA <- estimated_params[1]
     kCLEal <- estimated_params[2]
     kCLEua <- estimated_params[3]
@@ -1054,7 +1054,7 @@ ode.func <- function(time, inits, params){
     
     
     #Upper airways
-    dMUA = - CLEua*CUA  - kUAB * CUA #+ IVR*EC*Dua 
+    dMUA = - CLEua*CUA  - kUAB * CUA 
     
     
     #Lung
@@ -1065,7 +1065,7 @@ ode.func <- function(time, inits, params){
     #Lung tissue subcompartment
     dMLuT = - kLuTLuF*(CLuT-CLuFf) + kLuAFLuT*CLuAFf  
     #Alveolar lining fluid
-    dMLuAF = - CLEal*CLuAFf - kLuAFLuT*CLuAFf #+ IVR*EC*Dal 
+    dMLuAF = - CLEal*CLuAFf - kLuAFLuT*CLuAFf 
     
     
     #Spleen
