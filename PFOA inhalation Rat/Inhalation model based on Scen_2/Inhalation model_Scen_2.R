@@ -917,27 +917,27 @@ ode.func <- function(time, inits, params){
     CBoB = MBBo/VBoB # blood concentration
     CBoF = MBoF/VBoF  #interstitial fluid concentration
     CBoT = MBoT/VBoT # tissue concentration
-    
+    free = 0.001
     #Cfree calculation using the expression of free fraction ff
-    CBfart = CBart * 1.0 / (1.0 + CalbB * Ka)
-    CBfven= CBven * 1.0 / (1.0 + CalbB * Ka)
+    CBfart = CBart * free#1.0 / (1.0 + CalbB * Ka)
+    CBfven= CBven * free#1.0 / (1.0 + CalbB * Ka)
 
     #Calculation of free concentrations in organ blood
     
-    CKBf = CKB * 1.0 / (1.0 + CalbKB * Ka)
-    CLBf = CLB * 1.0 / (1.0 + CalbLB * Ka)
-    CSTBf = CSTB * 1.0 / (1.0 + CalbSTB * Ka)
-    CINBf = CINB * 1.0 / (1.0 + CalbINB * Ka)
-    CMBf = CMB * 1.0 / (1.0 + CalbMB * Ka)
-    CABf = CAB * 1.0 / (1.0 + CalbAB * Ka)
-    CRBf = CRB * 1.0 / (1.0 + CalbRB * Ka)
-    CLuBf = CLuB * 1.0 / (1.0 + CalbLuB * Ka)
-    CSPBf = CSPB * 1.0 / (1.0 + CalbSPB * Ka)
-    CHBf = CHB * 1.0 / (1.0 + CalbHB * Ka)
-    CBrBf = CBrB * 1.0 / (1.0 + CalbBrB * Ka)
-    CGoBf = CGoB * 1.0 / (1.0 + CalbGoB * Ka)
-    CSKBf = CSKB * 1.0 / (1.0 + CalbSKB * Ka)
-    CBoBf = CBoB * 1.0 / (1.0 + CalbBoB * Ka)
+    CKBf = CKB * free#1.0 / (1.0 + CalbKB * Ka)
+    CLBf = CLB * free#1.0 / (1.0 + CalbLB * Ka)
+    CSTBf = CSTB * free#1.0 / (1.0 + CalbSTB * Ka)
+    CINBf = CINB * free#1.0 / (1.0 + CalbINB * Ka)
+    CMBf = CMB * free#1.0 / (1.0 + CalbMB * Ka)
+    CABf = CAB * free#1.0 / (1.0 + CalbAB * Ka)
+    CRBf = CRB * free#1.0 / (1.0 + CalbRB * Ka)
+    CLuBf = CLuB * free#1.0 / (1.0 + CalbLuB * Ka)
+    CSPBf = CSPB * free#1.0 / (1.0 + CalbSPB * Ka)
+    CHBf = CHB * free#1.0 / (1.0 + CalbHB * Ka)
+    CBrBf = CBrB * free#1.0 / (1.0 + CalbBrB * Ka)
+    CGoBf = CGoB * free#1.0 / (1.0 + CalbGoB * Ka)
+    CSKBf = CSKB * free#1.0 / (1.0 + CalbSKB * Ka)
+    CBoBf = CBoB * free#1.0 / (1.0 + CalbBoB * Ka)
     
     #Calculation of free concentrations in organ interstitial fluid
     
@@ -1196,7 +1196,8 @@ ode.func <- function(time, inits, params){
             'Cfeces'= Cfeces, 'Curine'= Curine,
             'Cspleen'= Cspleen, 'Cheart'= Cheart,
             'Cbrain'= Cbrain, 'Mbrain'= Mbrain,
-            'Cgonads'= Cgonads, 'Cskin'= Cskin
+            'Cgonads'= Cgonads, 'Cskin'= Cskin,
+            'CBart' = CBart
                 
          )
     

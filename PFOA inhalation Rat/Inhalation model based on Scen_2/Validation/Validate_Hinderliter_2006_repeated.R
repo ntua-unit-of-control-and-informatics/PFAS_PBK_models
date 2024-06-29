@@ -46,9 +46,7 @@ solution_1M <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = parameters, events = events,
                                       method="lsodes",rtol = 1e-7, atol = 1e-7))
 
-# Carefully select the order so that it matches the experimental data presented in the xlsx file
-pred_comps <- c( "Cplasma" )
-solution_1M <- solution_1M[solution_1M$time %in% sample_time, pred_comps] / 1000  #[ug/L]/1000-->[ug/g]
+
 
 
 #10mg/m^3 dose male
@@ -66,7 +64,7 @@ solution_10M <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                        y = inits, parms = parameters, events = events,
                                        method="lsodes",rtol = 1e-7, atol = 1e-7))
 
-solution_10M <- solution_10M[solution_10M$time %in% sample_time, pred_comps] / 1000 #[ug/L]/1000-->[ug/g]
+
 
 #25mg/m^3 dose male
 admin.dose_mg_per_m3 <- 25 # administered dose in mg/m^3
@@ -83,7 +81,7 @@ solution_25M <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = parameters, events = events,
                                       method="lsodes",rtol = 1e-7, atol = 1e-7))
 
-solution_25M <- solution_25M[solution_25M$time %in% sample_time, pred_comps] / 1000 #[ug/L]/1000-->[ug/g]
+
 
 #1mg/m^3 dose female
 sex <- "F"
@@ -104,7 +102,7 @@ solution_1F <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = parameters, events = events,
                                       method="lsodes",rtol = 1e-7, atol = 1e-7))
 
-solution_1F <- solution_1F[solution_1F$time %in% sample_time, pred_comps] / 1000 #[ug/L]/1000-->[ug/g]
+
 
 
 #10mg/m^3 dose male
@@ -122,7 +120,7 @@ solution_10F <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = parameters, events = events,
                                       method="lsodes",rtol = 1e-7, atol = 1e-7))
 
-solution_10F <- solution_10F[solution_10F$time %in% sample_time, pred_comps] / 1000 #[ug/L]/1000-->[ug/g]
+
 
 #25mg/m^3 dose male
 admin.dose_mg_per_m3 <- 25 # administered dose in mg/m^3
@@ -139,74 +137,116 @@ solution_25F <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = parameters, events = events,
                                       method="lsodes",rtol = 1e-7, atol = 1e-7))
 
-solution_25F <- solution_25F[solution_25F$time %in% sample_time, pred_comps] / 1000 #[ug/L]/1000-->[ug/g]
+
 
 ##############################
 ### Load experimental data ###
 ##############################
 
+# Custom rounding function
+custom_round <- function(time) {
+  if (time < 1) {
+    return(round(time, 1))
+  } else {
+    return(round(time, 0))
+  }
+}
+
 # Load the mean values 
-df <- openxlsx::read.xlsx("Raw_Data/All_data_Hinderliter_2006_repeated.xlsx")
-plasma_1M <- df[df$Dose_mg_per_m3 == 1 & df$Sex == "M",]
-plasma_10M <- df[df$Dose_mg_per_m3 == 10 & df$Sex == "M",]
-plasma_25M <- df[df$Dose_mg_per_m3 == 25 & df$Sex == "M",]
-plasma_1F <- df[df$Dose_mg_per_m3 == 1 & df$Sex == "F",]
-plasma_10F <- df[df$Dose_mg_per_m3 == 10 & df$Sex == "F",]
-plasma_25F <- df[df$Dose_mg_per_m3 == 25 & df$Sex == "F",]
 
 score <- rep(NA,6)
+
 # Gather the required data for the x-y plot
-score[1] <- AAFE(solution_1M,plasma_1M$`Concentration_microg_per_g_organ`)
+df <- openxlsx::read.xlsx("Raw_Data/All_data_Hinderliter_2006_repeated.xlsx")
+obs_plasma_1M <- df[df$Dose_mg_per_m3 == 1 & df$Sex == "M",]
+rounded_time <- sapply(obs_plasma_1M$Time_h, custom_round)
+rounded_soltime <- sapply(solution_1M$time, custom_round)
+preds_plasma_1M <- solution_1M[rounded_soltime %in% rounded_time, "Cplasma"]/1000
+score[1] <- AAFE(preds_plasma_1M,obs_plasma_1M$Concentration_microg_per_g_organ)
 
-results_df_1M<- data.frame("Study" = "Hinderliter_2006", "Dose" =  plasma_1M$Dose_mg_per_m3,
-                          "Tissue" = plasma_1M$Tissue ,
-                          "Type" = plasma_1M$Type, sex = plasma_1M$Sex,
-                          "Observed" =plasma_1M$`Concentration_microg_per_g_organ`,
-                          "Predicted" = unname(t(solution_1M)), "Time" = plasma_1M$Time_h )
-
-
-score[2] <- AAFE(solution_10M,plasma_1M$`Concentration_microg_per_g_organ`)
-
-results_df_10M<- data.frame("Study" = "Hinderliter_2006", "Dose" =  plasma_10M$Dose_mg_per_m3,
-                            "Tissue" = plasma_10M$Tissue ,
-                            "Type" = plasma_10M$Type, sex = plasma_10M$Sex,
-                            "Observed" =plasma_10M$`Concentration_microg_per_g_organ`,
-                            "Predicted" = unname(t(solution_10M)), "Time" = plasma_10M$Time_h )
-
-score[3] <- AAFE(solution_25M,plasma_25M$`Concentration_microg_per_g_organ`)
-
-results_df_25M<- data.frame("Study" = "Hinderliter_2006", "Dose" =  plasma_25M$Dose_mg_per_m3,
-                            "Tissue" = plasma_25M$Tissue ,
-                            "Type" = plasma_25M$Type, sex = plasma_25M$Sex,
-                            "Observed" =plasma_25M$`Concentration_microg_per_g_organ`,
-                            "Predicted" = unname(t(solution_25M)), "Time" = plasma_25M$Time_h )
+results_df_1M<- data.frame("Study" = "Hinderliter_2006", "Dose" =  obs_plasma_1M$Dose_mg_per_m3,
+                          "Tissue" = obs_plasma_1M$Tissue ,
+                          "Type" = obs_plasma_1M$Type, sex = obs_plasma_1M$Sex,
+                          "Observed" =obs_plasma_1M$Concentration_microg_per_g_organ,
+                          "Predicted" = preds_plasma_1M, "Time" = obs_plasma_1M$Time_h )
 
 
-score[4] <- AAFE(solution_1F,plasma_1F$`Concentration_microg_per_g_organ`)
-
-results_df_1F<- data.frame("Study" = "Hinderliter_2006", "Dose" =  plasma_1F$Dose_mg_per_m3,
-                            "Tissue" = plasma_1F$Tissue ,
-                            "Type" = plasma_1F$Type, sex = plasma_1F$Sex,
-                            "Observed" =plasma_1F$`Concentration_microg_per_g_organ`,
-                            "Predicted" = unname(t(solution_1F)), "Time" = plasma_1F$Time_h )
 
 
-score[5] <- AAFE(solution_10F,plasma_10F$`Concentration_microg_per_g_organ`)
+df <- openxlsx::read.xlsx("Raw_Data/All_data_Hinderliter_2006_repeated.xlsx")
+obs_plasma_10M <- df[df$Dose_mg_per_m3 == 10 & df$Sex == "M",]
+rounded_time <- sapply(obs_plasma_10M$Time_h, custom_round)
+rounded_soltime <- sapply(solution_10M$time, custom_round)
+preds_plasma_10M <- solution_10M[rounded_soltime %in% rounded_time, "Cplasma"]/1000
+score[2] <- AAFE(preds_plasma_10M,obs_plasma_10M$Concentration_microg_per_g_organ)
 
-results_df_10F<- data.frame("Study" = "Hinderliter_2006", "Dose" =  plasma_10F$Dose_mg_per_m3,
-                            "Tissue" = plasma_10F$Tissue ,
-                            "Type" = plasma_10F$Type, sex = plasma_10F$Sex,
-                            "Observed" =plasma_10F$`Concentration_microg_per_g_organ`,
-                            "Predicted" = unname(t(solution_10F)), "Time" = plasma_10F$Time_h )
+results_df_10M<- data.frame("Study" = "Hinderliter_2006", "Dose" =  obs_plasma_10M$Dose_mg_per_m3,
+                           "Tissue" = obs_plasma_10M$Tissue ,
+                           "Type" = obs_plasma_10M$Type, sex = obs_plasma_10M$Sex,
+                           "Observed" =obs_plasma_10M$Concentration_microg_per_g_organ,
+                           "Predicted" = preds_plasma_10M, "Time" = obs_plasma_10M$Time_h )
 
 
-score[6] <- AAFE(solution_25F,plasma_25F$`Concentration_microg_per_g_organ`)
 
-results_df_25F<- data.frame("Study" = "Hinderliter_2006", "Dose" =  plasma_25F$Dose_mg_per_m3,
-                            "Tissue" = plasma_25F$Tissue ,
-                            "Type" = plasma_25F$Type, sex = plasma_25F$Sex,
-                            "Observed" =plasma_25F$`Concentration_microg_per_g_organ`,
-                            "Predicted" = unname(t(solution_25F)), "Time" = plasma_25F$Time_h )
+
+df <- openxlsx::read.xlsx("Raw_Data/All_data_Hinderliter_2006_repeated.xlsx")
+obs_plasma_25M <- df[df$Dose_mg_per_m3 == 25 & df$Sex == "M",]
+rounded_time <- sapply(obs_plasma_25M$Time_h, custom_round)
+rounded_soltime <- sapply(solution_25M$time, custom_round)
+preds_plasma_25M <- solution_25M[rounded_soltime %in% rounded_time, "Cplasma"]/1000
+score[3] <- AAFE(preds_plasma_25M,obs_plasma_25M$Concentration_microg_per_g_organ)
+
+results_df_25M<- data.frame("Study" = "Hinderliter_2006", "Dose" =  obs_plasma_25M$Dose_mg_per_m3,
+                            "Tissue" = obs_plasma_25M$Tissue ,
+                            "Type" = obs_plasma_25M$Type, sex = obs_plasma_25M$Sex,
+                            "Observed" =obs_plasma_25M$Concentration_microg_per_g_organ,
+                            "Predicted" = preds_plasma_25M, "Time" = obs_plasma_25M$Time_h )
+
+
+
+df <- openxlsx::read.xlsx("Raw_Data/All_data_Hinderliter_2006_repeated.xlsx")
+obs_plasma_1F <- df[df$Dose_mg_per_m3 == 1 & df$Sex == "F",]
+rounded_time <- sapply(obs_plasma_1F$Time_h, custom_round)
+rounded_soltime <- sapply(solution_1F$time, custom_round)
+preds_plasma_1F <- solution_1F[rounded_soltime %in% rounded_time, "Cplasma"]/1000
+score[4] <- AAFE(preds_plasma_1F,obs_plasma_1F$Concentration_microg_per_g_organ)
+
+results_df_1F<- data.frame("Study" = "Hinderliter_2006", "Dose" =  obs_plasma_1F$Dose_mg_per_m3,
+                           "Tissue" = obs_plasma_1F$Tissue ,
+                           "Type" = obs_plasma_1F$Type, sex = obs_plasma_1F$Sex,
+                           "Observed" =obs_plasma_1F$Concentration_microg_per_g_organ,
+                           "Predicted" = preds_plasma_1F, "Time" = obs_plasma_1F$Time_h )
+
+
+
+df <- openxlsx::read.xlsx("Raw_Data/All_data_Hinderliter_2006_repeated.xlsx")
+obs_plasma_10F <- df[df$Dose_mg_per_m3 == 10 & df$Sex == "F",]
+rounded_time <- sapply(obs_plasma_10F$Time_h, custom_round)
+rounded_soltime <- sapply(solution_10F$time, custom_round)
+preds_plasma_10F <- solution_10F[rounded_soltime %in% rounded_time, "Cplasma"]/1000
+score[5] <- AAFE(preds_plasma_10F,obs_plasma_10F$Concentration_microg_per_g_organ)
+
+results_df_10F<- data.frame("Study" = "Hinderliter_2006", "Dose" =  obs_plasma_10F$Dose_mg_per_m3,
+                            "Tissue" = obs_plasma_10F$Tissue ,
+                            "Type" = obs_plasma_10F$Type, sex = obs_plasma_10F$Sex,
+                            "Observed" =obs_plasma_10F$Concentration_microg_per_g_organ,
+                            "Predicted" = preds_plasma_10F, "Time" = obs_plasma_10F$Time_h )
+
+
+df <- openxlsx::read.xlsx("Raw_Data/All_data_Hinderliter_2006_repeated.xlsx")
+obs_plasma_25F <- df[df$Dose_mg_per_m3 == 25 & df$Sex == "F",]
+rounded_time <- sapply(obs_plasma_25F$Time_h, custom_round)
+rounded_soltime <- sapply(solution_25F$time, custom_round)
+preds_plasma_25F <- solution_25F[rounded_soltime %in% rounded_time, "Cplasma"]/1000
+score[6] <- AAFE(preds_plasma_25F,obs_plasma_25F$Concentration_microg_per_g_organ)
+
+results_df_25F<- data.frame("Study" = "Hinderliter_2006", "Dose" =  obs_plasma_25F$Dose_mg_per_m3,
+                            "Tissue" = obs_plasma_25F$Tissue ,
+                            "Type" = obs_plasma_25F$Type, sex = obs_plasma_25F$Sex,
+                            "Observed" =obs_plasma_25F$Concentration_microg_per_g_organ,
+                            "Predicted" = preds_plasma_25F, "Time" = obs_plasma_25F$Time_h )
+
+
 
 results_df <- rbind(results_df_1M, results_df_10M, results_df_25M, results_df_1F, results_df_10F, results_df_25F)
 
@@ -215,5 +255,5 @@ print(paste0("The AAFE on the Plasma data of Hinderliter et al. (2006) was ", AA
 
 write.csv(results_df,
           #"C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_results/Cui_2008_results.csv",
-          "C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Inhalation model based on Scen_2/Validation_results/Hinderliter_2006_results.csv",
+          "C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Inhalation model based on Scen_2/Validation/Validation_results/Hinderliter_2006_results.csv",
           row.names =F)

@@ -1,0 +1,12 @@
+List of inhalation experiments
+
+1. Inhalation male blood Gustafsson (2022)
+2. Oral male blood Gustafsson (2022)
+3. Inhalation male tissues Gustafsson (2022)
+4. Oral male tissues Gustafsson (2022)
+5. Inhalation male single low Hinderliter (2006)
+6. Inhalation male single medium Hinderliter (2006)
+7. Inhalation male single high Hinderliter (2006)
+8. Inhalation female single low Hinderliter (2006)
+9. Inhalation female single medium Hinderliter (2006)
+10. Inhalation female single high Hinderliter (2006)

@@ -6,7 +6,7 @@ setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Inhal
 # Load Results 
 
 # 
-Hinderliter_serum_results <- read.csv("Hinderliter_2006_results.csv", header = T)
+Hinderliter_2006_results <- read.csv("Hinderliter_2006_results.csv", header = T)
 Hinderliter_nasal_M_1 <- Hinderliter_2006_results[Hinderliter_2006_results$Dose == 1 & Hinderliter_2006_results$Type == "nasal" &
                                Hinderliter_2006_results$sex == "M", ]
 Hinderliter_nasal_M_1$Experiment <- "Hinderliter | 1mg/m3 | nasal | M"
@@ -35,7 +35,7 @@ Experiment <- scales::hue_pal()(6)
 
 names(Experiment) <- unique(c( Hinderliter_nasal_M_1$Experiment, Hinderliter_nasal_F_1$Experiment,
                                Hinderliter_nasal_M_10$Experiment,Hinderliter_nasal_F_10$Experiment,
-                               Hinderliter_nasal_M_25$Experiment, Hinderliter_nasal_F_25))
+                               Hinderliter_nasal_M_25$Experiment, Hinderliter_nasal_F_25$Experiment))
 
 
 
