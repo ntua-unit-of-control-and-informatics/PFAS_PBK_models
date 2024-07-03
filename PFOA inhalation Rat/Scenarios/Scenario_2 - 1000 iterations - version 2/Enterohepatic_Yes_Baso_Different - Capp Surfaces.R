@@ -14,11 +14,11 @@ create.params <- function(user.input){
       RAFOatp_k <- estimated_params[1]
       RAFOat1 <- estimated_params[2]
       RAFOat3 <- RAFOat1
-      RAFUrat <- RAFOat1
       
       RAFOatp_l <- estimated_params[3] 
       RAFOatp2_l <- RAFOatp_l
       RAFNtcp <- RAFOatp_l
+      RAFUrat <- RAFOatp_l
       
       KmK_baso <- estimated_params[4]
       VmK_baso <- estimated_params[5]
@@ -28,12 +28,12 @@ create.params <- function(user.input){
       RAFOatp_k <- estimated_params[6]
       RAFOat1 <- estimated_params[7] 
       RAFOat3 <- RAFOat1
-      RAFUrat <- RAFOat1
-      
+     
       RAFOatp_l <- estimated_params[8] 
       RAFOatp2_l <- RAFOatp_l
       RAFNtcp <- RAFOatp_l
-     
+      RAFUrat <- RAFOatp_l
+      
       KmK_baso <- estimated_params[9]
       VmK_baso <- estimated_params[10]
       
@@ -2802,10 +2802,10 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 
 
 N_pars <- 13 # Number of parameters to be fitted
-fit <-  c(rep(log(1),3),log(1e4),log(1e4),log(1),log(1),log(0.1),log(1e4),log(1e4),log(1e2),log(1),log(1e5))
+fit <-  c(rep(log(1),3),log(1e4),log(1e4),log(1e-2),log(1),log(1e-2),log(1e4),log(1e4),log(1e2),log(1),log(1e5))
 
 lb	= c(rep(log(1e-6),3),log(1e2),log(1e2),log(1e-06),log(1e-6),log(1e-6),log(1e2),log(1e2),log(1e-2),log(1e-5),log(1e3))
-ub = c(rep(log(1e5),3),log(1e6),log(1e6),log(1e5),log(1e5),log(1e5),log(1e6),log(1e6),log(1e2),log(1e8),log(1e6))
+ub = c(rep(log(1e5),3),log(1e6),log(1e6),log(1e-1),log(1e5),log(1e-1),log(1e6),log(1e6),log(1e2),log(1e8),log(1e6))
 # Run the optimization algorithmm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,

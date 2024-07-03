@@ -14,11 +14,11 @@ create.params <- function(user.input){
       RAFOatp_k <- 3.360748e-01
       RAFOat1 <- 1.015929e-02
       RAFOat3 <- RAFOat1
-      RAFUrat <- RAFOat1
-      
+     
       RAFOatp_l <- 1.000034e-02
       RAFOatp2_l <- RAFOatp_l
       RAFNtcp <- RAFOatp_l
+      RAFUrat <- RAFOatp_l
       
       KmK_baso <- 4.851338e+05
       VmK_baso <- 1.763982e+03
@@ -28,12 +28,12 @@ create.params <- function(user.input){
       RAFOatp_k <- 1.000207e-04
       RAFOat1 <- 1.000473e-02
       RAFOat3 <- RAFOat1
-      RAFUrat <- RAFOat1
       
       RAFOatp_l <- 1.000000e+01
       RAFOatp2_l <- RAFOatp_l
       RAFNtcp <- RAFOatp_l
-     
+      RAFUrat <- RAFOatp_l
+      
       KmK_baso <- 9.998978e+05
       VmK_baso <- 1.001839e+03
       
@@ -965,11 +965,11 @@ ode.func <- function(time, inits, params){
 
     #Arterial Blood
     dMBart = QBLu*CLuBf - CBfart*(QBK+QBL+QBM+QBA+QBR+QBSP+QBH+QBBr+
-                                             QBST+QBIN+QBGo+QBSK) - QGFR*CBfart
+                                             QBST+QBIN+QBGo+QBSK+QBBo) - QGFR*CBfart
     
     #Venous Blood
     dMBven = kUAB * CUA - CBfven*QBLu + QBK*CKBf + QBLtot*CLBf + QBM*CMBf + QBA*CABf + QBR*CRBf+
-               QBH*CHBf + QBBr*CBrBf+ QBGo*CGoBf + QBSK*CSKBf
+               QBH*CHBf + QBBr*CBrBf+ QBGo*CGoBf + QBSK*CSKBf + QBBo*CBoBf
     
     #Kidney
     #blood subcompartment
@@ -1133,7 +1133,7 @@ ode.func <- function(time, inits, params){
     Cliver <- (MBL + MLF+ MLT)/(VLB+VLF+VLT)
     Mliver <- MBL + MLF+ MLT
     
-    Cstomach <-  (MBST + MSTF+ MSTT)/(VSTB+VSTF+VSTT)
+    Cstomach <-  (MBST + MSTF+ MSTT+MSTL)/(VSTB+VSTF+VSTT+VSTL)
     Cintestine <-  (MBIN + MINF+ MINT+MINL)/(VINB+VINF+VINT+VINL)
     Cmuscle <-  (MBM + MMF+ MMT)/(VMB+VMF+VMT)
     Cadipose <-  (MBA + MAF+ MAT)/(VAB+VAF+VAT)
