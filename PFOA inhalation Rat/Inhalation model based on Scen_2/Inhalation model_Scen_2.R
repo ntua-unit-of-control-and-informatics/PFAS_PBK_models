@@ -649,7 +649,7 @@ create.params <- function(user.input){
     
     #Lung
     
-    kUAB <- kabsUA * RA_area #transport rate from upper airways to blood
+    kUAB <- kabsUA * RA_area #absorption rate from upper airways to blood
     CLEal <- kCLEal * ALF #clearance rate from alveolar lining fluid to stomach, ALF in m^2
     CLEua <- kCLEua * AUA #clearance rate rate from upper airways to stomach, AUA in m^2
     kLuAFLuT <- kLuAF * ALF #transport rate from alveolar lining fluid to lung tissue, ALF in m^2

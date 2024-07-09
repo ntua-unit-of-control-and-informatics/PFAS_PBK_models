@@ -22,27 +22,30 @@ create.params <- function(user.input){
       
       KmK_baso <- estimated_params[4]
       VmK_baso <- estimated_params[5]
-      
+      KmL_sin <- estimated_params[6]
+      VmL_sin <- estimated_params[7]
       
     }else if(sex == "F"){
-      RAFOatp_k <- estimated_params[6]
-      RAFOat1 <- estimated_params[7] 
+      RAFOatp_k <- estimated_params[8]
+      RAFOat1 <- estimated_params[9] 
       RAFOat3 <- RAFOat1
      
-      RAFOatp_l <- estimated_params[8] 
+      RAFOatp_l <- estimated_params[10] 
       RAFOatp2_l <- RAFOatp_l
       RAFNtcp <- RAFOatp_l
       RAFUrat <- RAFOatp_l
       
-      KmK_baso <- estimated_params[9]
-      VmK_baso <- estimated_params[10]
+      KmK_baso <- estimated_params[11]
+      VmK_baso <- estimated_params[12]
+      KmL_sin <- estimated_params[13]
+      VmL_sin <- estimated_params[14]
       
     }
     
-    RAFOatp2_Int <- estimated_params[11]
+    RAFOatp2_Int <- estimated_params[15]
     #permeabilities correction factor
-    P_liver_bile <- estimated_params[12] 
-    Ka <- estimated_params[13]*1e-3 #mol/m^3
+    P_liver_bile <- estimated_params[16] 
+    Ka <- estimated_params[17]*1e-3 #mol/m^3
     kabs_st <- 0 #m/h
     #units conversion from Cheng 2017R, time-> h, PFOA mass->ng, tissues mass-> g
     Hct <- 0.41 #hematocrit for rats, https://doi.org/10.1080/13685538.2017.1350156 mean value for both males and females
@@ -254,7 +257,7 @@ create.params <- function(user.input){
     #   Reflection Coefficients   #
     #-----------------------------#
     ###############################
-    # Pore diameters from Price & Gesquiere (2020), doi:https://doi.org/10.1126/sciadv.aax2642
+    # Pore diameters from Price & Gesquiere (2020), doi:10.1126/sciadv.aax2642
     DpKi <- 200 #nm
     DpLi <- 280 #nm
     DpSt <- 80 #nm, assumption
@@ -397,11 +400,11 @@ create.params <- function(user.input){
     if (sex == "M"){
       PQGFR <- 62.1  #L/h/kg   Corley et al., 2005 https://doi.org/10.1093/toxsci/kfi119, GFRC --> scaled fraction of kidney weight
       QGFR <- PQGFR * VK #L/h
-      Qurine <- (60/1000)*BW/24 #([ml/d/kg]/1000)*BW/24 --> L/h, from Schmidt et al., 2001, https://doi.org/10.1002/nau.1006
+      Qurine <- (60/1000)*BW/24 #([ml/d/kg]/1000)*BW/24 --> L/h, from Schmidt et al., 2001, 10.1002/nau.1006
       }else if(sex == "F"){
       PQGFR <- 41.04  #L/h/kg  Corley et al., 2005 https://doi.org/10.1093/toxsci/kfi119, GFRC --> scaled fraction of kidney weight
       QGFR <- PQGFR * VK #L/h
-      Qurine <- (85/1000)*BW/24 #([ml/d/kg]/1000)*BW/24 --> L/h, from Schmidt et al., 2001, https://doi.org/10.1002/nau.1006  
+      Qurine <- (85/1000)*BW/24 #([ml/d/kg]/1000)*BW/24 --> L/h, from Schmidt et al., 2001, 10.1002/nau.1006  
     }
     QGE<- 0.54/BW^0.25 #gastric emptying time (1/(h*BW^0.25)); from Yang, 2013
       
@@ -615,7 +618,7 @@ create.params <- function(user.input){
     # For identifiability reasons we assume that absorption takes place only through the intestines
     kabST <- (kabs_st* ASTL)*1000 #L/h
     
-    #Effective permeability (Peff, in mm/h) for blood (B), liver(L), kidney(K),
+    #Effective permeability (Peff, in m/h) for blood (B), liver(L), kidney(K),
     #stomach(ST),intestine (IN), adipose(A), muscle(M), spleen (SP), heart (H), 
     #brain (Br), gonads (Go), rest of body(R)
     
@@ -714,6 +717,8 @@ create.params <- function(user.input){
                   
                 'KmK_baso' = KmK_baso,
                 'VmK_baso' = VmK_baso,
+                'KmL_sin' = KmL_sin,
+                'VmL_sin' = VmL_sin,
                 
                 'Papp' = Papp, 'P_passive' = P_passive,
                 'kKFKT'=kKFKT, 'kFKT'=kFKT,  
@@ -896,11 +901,11 @@ ode.func <- function(time, inits, params){
     #Liver
     #blood subcompartment
     dMBL = QBL*CBfart + QBSP*CSPBf + QBIN*CINBf + QBST*CSTBf - 
-           QBLtot*CLBf - PeffL*AL*(CLBf-CLFf) - QparaLi*(1-SLi)*CLBf
+           QBLtot*CLBf - PeffL*AL*(CLBf-CLFf) - QparaLi*(1-SLi)*CLBf + (VmL_sin*CLFf/(KmL_sin+CLFf))
     #interstitial fluid subcompartment 
     dMLF =  QparaLi*(1-SLi)*CLBf + PeffL*AL*(CLBf-CLFf) - kLFLT*(CLFf-CLTf) - 
-           (VmL_Oatp*CLFf/(KmL_Oatp+CLFf)) - 
-           (VmL_Oatp2*CLFf/(KmL_Oatp2+CLFf)) - (VmL_Ntcp*CLFf/(KmL_Ntcp+CLFf))
+           (VmL_Oatp*CLFf/(KmL_Oatp+CLFf)) - (VmL_Oatp2*CLFf/(KmL_Oatp2+CLFf)) 
+         - (VmL_Ntcp*CLFf/(KmL_Ntcp+CLFf)) - (VmL_sin*CLFf/(KmL_sin+CLFf))
     #Liver tissue subcompartment
     dMLT = kLFLT*(CLFf-CLTf) + (VmL_Oatp*CLFf/(KmL_Oatp+CLFf)) + (VmL_Oatp2*CLFf/(KmL_Oatp2+CLFf))+
           (VmL_Ntcp*CLFf/(KmL_Ntcp+CLFf)) -  P_liver_bile*Qbile*CLTf
@@ -2775,7 +2780,7 @@ kim_OR_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_ORAL_kim_2016.xlsx"
 kim_IV_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_IV_kim_2016.xlsx")
 
 #setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_2/Training/AAFE/NoStomachAbs")
-setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_2 - 1000 iterations - version 2/Training 2/AAFE")
+setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_2 - 600 iterations - sinusoidal efflux liver transporter/Training/AAFE")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -2801,11 +2806,11 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
 
 
-N_pars <- 13 # Number of parameters to be fitted
-fit <-  c(rep(log(1),3),log(1e4),log(1e4),log(1e-2),log(1),log(1e-2),log(1e4),log(1e4),log(1e2),log(1),log(1e5))
+N_pars <- 17 # Number of parameters to be fitted
+fit <-  c(rep(log(1),3),log(1e4),log(1e4),log(1e4),log(1e4),log(1e-2),log(1),log(1e-2),log(1e4),log(1e4),log(1e4),log(1e4),log(1e2),log(1),log(1e5))
 
-lb	= c(rep(log(1e-6),3),log(1e2),log(1e2),log(1e-06),log(1e-6),log(1e-6),log(1e2),log(1e2),log(1e-2),log(1e-5),log(1e3))
-ub = c(rep(log(1e5),3),log(1e6),log(1e6),log(1e-1),log(1e5),log(1e-1),log(1e6),log(1e6),log(1e2),log(1e8),log(1e6))
+lb	= c(rep(log(1e-6),3),log(1e2),log(1e2),log(1e2),log(1e2),log(1e-06),log(1e-6),log(1e-6),log(1e2),log(1e2),log(1e2),log(1e2),log(1e-2),log(1e-5),log(1e3))
+ub = c(rep(log(1e5),3),log(1e6),log(1e6),log(1e6),log(1e6),log(1e-1),log(1e5),log(1e-1),log(1e6),log(1e6),log(1e6),log(1e6),log(1e2),log(1e8),log(1e6))
 # Run the optimization algorithmm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,
@@ -3989,7 +3994,7 @@ experiment2 <- reshape(kudo_low_dose[c("Tissue" ,"Time_hours",
           height = 10,
           units = "in")
  }
-save.image("Scenario_2_version_2_600_it.RData")
+save.image("Scenario_2_sinusoidal_efflux_transporter.RData")
  
  
  
