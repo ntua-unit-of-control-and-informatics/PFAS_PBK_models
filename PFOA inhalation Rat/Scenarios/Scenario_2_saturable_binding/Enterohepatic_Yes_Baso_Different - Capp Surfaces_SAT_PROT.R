@@ -495,7 +495,7 @@ create.params <- function(user.input){
     #Overall mass transfer coefficients between subcompartments and passive
     #diffusion rate constants. See SI section S3-1 for details
     
-    #Surface areas Interstitial - Intracellualr PKSim (m^2)
+    #Surface areas Interstitial - Intracellular PKSim (m^2)
     BW_ref <- 0.23
     AcK= 437.16*BW/BW_ref
     AcL= 84.45*BW/BW_ref
@@ -511,6 +511,9 @@ create.params <- function(user.input){
     AcSK= 0.11*BW/BW_ref
     AcBo= 6.52*BW/BW_ref
     AcR= (AcK+AcL+AcST+AcIN+AcM+AcA+AcLu+AcSP+AcH+AcBr+AcGo+AcSK+AcBo)/13
+    
+    #Alveolar cells surface area (Type I and II), m^2
+    AcALF = ((78.8*2*5320*1e-6) + (125*2*123*1e-6))*BW/0.29  #Stone et al., 1992, BW_ref = 0.29, values for each lung , https://doi.org/10.1165/ajrcmb/6.2.235
     
     # Following the calculations of Lin et al. (2023) for Caco-2 cells
     ClINFT_unscaled= 18.1 #uL/min/mg protein, Kimura et al. 2017
@@ -536,7 +539,8 @@ create.params <- function(user.input){
     kSTFSTT = ((Papp/100) * AcST)*1000 #m^3/h * 1000 --> L/h 
     kINFINT = ((Papp/100) * AcIN)*1000 #m^3/h * 1000 --> L/h 
     kAFAT = ((Papp/100) * AcA)*1000 #m^3/h * 1000 --> L/h 
-    kLuTLuF = ((Papp/100) * AcLu)*1000 #m^3/h * 1000 --> L/h 
+    kLuTLuF = ((Papp/100) * AcLu)*1000 #m^3/h * 1000 --> L/h
+    kLuTLuAF = ((Papp/100) * AcALF)*1000 #m^3/h * 1000 --> L/h
     kSPFSPT = ((Papp/100) * AcSP)*1000 #m^3/h * 1000 --> L/h 
     kHFHT = ((Papp/100) * AcH)*1000 #m^3/h * 1000 --> L/h 
     kBrFBrT = ((Papp/100) * AcBr)*1000 #m^3/h * 1000 --> L/h 
@@ -734,7 +738,7 @@ create.params <- function(user.input){
                 'kLFLT'=kLFLT, 'kAFAT'=kAFAT, 
                 'kRFRT'=kRFRT,
                 'kabST'=kabST, 
-                'kMFMT'=kMFMT, 'kLuTLuF' =kLuTLuF, 'kSPFSPT' =kSPFSPT,
+                'kMFMT'=kMFMT, 'kLuTLuF' =kLuTLuF, 'kLuTLuAF'=kLuTLuAF, 'kSPFSPT' =kSPFSPT,
                 'kSTFSTT' =kSTFSTT, 'kINFINT' =kINFINT, 'kHFHT' =kHFHT,
                 'kBrFBrT' =kBrFBrT, 'kGoFGoT' =kGoFGoT,
                 'kSKFSKT' =kSKFSKT, 'kBoFBoT'=kBoFBoT,
@@ -1229,9 +1233,9 @@ ode.func <- function(time, inits, params){
     dMLuFf = QparaLu*(1-SLu)*CLuBf + PeffLu*ALu*(CLuBf-CLuFf) + kLuTLuF*(CLuT-CLuFf) + 
             koff_alb*CLuFb*VLuF/MW/1e6
     #Lung tissue
-    dMLuTf =  - kLuTLuF*(CLuT-CLuFf)  
+    dMLuTf =  - kLuTLuF*(CLuT-CLuFf) -  kLuTLuAF*(CLuT-CLuAFf)
     #Alveolar lining fluid
-    dMLuAFf = 0 
+    dMLuAFf =  kLuTLuAF*(CLuT-CLuAFf)
     
     
     #Spleen
@@ -1317,11 +1321,11 @@ ode.func <- function(time, inits, params){
     Cliver <- (MLB + MLF+ MLT)/(VLB+VLF+VLT)
     Mliver <- MLB + MLF+ MLT
     
-    Cstomach <-  (MSTB + MSTF+ MSTT)/(VSTB+VSTF+VSTT)
+    Cstomach <-  (MSTB + MSTF+ MSTT + MSTL)/(VSTB+VSTF+VSTT+VSTL)
     Cintestine <-  (MINB + MINF+ MINT+MINL)/(VINB+VINF+VINT+VINL)
     Cmuscle <-  (MMB + MMF+ MMT)/(VMB+VMF+VMT)
     Cadipose <-  (MAB + MAF+ MAT)/(VAB+VAF+VAT)
-    Clungs <-  (MLuB + MLuF+ MLuT)/(VLuB+VLuF+VLuT)
+    Clungs <-  (MLuB + MLuF+ MLuT + MLuAF)/(VLuB+VLuF+VLuT+VLuAF)
     Crest <-  (MRB + MRF+ MRT)/(VRB+VRF+VRT)
     Ccarcass <- (MMB+MMF+MMT+MAB+MAF+MAT+MRB+MRF+MRT+MBoB+MBoF+MBoT+MSKB+MSKF+MSKT)/(VM+VA+VR+VBo+VSK)
     Cfeces <- Mfeces/(Vfeces*feces_density)
@@ -3159,7 +3163,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0 ,
-              "maxeval" = 300, 
+              "maxeval" = 200, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
