@@ -59,7 +59,7 @@ create.params <- function(user.input){
     
     #Kidney
     PVK <- 7.3e-3 #Brown et al. 1997
-    VK <- PVK * BW #kidney volume kg=L
+    VK <- PVK * BW #kidney volume kg=L 
     PVKB <- 0.16 #Brown et al. 1997
     VKB <- PVKB * PVK * BW #kidney blood volume kg=L
     PVKF <- 0.2 #pkSim
@@ -3162,8 +3162,8 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "xtol_rel" = 1e-07,
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
-              "xtol_abs" = 0.0 ,
-              "maxeval" = 200, 
+              "xtol_abs" = 0.0, 
+              "maxeval" = 600, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
@@ -3175,8 +3175,8 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 N_pars <- 13 # Number of parameters to be fitted
 fit <-  c(rep(log(1),3),log(1e4),log(1e4),log(1e-2),log(1),log(1e-2),log(1e4),log(1e4),log(1e2),log(1),log(1e5))
 
-lb	= c(rep(log(1e-6),3),log(1e2),log(1e2),log(1e-06),log(1e-6),log(1e-6),log(1e2),log(1e2),log(1e-2),log(1e-5),log(1e3))
-ub = c(rep(log(1e5),3),log(1e6),log(1e6),log(1e-1),log(1e5),log(1e-1),log(1e6),log(1e6),log(1e2),log(1e8),log(1e6))
+lb	= c(rep(log(1e-6),3),log(1e2),log(1e2),log(1e-08),log(1e-6),log(1e-6),log(1e2),log(1e2),log(1e-2),log(1e-5),log(1e3))
+ub = c(rep(log(1e5),3),log(1e6),log(1e8),log(1e-1),log(1e5),log(1e-1),log(1e6),log(1e8),log(1e4),log(1e8),log(1e6))
 # Run the optimization algorithm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,
