@@ -23,9 +23,9 @@ create.params <- function(user.input){
     RAFNtcp <- RAFOatp_l
     RAFOatp2_Int <- estimated_params[5]
     
-    koff_alb <- estimated_params[6]
-    koff_fabp <-   estimated_params[7]
-    P_liver_bile <- estimated_params[8] 
+    koff_alb <- estimated_params[6] #Albumin dissociation rate constant ?
+    koff_fabp <-   estimated_params[7] #L-FABP dissociation rate constant ?
+    P_liver_bile <- estimated_params[8] #liver:bile partition coefficient 
     
     
     KmK_baso <- 1e20
@@ -615,8 +615,9 @@ create.params <- function(user.input){
     
     #Ka <-  24.18 #3.1*7.8 m3/mol multiplying by number of binding sites (Cheng et al. 2021)
     #Ka <-  1e05*1e-3 #[L/mol]*1e-3--->m3/mol
-    KLfabp <- (3.19e5+3.8e4+1.9e4)*1e-3  #[L/mol]*1e-3 , value from Cheng et al. (2017)
-    Ka2u <- 31.5*1e-3 #[L/mol]*1e-3--->m3/mol, value from Cheng et al. (2017)
+    KLfabp <- (3.19e5+3.8e4+1.9e4)*1e-3  #[L/mol]*1e-3 , value from https://doi.org/10.1002/etc.199 
+    Ka2u <- 31.5*1e-3 #[L/mol]*1e-3--->m3/mol, value from https://doi.org/10.1081/DCT-200039725
+
     
     
     koff_a2u <-  0.01 #1/s
