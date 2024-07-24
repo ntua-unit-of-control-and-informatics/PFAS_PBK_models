@@ -396,91 +396,6 @@ create.params <- function(user.input){
     
     
     
-    #Albumin concentration in blood and interstitial fluid compartments(mol/m^3 = 1e-6* nmol/g)
-    
-    CalbB_init <- 486*1e-03 # #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
-    
-    
-    CalbKF_init <- 243*1e-3 # #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
-    CalbLF_init <- 243*1e-3 # #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
-    CalbSTF_init <- 146*1e-3 # [umol/L]*1e-3 -->(mol/m3), same as Gut (assumption)
-    CalbINF_init <- 146*1e-3 #[umol/L]*1e-3 -->(mol/m3), same as Gut (assumption)
-    CalbMF_init <- 146*1e-3 #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
-    CalbAF_init <- 73*1e-3 #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
-    CalbRF_init <- 73*1e-3 #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
-    CalbBoF_init <- 73*1e-3 #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
-    CalbLuF_init = CalbINF_init #assumption 
-    CalbLuAF_init <- 10/100 * CalbB_init #based on Woods et al. 2015 statement https://doi.org/10.1016/j.jconrel.2015.05.269
-    
-    MW_albumin <- 66.5#kg/mol
-    CalbSPF_init <- 243e-3 #[umol/L]*1e-3 -->(mol/m3), same as liver (assumption)
-    CalbGoF_init <- 41/MW_albumin #mg/mL-->  (mol/m3) from https://doi.org/10.1210/endo-116-5-1983 --> 41 mg/mL, MW=65 kg/mol
-    CalbHF_init <- 65/MW_albumin##mg/mL--> (mol/m3) https://doi.org/10.1007/s12291-010-0042-x --> 6.5 g/100 g tissue, MW=65 kg/mol 
-    CalbBrF_init <- 8e-2/MW_albumin  ##mg/mL--> (mol/m3) https://doi.org/10.1016/0014-4886(90)90158-O --> 0.08 g/L, MW=65 kg/mol 
-    CalbSKF_init <- 21/MW_albumin ##mg/mL-->  (mol/m3) https://doi.org/10.1111/j.1748-1716.1973.tb05464.x -->Table 2: 2.1 g/100 mL
-    
-    #Interstitial/plasma concentration ratio (IPR)
-    #values from Kawai et al., 1994, Table C-I
-    
-    IPR_K = 0.5
-    IPR_L = 0.5
-    IPR_ST = 0.5
-    IPR_IN = 0.9
-    IPR_M = 0.6
-    IPR_A = 0.5
-    IPR_Lu = 0.5
-    IPR_Sp = 0.5
-    IPR_H = 0.5
-    IPR_SK = 1
-    IPR_Br = 0.5
-    IPR_Go = 0.5 #assumption
-    IPR_Bo = 0.5 #assumption
-    IPR_R = (IPR_K+IPR_L+IPR_ST+IPR_IN+IPR_M+IPR_A+IPR_Lu+IPR_Sp+IPR_H+IPR_SK+IPR_Br+IPR_Go+IPR_Bo)/13 #average IPR of all the included organs (kg=L)
-    
-    
-    CalbKB_init <- CalbKF_init*(1/IPR_K) 
-    CalbLB_init <- CalbLF_init*(1/IPR_L) 
-    CalbSTB_init <- CalbLF_init*(1/IPR_ST)
-    CalbINB_init <- CalbINF_init*(1/IPR_IN)
-    CalbMB_init <- CalbMF_init*(1/IPR_M)
-    CalbAB_init <- CalbAF_init*(1/IPR_A)
-    CalbRB_init <- CalbRF_init*(1/IPR_R)
-    CalbBoB_init <- CalbBoF_init*(1/IPR_Bo)
-    CalbLuB_init <- CalbLuF_init*(1/IPR_Lu)
-    CalbSPB_init <- CalbSPF_init*(1/IPR_Sp)
-    CalbGoB_init <- CalbGoF_init*(1/IPR_Go)
-    CalbHB_init <- CalbHF_init*(1/IPR_H)
-    CalbBrB_init <- CalbBrF_init*(1/IPR_Br)
-    CalbSKB_init <- CalbSKF_init*(1/IPR_SK)
-    
-    #Alpha2mu-globulin concentration in kidney tissue (mol/m3)
-    if (sex == "M"){
-      Ca2uKT_init <- 110*1e-3 #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
-    }else if(sex == "F"){
-      Ca2uKT_init <- 0 #mol/m3
-    }
-    
-    #LFABP concentration in kidney and liver tissue (mol/m^3)
-    CFabpKT_init <- 2.65*1e-3  #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
-    CFabpLT_init <- 133*1e-3  #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
-    
-    #======Table S2=======#
-    #Equilibrium association constant (m^3/mol= 10^-3*M-1) for albumin(Ka), LFABP(KL_fabp),
-    #and alpha2mu-globulin(Ka2u). See SI section S2-2 for details
-    
-    #Ka <-  24.18 #3.1*7.8 m3/mol multiplying by number of binding sites (Cheng et al. 2021)
-    #Ka <-  1e05*1e-3 #[L/mol]*1e-3--->m3/mol
-    KLfabp <- (1.2e5+4e4+1.9e4)*1e-3  #[L/mol]*1e-3 , value from Cheng et al. (2017)
-    Ka2u <- 5*1e02*1e-3 #[L/mol]*1e-3--->m3/mol, value from Cheng et al. (2017)
-    
-
-    koff_a2u <-  0.01 #1/s
-
-    
-    kon_alb <- Ka * koff_alb #1/M/s
-    kon_a2u <- Ka2u * koff_a2u#1/M/s
-    kon_fabp <- KLfabp * koff_fabp #1/M/s
-    
     #Overall mass transfer coefficients between subcompartments and passive
     #diffusion rate constants. See SI section S3-1 for details
     
@@ -615,6 +530,101 @@ create.params <- function(user.input){
     #Stomach
     # For identifiability reasons we assume that absorption takes place only through the intestines
     kabST <- (kabs_st* ASTL)*1000 #L/h
+    
+    
+    #Albumin concentration in blood and interstitial fluid compartments(mol/m^3 = 1e-6* nmol/g)
+    
+    CalbB_init <- 486*1e-03 # #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
+    
+    
+    CalbKF_init <- 243*1e-3 # #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
+    CalbLF_init <- 243*1e-3 # #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
+    CalbSTF_init <- 146*1e-3 # [umol/L]*1e-3 -->(mol/m3), same as Gut (assumption)
+    CalbINF_init <- 146*1e-3 #[umol/L]*1e-3 -->(mol/m3), same as Gut (assumption)
+    CalbMF_init <- 146*1e-3 #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
+    CalbAF_init <- 73*1e-3 #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
+    CalbRF_init <- 73*1e-3 #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
+    CalbBoF_init <- 73*1e-3 #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
+    CalbLuF_init = CalbINF_init #assumption 
+    CalbLuAF_init <- 10/100 * CalbB_init #based on Woods et al. 2015 statement https://doi.org/10.1016/j.jconrel.2015.05.269
+    
+    MW_albumin <- 66.5#kg/mol
+    CalbSPF_init <- 243e-3 #[umol/L]*1e-3 -->(mol/m3), same as liver (assumption)
+    CalbGoF_init <- 41/MW_albumin #mg/mL-->  (mol/m3) from https://doi.org/10.1210/endo-116-5-1983 --> 41 mg/mL, MW=65 kg/mol
+    CalbHF_init <- 65/MW_albumin##mg/mL--> (mol/m3) https://doi.org/10.1007/s12291-010-0042-x --> 6.5 g/100 g tissue, MW=65 kg/mol 
+    CalbBrF_init <- 8e-2/MW_albumin  ##mg/mL--> (mol/m3) https://doi.org/10.1016/0014-4886(90)90158-O --> 0.08 g/L, MW=65 kg/mol 
+    CalbSKF_init <- 21/MW_albumin ##mg/mL-->  (mol/m3) https://doi.org/10.1111/j.1748-1716.1973.tb05464.x -->Table 2: 2.1 g/100 mL
+    
+    #Interstitial/plasma concentration ratio (IPR)
+    #values from Kawai et al., 1994, Table C-I
+    
+    IPR_K = 0.5
+    IPR_L = 0.5
+    IPR_ST = 0.5
+    IPR_IN = 0.9
+    IPR_M = 0.6
+    IPR_A = 0.5
+    IPR_Lu = 0.5
+    IPR_Sp = 0.5
+    IPR_H = 0.5
+    IPR_SK = 1
+    IPR_Br = 0.5
+    IPR_Go = 0.5 #assumption
+    IPR_Bo = 0.5 #assumption
+    IPR_R = (IPR_K+IPR_L+IPR_ST+IPR_IN+IPR_M+IPR_A+IPR_Lu+IPR_Sp+IPR_H+IPR_SK+IPR_Br+IPR_Go+IPR_Bo)/13 #average IPR of all the included organs (kg=L)
+    
+    
+    CalbKB_init <- CalbKF_init*(1/IPR_K) 
+    CalbLB_init <- CalbLF_init*(1/IPR_L) 
+    CalbSTB_init <- CalbLF_init*(1/IPR_ST)
+    CalbINB_init <- CalbINF_init*(1/IPR_IN)
+    CalbMB_init <- CalbMF_init*(1/IPR_M)
+    CalbAB_init <- CalbAF_init*(1/IPR_A)
+    CalbRB_init <- CalbRF_init*(1/IPR_R)
+    CalbBoB_init <- CalbBoF_init*(1/IPR_Bo)
+    CalbLuB_init <- CalbLuF_init*(1/IPR_Lu)
+    CalbSPB_init <- CalbSPF_init*(1/IPR_Sp)
+    CalbGoB_init <- CalbGoF_init*(1/IPR_Go)
+    CalbHB_init <- CalbHF_init*(1/IPR_H)
+    CalbBrB_init <- CalbBrF_init*(1/IPR_Br)
+    CalbSKB_init <- CalbSKF_init*(1/IPR_SK)
+    
+    #Alpha2mu-globulin concentration in kidney tissue (mol/m3)
+    if (sex == "M"){
+      a2u_globulin_k = 8.77*kidney_protein_total*1e-3/VKT #mg/L, 8.77 mg/g kidney protein from https://doi.org/10.1016/0300-483X(86)90197-6 
+      Ca2uKT_init <- (a2u_globulin_k*1e-3/15.5e3)*1e3 #[mol/L]*1e3 -->(mol/m3)
+      
+      #Ca2uKT_init <- 321.51*1e-3 #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
+      
+    }else if(sex == "F"){
+      Ca2uKT_init <- 0 #mol/m3
+    }
+    
+    #LFABP concentration in kidney and liver tissue (mol/m^3)
+    L_FABP_L = 28.2e-3*kidney_protein_total/VKT #mg/L, 28.2 ug/mg cytosolic protein from https://doi.org/10.1016/S0021-9258(18)34463-6
+    #cytosolic protein is 96.3% of the total liver protein, https://doi.org/10.18632/aging.101009
+    CFabpLT_init = (L_FABP_L*1e-3/14e3)*1e3 #[mol/L]*1e3 -->(mol/m3)
+    
+    CFabpKT_init <- 0.797e-7*1e-3  #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
+    
+    #CFabpLT_init <- 301.22*1e-3  #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
+    
+    #======Table S2=======#
+    #Equilibrium association constant (m^3/mol= 10^-3*M-1) for albumin(Ka), LFABP(KL_fabp),
+    #and alpha2mu-globulin(Ka2u). See SI section S2-2 for details
+    
+    #Ka <-  24.18 #3.1*7.8 m3/mol multiplying by number of binding sites (Cheng et al. 2021)
+    #Ka <-  1e05*1e-3 #[L/mol]*1e-3--->m3/mol
+    KLfabp <- (3.19e5+3.8e4+1.9e4)*1e-3  #[L/mol]*1e-3 , value from Cheng et al. (2017)
+    Ka2u <- 31.5*1e-3 #[L/mol]*1e-3--->m3/mol, value from Cheng et al. (2017)
+    
+    
+    koff_a2u <-  0.01 #1/s
+    
+    
+    kon_alb <- Ka * koff_alb #1/M/s
+    kon_a2u <- Ka2u * koff_a2u#1/M/s
+    kon_fabp <- KLfabp * koff_fabp #1/M/s
     
     #Effective permeability (Peff, in mm/h) for blood (B), liver(L), kidney(K),
     #stomach(ST),intestine (IN), adipose(A), muscle(M), spleen (SP), heart (H), 
@@ -3152,7 +3162,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0,    
-              "maxeval" = 300, 
+              "maxeval" = 100, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
