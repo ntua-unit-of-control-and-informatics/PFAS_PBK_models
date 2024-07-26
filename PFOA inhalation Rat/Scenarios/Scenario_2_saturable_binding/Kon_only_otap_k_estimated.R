@@ -12,26 +12,30 @@ create.params <- function(user.input){
     # Estimated parameters
     if (sex == "M"){
       RAFOatp_k <- estimated_params[1]
+      RAFOat1 <- estimated_params[2]
+      
     }else if(sex == "F"){
-      RAFOatp_k <- estimated_params[2]
+      RAFOatp_k <- estimated_params[3]
+      RAFOat1 <- estimated_params[4]
+      
     }
-    RAFOat1 <- estimated_params[3]
+    RAFOat1 <- estimated_params[5]
     RAFOat3 <- RAFOat1
     RAFUrat <- RAFOatp_k
-    RAFOatp_l <- estimated_params[4] 
+    RAFOatp_l <- estimated_params[6] 
     RAFOatp2_l <- RAFOatp_l
     RAFNtcp <- RAFOatp_l
-    RAFOatp2_Int <- estimated_params[5]
+    RAFOatp2_Int <- estimated_params[7]
     
-    koff_alb <- estimated_params[6]
-    koff_fabp <-   estimated_params[7]
-    P_liver_bile <- estimated_params[8] 
+    koff_alb <- estimated_params[8]
+    koff_fabp <-   koff_alb
+    P_liver_bile <- estimated_params[9] 
     
     
     KmK_baso <- 1e20
     VmK_baso <- 0
     #permeabilities correction factor
-    Ka <- 1e04*1e-3 #mol/m^3
+    Ka <- 5.8e05*1e-3 #mol/m^3
     kabs_st <- 0 #m/h
     #units conversion from Cheng 2017R, time-> h, PFOA mass->ng, tissues mass-> g
     Hct <- 0.41 #hematocrit for rats, https://doi.org/10.1080/13685538.2017.1350156 mean value for both males and females
@@ -455,7 +459,7 @@ create.params <- function(user.input){
     
     #Alpha2mu-globulin concentration in kidney tissue (mol/m3)
     if (sex == "M"){
-      Ca2uKT_init <- 110*1e-3 #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
+      Ca2uKT_init <- 110e-3#[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
     }else if(sex == "F"){
       Ca2uKT_init <- 0 #mol/m3
     }
@@ -473,9 +477,9 @@ create.params <- function(user.input){
     KLfabp <- (1.2e5+4e4+1.9e4)*1e-3  #[L/mol]*1e-3 , value from Cheng et al. (2017)
     Ka2u <- 5*1e02*1e-3 #[L/mol]*1e-3--->m3/mol, value from Cheng et al. (2017)
     
-
+    
     koff_a2u <-  0.01 #1/s
-
+    
     
     kon_alb <- Ka * koff_alb #1/M/s
     kon_a2u <- Ka2u * koff_a2u#1/M/s
@@ -3151,21 +3155,21 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "xtol_rel" = 1e-07,
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
-              "xtol_abs" = 0.0,    
-              "maxeval" = 300, 
+              "xtol_abs" = 0.0, 
+              "maxeval" = 600, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
 #Parameter names:
-# Male RAFOatp_k, Male RAFOat1, Male RAFOat3, Male RAFOatp_l,Male RAFNtcp    
+# Male RAFOatp_k, Male RAFOat1, Male RAFOat3, Male RAFOatp_l,Male RAFNtcp
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
 
 
-N_pars <- 8 # Number of parameters to be fitted
-fit <-  c(rep(log(1), 5),rep(log(0.1), 2), log(1))
+N_pars <- 9 # Number of parameters to be fitted
+fit <-  c(rep(log(1), 7), log(0.0001), log(1))
 
-lb	= c(rep(log(1e-5), 5),rep(log(1e-4), 2), log(1e-3))
-ub = c(rep(log(1e5), 5),rep(log(1e3), 2), log(1e3))
+lb	= c(rep(log(1e-5), 7),log(1e-5), log(1e-3))
+ub = c(rep(log(1e5), 7),log(1), log(1e3))
 # Run the optimization algorithm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,
