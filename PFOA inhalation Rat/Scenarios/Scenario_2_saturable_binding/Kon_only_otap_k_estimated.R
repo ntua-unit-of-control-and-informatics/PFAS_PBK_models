@@ -459,14 +459,24 @@ create.params <- function(user.input){
     
     #Alpha2mu-globulin concentration in kidney tissue (mol/m3)
     if (sex == "M"){
-      Ca2uKT_init <- 110e-3#[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
+      a2u_globulin_k = 8.77*kidney_protein_total*1e-3/VKT #mg/L, 8.77 mg/g kidney protein from https://doi.org/10.1016/0300-483X(86)90197-6 
+      Ca2uKT_init <- (a2u_globulin_k*1e-3/15.5e3)*1e3 #[mol/L]*1e3 -->(mol/m3)
+      
+      #Ca2uKT_init <- 321.51*1e-3 #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
+      
     }else if(sex == "F"){
       Ca2uKT_init <- 0 #mol/m3
     }
     
     #LFABP concentration in kidney and liver tissue (mol/m^3)
+    L_FABP_L = 28.2e-3*liver_protein_per_rat/VLT #mg/L, 28.2 ug/mg cytosolic protein from https://doi.org/10.1016/S0021-9258(18)34463-6
+    #cytosolic protein is 96.3% of the total liver protein, https://doi.org/10.18632/aging.101009
+    CFabpLT_init = (L_FABP_L*1e-3/14e3)*1e3 #[mol/L]*1e3 -->(mol/m3)
+    
+    
+    #LFABP concentration in kidney and liver tissue (mol/m^3)
     CFabpKT_init <- 2.65*1e-3  #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
-    CFabpLT_init <- 133*1e-3  #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
+    
     
     #======Table S2=======#
     #Equilibrium association constant (m^3/mol= 10^-3*M-1) for albumin(Ka), LFABP(KL_fabp),
@@ -474,9 +484,10 @@ create.params <- function(user.input){
     
     #Ka <-  24.18 #3.1*7.8 m3/mol multiplying by number of binding sites (Cheng et al. 2021)
     #Ka <-  1e05*1e-3 #[L/mol]*1e-3--->m3/mol
-    KLfabp <- (1.2e5+4e4+1.9e4)*1e-3  #[L/mol]*1e-3 , value from Cheng et al. (2017)
+    KLfabp <- (3.19e5+3.8e4+1.9e4)*1e-3  #[L/mol]*1e-3 , value from https://doi.org/10.1002/etc.199 
     Ka2u <- 5*1e02*1e-3 #[L/mol]*1e-3--->m3/mol, value from Cheng et al. (2017)
     
+    #TRY ALSO WITH THIS VALUE: Ka2u <- 31.5*1e-3 #[L/mol]*1e-3--->m3/mol, value from https://doi.org/10.1081/DCT-200039725
     
     koff_a2u <-  0.01 #1/s
     

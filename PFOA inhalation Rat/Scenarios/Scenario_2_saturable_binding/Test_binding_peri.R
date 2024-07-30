@@ -6,6 +6,8 @@ library(deSolve)
 create.params <- function(user.input){
   with(as.list(user.input),{
 
+    # https://doi.org/10.3390/toxics12040253, Table 1
+    
     Ka <- 5.8e5
     CalbB_init <- 486*1e-06 #mol/L
     Calb_exp_init <- 600*1e-06 #mol/L
