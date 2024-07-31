@@ -11,8 +11,8 @@ create.params <- function(user.input){
     Ka <- 5.8e5
     CalbB_init <- 486*1e-06 #mol/L
     Calb_exp_init <- 600*1e-06 #mol/L
-    Cpfoa_init <-  5*1e-06 #mol/L
-    koff_alb <- 0.0001 #1/s
+    Cpfoa_init <-  0.192/414.07#5*1e-06 #mol/L
+    koff_alb <- 0.001 #1/s
     kon_alb <- Ka * koff_alb #1/M/s
 
     return(list("CalbB_init" = CalbB_init, "Cpfoa_init" = Cpfoa_init, "kon_alb" = kon_alb, 
@@ -47,7 +47,7 @@ ode.func <- function(time, inits, params){
 create.inits <- function(parameters){
   with(as.list(parameters),{
     
-    Calb_free <- Calb_exp_init; CPFOA_free <- Cpfoa_init
+    Calb_free <- CalbB_init; CPFOA_free <- Cpfoa_init
     Calb_bound<- 0; CPFOA_bound<-0
     
     
