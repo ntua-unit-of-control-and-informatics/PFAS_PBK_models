@@ -13,29 +13,31 @@ create.params <- function(user.input){
     if (sex == "M"){
       RAFOatp_k <- estimated_params[1]
       RAFOat1 <- estimated_params[2]
+      RAFOatp_l <- estimated_params[3] 
       
     }else if(sex == "F"){
-      RAFOatp_k <- estimated_params[3]
-      RAFOat1 <- estimated_params[4]
+      RAFOatp_k <- estimated_params[4]
+      RAFOat1 <- estimated_params[5]
+      RAFOatp_l <- estimated_params[6] 
       
     }
-    RAFOat1 <- estimated_params[5]
     RAFOat3 <- RAFOat1
     RAFUrat <- RAFOatp_k
-    RAFOatp_l <- estimated_params[6] 
     RAFOatp2_l <- RAFOatp_l
     RAFNtcp <- RAFOatp_l
     RAFOatp2_Int <- estimated_params[7]
     
     koff_alb <- estimated_params[8]
     koff_fabp <-   koff_alb
+    #koff_a2u <-  0.01 #1/s
+    koff_a2u <- koff_alb
     P_liver_bile <- estimated_params[9] 
     
     
     KmK_baso <- 1e20
     VmK_baso <- 0
     #permeabilities correction factor
-    Ka <- 5.8e05*1e-3 #mol/m^3
+    Ka <- 5.8e05 #mol/L
     kabs_st <- 0 #m/h
     #units conversion from Cheng 2017R, time-> h, PFOA mass->ng, tissues mass-> g
     Hct <- 0.41 #hematocrit for rats, https://doi.org/10.1080/13685538.2017.1350156 mean value for both males and females
@@ -399,104 +401,7 @@ create.params <- function(user.input){
     QGE<- 0.54/BW^0.25 #gastric emptying time (1/(h*BW^0.25)); from Yang, 2013
     
     
-    
-    #Albumin concentration in blood and interstitial fluid compartments(mol/m^3 = 1e-6* nmol/g)
-    
-    CalbB_init <- 486*1e-03 # #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
-    
-    
-    CalbKF_init <- 243*1e-3 # #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
-    CalbLF_init <- 243*1e-3 # #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
-    CalbSTF_init <- 146*1e-3 # [umol/L]*1e-3 -->(mol/m3), same as Gut (assumption)
-    CalbINF_init <- 146*1e-3 #[umol/L]*1e-3 -->(mol/m3), same as Gut (assumption)
-    CalbMF_init <- 146*1e-3 #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
-    CalbAF_init <- 73*1e-3 #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
-    CalbRF_init <- 73*1e-3 #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
-    CalbBoF_init <- 73*1e-3 #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
-    CalbLuF_init = CalbINF_init #assumption 
-    CalbLuAF_init <- 10/100 * CalbB_init #based on Woods et al. 2015 statement https://doi.org/10.1016/j.jconrel.2015.05.269
-    
-    MW_albumin <- 66.5#kg/mol
-    CalbSPF_init <- 243e-3 #[umol/L]*1e-3 -->(mol/m3), same as liver (assumption)
-    CalbGoF_init <- 41/MW_albumin #mg/mL-->  (mol/m3) from https://doi.org/10.1210/endo-116-5-1983 --> 41 mg/mL, MW=65 kg/mol
-    CalbHF_init <- 65/MW_albumin##mg/mL--> (mol/m3) https://doi.org/10.1007/s12291-010-0042-x --> 6.5 g/100 g tissue, MW=65 kg/mol 
-    CalbBrF_init <- 8e-2/MW_albumin  ##mg/mL--> (mol/m3) https://doi.org/10.1016/0014-4886(90)90158-O --> 0.08 g/L, MW=65 kg/mol 
-    CalbSKF_init <- 21/MW_albumin ##mg/mL-->  (mol/m3) https://doi.org/10.1111/j.1748-1716.1973.tb05464.x -->Table 2: 2.1 g/100 mL
-    
-    #Interstitial/plasma concentration ratio (IPR)
-    #values from Kawai et al., 1994, Table C-I
-    
-    IPR_K = 0.5
-    IPR_L = 0.5
-    IPR_ST = 0.5
-    IPR_IN = 0.9
-    IPR_M = 0.6
-    IPR_A = 0.5
-    IPR_Lu = 0.5
-    IPR_Sp = 0.5
-    IPR_H = 0.5
-    IPR_SK = 1
-    IPR_Br = 0.5
-    IPR_Go = 0.5 #assumption
-    IPR_Bo = 0.5 #assumption
-    IPR_R = (IPR_K+IPR_L+IPR_ST+IPR_IN+IPR_M+IPR_A+IPR_Lu+IPR_Sp+IPR_H+IPR_SK+IPR_Br+IPR_Go+IPR_Bo)/13 #average IPR of all the included organs (kg=L)
-    
-    
-    CalbKB_init <- CalbKF_init*(1/IPR_K) 
-    CalbLB_init <- CalbLF_init*(1/IPR_L) 
-    CalbSTB_init <- CalbLF_init*(1/IPR_ST)
-    CalbINB_init <- CalbINF_init*(1/IPR_IN)
-    CalbMB_init <- CalbMF_init*(1/IPR_M)
-    CalbAB_init <- CalbAF_init*(1/IPR_A)
-    CalbRB_init <- CalbRF_init*(1/IPR_R)
-    CalbBoB_init <- CalbBoF_init*(1/IPR_Bo)
-    CalbLuB_init <- CalbLuF_init*(1/IPR_Lu)
-    CalbSPB_init <- CalbSPF_init*(1/IPR_Sp)
-    CalbGoB_init <- CalbGoF_init*(1/IPR_Go)
-    CalbHB_init <- CalbHF_init*(1/IPR_H)
-    CalbBrB_init <- CalbBrF_init*(1/IPR_Br)
-    CalbSKB_init <- CalbSKF_init*(1/IPR_SK)
-    
-    #Alpha2mu-globulin concentration in kidney tissue (mol/m3)
-    if (sex == "M"){
-      a2u_globulin_k = 8.77*kidney_protein_total*1e-3/VKT #mg/L, 8.77 mg/g kidney protein from https://doi.org/10.1016/0300-483X(86)90197-6 
-      Ca2uKT_init <- (a2u_globulin_k*1e-3/15.5e3)*1e3 #[mol/L]*1e3 -->(mol/m3)
-      
-      #Ca2uKT_init <- 321.51*1e-3 #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
-      
-    }else if(sex == "F"){
-      Ca2uKT_init <- 0 #mol/m3
-    }
-    
-    #LFABP concentration in kidney and liver tissue (mol/m^3)
-    L_FABP_L = 28.2e-3*liver_protein_per_rat/VLT #mg/L, 28.2 ug/mg cytosolic protein from https://doi.org/10.1016/S0021-9258(18)34463-6
-    #cytosolic protein is 96.3% of the total liver protein, https://doi.org/10.18632/aging.101009
-    CFabpLT_init = (L_FABP_L*1e-3/14e3)*1e3 #[mol/L]*1e3 -->(mol/m3)
-    
-    
-    #LFABP concentration in kidney and liver tissue (mol/m^3)
-    CFabpKT_init <- 2.65*1e-3  #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
-    
-    
-    #======Table S2=======#
-    #Equilibrium association constant (m^3/mol= 10^-3*M-1) for albumin(Ka), LFABP(KL_fabp),
-    #and alpha2mu-globulin(Ka2u). See SI section S2-2 for details
-    
-    #Ka <-  24.18 #3.1*7.8 m3/mol multiplying by number of binding sites (Cheng et al. 2021)
-    #Ka <-  1e05*1e-3 #[L/mol]*1e-3--->m3/mol
-    KLfabp <- (3.19e5+3.8e4+1.9e4)*1e-3  #[L/mol]*1e-3 , value from https://doi.org/10.1002/etc.199 
-    Ka2u <- 5*1e02*1e-3 #[L/mol]*1e-3--->m3/mol, value from Cheng et al. (2017)
-    
-    #TRY ALSO WITH THIS VALUE: Ka2u <- 31.5*1e-3 #[L/mol]*1e-3--->m3/mol, value from https://doi.org/10.1081/DCT-200039725
-    
-    koff_a2u <-  0.01 #1/s
-    
-    
-    kon_alb <- Ka * koff_alb #1/M/s
-    kon_a2u <- Ka2u * koff_a2u#1/M/s
-    kon_fabp <- KLfabp * koff_fabp #1/M/s
-    
-    #Overall mass transfer coefficients between subcompartments and passive
+       #Overall mass transfer coefficients between subcompartments and passive
     #diffusion rate constants. See SI section S3-1 for details
     
     #Surface areas Interstitial - Intracellular PKSim (m^2)
@@ -650,6 +555,98 @@ create.params <- function(user.input){
     PeffGo <- Papp*10 #mm/h
     PeffSK <- Papp*10 #mm/h
     PeffBo <- Papp*10 #mm/h
+    
+    
+    #Albumin concentration in blood and interstitial fluid compartments(mol/m^3 = 1e-6* nmol/g)
+    
+    CalbB_init <- 486*1e-06 # #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
+    
+    
+    CalbKF_init <- 243*1e-6 # #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
+    CalbLF_init <- 243*1e-6 # #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
+    CalbSTF_init <- 146*1e-6 # [umol/L]*1e-6 -->(mol/L), same as Gut (assumption)
+    CalbINF_init <- 146*1e-6 #[umol/L]*1e-6 -->(mol/L), same as Gut (assumption)
+    CalbMF_init <- 146*1e-6 #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
+    CalbAF_init <- 73*1e-6 #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
+    CalbRF_init <- 73*1e-6 #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
+    CalbBoF_init <- 73*1e-6 #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
+    CalbLuF_init = CalbINF_init #assumption 
+    CalbLuAF_init <- 10/100 * CalbB_init #based on Woods et al. 2015 statement https://doi.org/10.1016/j.jconrel.2015.05.269
+    
+    MW_albumin <- 66500#g/mol
+    CalbSPF_init <- 243e-6 #[umol/L]*1e-6 -->(mol/L), same as liver (assumption)
+    CalbGoF_init <- 41/MW_albumin #mg/mL-->  (mol/L) from https://doi.org/10.1210/endo-116-5-1983 --> 41 mg/mL, MW=65 kg/mol
+    CalbHF_init <- 65/MW_albumin##mg/mL--> (mol/L) https://doi.org/10.1007/s12291-010-0042-x --> 6.5 g/100 g tissue, MW=65 kg/mol 
+    CalbBrF_init <- 8e-2/MW_albumin  ##mg/mL--> (mol/L) https://doi.org/10.1016/0014-4886(90)90158-O --> 0.08 g/L, MW=65 kg/mol 
+    CalbSKF_init <- 21/MW_albumin ##mg/mL-->  (mol/L) https://doi.org/10.1111/j.1748-1716.1973.tb05464.x -->Table 2: 2.1 g/100 mL
+    
+    #Interstitial/plasma concentration ratio (IPR)
+    #values from Kawai et al., 1994, Table C-I
+    
+    IPR_K = 0.5
+    IPR_L = 0.5
+    IPR_ST = 0.5
+    IPR_IN = 0.9
+    IPR_M = 0.6
+    IPR_A = 0.5
+    IPR_Lu = 0.5
+    IPR_Sp = 0.5
+    IPR_H = 0.5
+    IPR_SK = 1
+    IPR_Br = 0.5
+    IPR_Go = 0.5 #assumption
+    IPR_Bo = 0.5 #assumption
+    IPR_R = (IPR_K+IPR_L+IPR_ST+IPR_IN+IPR_M+IPR_A+IPR_Lu+IPR_Sp+IPR_H+IPR_SK+IPR_Br+IPR_Go+IPR_Bo)/13 #average IPR of all the included organs (kg=L)
+    
+    
+    CalbKB_init <- CalbKF_init*(1/IPR_K) 
+    CalbLB_init <- CalbLF_init*(1/IPR_L) 
+    CalbSTB_init <- CalbLF_init*(1/IPR_ST)
+    CalbINB_init <- CalbINF_init*(1/IPR_IN)
+    CalbMB_init <- CalbMF_init*(1/IPR_M)
+    CalbAB_init <- CalbAF_init*(1/IPR_A)
+    CalbRB_init <- CalbRF_init*(1/IPR_R)
+    CalbBoB_init <- CalbBoF_init*(1/IPR_Bo)
+    CalbLuB_init <- CalbLuF_init*(1/IPR_Lu)
+    CalbSPB_init <- CalbSPF_init*(1/IPR_Sp)
+    CalbGoB_init <- CalbGoF_init*(1/IPR_Go)
+    CalbHB_init <- CalbHF_init*(1/IPR_H)
+    CalbBrB_init <- CalbBrF_init*(1/IPR_Br)
+    CalbSKB_init <- CalbSKF_init*(1/IPR_SK)
+    
+    #Alpha2mu-globulin concentration in kidney tissue (mol/L)
+    if (sex == "M"){
+      a2u_globulin_k = 8.77*kidney_protein_total*1e-3/VKT #mg/L, 8.77 mg/g kidney protein from https://doi.org/10.1016/0300-483X(86)90197-6 
+      Ca2uKT_init <- (a2u_globulin_k*1e-3/15.5e3) #[mol/L]
+      
+      #Ca2uKT_init <- 321.51*1e-3 #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
+      
+    }else if(sex == "F"){
+      Ca2uKT_init <- 0 #mol/L
+    }
+    
+    #LFABP concentration in kidney and liver tissue (mol/m^3)
+    L_FABP_L = 28.2e-3*liver_protein_per_rat/VLT #mg/L, 28.2 ug/mg cytosolic protein from https://doi.org/10.1016/S0021-9258(18)34463-6
+    #cytosolic protein is 96.3% of the total liver protein, https://doi.org/10.18632/aging.101009
+    CFabpLT_init = (L_FABP_L*1e-3/14e3) #[mol/L]
+    
+    
+    #LFABP concentration in kidney and liver tissue (mol/m^3)
+    CFabpKT_init <- 2.65*1e-6  #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
+    
+    #======Table S2=======#
+    #Equilibrium association constant (m^3/mol= 10^-3*M-1) for albumin(Ka), LFABP(KL_fabp),
+    #and alpha2mu-globulin(Ka2u). See SI section S2-2 for details
+    
+    #Ka <-  24.18 #3.1*7.8 m3/mol multiplying by number of binding sites (Cheng et al. 2021)
+    #Ka <-  1e05*1e-3 #[L/mol]*1e-3--->m3/mol
+    KLfabp <- (1.2e5+4e4+1.9e4)  #[L/mol]*1e-3 , value from Cheng et al. (2017)
+    Ka2u <- 5*1e02 #[L/mol]*1e-3--->m3/mol, value from Cheng et al. (2017)
+    
+    
+    kon_alb <- Ka * koff_alb #1/M/s
+    kon_a2u <- Ka2u * koff_a2u#1/M/s
+    kon_fabp <- KLfabp * koff_fabp #1/M/s
     
     
     return(list('VB'=VB, 'Vplasma'=Vplasma, 'VK'=VK, 'VKB'=VKB, 
@@ -971,102 +968,102 @@ ode.func <- function(time, inits, params){
     CBoT <- MBoT/VBoT # tissue concentration
     
     #Calculation of free and bound PFOA in venous blood
-    dCalbVenf <- koff_alb*CVenb/MW/1e6 - kon_alb*CalbVenf*CVenf/MW/1e6
+    dCalbVenf <- koff_alb*CVenb/MW/1e3 - kon_alb*CalbVenf*CVenf
     
     #Calculation of free and bound PFOA in arterial blood
-    dCalbArtf <- koff_alb*CArtb/MW/1e6 - kon_alb*CalbArtf*CArtf/MW/1e6
+    dCalbArtf <- koff_alb*CArtb/MW/1e3 - kon_alb*CalbArtf*CArtf
     
     #--------------------------------------------------------------
     #Calculation of free concentrations in organ blood
     #--------------------------------------------------------------
     
     #Calculation of free and bound PFOA in kidney blood
-    dCalbKBf <- koff_alb*CKBb/MW/1e6 - kon_alb*CalbKBf*CKBf/MW/1e6
+    dCalbKBf <- koff_alb*CKBb/MW/1e3 - kon_alb*CalbKBf*CKBf
     
     #Calculation of free and bound PFOA in liver blood
-    dCalbLBf <- koff_alb*CLBb/MW/1e6 - kon_alb*CalbLBf*CLBf/MW/1e6
+    dCalbLBf <- koff_alb*CLBb/MW/1e3 - kon_alb*CalbLBf*CLBf
     
     #Calculation of free and bound PFOA in stomach blood
-    dCalbSTBf <- koff_alb*CSTBb/MW/1e6 - kon_alb*CalbSTBf*CSTBf/MW/1e6
+    dCalbSTBf <- koff_alb*CSTBb/MW/1e3 - kon_alb*CalbSTBf*CSTBf
     
     #Calculation of free and bound PFOA in intestine blood
-    dCalbINBf <- koff_alb*CINBb/MW/1e6 - kon_alb*CalbINBf*CINBf/MW/1e6
+    dCalbINBf <- koff_alb*CINBb/MW/1e3 - kon_alb*CalbINBf*CINBf
     
     #Calculation of free and bound PFOA in muscle blood
-    dCalbMBf <- koff_alb*CMBb/MW/1e6 - kon_alb*CalbMBf*CMBf/MW/1e6
+    dCalbMBf <- koff_alb*CMBb/MW/1e3 - kon_alb*CalbMBf*CMBf
     
     #Calculation of free and bound PFOA in adipose blood
-    dCalbABf <- koff_alb*CABb/MW/1e6 - kon_alb*CalbABf*CABf/MW/1e6
+    dCalbABf <- koff_alb*CABb/MW/1e3 - kon_alb*CalbABf*CABf
     
     #Calculation of free and bound PFOA in Rest-of-the-body blood
-    dCalbRBf <- koff_alb*CRBb/MW/1e6 - kon_alb*CalbRBf*CRBf/MW/1e6
+    dCalbRBf <- koff_alb*CRBb/MW/1e3 - kon_alb*CalbRBf*CRBf
     
     #Calculation of free and bound PFOA in lungs blood
-    dCalbLuBf <- koff_alb*CLuBb/MW/1e6 - kon_alb*CalbLuBf*CLuBf/MW/1e6 
+    dCalbLuBf <- koff_alb*CLuBb/MW/1e3 - kon_alb*CalbLuBf*CLuBf 
     
     #Calculation of free and bound PFOA in spleen blood
-    dCalbSPBf <- koff_alb*CSPBb/MW/1e6  - kon_alb*CalbSPBf*CSPBf/MW/1e6 
+    dCalbSPBf <- koff_alb*CSPBb/MW/1e3  - kon_alb*CalbSPBf*CSPBf 
     
     #Calculation of free and bound PFOA in heart blood
-    dCalbHBf <- koff_alb*CHBb/MW/1e6  - kon_alb*CalbHBf*CHBf/MW/1e6 
+    dCalbHBf <- koff_alb*CHBb/MW/1e3  - kon_alb*CalbHBf*CHBf 
     
     #Calculation of free and bound PFOA in brain blood
-    dCalbBrBf <- koff_alb*CBrBb/MW/1e6  - kon_alb*CalbBrBf*CBrBf/MW/1e6 
+    dCalbBrBf <- koff_alb*CBrBb/MW/1e3  - kon_alb*CalbBrBf*CBrBf 
     
     #Calculation of free and bound PFOA in gonad blood
-    dCalbGoBf <- koff_alb*CGoBb/MW/1e6  - kon_alb*CalbGoBf*CGoBf/MW/1e6 
+    dCalbGoBf <- koff_alb*CGoBb/MW/1e3  - kon_alb*CalbGoBf*CGoBf 
     
     #Calculation of free and bound PFOA in skin blood
-    dCalbSKBf <- koff_alb*CSKBb/MW/1e6  - kon_alb*CalbSKBf*CSKBf/MW/1e6 
+    dCalbSKBf <- koff_alb*CSKBb/MW/1e3  - kon_alb*CalbSKBf*CSKBf 
     
     #Calculation of free and bound PFOA in gonad blood
-    dCalbBoBf <- koff_alb*CBoBb/MW/1e6  - kon_alb*CalbBoBf*CBoBf/MW/1e6
+    dCalbBoBf <- koff_alb*CBoBb/MW/1e3  - kon_alb*CalbBoBf*CBoBf
     
     #--------------------------------------------------------------
     #Calculation of free concentrations in organ interstitial fluid
     #--------------------------------------------------------------
     
-    #Calculation of free and bound PFOA in kidney blood
-    dCalbKFf <- koff_alb*CKFb/MW/1e6 - kon_alb*CalbKFf*CKFf/MW/1e6
+    #Calculation of free and bound PFOA in kidney interstitial fluid
+    dCalbKFf <- koff_alb*CKFb/MW/1e3 - kon_alb*CalbKFf*CKFf
     
-    #Calculation of free and bound PFOA in liver blood
-    dCalbLFf <- koff_alb*CLFb/MW/1e6 - kon_alb*CalbLFf*CLFf/MW/1e6
+    #Calculation of free and bound PFOA in liver interstitial fluid
+    dCalbLFf <- koff_alb*CLFb/MW/1e3 - kon_alb*CalbLFf*CLFf
     
-    #Calculation of free and bound PFOA in stomach blood
-    dCalbSTFf <- koff_alb*CSTFb/MW/1e6 - kon_alb*CalbSTFf*CSTFf/MW/1e6
+    #Calculation of free and bound PFOA in stomach interstitial fluid
+    dCalbSTFf <- koff_alb*CSTFb/MW/1e3 - kon_alb*CalbSTFf*CSTFf
     
-    #Calculation of free and bound PFOA in intestine blood
-    dCalbINFf <- koff_alb*CINFb/MW/1e6 - kon_alb*CalbINFf*CINFf/MW/1e6
+    #Calculation of free and bound PFOA in intestine interstitial fluid
+    dCalbINFf <- koff_alb*CINFb/MW/1e3 - kon_alb*CalbINFf*CINFf
     
-    #Calculation of free and bound PFOA in muscle blood
-    dCalbMFf <- koff_alb*CMFb/MW/1e6 - kon_alb*CalbMFf*CMFf/MW/1e6
+    #Calculation of free and bound PFOA in muscle interstitial fluid
+    dCalbMFf <- koff_alb*CMFb/MW/1e3 - kon_alb*CalbMFf*CMFf
     
-    #Calculation of free and bound PFOA in adipose blood
-    dCalbAFf <- koff_alb*CAFb/MW/1e6 - kon_alb*CalbAFf*CAFf/MW/1e6
+    #Calculation of free and bound PFOA in adipose interstitial fluid
+    dCalbAFf <- koff_alb*CAFb/MW/1e3 - kon_alb*CalbAFf*CAFf
     
-    #Calculation of free and bound PFOA in Rest-of-the-body blood
-    dCalbRFf <- koff_alb*CRFb/MW/1e6 - kon_alb*CalbRFf*CRFf/MW/1e6
+    #Calculation of free and bound PFOA in Rest-of-the-body interstitial fluid
+    dCalbRFf <- koff_alb*CRFb/MW/1e3 - kon_alb*CalbRFf*CRFf
     
-    #Calculation of free and bound PFOA in lungs blood
-    dCalbLuFf <- koff_alb*CLuFb/MW/1e6 - kon_alb*CalbLuFf*CLuFf/MW/1e6
+    #Calculation of free and bound PFOA in lungs interstitial fluid
+    dCalbLuFf <- koff_alb*CLuFb/MW/1e3 - kon_alb*CalbLuFf*CLuFf
     
-    #Calculation of free and bound PFOA in spleen blood
-    dCalbSPFf <- koff_alb*CSPFb/MW/1e6 - kon_alb*CalbSPFf*CSPFf/MW/1e6
+    #Calculation of free and bound PFOA in spleen interstitial fluid
+    dCalbSPFf <- koff_alb*CSPFb/MW/1e3 - kon_alb*CalbSPFf*CSPFf
     
-    #Calculation of free and bound PFOA in heart blood
-    dCalbHFf <- koff_alb*CHFb/MW/1e6 - kon_alb*CalbHFf*CHFf/MW/1e6
+    #Calculation of free and bound PFOA in heart interstitial fluid
+    dCalbHFf <- koff_alb*CHFb/MW/1e3 - kon_alb*CalbHFf*CHFf
     
-    #Calculation of free and bound PFOA in brain blood
-    dCalBrFf <- koff_alb*CBrFb/MW/1e6 - kon_alb*CalBrFf*CBrFf/MW/1e6
+    #Calculation of free and bound PFOA in brain interstitial fluid
+    dCalBrFf <- koff_alb*CBrFb/MW/1e3 - kon_alb*CalBrFf*CBrFf
     
-    #Calculation of free and bound PFOA in gonad blood
-    dCalbGoFf <- koff_alb*CGoFb/MW/1e6 - kon_alb*CalbGoFf*CGoFf/MW/1e6
+    #Calculation of free and bound PFOA in gonad interstitial fluid
+    dCalbGoFf <- koff_alb*CGoFb/MW/1e3 - kon_alb*CalbGoFf*CGoFf
     
-    #Calculation of free and bound PFOA in skin blood
-    dCalbSKFf <- koff_alb*CSKFb/MW/1e6 - kon_alb*CalbSKFf*CSKFf/MW/1e6
+    #Calculation of free and bound PFOA in skin interstitial fluid
+    dCalbSKFf <- koff_alb*CSKFb/MW/1e3 - kon_alb*CalbSKFf*CSKFf
     
-    #Calculation of free and bound PFOA in gonad blood
-    dCalbBoFf <- koff_alb*CBoFb/MW/1e6 - kon_alb*CalbBoFf*CBoFf/MW/1e6
+    #Calculation of free and bound PFOA in gonad interstitial fluid
+    dCalbBoFf <- koff_alb*CBoFb/MW/1e3 - kon_alb*CalbBoFf*CBoFf
     
     #-------------------------------------------------------------------
     #Calculation of free concentrations in organ where we have tissue binding
@@ -1074,83 +1071,83 @@ ode.func <- function(time, inits, params){
     
     
     #Calculation of free and bound PFOA in kidney Tissue
-    dCa2uKTf <- koff_a2u*CKTb/MW/1e6 - kon_a2u*Ca2uKTf*CKTf/MW/1e6
-    dCFabpKTf <- koff_fabp*CKTb/MW/1e6 - kon_fabp*CFabpKTf*CKTf/MW/1e6
+    dCa2uKTf <- koff_a2u*CKTb/MW/1e3 - kon_a2u*Ca2uKTf*CKTf
+    dCFabpKTf <- koff_fabp*CKTb/MW/1e3 - kon_fabp*CFabpKTf*CKTf
     
     
     #Calculation of free and bound PFOA in liver tissue
-    dCFabpLTf <- koff_fabp*CLTb/MW/1e6 - kon_fabp*CFabpLTf*CLTf/MW/1e6
+    dCFabpLTf <- koff_fabp*CLTb/MW/1e3 - kon_fabp*CFabpLTf*CLTf
     
     #Calculation of free and bound PFOA in alveolar lining fluid
-    dCalbLuAFf = koff_alb*CLuAFb/MW/1e6 - kon_alb*CalbLuAFf*CLuAFf/MW/1e6
+    dCalbLuAFf = koff_alb*CLuAFb/MW/1e3 - kon_alb*CalbLuAFf*CLuAFf
     
     # Bound PFOA
     #Blood
-    dMVenb <-  kon_alb*CalbVenf*CVenf*VVen/MW/1e6
-    dMArtb <- kon_alb*CalbArtf*CArtf*VArt/MW/1e6
-    dMKBb <- kon_alb*CalbKBf*CKBf*VKB/MW/1e6
-    dMLBb <- kon_alb*CalbLBf*CLBf*VLB/MW/1e6
-    dMSTBb <- kon_alb*CalbSTBf*CSTBf*VSTB/MW/1e6
-    dMINBb <- kon_alb*CalbINBf*CINBf*VINB/MW/1e6
-    dMMBb <- kon_alb*CalbMBf*CMBf*VMB/MW/1e6
-    dMABb <- kon_alb*CalbABf*CABf*VAB/MW/1e6
-    dMRBb <- kon_alb*CalbRBf*CRBf*VRB/MW/1e6
-    dMLuBb <- kon_alb*CalbLuBf*CLuBf*VLuB/MW/1e6
-    dMSPBb <- kon_alb*CalbSPBf*CSPBf*VSPB/MW/1e6
-    dMHBb <- kon_alb*CalbHBf*CHBf*VHB/MW/1e6
-    dMBrBb <- kon_alb*CalbBrBf*CBrBf*VBrB/MW/1e6
-    dMGoBb <- kon_alb*CalbGoBf*CGoBf*VGoB/MW/1e6
-    dMSKBb <- kon_alb*CalbSKBf*CSKBf*VSKB/MW/1e6
-    dMBoBb <- kon_alb*CalbBoBf*CBoBf*VBoB/MW/1e6
+    dMVenb <-  kon_alb*CalbVenf*CVenf*VVen
+    dMArtb <- kon_alb*CalbArtf*CArtf*VArt
+    dMKBb <- kon_alb*CalbKBf*CKBf*VKB
+    dMLBb <- kon_alb*CalbLBf*CLBf*VLB
+    dMSTBb <- kon_alb*CalbSTBf*CSTBf*VSTB
+    dMINBb <- kon_alb*CalbINBf*CINBf*VINB
+    dMMBb <- kon_alb*CalbMBf*CMBf*VMB
+    dMABb <- kon_alb*CalbABf*CABf*VAB
+    dMRBb <- kon_alb*CalbRBf*CRBf*VRB
+    dMLuBb <- kon_alb*CalbLuBf*CLuBf*VLuB
+    dMSPBb <- kon_alb*CalbSPBf*CSPBf*VSPB
+    dMHBb <- kon_alb*CalbHBf*CHBf*VHB
+    dMBrBb <- kon_alb*CalbBrBf*CBrBf*VBrB
+    dMGoBb <- kon_alb*CalbGoBf*CGoBf*VGoB
+    dMSKBb <- kon_alb*CalbSKBf*CSKBf*VSKB
+    dMBoBb <- kon_alb*CalbBoBf*CBoBf*VBoB
     
     #Interstitial fluid
-    dMKFb <- kon_alb*CalbKFf*CKFf*VKF/MW/1e6
-    dMLFb <- kon_alb*CalbLFf*CLFf*VLF/MW/1e6
-    dMSTFb <- kon_alb*CalbSTFf*CSTFf*VSTF/MW/1e6
-    dMINFb <- kon_alb*CalbINFf*CINFf*VINF/MW/1e6
-    dMMFb <- kon_alb*CalbMFf*CMFf*VMF/MW/1e6
-    dMAFb <- kon_alb*CalbAFf*CAFf*VAF/MW/1e6
-    dMRFb <- kon_alb*CalbRFf*CRFf*VRF/MW/1e6
-    dMLuFb <- kon_alb*CalbLuFf*CLuFf*VLuF/MW/1e6
-    dMSPFb <- kon_alb*CalbSPFf*CSPFf*VSPF/MW/1e6
-    dMHFb <- kon_alb*CalbHFf*CHFf*VHF/MW/1e6
-    dMBrFb <- kon_alb*CalBrFf*CBrFf*VBrF/MW/1e6
-    dMGoFb <- kon_alb*CalbGoFf*CGoFf*VGoF/MW/1e6
-    dMSKFb <- kon_alb*CalbSKFf*CSKFf*VSKF/MW/1e6
-    dMBoFb <- kon_alb*CalbBoFf*CBoFf*VBoF/MW/1e6
+    dMKFb <- kon_alb*CalbKFf*CKFf*VKF
+    dMLFb <- kon_alb*CalbLFf*CLFf*VLF
+    dMSTFb <- kon_alb*CalbSTFf*CSTFf*VSTF
+    dMINFb <- kon_alb*CalbINFf*CINFf*VINF
+    dMMFb <- kon_alb*CalbMFf*CMFf*VMF
+    dMAFb <- kon_alb*CalbAFf*CAFf*VAF
+    dMRFb <- kon_alb*CalbRFf*CRFf*VRF
+    dMLuFb <- kon_alb*CalbLuFf*CLuFf*VLuF
+    dMSPFb <- kon_alb*CalbSPFf*CSPFf*VSPF
+    dMHFb <- kon_alb*CalbHFf*CHFf*VHF
+    dMBrFb <- kon_alb*CalBrFf*CBrFf*VBrF
+    dMGoFb <- kon_alb*CalbGoFf*CGoFf*VGoF
+    dMSKFb <- kon_alb*CalbSKFf*CSKFf*VSKF
+    dMBoFb <- kon_alb*CalbBoFf*CBoFf*VBoF
     
     #Tissue
-    dMKTb <- kon_a2u*Ca2uKTf*CKTf*VKT/MW/1e6 + kon_fabp*CFabpKTf*CKTf*VKT/MW/1e6
-    dMLTb <-  kon_fabp*CFabpLTf*CLTf*VLT/MW/1e6
+    dMKTb <- kon_a2u*Ca2uKTf*CKTf*VKT + kon_fabp*CFabpKTf*CKTf*VKT
+    dMLTb <-  kon_fabp*CFabpLTf*CLTf*VLT
     
     #Alveolar lining fluid
-    dMLuAFb <-  kon_fabp*CalbLuAFf*CLuAFf*VLuAF/MW/1e6
+    dMLuAFb <-  kon_alb*CalbLuAFf*CLuAFf*VLuAF
     
     #====================================================================================================================
     
     #Arterial Blood
     dMArtf = QBLu*CLuBf - CArtf*(QBK+QBL+QBM+QBA+QBR+QBSP+QBH+QBBr+
                                    QBST+QBIN+QBGo+QBSK+QBBo) - QGFR*CArtf +
-      koff_alb*CArtb*VArt/MW/1e6
+      koff_alb*CArtb*VArt
     
     #Venous Blood
     dMVenf = - CVenf*QBLu + QBK*CKBf + QBLtot*CLBf + QBM*CMBf + QBA*CABf + QBR*CRBf+
       QBH*CHBf + QBBr*CBrBf+ QBGo*CGoBf + QBSK*CSKBf + QBBo*CBoBf +
-      koff_alb*CVenb*VVen/MW/1e6
+      koff_alb*CVenb*VVen
     
     #Kidney
     #blood subcompartment
     dMKBf = QBK*CArtf - QBK*CKBf - PeffK*AK*(CKBf-CKFf) - QparaKi*(1-SKi)*CKBf +
-      koff_alb*CKBb*VKB/MW/1e6
+      koff_alb*CKBb*VKB
     #interstitial fluid subcompartment
     dMKFf = QparaKi*(1-SKi)*CKBf+ PeffK*AK*(CKBf-CKFf) - kKFKT*(CKFf-CKTf) -
       (VmK_Oat1*CKFf/(KmK_Oat1+CKFf)) - (VmK_Oat3*CKFf/(KmK_Oat3+CKFf))  +
-      (VmK_baso*CKTf/(KmK_baso+CKTf)) +  koff_alb*CKBb*VKB/MW/1e6
+      (VmK_baso*CKTf/(KmK_baso+CKTf)) +  koff_alb*CKFb*VKF
     #Kidney proximal tubule cells subcompartment
     dMKTf = kKFKT*(CKFf-CKTf) - kFKT*(CKTf - CFil) + (VmK_Oatp*CFil/(KmK_Oatp+CFil)) +
       (VmK_Oat1*CKFf/(KmK_Oat1+CKFf)) + (VmK_Oat3*CKFf/(KmK_Oat3+CKFf)) + 
       (VmK_Urat*CFil/(KmK_Urat+CFil))  - (VmK_baso*CKTf/(KmK_baso+CKTf)) +
-      koff_fabp*CKTb*VKT/MW/1e6
+      koff_fabp*CKTb*VKT + koff_a2u*CKTb*VKT
     
     dMFil =  QGFR*CArtf + kFKT*(CKTf - CFil) - (VmK_Oatp*CFil/(KmK_Oatp+CFil)) - 
       (VmK_Urat*CFil/(KmK_Urat+CFil))- (Qurine*CFil)
@@ -1159,23 +1156,23 @@ ode.func <- function(time, inits, params){
     #blood subcompartment
     dMLBf = QBL*CArtf + QBSP*CSPBf + QBIN*CINBf + QBST*CSTBf - 
       QBLtot*CLBf - PeffL*AL*(CLBf-CLFf) - QparaLi*(1-SLi)*CLBf +
-      koff_alb*CLBb*VLB/MW/1e6
+      koff_alb*CLBb*VLB
     #interstitial fluid subcompartment 
     dMLFf =  QparaLi*(1-SLi)*CLBf + PeffL*AL*(CLBf-CLFf) - kLFLT*(CLFf-CLTf) - 
       (VmL_Oatp*CLFf/(KmL_Oatp+CLFf)) - (VmL_Oatp2*CLFf/(KmL_Oatp2+CLFf)) -
-      (VmL_Ntcp*CLFf/(KmL_Ntcp+CLFf)) + koff_alb*CLFb*VLF/MW/1e6
+      (VmL_Ntcp*CLFf/(KmL_Ntcp+CLFf)) + koff_alb*CLFb*VLF
     #Liver tissue subcompartment
     dMLTf = kLFLT*(CLFf-CLTf) + (VmL_Oatp*CLFf/(KmL_Oatp+CLFf)) + (VmL_Oatp2*CLFf/(KmL_Oatp2+CLFf))+
-      (VmL_Ntcp*CLFf/(KmL_Ntcp+CLFf)) -  P_liver_bile*Qbile*CLTf + koff_fabp*CLTb*VLT/MW/1e6
+      (VmL_Ntcp*CLFf/(KmL_Ntcp+CLFf)) -  P_liver_bile*Qbile*CLTf + koff_fabp*CLTb*VLT
     
     
     #Stomach
     #blood subcompartment
     dMSTBf = QBST*CArtf - QBST*CSTBf - PeffST*AST*(CSTBf-CSTFf) -  QparaSt*(1-SSt)*CSTBf +
-      koff_alb*CSTBb*VSTB/MW/1e6
+      koff_alb*CSTBb*VSTB
     #interstitial fluid subcompartment 
     dMSTFf = QparaSt*(1-SSt)*CSTBf + PeffST*AST*(CSTBf-CSTFf) - kSTFSTT*(CSTFf-CSTT) +
-      koff_alb*CSTFb*VSTF/MW/1e6
+      koff_alb*CSTFb*VSTF
     #Stomach tissue subcompartment
     dMSTTf = kSTFSTT*(CSTFf-CSTT) + kabST*CSTL
     #Stomach lumen
@@ -1185,10 +1182,10 @@ ode.func <- function(time, inits, params){
     #Intestine
     #blood subcompartment
     dMINBf = QBIN*CArtf - QBIN*CINBf - PeffIN*AIN*(CINBf-CINFf) - QparaIn*(1-SIn)*CINBf +
-      koff_alb*CINBb*VINB/MW/1e6
+      koff_alb*CINBb*VINB
     #interstitial fluid subcompartment 
     dMINFf = QparaIn*(1-SIn)*CINBf + PeffIN*AIN*(CINBf-CINFf) - kINFINT*(CINFf-CINT) +
-      koff_alb*CINFb*VINF/MW/1e6
+      koff_alb*CINFb*VINF
     #Intestine tissue subcompartment
     dMINTf = kINFINT*(CINFf-CINT) + P_passive*CINL + (VmIn_Oatp2*CINL/(KmIn_Oatp2+CINL))
     #Intestine lumen
@@ -1199,10 +1196,10 @@ ode.func <- function(time, inits, params){
     #Muscle
     #blood subcompartment
     dMMBf = QBM*CArtf - QBM*CMBf - PeffM*AM*(CMBf-CMFf) - QparaMu*(1-SMu)*CMBf +
-      koff_alb*CMBb*VMB/MW/1e6
+      koff_alb*CMBb*VMB
     #interstitial fluid subcompartment 
     dMMFf = QparaMu*(1-SMu)*CMBf + PeffM*AM*(CMBf-CMFf) - kMFMT*(CMFf- CMT) +
-      koff_alb*CMFb*VMF/MW/1e6
+      koff_alb*CMFb*VMF
     #Muscle tissue subcompartment 
     dMMTf = kMFMT*(CMFf- CMT)
     
@@ -1210,10 +1207,10 @@ ode.func <- function(time, inits, params){
     #Adipose
     #blood subcompartment
     dMABf = QBA*CArtf - QBA*CABf - PeffA*AA*(CABf-CAFf) - QparaAd*(1-SAd)*CABf +
-      koff_alb*CABb*VAB/MW/1e6
+      koff_alb*CABb*VAB
     #interstitial fluid subcompartment 
     dMAFf = QparaAd*(1-SAd)*CABf + PeffA*AA*(CABf-CAFf) - kAFAT*(CAFf-CAT) +
-      koff_alb*CAFb*VAF/MW/1e6
+      koff_alb*CAFb*VAF
     #Adipose tissue subcompartment 
     dMATf =  kAFAT*(CAFf-CAT) 
     
@@ -1221,10 +1218,10 @@ ode.func <- function(time, inits, params){
     #Rest of body
     #blood subcompartment
     dMRBf = QBR*CArtf - QBR*CRBf - PeffR*AR*(CRBf-CRFf) - QparaRe*(1-SRe)*CRBf +
-      koff_alb*CRBb*VRB/MW/1e6
+      koff_alb*CRBb*VRB
     #interstitial fluid subcompartment 
     dMRFf = QparaRe*(1-SRe)*CRBf + PeffR*AR*(CRBf-CRFf) - kRFRT*(CRFf -CRT) +
-      koff_alb*CRFb*VRF/MW/1e6
+      koff_alb*CRFb*VRF
     #Rest of body tissue subcompartment 
     dMRTf = kRFRT*(CRFf -CRT) 
     
@@ -1232,23 +1229,23 @@ ode.func <- function(time, inits, params){
     #Lung 
     #blood subcompartment
     dMLuBf = CVenf*QBLu - QBLu*CLuBf - PeffLu*ALu*(CLuBf-CLuFf) - QparaLu*(1-SLu)*CLuBf +
-      koff_alb*CLuBb*VLuB/MW/1e6
+      koff_alb*CLuBb*VLuB
     #interstitial fluid subcompartment
     dMLuFf = QparaLu*(1-SLu)*CLuBf + PeffLu*ALu*(CLuBf-CLuFf) + kLuTLuF*(CLuT-CLuFf) + 
-      koff_alb*CLuFb*VLuF/MW/1e6
+      koff_alb*CLuFb*VLuF
     #Lung tissue
     dMLuTf =  - kLuTLuF*(CLuT-CLuFf) -  kLuTLuAF*(CLuT-CLuAFf)
     #Alveolar lining fluid
-    dMLuAFf =  kLuTLuAF*(CLuT-CLuAFf)
+    dMLuAFf =  kLuTLuAF*(CLuT-CLuAFf) + koff_alb*CLuAFb*VLuAF
     
     
     #Spleen
     #blood subcompartment
     dMSPBf = QBSP*CArtf - QBSP*CSPBf - PeffSP*ASP*(CSPBf-CSPFf) - QparaSp*(1-SSp)*CSPBf + 
-      koff_alb*CSPBb*VSPB/MW/1e6
+      koff_alb*CSPBb*VSPB
     #interstitial fluid subcompartment 
     dMSPFf = QparaSp*(1-SSp)*CSPBf + PeffSP*ASP*(CSPBf-CSPFf) - kSPFSPT*(CSPFf -CSPT) +
-      koff_alb*CSPFb*VSPF/MW/1e6
+      koff_alb*CSPFb*VSPF
     #Spleen tissue subcompartment 
     dMSPTf = kSPFSPT*(CSPFf -CSPT) 
     
@@ -1256,10 +1253,10 @@ ode.func <- function(time, inits, params){
     #Heart
     #blood subcompartment
     dMHBf = QBH*CArtf - QBH*CHBf - PeffH*AH*(CHBf-CHFf) - QparaHt*(1-SHt)*CHBf + 
-      koff_alb*CHBb*VHB/MW/1e6
+      koff_alb*CHBb*VHB
     #interstitial fluid subcompartment 
     dMHFf = QparaHt*(1-SHt)*CHBf + PeffH*AH*(CHBf-CHFf) - kHFHT*(CHFf -CHT) + 
-      koff_alb*CHFb*VHF/MW/1e6
+      koff_alb*CHFb*VHF
     #Heart tissue subcompartment 
     dMHTf = kHFHT*(CHFf -CHT) 
     
@@ -1267,10 +1264,10 @@ ode.func <- function(time, inits, params){
     #Brain
     #blood subcompartment
     dMBrBf = QBBr*CArtf - QBBr*CBrBf - PeffBr*ABr*(CBrBf-CBrFf) - QparaBr*(1-SBr)*CBrBf + 
-      koff_alb*CBrBb*VBrB/MW/1e6 
+      koff_alb*CBrBb*VBrB 
     #interstitial fluid subcompartment 
     dMBrFf = QparaBr*(1-SBr)*CBrBf + PeffBr*ABr*(CBrBf-CBrFf) - kBrFBrT*(CBrFf -CBrT) +
-      koff_alb*CBrFb*VBrF/MW/1e6
+      koff_alb*CBrFb*VBrF
     #Brain tissue subcompartment 
     dMBrTf = kBrFBrT*(CBrFf -CBrT) 
     
@@ -1278,10 +1275,10 @@ ode.func <- function(time, inits, params){
     #Gonads
     #blood subcompartment
     dMGoBf = QBGo*CArtf - QBGo*CGoBf - PeffGo*AGo*(CGoBf-CGoFf) - QparaGo*(1-SGo)*CGoBf +
-      koff_alb*CGoBb*VGoB/MW/1e6
+      koff_alb*CGoBb*VGoB
     #interstitial fluid subcompartment 
     dMGoFf = QparaGo*(1-SGo)*CGoBf + PeffGo*AGo*(CGoBf-CGoFf) - kGoFGoT*(CGoFf -CGoT) +
-      koff_alb*CGoFb*VGoF/MW/1e6
+      koff_alb*CGoFb*VGoF
     #gonads tissue subcompartment 
     dMGoTf = kGoFGoT*(CGoFf -CGoT) 
     
@@ -1289,10 +1286,10 @@ ode.func <- function(time, inits, params){
     #Skin
     #blood subcompartment
     dMSKBf = QBSK*CArtf - QBSK*CSKBf - PeffSK*ASK*(CSKBf-CSKFf) - QparaSk*(1-SSk)*CSKBf +
-      koff_alb*CSKBb*VSKB/MW/1e6
+      koff_alb*CSKBb*VSKB
     #interstitial fluid subcompartment
     dMSKFf = QparaSk*(1-SSk)*CSKBf + PeffSK*ASK*(CSKBf-CSKFf) - kSKFSKT*(CSKFf -CSKT) +
-      koff_alb*CSKFb*VSKF/MW/1e6
+      koff_alb*CSKFb*VSKF
     #Skin tissue subcompartment
     dMSKTf = kSKFSKT*(CSKFf -CSKT)
     
@@ -1300,10 +1297,10 @@ ode.func <- function(time, inits, params){
     #Bones
     #blood subcompartment
     dMBoBf = QBBo*CArtf - QBBo*CBoBf - PeffBo*ABo*(CBoBf-CBoFf) - QparaBo*(1-SBo)*CBoBf +
-      koff_alb*CBoBb*VBoB/MW/1e6
+      koff_alb*CBoBb*VBoB
     #interstitial fluid subcompartment
     dMBoFf = QparaBo*(1-SBo)*CBoBf + PeffBo*ABo*(CBoBf-CBoFf) - kBoFBoT*(CBoFf -CBoT) +
-      koff_alb*CBoFb*VBoF/MW/1e6
+      koff_alb*CBoFb*VBoF
     #Bones tissue subcompartment
     dMBoTf = kBoFBoT*(CBoFf -CBoT)
     
@@ -3162,12 +3159,12 @@ dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mt
 
 
 #Initialise optimiser to NULL for better error handling later
-opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
+opts <- list( "algorithm" = "NLOPT_LN_NEWUOA",#"NLOPT_LN_SBPLX"
               "xtol_rel" = 1e-07,
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0, 
-              "maxeval" = 600, 
+              "maxeval" = 300, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
@@ -3177,10 +3174,10 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 
 
 N_pars <- 9 # Number of parameters to be fitted
-fit <-  c(rep(log(1), 7), log(0.0001), log(1))
+fit <-  c(rep(log(1), 7), log(0.01), log(1))
 
-lb	= c(rep(log(1e-5), 7),log(1e-5), log(1e-3))
-ub = c(rep(log(1e5), 7),log(1), log(1e3))
+lb	= c(rep(log(1e-5), 7),log(1e-4), log(1e-3))
+ub = c(rep(log(1e5), 7),log(0.1), log(1e3))
 # Run the optimization algorithm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,
@@ -3191,6 +3188,7 @@ optimizer <- nloptr::nloptr( x0= fit,
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
+save.image("Scenario_2_saturable_binding_newoa.RData")
 
 
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
@@ -3596,7 +3594,7 @@ events <- create.events(params)
 sample_time=seq(0,672,2)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-03, atol = 1e-03))
+                                    method="lsodes",rtol = 1e-07, atol = 1e-07))
 
 preds_Cui_OR_MurineL <-  solution[, c("time", "Murine")]
 
@@ -4364,7 +4362,6 @@ for(i in 1:length(experiments)){
          height = 10,
          units = "in")
 }
-save.image("Scenario_2_saturable_binding.RData")
 
 
 
