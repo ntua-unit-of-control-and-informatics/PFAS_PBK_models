@@ -1083,71 +1083,71 @@ ode.func <- function(time, inits, params){
     
     # Bound PFOA
     #Blood
-    dMVenb <-  kon_alb*CalbVenf*CVenf*VVen/MW/1e6
-    dMArtb <- kon_alb*CalbArtf*CArtf*VArt/MW/1e6
-    dMKBb <- kon_alb*CalbKBf*CKBf*VKB/MW/1e6
-    dMLBb <- kon_alb*CalbLBf*CLBf*VLB/MW/1e6
-    dMSTBb <- kon_alb*CalbSTBf*CSTBf*VSTB/MW/1e6
-    dMINBb <- kon_alb*CalbINBf*CINBf*VINB/MW/1e6
-    dMMBb <- kon_alb*CalbMBf*CMBf*VMB/MW/1e6
-    dMABb <- kon_alb*CalbABf*CABf*VAB/MW/1e6
-    dMRBb <- kon_alb*CalbRBf*CRBf*VRB/MW/1e6
-    dMLuBb <- kon_alb*CalbLuBf*CLuBf*VLuB/MW/1e6
-    dMSPBb <- kon_alb*CalbSPBf*CSPBf*VSPB/MW/1e6
-    dMHBb <- kon_alb*CalbHBf*CHBf*VHB/MW/1e6
-    dMBrBb <- kon_alb*CalbBrBf*CBrBf*VBrB/MW/1e6
-    dMGoBb <- kon_alb*CalbGoBf*CGoBf*VGoB/MW/1e6
-    dMSKBb <- kon_alb*CalbSKBf*CSKBf*VSKB/MW/1e6
-    dMBoBb <- kon_alb*CalbBoBf*CBoBf*VBoB/MW/1e6
+    dMVenb <-  kon_alb*CalbVenf*CVenf*VVen
+    dMArtb <- kon_alb*CalbArtf*CArtf*VArt
+    dMKBb <- kon_alb*CalbKBf*CKBf*VKB
+    dMLBb <- kon_alb*CalbLBf*CLBf*VLB
+    dMSTBb <- kon_alb*CalbSTBf*CSTBf*VSTB
+    dMINBb <- kon_alb*CalbINBf*CINBf*VINB
+    dMMBb <- kon_alb*CalbMBf*CMBf*VMB
+    dMABb <- kon_alb*CalbABf*CABf*VAB
+    dMRBb <- kon_alb*CalbRBf*CRBf*VRB
+    dMLuBb <- kon_alb*CalbLuBf*CLuBf*VLuB
+    dMSPBb <- kon_alb*CalbSPBf*CSPBf*VSPB
+    dMHBb <- kon_alb*CalbHBf*CHBf*VHB
+    dMBrBb <- kon_alb*CalbBrBf*CBrBf*VBrB
+    dMGoBb <- kon_alb*CalbGoBf*CGoBf*VGoB
+    dMSKBb <- kon_alb*CalbSKBf*CSKBf*VSKB
+    dMBoBb <- kon_alb*CalbBoBf*CBoBf*VBoB
     
     #Interstitial fluid
-    dMKFb <- kon_alb*CalbKFf*CKFf*VKF/MW/1e6
-    dMLFb <- kon_alb*CalbLFf*CLFf*VLF/MW/1e6
-    dMSTFb <- kon_alb*CalbSTFf*CSTFf*VSTF/MW/1e6
-    dMINFb <- kon_alb*CalbINFf*CINFf*VINF/MW/1e6
-    dMMFb <- kon_alb*CalbMFf*CMFf*VMF/MW/1e6
-    dMAFb <- kon_alb*CalbAFf*CAFf*VAF/MW/1e6
-    dMRFb <- kon_alb*CalbRFf*CRFf*VRF/MW/1e6
-    dMLuFb <- kon_alb*CalbLuFf*CLuFf*VLuF/MW/1e6
-    dMSPFb <- kon_alb*CalbSPFf*CSPFf*VSPF/MW/1e6
-    dMHFb <- kon_alb*CalbHFf*CHFf*VHF/MW/1e6
-    dMBrFb <- kon_alb*CalBrFf*CBrFf*VBrF/MW/1e6
-    dMGoFb <- kon_alb*CalbGoFf*CGoFf*VGoF/MW/1e6
-    dMSKFb <- kon_alb*CalbSKFf*CSKFf*VSKF/MW/1e6
-    dMBoFb <- kon_alb*CalbBoFf*CBoFf*VBoF/MW/1e6
+    dMKFb <- kon_alb*CalbKFf*CKFf*VKF
+    dMLFb <- kon_alb*CalbLFf*CLFf*VLF
+    dMSTFb <- kon_alb*CalbSTFf*CSTFf*VSTF
+    dMINFb <- kon_alb*CalbINFf*CINFf*VINF
+    dMMFb <- kon_alb*CalbMFf*CMFf*VMF
+    dMAFb <- kon_alb*CalbAFf*CAFf*VAF
+    dMRFb <- kon_alb*CalbRFf*CRFf*VRF
+    dMLuFb <- kon_alb*CalbLuFf*CLuFf*VLuF
+    dMSPFb <- kon_alb*CalbSPFf*CSPFf*VSPF
+    dMHFb <- kon_alb*CalbHFf*CHFf*VHF
+    dMBrFb <- kon_alb*CalBrFf*CBrFf*VBrF
+    dMGoFb <- kon_alb*CalbGoFf*CGoFf*VGoF
+    dMSKFb <- kon_alb*CalbSKFf*CSKFf*VSKF
+    dMBoFb <- kon_alb*CalbBoFf*CBoFf*VBoF
     
     #Tissue
-    dMKTb <- kon_a2u*Ca2uKTf*CKTf*VKT/MW/1e6 + kon_fabp*CFabpKTf*CKTf*VKT/MW/1e6
-    dMLTb <-  kon_fabp*CFabpLTf*CLTf*VLT/MW/1e6
+    dMKTb <- kon_a2u*Ca2uKTf*CKTf*VKT + kon_fabp*CFabpKTf*CKTf*VKT
+    dMLTb <-  kon_fabp*CFabpLTf*CLTf*VLT
     
     #Alveolar lining fluid
-    dMLuAFb <-  kon_fabp*CalbLuAFf*CLuAFf*VLuAF/MW/1e6
+    dMLuAFb <-  kon_fabp*CalbLuAFf*CLuAFf*VLuAF
     
     #====================================================================================================================
     
     #Arterial Blood
     dMArtf = QBLu*CLuBf - CArtf*(QBK+QBL+QBM+QBA+QBR+QBSP+QBH+QBBr+
                                    QBST+QBIN+QBGo+QBSK+QBBo) - QGFR*CArtf +
-      koff_alb*CArtb*VArt/MW/1e6
+      koff_alb*CArtb*VArt
     
     #Venous Blood
     dMVenf = - CVenf*QBLu + QBK*CKBf + QBLtot*CLBf + QBM*CMBf + QBA*CABf + QBR*CRBf+
       QBH*CHBf + QBBr*CBrBf+ QBGo*CGoBf + QBSK*CSKBf + QBBo*CBoBf +
-      koff_alb*CVenb*VVen/MW/1e6
+      koff_alb*CVenb*VVen
     
     #Kidney
     #blood subcompartment
     dMKBf = QBK*CArtf - QBK*CKBf - PeffK*AK*(CKBf-CKFf) - QparaKi*(1-SKi)*CKBf +
-      koff_alb*CKBb*VKB/MW/1e6
+      koff_alb*CKBb*VKB
     #interstitial fluid subcompartment
     dMKFf = QparaKi*(1-SKi)*CKBf+ PeffK*AK*(CKBf-CKFf) - kKFKT*(CKFf-CKTf) -
       (VmK_Oat1*CKFf/(KmK_Oat1+CKFf)) - (VmK_Oat3*CKFf/(KmK_Oat3+CKFf))  +
-      (VmK_baso*CKTf/(KmK_baso+CKTf)) +  koff_alb*CKBb*VKB/MW/1e6
+      (VmK_baso*CKTf/(KmK_baso+CKTf)) +  koff_alb*CKBb*VKB
     #Kidney proximal tubule cells subcompartment
     dMKTf = kKFKT*(CKFf-CKTf) - kFKT*(CKTf - CFil) + (VmK_Oatp*CFil/(KmK_Oatp+CFil)) +
       (VmK_Oat1*CKFf/(KmK_Oat1+CKFf)) + (VmK_Oat3*CKFf/(KmK_Oat3+CKFf)) + 
       (VmK_Urat*CFil/(KmK_Urat+CFil))  - (VmK_baso*CKTf/(KmK_baso+CKTf)) +
-      koff_fabp*CKTb*VKT/MW/1e6
+      koff_fabp*CKTb*VKT
     
     dMFil =  QGFR*CArtf + kFKT*(CKTf - CFil) - (VmK_Oatp*CFil/(KmK_Oatp+CFil)) - 
       (VmK_Urat*CFil/(KmK_Urat+CFil))- (Qurine*CFil)
@@ -1156,23 +1156,23 @@ ode.func <- function(time, inits, params){
     #blood subcompartment
     dMLBf = QBL*CArtf + QBSP*CSPBf + QBIN*CINBf + QBST*CSTBf - 
       QBLtot*CLBf - PeffL*AL*(CLBf-CLFf) - QparaLi*(1-SLi)*CLBf +
-      koff_alb*CLBb*VLB/MW/1e6
+      koff_alb*CLBb*VLB
     #interstitial fluid subcompartment 
     dMLFf =  QparaLi*(1-SLi)*CLBf + PeffL*AL*(CLBf-CLFf) - kLFLT*(CLFf-CLTf) - 
       (VmL_Oatp*CLFf/(KmL_Oatp+CLFf)) - (VmL_Oatp2*CLFf/(KmL_Oatp2+CLFf)) -
-      (VmL_Ntcp*CLFf/(KmL_Ntcp+CLFf)) + koff_alb*CLFb*VLF/MW/1e6
+      (VmL_Ntcp*CLFf/(KmL_Ntcp+CLFf)) + koff_alb*CLFb*VLF
     #Liver tissue subcompartment
     dMLTf = kLFLT*(CLFf-CLTf) + (VmL_Oatp*CLFf/(KmL_Oatp+CLFf)) + (VmL_Oatp2*CLFf/(KmL_Oatp2+CLFf))+
-      (VmL_Ntcp*CLFf/(KmL_Ntcp+CLFf)) -  P_liver_bile*Qbile*CLTf + koff_fabp*CLTb*VLT/MW/1e6
+      (VmL_Ntcp*CLFf/(KmL_Ntcp+CLFf)) -  P_liver_bile*Qbile*CLTf + koff_fabp*CLTb*VLT
     
     
     #Stomach
     #blood subcompartment
     dMSTBf = QBST*CArtf - QBST*CSTBf - PeffST*AST*(CSTBf-CSTFf) -  QparaSt*(1-SSt)*CSTBf +
-      koff_alb*CSTBb*VSTB/MW/1e6
+      koff_alb*CSTBb*VSTB
     #interstitial fluid subcompartment 
     dMSTFf = QparaSt*(1-SSt)*CSTBf + PeffST*AST*(CSTBf-CSTFf) - kSTFSTT*(CSTFf-CSTT) +
-      koff_alb*CSTFb*VSTF/MW/1e6
+      koff_alb*CSTFb*VSTF
     #Stomach tissue subcompartment
     dMSTTf = kSTFSTT*(CSTFf-CSTT) + kabST*CSTL
     #Stomach lumen
@@ -1182,10 +1182,10 @@ ode.func <- function(time, inits, params){
     #Intestine
     #blood subcompartment
     dMINBf = QBIN*CArtf - QBIN*CINBf - PeffIN*AIN*(CINBf-CINFf) - QparaIn*(1-SIn)*CINBf +
-      koff_alb*CINBb*VINB/MW/1e6
+      koff_alb*CINBb*VINB
     #interstitial fluid subcompartment 
     dMINFf = QparaIn*(1-SIn)*CINBf + PeffIN*AIN*(CINBf-CINFf) - kINFINT*(CINFf-CINT) +
-      koff_alb*CINFb*VINF/MW/1e6
+      koff_alb*CINFb*VINF
     #Intestine tissue subcompartment
     dMINTf = kINFINT*(CINFf-CINT) + P_passive*CINL + (VmIn_Oatp2*CINL/(KmIn_Oatp2+CINL))
     #Intestine lumen
@@ -1196,10 +1196,10 @@ ode.func <- function(time, inits, params){
     #Muscle
     #blood subcompartment
     dMMBf = QBM*CArtf - QBM*CMBf - PeffM*AM*(CMBf-CMFf) - QparaMu*(1-SMu)*CMBf +
-      koff_alb*CMBb*VMB/MW/1e6
+      koff_alb*CMBb*VMB
     #interstitial fluid subcompartment 
     dMMFf = QparaMu*(1-SMu)*CMBf + PeffM*AM*(CMBf-CMFf) - kMFMT*(CMFf- CMT) +
-      koff_alb*CMFb*VMF/MW/1e6
+      koff_alb*CMFb*VMF
     #Muscle tissue subcompartment 
     dMMTf = kMFMT*(CMFf- CMT)
     
@@ -1207,10 +1207,10 @@ ode.func <- function(time, inits, params){
     #Adipose
     #blood subcompartment
     dMABf = QBA*CArtf - QBA*CABf - PeffA*AA*(CABf-CAFf) - QparaAd*(1-SAd)*CABf +
-      koff_alb*CABb*VAB/MW/1e6
+      koff_alb*CABb*VAB
     #interstitial fluid subcompartment 
     dMAFf = QparaAd*(1-SAd)*CABf + PeffA*AA*(CABf-CAFf) - kAFAT*(CAFf-CAT) +
-      koff_alb*CAFb*VAF/MW/1e6
+      koff_alb*CAFb*VAF
     #Adipose tissue subcompartment 
     dMATf =  kAFAT*(CAFf-CAT) 
     
@@ -1218,10 +1218,10 @@ ode.func <- function(time, inits, params){
     #Rest of body
     #blood subcompartment
     dMRBf = QBR*CArtf - QBR*CRBf - PeffR*AR*(CRBf-CRFf) - QparaRe*(1-SRe)*CRBf +
-      koff_alb*CRBb*VRB/MW/1e6
+      koff_alb*CRBb*VRB
     #interstitial fluid subcompartment 
     dMRFf = QparaRe*(1-SRe)*CRBf + PeffR*AR*(CRBf-CRFf) - kRFRT*(CRFf -CRT) +
-      koff_alb*CRFb*VRF/MW/1e6
+      koff_alb*CRFb*VRF
     #Rest of body tissue subcompartment 
     dMRTf = kRFRT*(CRFf -CRT) 
     
@@ -1229,10 +1229,10 @@ ode.func <- function(time, inits, params){
     #Lung 
     #blood subcompartment
     dMLuBf = CVenf*QBLu - QBLu*CLuBf - PeffLu*ALu*(CLuBf-CLuFf) - QparaLu*(1-SLu)*CLuBf +
-      koff_alb*CLuBb*VLuB/MW/1e6
+      koff_alb*CLuBb*VLuB
     #interstitial fluid subcompartment
     dMLuFf = QparaLu*(1-SLu)*CLuBf + PeffLu*ALu*(CLuBf-CLuFf) + kLuTLuF*(CLuT-CLuFf) + 
-      koff_alb*CLuFb*VLuF/MW/1e6
+      koff_alb*CLuFb*VLuF
     #Lung tissue
     dMLuTf =  - kLuTLuF*(CLuT-CLuFf) -  kLuTLuAF*(CLuT-CLuAFf)
     #Alveolar lining fluid
@@ -1242,10 +1242,10 @@ ode.func <- function(time, inits, params){
     #Spleen
     #blood subcompartment
     dMSPBf = QBSP*CArtf - QBSP*CSPBf - PeffSP*ASP*(CSPBf-CSPFf) - QparaSp*(1-SSp)*CSPBf + 
-      koff_alb*CSPBb*VSPB/MW/1e6
+      koff_alb*CSPBb*VSPB
     #interstitial fluid subcompartment 
     dMSPFf = QparaSp*(1-SSp)*CSPBf + PeffSP*ASP*(CSPBf-CSPFf) - kSPFSPT*(CSPFf -CSPT) +
-      koff_alb*CSPFb*VSPF/MW/1e6
+      koff_alb*CSPFb*VSPF
     #Spleen tissue subcompartment 
     dMSPTf = kSPFSPT*(CSPFf -CSPT) 
     
@@ -1253,10 +1253,10 @@ ode.func <- function(time, inits, params){
     #Heart
     #blood subcompartment
     dMHBf = QBH*CArtf - QBH*CHBf - PeffH*AH*(CHBf-CHFf) - QparaHt*(1-SHt)*CHBf + 
-      koff_alb*CHBb*VHB/MW/1e6
+      koff_alb*CHBb*VHB
     #interstitial fluid subcompartment 
     dMHFf = QparaHt*(1-SHt)*CHBf + PeffH*AH*(CHBf-CHFf) - kHFHT*(CHFf -CHT) + 
-      koff_alb*CHFb*VHF/MW/1e6
+      koff_alb*CHFb*VHF
     #Heart tissue subcompartment 
     dMHTf = kHFHT*(CHFf -CHT) 
     
@@ -1264,10 +1264,10 @@ ode.func <- function(time, inits, params){
     #Brain
     #blood subcompartment
     dMBrBf = QBBr*CArtf - QBBr*CBrBf - PeffBr*ABr*(CBrBf-CBrFf) - QparaBr*(1-SBr)*CBrBf + 
-      koff_alb*CBrBb*VBrB/MW/1e6 
+      koff_alb*CBrBb*VBrB 
     #interstitial fluid subcompartment 
     dMBrFf = QparaBr*(1-SBr)*CBrBf + PeffBr*ABr*(CBrBf-CBrFf) - kBrFBrT*(CBrFf -CBrT) +
-      koff_alb*CBrFb*VBrF/MW/1e6
+      koff_alb*CBrFb*VBrF
     #Brain tissue subcompartment 
     dMBrTf = kBrFBrT*(CBrFf -CBrT) 
     
@@ -1275,10 +1275,10 @@ ode.func <- function(time, inits, params){
     #Gonads
     #blood subcompartment
     dMGoBf = QBGo*CArtf - QBGo*CGoBf - PeffGo*AGo*(CGoBf-CGoFf) - QparaGo*(1-SGo)*CGoBf +
-      koff_alb*CGoBb*VGoB/MW/1e6
+      koff_alb*CGoBb*VGoB
     #interstitial fluid subcompartment 
     dMGoFf = QparaGo*(1-SGo)*CGoBf + PeffGo*AGo*(CGoBf-CGoFf) - kGoFGoT*(CGoFf -CGoT) +
-      koff_alb*CGoFb*VGoF/MW/1e6
+      koff_alb*CGoFb*VGoF
     #gonads tissue subcompartment 
     dMGoTf = kGoFGoT*(CGoFf -CGoT) 
     
@@ -1286,10 +1286,10 @@ ode.func <- function(time, inits, params){
     #Skin
     #blood subcompartment
     dMSKBf = QBSK*CArtf - QBSK*CSKBf - PeffSK*ASK*(CSKBf-CSKFf) - QparaSk*(1-SSk)*CSKBf +
-      koff_alb*CSKBb*VSKB/MW/1e6
+      koff_alb*CSKBb*VSKB
     #interstitial fluid subcompartment
     dMSKFf = QparaSk*(1-SSk)*CSKBf + PeffSK*ASK*(CSKBf-CSKFf) - kSKFSKT*(CSKFf -CSKT) +
-      koff_alb*CSKFb*VSKF/MW/1e6
+      koff_alb*CSKFb*VSKF
     #Skin tissue subcompartment
     dMSKTf = kSKFSKT*(CSKFf -CSKT)
     
@@ -1297,10 +1297,10 @@ ode.func <- function(time, inits, params){
     #Bones
     #blood subcompartment
     dMBoBf = QBBo*CArtf - QBBo*CBoBf - PeffBo*ABo*(CBoBf-CBoFf) - QparaBo*(1-SBo)*CBoBf +
-      koff_alb*CBoBb*VBoB/MW/1e6
+      koff_alb*CBoBb*VBoB
     #interstitial fluid subcompartment
     dMBoFf = QparaBo*(1-SBo)*CBoBf + PeffBo*ABo*(CBoBf-CBoFf) - kBoFBoT*(CBoFf -CBoT) +
-      koff_alb*CBoFb*VBoF/MW/1e6
+      koff_alb*CBoFb*VBoF
     #Bones tissue subcompartment
     dMBoTf = kBoFBoT*(CBoFf -CBoT)
     
@@ -3594,7 +3594,7 @@ events <- create.events(params)
 sample_time=seq(0,672,2)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-03, atol = 1e-03))
+                                    method="lsodes",rtol = 1e-07, atol = 1e-07))
 
 preds_Cui_OR_MurineL <-  solution[, c("time", "Murine")]
 
