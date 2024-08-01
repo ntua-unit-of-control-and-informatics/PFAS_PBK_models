@@ -3159,7 +3159,7 @@ dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mt
 
 
 #Initialise optimiser to NULL for better error handling later
-opts <- list( "algorithm" = "NLOPT_LN_NEWUOA",#"NLOPT_LN_SBPLX"
+opts <- list( "algorithm" ="NLOPT_LN_SBPLX", # "NLOPT_LN_NEWUOA"
               "xtol_rel" = 1e-07,
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
@@ -3188,7 +3188,7 @@ optimizer <- nloptr::nloptr( x0= fit,
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
-save.image("Scenario_2_saturable_binding_newoa.RData")
+save.image("Scenario_2_saturable_binding_spblx.RData")
 
 
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
