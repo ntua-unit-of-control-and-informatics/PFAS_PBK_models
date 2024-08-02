@@ -1016,53 +1016,53 @@ ode.func <- function(time, inits, params){
     #Calculation of free and bound PFOA in skin blood
     dCalbSKBf <- koff_alb*CSKBb/MW/1e6  - kon_alb*CalbSKBf*CSKBf/MW/1e6 
     
-    #Calculation of free and bound PFOA in gonad blood
+    #Calculation of free and bound PFOA in bone blood
     dCalbBoBf <- koff_alb*CBoBb/MW/1e6  - kon_alb*CalbBoBf*CBoBf/MW/1e6
     
     #--------------------------------------------------------------
     #Calculation of free concentrations in organ interstitial fluid
     #--------------------------------------------------------------
     
-    #Calculation of free and bound PFOA in kidney blood
+    #Calculation of free and bound PFOA in kidney interstitial fluid
     dCalbKFf <- koff_alb*CKFb/MW/1e6 - kon_alb*CalbKFf*CKFf/MW/1e6
     
-    #Calculation of free and bound PFOA in liver blood
+    #Calculation of free and bound PFOA in liver interstitial fluid
     dCalbLFf <- koff_alb*CLFb/MW/1e6 - kon_alb*CalbLFf*CLFf/MW/1e6
     
-    #Calculation of free and bound PFOA in stomach blood
+    #Calculation of free and bound PFOA in stomach interstitial fluid
     dCalbSTFf <- koff_alb*CSTFb/MW/1e6 - kon_alb*CalbSTFf*CSTFf/MW/1e6
     
-    #Calculation of free and bound PFOA in intestine blood
+    #Calculation of free and bound PFOA in intestine interstitial fluid
     dCalbINFf <- koff_alb*CINFb/MW/1e6 - kon_alb*CalbINFf*CINFf/MW/1e6
     
-    #Calculation of free and bound PFOA in muscle blood
+    #Calculation of free and bound PFOA in muscle interstitial fluid
     dCalbMFf <- koff_alb*CMFb/MW/1e6 - kon_alb*CalbMFf*CMFf/MW/1e6
     
-    #Calculation of free and bound PFOA in adipose blood
+    #Calculation of free and bound PFOA in adipose interstitial fluid
     dCalbAFf <- koff_alb*CAFb/MW/1e6 - kon_alb*CalbAFf*CAFf/MW/1e6
     
-    #Calculation of free and bound PFOA in Rest-of-the-body blood
+    #Calculation of free and bound PFOA in Rest-of-the-body interstitial fluid
     dCalbRFf <- koff_alb*CRFb/MW/1e6 - kon_alb*CalbRFf*CRFf/MW/1e6
     
-    #Calculation of free and bound PFOA in lungs blood
+    #Calculation of free and bound PFOA in lungs interstitial fluid
     dCalbLuFf <- koff_alb*CLuFb/MW/1e6 - kon_alb*CalbLuFf*CLuFf/MW/1e6
     
-    #Calculation of free and bound PFOA in spleen blood
+    #Calculation of free and bound PFOA in spleen interstitial fluid
     dCalbSPFf <- koff_alb*CSPFb/MW/1e6 - kon_alb*CalbSPFf*CSPFf/MW/1e6
     
-    #Calculation of free and bound PFOA in heart blood
+    #Calculation of free and bound PFOA in heart interstitial fluid
     dCalbHFf <- koff_alb*CHFb/MW/1e6 - kon_alb*CalbHFf*CHFf/MW/1e6
     
-    #Calculation of free and bound PFOA in brain blood
+    #Calculation of free and bound PFOA in brain interstitial fluid
     dCalBrFf <- koff_alb*CBrFb/MW/1e6 - kon_alb*CalBrFf*CBrFf/MW/1e6
     
-    #Calculation of free and bound PFOA in gonad blood
+    #Calculation of free and bound PFOA in gonad interstitial fluid
     dCalbGoFf <- koff_alb*CGoFb/MW/1e6 - kon_alb*CalbGoFf*CGoFf/MW/1e6
     
-    #Calculation of free and bound PFOA in skin blood
+    #Calculation of free and bound PFOA in skin interstitial fluid
     dCalbSKFf <- koff_alb*CSKFb/MW/1e6 - kon_alb*CalbSKFf*CSKFf/MW/1e6
     
-    #Calculation of free and bound PFOA in gonad blood
+    #Calculation of free and bound PFOA in bone interstitial fluid
     dCalbBoFf <- koff_alb*CBoFb/MW/1e6 - kon_alb*CalbBoFf*CBoFf/MW/1e6
     
     #-------------------------------------------------------------------
@@ -1083,71 +1083,72 @@ ode.func <- function(time, inits, params){
     
     # Bound PFOA
     #Blood
-    dMVenb <-  kon_alb*CalbVenf*CVenf*VVen
-    dMArtb <- kon_alb*CalbArtf*CArtf*VArt
-    dMKBb <- kon_alb*CalbKBf*CKBf*VKB
-    dMLBb <- kon_alb*CalbLBf*CLBf*VLB
-    dMSTBb <- kon_alb*CalbSTBf*CSTBf*VSTB
-    dMINBb <- kon_alb*CalbINBf*CINBf*VINB
-    dMMBb <- kon_alb*CalbMBf*CMBf*VMB
-    dMABb <- kon_alb*CalbABf*CABf*VAB
-    dMRBb <- kon_alb*CalbRBf*CRBf*VRB
-    dMLuBb <- kon_alb*CalbLuBf*CLuBf*VLuB
-    dMSPBb <- kon_alb*CalbSPBf*CSPBf*VSPB
-    dMHBb <- kon_alb*CalbHBf*CHBf*VHB
-    dMBrBb <- kon_alb*CalbBrBf*CBrBf*VBrB
-    dMGoBb <- kon_alb*CalbGoBf*CGoBf*VGoB
-    dMSKBb <- kon_alb*CalbSKBf*CSKBf*VSKB
-    dMBoBb <- kon_alb*CalbBoBf*CBoBf*VBoB
+    dMVenb <-  kon_alb*CalbVenf*CVenf*VVen -  koff_alb*CVenb*VVen
+    dMArtb <- kon_alb*CalbArtf*CArtf*VArt -  koff_alb*CArtb*VArt 
+    dMKBb <- kon_alb*CalbKBf*CKBf*VKB - koff_alb*CKBb*VKB
+    dMLBb <- kon_alb*CalbLBf*CLBf*VLB - koff_alb*CLBb*VLB
+    dMSTBb <- kon_alb*CalbSTBf*CSTBf*VSTB - koff_alb*CSTBb*VSTB
+    dMINBb <- kon_alb*CalbINBf*CINBf*VINB - koff_alb*CINBb*VINB 
+    dMMBb <- kon_alb*CalbMBf*CMBf*VMB - koff_alb*CMBb*VMB
+    dMABb <- kon_alb*CalbABf*CABf*VAB - koff_alb*CABb*VAB
+    dMRBb <- kon_alb*CalbRBf*CRBf*VRB - koff_alb*CRBb*VRB
+    dMLuBb <- kon_alb*CalbLuBf*CLuBf*VLuB - koff_alb*CLuBb*VLuB
+    dMSPBb <- kon_alb*CalbSPBf*CSPBf*VSPB - koff_alb*CSPBb*VSPB
+    dMHBb <- kon_alb*CalbHBf*CHBf*VHB - koff_alb*CHBb*VHB
+    dMBrBb <- kon_alb*CalbBrBf*CBrBf*VBrB - koff_alb*CBrBb*VBrB
+    dMGoBb <- kon_alb*CalbGoBf*CGoBf*VGoB - koff_alb*CGoBb*VGoB
+    dMSKBb <- kon_alb*CalbSKBf*CSKBf*VSKB - koff_alb*CSKBb*VSKB
+    dMBoBb <- kon_alb*CalbBoBf*CBoBf*VBoB - koff_alb*CBoBb*VBoB
     
     #Interstitial fluid
-    dMKFb <- kon_alb*CalbKFf*CKFf*VKF
-    dMLFb <- kon_alb*CalbLFf*CLFf*VLF
-    dMSTFb <- kon_alb*CalbSTFf*CSTFf*VSTF
-    dMINFb <- kon_alb*CalbINFf*CINFf*VINF
-    dMMFb <- kon_alb*CalbMFf*CMFf*VMF
-    dMAFb <- kon_alb*CalbAFf*CAFf*VAF
-    dMRFb <- kon_alb*CalbRFf*CRFf*VRF
-    dMLuFb <- kon_alb*CalbLuFf*CLuFf*VLuF
-    dMSPFb <- kon_alb*CalbSPFf*CSPFf*VSPF
-    dMHFb <- kon_alb*CalbHFf*CHFf*VHF
-    dMBrFb <- kon_alb*CalBrFf*CBrFf*VBrF
-    dMGoFb <- kon_alb*CalbGoFf*CGoFf*VGoF
-    dMSKFb <- kon_alb*CalbSKFf*CSKFf*VSKF
-    dMBoFb <- kon_alb*CalbBoFf*CBoFf*VBoF
+    dMKFb <- kon_alb*CalbKFf*CKFf*VKF - koff_alb*CKFb*VKB 
+    dMLFb <- kon_alb*CalbLFf*CLFf*VLF - koff_alb*CLFb*VLF
+    dMSTFb <- kon_alb*CalbSTFf*CSTFf*VSTF - koff_alb*CSTFb*VSTF
+    dMINFb <- kon_alb*CalbINFf*CINFf*VINF - koff_alb*CINFb*VINF
+    dMMFb <- kon_alb*CalbMFf*CMFf*VMF - koff_alb*CMFb*VMF 
+    dMAFb <- kon_alb*CalbAFf*CAFf*VAF - koff_alb*CAFb*VAF 
+    dMRFb <- kon_alb*CalbRFf*CRFf*VRF - koff_alb*CRFb*VRF
+    dMLuFb <- kon_alb*CalbLuFf*CLuFf*VLuF - koff_alb*CLuFb*VLuF
+    dMSPFb <- kon_alb*CalbSPFf*CSPFf*VSPF - koff_alb*CSPFb*VSPF
+    dMHFb <- kon_alb*CalbHFf*CHFf*VHF - koff_alb*CHFb*VHF
+    dMBrFb <- kon_alb*CalBrFf*CBrFf*VBrF - koff_alb*CBrFb*VBrF 
+    dMGoFb <- kon_alb*CalbGoFf*CGoFf*VGoF - koff_alb*CGoFb*VGoF 
+    dMSKFb <- kon_alb*CalbSKFf*CSKFf*VSKF - koff_alb*CSKFb*VSKF
+    dMBoFb <- kon_alb*CalbBoFf*CBoFf*VBoF - koff_alb*CBoFb*VBoF
     
     #Tissue
-    dMKTb <- kon_a2u*Ca2uKTf*CKTf*VKT + kon_fabp*CFabpKTf*CKTf*VKT
-    dMLTb <-  kon_fabp*CFabpLTf*CLTf*VLT
+    dMKTb <- kon_a2u*Ca2uKTf*CKTf*VKT + kon_fabp*CFabpKTf*CKTf*VKT -
+             koff_fabp*CKTb*VKT - koff_a2u*CKTb*VKT
+    dMLTb <-  kon_fabp*CFabpLTf*CLTf*VLT - koff_fabp*CLTb*VLT
     
     #Alveolar lining fluid
-    dMLuAFb <-  kon_fabp*CalbLuAFf*CLuAFf*VLuAF
+    dMLuAFb <-  kon_alb*CalbLuAFf*CLuAFf*VLuAF -  koff_alb*CLuAFb*VLuAF
     
     #====================================================================================================================
     
     #Arterial Blood
     dMArtf = QBLu*CLuBf - CArtf*(QBK+QBL+QBM+QBA+QBR+QBSP+QBH+QBBr+
                                    QBST+QBIN+QBGo+QBSK+QBBo) - QGFR*CArtf +
-      koff_alb*CArtb*VArt
+      koff_alb*CArtb*VArt - kon_alb*CalbArtf*CArtf*VArt
     
     #Venous Blood
     dMVenf = - CVenf*QBLu + QBK*CKBf + QBLtot*CLBf + QBM*CMBf + QBA*CABf + QBR*CRBf+
       QBH*CHBf + QBBr*CBrBf+ QBGo*CGoBf + QBSK*CSKBf + QBBo*CBoBf +
-      koff_alb*CVenb*VVen
+      koff_alb*CVenb*VVen - kon_alb*CalbVenf*CVenf*VVen
     
     #Kidney
     #blood subcompartment
     dMKBf = QBK*CArtf - QBK*CKBf - PeffK*AK*(CKBf-CKFf) - QparaKi*(1-SKi)*CKBf +
-      koff_alb*CKBb*VKB
+      koff_alb*CKBb*VKB - kon_alb*CalbKBf*CKBf*VKB
     #interstitial fluid subcompartment
     dMKFf = QparaKi*(1-SKi)*CKBf+ PeffK*AK*(CKBf-CKFf) - kKFKT*(CKFf-CKTf) -
       (VmK_Oat1*CKFf/(KmK_Oat1+CKFf)) - (VmK_Oat3*CKFf/(KmK_Oat3+CKFf))  +
-      (VmK_baso*CKTf/(KmK_baso+CKTf)) +  koff_alb*CKBb*VKB
+      (VmK_baso*CKTf/(KmK_baso+CKTf)) +  koff_alb*CKFb*VKB - kon_alb*CalbKFf*CKFf*VKF
     #Kidney proximal tubule cells subcompartment
     dMKTf = kKFKT*(CKFf-CKTf) - kFKT*(CKTf - CFil) + (VmK_Oatp*CFil/(KmK_Oatp+CFil)) +
       (VmK_Oat1*CKFf/(KmK_Oat1+CKFf)) + (VmK_Oat3*CKFf/(KmK_Oat3+CKFf)) + 
       (VmK_Urat*CFil/(KmK_Urat+CFil))  - (VmK_baso*CKTf/(KmK_baso+CKTf)) +
-      koff_fabp*CKTb*VKT
+      koff_fabp*CKTb*VKT + koff_a2u*CKTb*VKT -kon_fabp*CFabpKTf*CKTf*VKT - kon_a2u*Ca2uKTf*CKTf*VKT
     
     dMFil =  QGFR*CArtf + kFKT*(CKTf - CFil) - (VmK_Oatp*CFil/(KmK_Oatp+CFil)) - 
       (VmK_Urat*CFil/(KmK_Urat+CFil))- (Qurine*CFil)
@@ -1156,23 +1157,24 @@ ode.func <- function(time, inits, params){
     #blood subcompartment
     dMLBf = QBL*CArtf + QBSP*CSPBf + QBIN*CINBf + QBST*CSTBf - 
       QBLtot*CLBf - PeffL*AL*(CLBf-CLFf) - QparaLi*(1-SLi)*CLBf +
-      koff_alb*CLBb*VLB
+      koff_alb*CLBb*VLB -kon_alb*CalbLBf*CLBf*VLB
     #interstitial fluid subcompartment 
     dMLFf =  QparaLi*(1-SLi)*CLBf + PeffL*AL*(CLBf-CLFf) - kLFLT*(CLFf-CLTf) - 
       (VmL_Oatp*CLFf/(KmL_Oatp+CLFf)) - (VmL_Oatp2*CLFf/(KmL_Oatp2+CLFf)) -
-      (VmL_Ntcp*CLFf/(KmL_Ntcp+CLFf)) + koff_alb*CLFb*VLF
+      (VmL_Ntcp*CLFf/(KmL_Ntcp+CLFf)) + koff_alb*CLFb*VLF -kon_alb*CalbLFf*CLFf*VLF
     #Liver tissue subcompartment
     dMLTf = kLFLT*(CLFf-CLTf) + (VmL_Oatp*CLFf/(KmL_Oatp+CLFf)) + (VmL_Oatp2*CLFf/(KmL_Oatp2+CLFf))+
-      (VmL_Ntcp*CLFf/(KmL_Ntcp+CLFf)) -  P_liver_bile*Qbile*CLTf + koff_fabp*CLTb*VLT
+      (VmL_Ntcp*CLFf/(KmL_Ntcp+CLFf)) -  P_liver_bile*Qbile*CLTf + koff_fabp*CLTb*VLT-
+      kon_fabp*CFabpLTf*CLTf*VLT
     
     
     #Stomach
     #blood subcompartment
     dMSTBf = QBST*CArtf - QBST*CSTBf - PeffST*AST*(CSTBf-CSTFf) -  QparaSt*(1-SSt)*CSTBf +
-      koff_alb*CSTBb*VSTB
+      koff_alb*CSTBb*VSTB-kon_alb*CalbSTBf*CSTBf*VSTB
     #interstitial fluid subcompartment 
     dMSTFf = QparaSt*(1-SSt)*CSTBf + PeffST*AST*(CSTBf-CSTFf) - kSTFSTT*(CSTFf-CSTT) +
-      koff_alb*CSTFb*VSTF
+      koff_alb*CSTFb*VSTF - kon_alb*CalbSTFf*CSTFf*VSTF
     #Stomach tissue subcompartment
     dMSTTf = kSTFSTT*(CSTFf-CSTT) + kabST*CSTL
     #Stomach lumen
@@ -1182,10 +1184,10 @@ ode.func <- function(time, inits, params){
     #Intestine
     #blood subcompartment
     dMINBf = QBIN*CArtf - QBIN*CINBf - PeffIN*AIN*(CINBf-CINFf) - QparaIn*(1-SIn)*CINBf +
-      koff_alb*CINBb*VINB
+      koff_alb*CINBb*VINB - kon_alb*CalbINBf*CINBf*VINB
     #interstitial fluid subcompartment 
     dMINFf = QparaIn*(1-SIn)*CINBf + PeffIN*AIN*(CINBf-CINFf) - kINFINT*(CINFf-CINT) +
-      koff_alb*CINFb*VINF
+      koff_alb*CINFb*VINF - kon_alb*CalbINFf*CINFf*VINF
     #Intestine tissue subcompartment
     dMINTf = kINFINT*(CINFf-CINT) + P_passive*CINL + (VmIn_Oatp2*CINL/(KmIn_Oatp2+CINL))
     #Intestine lumen
@@ -1196,10 +1198,10 @@ ode.func <- function(time, inits, params){
     #Muscle
     #blood subcompartment
     dMMBf = QBM*CArtf - QBM*CMBf - PeffM*AM*(CMBf-CMFf) - QparaMu*(1-SMu)*CMBf +
-      koff_alb*CMBb*VMB
+      koff_alb*CMBb*VMB - kon_alb*CalbMBf*CMBf*VMB
     #interstitial fluid subcompartment 
     dMMFf = QparaMu*(1-SMu)*CMBf + PeffM*AM*(CMBf-CMFf) - kMFMT*(CMFf- CMT) +
-      koff_alb*CMFb*VMF
+      koff_alb*CMFb*VMF - kon_alb*CalbMFf*CMFf*VMF
     #Muscle tissue subcompartment 
     dMMTf = kMFMT*(CMFf- CMT)
     
@@ -1207,10 +1209,10 @@ ode.func <- function(time, inits, params){
     #Adipose
     #blood subcompartment
     dMABf = QBA*CArtf - QBA*CABf - PeffA*AA*(CABf-CAFf) - QparaAd*(1-SAd)*CABf +
-      koff_alb*CABb*VAB
+      koff_alb*CABb*VAB - kon_alb*CalbABf*CABf*VAB
     #interstitial fluid subcompartment 
     dMAFf = QparaAd*(1-SAd)*CABf + PeffA*AA*(CABf-CAFf) - kAFAT*(CAFf-CAT) +
-      koff_alb*CAFb*VAF
+      koff_alb*CAFb*VAF - kon_alb*CalbAFf*CAFf*VAF
     #Adipose tissue subcompartment 
     dMATf =  kAFAT*(CAFf-CAT) 
     
@@ -1218,10 +1220,10 @@ ode.func <- function(time, inits, params){
     #Rest of body
     #blood subcompartment
     dMRBf = QBR*CArtf - QBR*CRBf - PeffR*AR*(CRBf-CRFf) - QparaRe*(1-SRe)*CRBf +
-      koff_alb*CRBb*VRB
+      koff_alb*CRBb*VRB - kon_alb*CalbRBf*CRBf*VRB
     #interstitial fluid subcompartment 
     dMRFf = QparaRe*(1-SRe)*CRBf + PeffR*AR*(CRBf-CRFf) - kRFRT*(CRFf -CRT) +
-      koff_alb*CRFb*VRF
+      koff_alb*CRFb*VRF - kon_alb*CalbRFf*CRFf*VRF
     #Rest of body tissue subcompartment 
     dMRTf = kRFRT*(CRFf -CRT) 
     
@@ -1229,23 +1231,23 @@ ode.func <- function(time, inits, params){
     #Lung 
     #blood subcompartment
     dMLuBf = CVenf*QBLu - QBLu*CLuBf - PeffLu*ALu*(CLuBf-CLuFf) - QparaLu*(1-SLu)*CLuBf +
-      koff_alb*CLuBb*VLuB
+      koff_alb*CLuBb*VLuB - kon_alb*CalbLuBf*CLuBf*VLuB
     #interstitial fluid subcompartment
     dMLuFf = QparaLu*(1-SLu)*CLuBf + PeffLu*ALu*(CLuBf-CLuFf) + kLuTLuF*(CLuT-CLuFf) + 
-      koff_alb*CLuFb*VLuF
+      koff_alb*CLuFb*VLuF - kon_alb*CalbLuFf*CLuFf*VLuF
     #Lung tissue
     dMLuTf =  - kLuTLuF*(CLuT-CLuFf) -  kLuTLuAF*(CLuT-CLuAFf)
     #Alveolar lining fluid
-    dMLuAFf =  kLuTLuAF*(CLuT-CLuAFf)
+    dMLuAFf =  kLuTLuAF*(CLuT-CLuAFf) + koff_alb*CLuAFb*VLuAF - kon_alb*CalbLuAFf*CLuAFf*VLuAF
     
     
     #Spleen
     #blood subcompartment
     dMSPBf = QBSP*CArtf - QBSP*CSPBf - PeffSP*ASP*(CSPBf-CSPFf) - QparaSp*(1-SSp)*CSPBf + 
-      koff_alb*CSPBb*VSPB
+      koff_alb*CSPBb*VSPB - kon_alb*CalbSPBf*CSPBf*VSPB 
     #interstitial fluid subcompartment 
     dMSPFf = QparaSp*(1-SSp)*CSPBf + PeffSP*ASP*(CSPBf-CSPFf) - kSPFSPT*(CSPFf -CSPT) +
-      koff_alb*CSPFb*VSPF
+      koff_alb*CSPFb*VSPF - kon_alb*CalbSPFf*CSPFf*VSPF
     #Spleen tissue subcompartment 
     dMSPTf = kSPFSPT*(CSPFf -CSPT) 
     
@@ -1253,10 +1255,10 @@ ode.func <- function(time, inits, params){
     #Heart
     #blood subcompartment
     dMHBf = QBH*CArtf - QBH*CHBf - PeffH*AH*(CHBf-CHFf) - QparaHt*(1-SHt)*CHBf + 
-      koff_alb*CHBb*VHB
+      koff_alb*CHBb*VHB - kon_alb*CalbHBf*CHBf*VHB
     #interstitial fluid subcompartment 
     dMHFf = QparaHt*(1-SHt)*CHBf + PeffH*AH*(CHBf-CHFf) - kHFHT*(CHFf -CHT) + 
-      koff_alb*CHFb*VHF
+      koff_alb*CHFb*VHF - kon_alb*CalbHFf*CHFf*VHF
     #Heart tissue subcompartment 
     dMHTf = kHFHT*(CHFf -CHT) 
     
@@ -1264,10 +1266,10 @@ ode.func <- function(time, inits, params){
     #Brain
     #blood subcompartment
     dMBrBf = QBBr*CArtf - QBBr*CBrBf - PeffBr*ABr*(CBrBf-CBrFf) - QparaBr*(1-SBr)*CBrBf + 
-      koff_alb*CBrBb*VBrB 
+      koff_alb*CBrBb*VBrB - kon_alb*CalbBrBf*CBrBf*VBrB
     #interstitial fluid subcompartment 
     dMBrFf = QparaBr*(1-SBr)*CBrBf + PeffBr*ABr*(CBrBf-CBrFf) - kBrFBrT*(CBrFf -CBrT) +
-      koff_alb*CBrFb*VBrF
+      koff_alb*CBrFb*VBrF - kon_alb*CalBrFf*CBrFf*VBrF
     #Brain tissue subcompartment 
     dMBrTf = kBrFBrT*(CBrFf -CBrT) 
     
@@ -1275,10 +1277,10 @@ ode.func <- function(time, inits, params){
     #Gonads
     #blood subcompartment
     dMGoBf = QBGo*CArtf - QBGo*CGoBf - PeffGo*AGo*(CGoBf-CGoFf) - QparaGo*(1-SGo)*CGoBf +
-      koff_alb*CGoBb*VGoB
+      koff_alb*CGoBb*VGoB - kon_alb*CalbGoBf*CGoBf*VGoB
     #interstitial fluid subcompartment 
     dMGoFf = QparaGo*(1-SGo)*CGoBf + PeffGo*AGo*(CGoBf-CGoFf) - kGoFGoT*(CGoFf -CGoT) +
-      koff_alb*CGoFb*VGoF
+      koff_alb*CGoFb*VGoF - kon_alb*CalbGoFf*CGoFf*VGoF
     #gonads tissue subcompartment 
     dMGoTf = kGoFGoT*(CGoFf -CGoT) 
     
@@ -1286,10 +1288,10 @@ ode.func <- function(time, inits, params){
     #Skin
     #blood subcompartment
     dMSKBf = QBSK*CArtf - QBSK*CSKBf - PeffSK*ASK*(CSKBf-CSKFf) - QparaSk*(1-SSk)*CSKBf +
-      koff_alb*CSKBb*VSKB
+      koff_alb*CSKBb*VSKB - kon_alb*CalbSKBf*CSKBf*VSKB
     #interstitial fluid subcompartment
     dMSKFf = QparaSk*(1-SSk)*CSKBf + PeffSK*ASK*(CSKBf-CSKFf) - kSKFSKT*(CSKFf -CSKT) +
-      koff_alb*CSKFb*VSKF
+      koff_alb*CSKFb*VSKF - kon_alb*CalbSKFf*CSKFf*VSKF
     #Skin tissue subcompartment
     dMSKTf = kSKFSKT*(CSKFf -CSKT)
     
@@ -1297,10 +1299,10 @@ ode.func <- function(time, inits, params){
     #Bones
     #blood subcompartment
     dMBoBf = QBBo*CArtf - QBBo*CBoBf - PeffBo*ABo*(CBoBf-CBoFf) - QparaBo*(1-SBo)*CBoBf +
-      koff_alb*CBoBb*VBoB
+      koff_alb*CBoBb*VBoB - kon_alb*CalbBoBf*CBoBf*VBoB
     #interstitial fluid subcompartment
     dMBoFf = QparaBo*(1-SBo)*CBoBf + PeffBo*ABo*(CBoBf-CBoFf) - kBoFBoT*(CBoFf -CBoT) +
-      koff_alb*CBoFb*VBoF
+      koff_alb*CBoFb*VBoF -  kon_alb*CalbBoFf*CBoFf*VBoF
     #Bones tissue subcompartment
     dMBoTf = kBoFBoT*(CBoFf -CBoT)
     
@@ -1617,7 +1619,7 @@ obj.func <- function(x, dataset){
                         exp_data[exp_data$Tissue == "Stomach", "concentration"],
                         exp_data[exp_data$Tissue == "Intestine", "concentration"])
   
-  score[1] <- SODI(predictions = preds_kudo_high, observations = obs_kudo_high)
+  score[1] <- AAFE(predictions = preds_kudo_high, observations = obs_kudo_high)
   
   ##########################
   #-------------------------
@@ -1679,7 +1681,7 @@ obj.func <- function(x, dataset){
                        exp_data[exp_data$Tissue == "Stomach", "concentration"],
                        exp_data[exp_data$Tissue == "Intestine", "concentration"])
   
-  score[2] <- SODI(predictions = preds_kudo_low, observations = obs_kudo_low)
+  score[2] <- AAFE(predictions = preds_kudo_low, observations = obs_kudo_low)
   
   ##########################
   #-------------------------
@@ -1733,7 +1735,7 @@ obj.func <- function(x, dataset){
                               exp_data[exp_data$Tissue == "Spleen", "concentration"],
                               exp_data[exp_data$Tissue == "Heart", "concentration"])
   
-  score[3] <- SODI(predictions = preds_kim_IV_Mtissues, observations = obs_kim_IV_Mtissues)
+  score[3] <- AAFE(predictions = preds_kim_IV_Mtissues, observations = obs_kim_IV_Mtissues)
   
   ##########################
   #-------------------------
@@ -1787,7 +1789,7 @@ obj.func <- function(x, dataset){
                               exp_data[exp_data$Tissue == "Spleen", "concentration"],
                               exp_data[exp_data$Tissue == "Heart", "concentration"])
   
-  score[4] <- SODI(predictions = preds_kim_OR_Mtissues, observations = obs_kim_OR_Mtissues)
+  score[4] <- AAFE(predictions = preds_kim_OR_Mtissues, observations = obs_kim_OR_Mtissues)
   ##########################
   #-------------------------
   # Kim IV female tissues
@@ -1840,7 +1842,7 @@ obj.func <- function(x, dataset){
                               exp_data[exp_data$Tissue == "Spleen", "concentration"],
                               exp_data[exp_data$Tissue == "Heart", "concentration"])
   
-  score[5] <- SODI(predictions = preds_kim_IV_Ftissues, observations = obs_kim_IV_Ftissues)
+  score[5] <- AAFE(predictions = preds_kim_IV_Ftissues, observations = obs_kim_IV_Ftissues)
   
   ##########################
   #-------------------------
@@ -1894,7 +1896,7 @@ obj.func <- function(x, dataset){
                               exp_data[exp_data$Tissue == "Spleen", "concentration"],
                               exp_data[exp_data$Tissue == "Heart", "concentration"])
   
-  score[6] <- SODI(predictions = preds_kim_OR_Ftissues, observations = obs_kim_OR_Ftissues)
+  score[6] <- AAFE(predictions = preds_kim_OR_Ftissues, observations = obs_kim_OR_Ftissues)
   
   ##########################
   #-------------------------
@@ -1954,7 +1956,7 @@ obj.func <- function(x, dataset){
                                exp_data[exp_data$Tissue == "Kidney", "concentration"],
                                exp_data[exp_data$Tissue == "Brain", "concentration"]) 
   
-  score[7] <- SODI(predictions = preds_dzi_OR_Mtissues, observations = obs_dzi_OR_Mtissues)
+  score[7] <- AAFE(predictions = preds_dzi_OR_Mtissues, observations = obs_dzi_OR_Mtissues)
   
   ##########################
   #-------------------------
@@ -2016,7 +2018,7 @@ obj.func <- function(x, dataset){
                                exp_data[exp_data$Tissue == "Kidney", "concentration"],
                                exp_data[exp_data$Tissue == "Brain", "concentration"]) 
   
-  score[8] <- SODI(predictions = preds_dzi_OR_Ftissues, observations = obs_dzi_OR_Ftissues)
+  score[8] <- AAFE(predictions = preds_dzi_OR_Ftissues, observations = obs_dzi_OR_Ftissues)
   
   ##########################
   #-------------------------
@@ -2075,7 +2077,7 @@ obj.func <- function(x, dataset){
   
   obs_kim_OR_Mblood <- list(exp_data[exp_data$Tissue == "Blood", "concentration"])
   
-  score[9] <- SODI(predictions = preds_kim_OR_Mblood, observations = obs_kim_OR_Mblood)
+  score[9] <- AAFE(predictions = preds_kim_OR_Mblood, observations = obs_kim_OR_Mblood)
   
   ##########################
   #-------------------------
@@ -2135,7 +2137,7 @@ obj.func <- function(x, dataset){
   
   obs_kim_IV_Mblood <- list(exp_data[exp_data$Tissue == "Blood", "concentration"])
   
-  score[10] <- SODI(predictions = preds_kim_IV_Mblood, observations = obs_kim_IV_Mblood)
+  score[10] <- AAFE(predictions = preds_kim_IV_Mblood, observations = obs_kim_IV_Mblood)
   
   ##########################
   #-------------------------
@@ -2228,7 +2230,7 @@ obj.func <- function(x, dataset){
   # Estimate cumulative fecal mass
   obs_Lup_OR_Ffeces_cum <- list(cumsum(obs_Lup_OR_Ffeces))
   
-  score[12] <- SODI(predictions = preds_Lup_OR_Ffeces, observations = obs_Lup_OR_Ffeces_cum)
+  score[12] <- AAFE(predictions = preds_Lup_OR_Ffeces, observations = obs_Lup_OR_Ffeces_cum)
   
   
   ##########################
@@ -2263,7 +2265,7 @@ obj.func <- function(x, dataset){
   # Estimate cumulative fecal mass
   obs_Lup_OR_Furine_cum <- list(cumsum(obs_Lup_OR_Furine))
   
-  score[13] <- SODI(predictions = preds_Lup_OR_Furine, observations = obs_Lup_OR_Furine_cum)
+  score[13] <- AAFE(predictions = preds_Lup_OR_Furine, observations = obs_Lup_OR_Furine_cum)
   
   ##########################
   #-------------------------
@@ -2335,7 +2337,7 @@ obj.func <- function(x, dataset){
   
   obs_Cui_OR_MurineL <- list(exp_data[exp_data$Tissue == "Urine", "mass"])
   
-  score[14] <- SODI(predictions = preds_Cui_OR_MurineL, observations = obs_Cui_OR_MurineL)
+  score[14] <- AAFE(predictions = preds_Cui_OR_MurineL, observations = obs_Cui_OR_MurineL)
   
   ##########################
   #-------------------------
@@ -2362,7 +2364,7 @@ obj.func <- function(x, dataset){
   
   obs_Cui_OR_MfecesL <- list(exp_data[exp_data$Tissue == "Feces", "mass"])
   
-  score[15] <- SODI(predictions = preds_Cui_OR_MfecesL, observations = obs_Cui_OR_MfecesL)
+  score[15] <- AAFE(predictions = preds_Cui_OR_MfecesL, observations = obs_Cui_OR_MfecesL)
   
   
   ##########################
@@ -2434,7 +2436,7 @@ obj.func <- function(x, dataset){
   
   obs_Cui_OR_MurineH <- list(exp_data[exp_data$Tissue == "Urine", "mass"])
   
-  score[16] <- SODI(predictions = preds_Cui_OR_MurineH, observations = obs_Cui_OR_MurineH)
+  score[16] <- AAFE(predictions = preds_Cui_OR_MurineH, observations = obs_Cui_OR_MurineH)
   
   
   ##########################
@@ -2465,7 +2467,7 @@ obj.func <- function(x, dataset){
   
   obs_Cui_OR_MfecesH <- list(exp_data[exp_data$Tissue == "Feces", "mass"])
   
-  score[17] <- SODI(predictions = preds_Cui_OR_MfecesH, observations = obs_Cui_OR_MfecesH)
+  score[17] <- AAFE(predictions = preds_Cui_OR_MfecesH, observations = obs_Cui_OR_MfecesH)
   
   ##########################
   #-------------------------
@@ -2527,7 +2529,7 @@ obj.func <- function(x, dataset){
   
   obs_dzi_IV_Mserum <- list(exp_data[exp_data$Tissue == "Serum", "concentration"])
   
-  score[18] <- SODI(predictions = preds_dzi_IV_Mserum, observations = obs_dzi_IV_Mserum)
+  score[18] <- AAFE(predictions = preds_dzi_IV_Mserum, observations = obs_dzi_IV_Mserum)
   
   ##########################
   #-------------------------
@@ -2589,7 +2591,7 @@ obj.func <- function(x, dataset){
   
   obs_dzi_OR_Mserum_low <- list(exp_data[exp_data$Tissue == "Serum", "concentration"])
   
-  score[19] <- SODI(predictions = preds_dzi_OR_Mserum_low, observations = obs_dzi_OR_Mserum_low)
+  score[19] <- AAFE(predictions = preds_dzi_OR_Mserum_low, observations = obs_dzi_OR_Mserum_low)
   
   ##########################
   #-------------------------
@@ -2651,7 +2653,7 @@ obj.func <- function(x, dataset){
   
   obs_dzi_OR_Mserum_medium <- list(exp_data[exp_data$Tissue == "Serum", "concentration"])
   
-  score[20] <- SODI(predictions = preds_dzi_OR_Mserum_medium, observations = obs_dzi_OR_Mserum_medium)
+  score[20] <- AAFE(predictions = preds_dzi_OR_Mserum_medium, observations = obs_dzi_OR_Mserum_medium)
   
   
   ##########################
@@ -2714,7 +2716,7 @@ obj.func <- function(x, dataset){
   
   obs_dzi_OR_Mserum_high <- list(exp_data[exp_data$Tissue == "Serum", "concentration"])
   
-  score[21] <- SODI(predictions = preds_dzi_OR_Mserum_high, observations = obs_dzi_OR_Mserum_high)
+  score[21] <- AAFE(predictions = preds_dzi_OR_Mserum_high, observations = obs_dzi_OR_Mserum_high)
   
   
   ##########################
@@ -2777,7 +2779,7 @@ obj.func <- function(x, dataset){
   
   obs_dzi_IV_Fserum <- list(exp_data[exp_data$Tissue == "Serum", "concentration"])
   
-  score[22] <- SODI(predictions = preds_dzi_IV_Fserum, observations = obs_dzi_IV_Fserum)
+  score[22] <- AAFE(predictions = preds_dzi_IV_Fserum, observations = obs_dzi_IV_Fserum)
   
   
   ##########################
@@ -2840,7 +2842,7 @@ obj.func <- function(x, dataset){
   
   obs_dzi_OR_Fserum_low <- list(exp_data[exp_data$Tissue == "Serum", "concentration"])
   
-  score[23] <- SODI(predictions = preds_dzi_OR_Fserum_low, observations = obs_dzi_OR_Fserum_low)
+  score[23] <- AAFE(predictions = preds_dzi_OR_Fserum_low, observations = obs_dzi_OR_Fserum_low)
   
   ##########################
   #-------------------------
@@ -2902,7 +2904,7 @@ obj.func <- function(x, dataset){
   
   obs_dzi_OR_Fserum_medium <- list(exp_data[exp_data$Tissue == "Serum", "concentration"])
   
-  score[24] <- SODI(predictions = preds_dzi_OR_Fserum_medium, observations = obs_dzi_OR_Fserum_medium)
+  score[24] <- AAFE(predictions = preds_dzi_OR_Fserum_medium, observations = obs_dzi_OR_Fserum_medium)
   
   
   ##########################
@@ -2965,7 +2967,7 @@ obj.func <- function(x, dataset){
   
   obs_dzi_OR_Fserum_high <- list(exp_data[exp_data$Tissue == "Serum", "concentration"])
   
-  score[25] <- SODI(predictions = preds_dzi_OR_Fserum_high, observations = obs_dzi_OR_Fserum_high)
+  score[25] <- AAFE(predictions = preds_dzi_OR_Fserum_high, observations = obs_dzi_OR_Fserum_high)
   
   ##########################
   #-------------------------
@@ -3024,7 +3026,7 @@ obj.func <- function(x, dataset){
   
   obs_kim_OR_Fblood <- list(exp_data[exp_data$Tissue == "Blood", "concentration"])
   
-  score[26] <- SODI(predictions = preds_kim_OR_Fblood, observations = obs_kim_OR_Fblood)
+  score[26] <- AAFE(predictions = preds_kim_OR_Fblood, observations = obs_kim_OR_Fblood)
   
   ##########################
   #-------------------------
@@ -3084,7 +3086,7 @@ obj.func <- function(x, dataset){
   
   obs_kim_IV_Fblood <- list(exp_data[exp_data$Tissue == "Blood", "concentration"])
   
-  score[27] <- SODI(predictions = preds_kim_IV_Fblood, observations = obs_kim_IV_Fblood)
+  score[27] <- AAFE(predictions = preds_kim_IV_Fblood, observations = obs_kim_IV_Fblood)
   
   ########################################################################################
   # Estimate final score
@@ -3147,7 +3149,7 @@ kim_OR_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_ORAL_kim_2016.xlsx"
 kim_IV_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_IV_kim_2016.xlsx")
 
 #setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_2/Training/AAFE/NoStomachAbs")
-setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_2_saturable_binding/Training/SODI")
+setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_2_saturable_binding/Training/AAFE")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
