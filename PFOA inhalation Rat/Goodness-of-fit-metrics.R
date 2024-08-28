@@ -115,6 +115,22 @@ SODI <- function(observations, predictions, comp.names =NULL){
 
 
 
+#  Root-mean-square deviation
+rmsd <- function(predictions, observations, times=NULL){
+  y_obs <- unlist(observations)
+  y_pred <- unlist(predictions)
+  # Total number of observations
+  N<- length(y_obs)
+  summation <- 0
+  for ( i in 1:N){
+    summation <- summation + (y_obs[i]-y_pred[i])^2
+  }
+  rmsd <- sqrt(summation/N)
+  
+  return(rmsd)
+}
+
+
 #  absolute average fold error
 AAFE <- function(predictions, observations, times=NULL){
   y_obs <- unlist(observations)

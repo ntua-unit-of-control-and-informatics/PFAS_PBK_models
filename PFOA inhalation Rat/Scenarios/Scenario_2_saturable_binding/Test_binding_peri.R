@@ -12,7 +12,7 @@ create.params <- function(user.input){
     CalbB_init <- 486*1e-06 #mol/L
     Calb_exp_init <- 600*1e-06 #mol/L
     Cpfoa_init <-  0.192/414.07#5*1e-06 #mol/L
-    koff_alb <- 0.001 #1/s
+    koff_alb <- 1.927153e-03 #1/s
     kon_alb <- Ka * koff_alb #1/M/s
 
     return(list("CalbB_init" = CalbB_init, "Cpfoa_init" = Cpfoa_init, "kon_alb" = kon_alb, 
