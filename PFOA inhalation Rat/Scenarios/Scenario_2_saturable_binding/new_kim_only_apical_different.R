@@ -3186,7 +3186,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
 # Male RAFOatp_k, Male RAFOat1, Male RAFOat3, Male RAFOatp_l,Male RAFNtcp
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
 
-N_pars <- 11 # Number of parameters to be fitted
+N_pars <- 9 # Number of parameters to be fitted
 fit <-  c(rep(log(1),4), log(1), log(0.1), rep(log(1e3),3))
 
 lb	= c(rep(log(1e-3), 4),  log(1e-3), log(1e-4), rep(log(1),3))
