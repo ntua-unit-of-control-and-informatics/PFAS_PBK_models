@@ -3034,7 +3034,7 @@ obj.func <- function(x, dataset){
   
   obs_kim_OR_Fblood <- list(exp_data[exp_data$Tissue == "Plasma", "concentration"])
   
-  score[26] <- rmsd(predictions = preds_kim_OR_Fblood, observations = obs_kim_OR_Fblood)/mean(unlist(obs_kim_OR_Fblood))
+  score[26] <- NA#rmsd(predictions = preds_kim_OR_Fblood, observations = obs_kim_OR_Fblood)/mean(unlist(obs_kim_OR_Fblood))
   
   ##########################
   #-------------------------

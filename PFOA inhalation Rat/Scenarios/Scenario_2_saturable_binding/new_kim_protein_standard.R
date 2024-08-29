@@ -3097,7 +3097,13 @@ obj.func <- function(x, dataset){
   score[27] <- AAFE(predictions = preds_kim_IV_Fblood, observations = obs_kim_IV_Fblood)
   
   ########################################################################################
-  # Estimate final score
+  score[12] <- 20*score[12]
+  score[13] <- 20*score[13]
+  score[14] <- 20*score[14]
+  score[15] <- 20*score[15]
+  score[16] <- 20*score[16]
+  score[17] <- 20*score[17]
+   # Estimate final score
   
   final_score <- mean(score, na.rm = TRUE)
   return(final_score)

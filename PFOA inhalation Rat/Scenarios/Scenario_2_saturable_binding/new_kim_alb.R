@@ -3128,8 +3128,13 @@ kim_OR_Mblood <- openxlsx::read.xlsx("Data/PFOA_male_blood_ORAL_kim_2016.xlsx")
 kim_IV_Mblood <- openxlsx::read.xlsx("Data/PFOA_male_blood_IV_kim_2016.xlsx")
 Lup_OR_Ftissues <- openxlsx::read.xlsx("Data/PFOA_female_tissues_Lupton_2020.xlsx")
 Lup_OR_Ffeces <- openxlsx::read.xlsx("Data/PFOA_female_add-feces_Lupton_2020.xlsx")
+Lup_OR_Ffeces <- Lup_OR_Ffeces[c(1,4,8, 11, 13, 16, 17)]
 Lup_OR_Furine <- openxlsx::read.xlsx("Data/PFOA_female_add-urine_Lupton_2020.xlsx")
+Lup_OR_Furine <- Lup_OR_Furine[c(1,4,8, 11, 13, 16, 17)]
+
 Cui_OR_MurineL <- openxlsx::read.xlsx("Data/PFOA_male_urine_oral_low_Cui_2010.xlsx")
+Cui_OR_MurineL <- Cui_OR_MurineL[c(1,4,8, 11, 13, 16, 17)]
+
 Cui_OR_MurineL$Mass_mg <-  Cui_OR_MurineL$Mass_mg*1000 #convert from mg to ug
 Cui_OR_MurineH <- openxlsx::read.xlsx("Data/PFOA_male_urine_oral_high_Cui_2010.xlsx")
 Cui_OR_MurineH$Mass_mg <- Cui_OR_MurineH$Mass_mg*1000 #convert from mg to ug
