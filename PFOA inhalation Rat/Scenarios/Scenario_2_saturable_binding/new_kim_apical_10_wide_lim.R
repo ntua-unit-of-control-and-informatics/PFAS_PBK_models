@@ -3165,7 +3165,7 @@ dzi_OR_Fserum_high$Concentration_microM <- dzi_OR_Fserum_high$Concentration_micr
 kim_OR_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_ORAL_kim_2016.xlsx")
 kim_IV_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_IV_kim_2016.xlsx")
 
-setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_2_saturable_binding/Training/AAFE/new_kim_apical_reduced_weight")
+setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_2_saturable_binding/Training/AAFE/new_kim_apical_10_wide_lim")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -3193,8 +3193,9 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
 N_pars <- 13 # Number of parameters to be fitted
 fit <-  c(rep(log(1),6), rep(log(1),2),log(1), log(0.1), rep(log(1e3),3))
 
-lb	= c(rep(log(1e-3), 6), rep(log(1e-4),2), log(1e-3), log(1e-4), rep(log(1),3))
-ub = c(rep(log(1e3), 6),  rep(log(1e4),2), log(1e3),log(1e2), rep(log(1e6),3))
+lb    = c(rep(log(1e-10), 6), rep(log(1e-4),2), log(1e-3), log(1e-4), rep(log(1),3))
+ub = c(rep(log(1e10), 6),  rep(log(1e4),2), log(1e3),log(1e2), rep(log(1e8),3))
+
 # Run the optimization algorithm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,
@@ -3205,7 +3206,7 @@ optimizer <- nloptr::nloptr( x0= fit,
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
-save.image("new_kim_apical_reduced_weight.RData")
+save.image("new_kim_apical_10_wide_lim.RData")
 
 
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues

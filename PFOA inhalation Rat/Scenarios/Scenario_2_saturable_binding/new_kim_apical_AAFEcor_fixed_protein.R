@@ -13,13 +13,13 @@ create.params <- function(user.input){
     if (sex == "M"){
       RAFOatp_k <- estimated_params[1]
       RAFOat1 <- estimated_params[2]
-      VmK_api <- estimated_params[12] 
+      VmK_api <- estimated_params[11] 
       
       
     }else if(sex == "F"){
       RAFOatp_k <- estimated_params[3]
       RAFOat1 <- estimated_params[4]
-      VmK_api <- estimated_params[13] 
+      VmK_api <- estimated_params[12] 
       
     }
     RAFOatp_l <- estimated_params[5]
@@ -35,16 +35,14 @@ create.params <- function(user.input){
     
     RAF_papp <- 1
     
-    koff_alb <- estimated_params[10] 
+    koff_alb <- 0.05 
     koff_fabp <-  koff_alb
     koff_a2u <- koff_alb
     
     
     VmK_baso <- 0
     KmK_baso <- 1e20
-    KmK_api <-  estimated_params[11] 
-    
-    
+    KmK_api <-  estimated_params[10] 
     
     
     
@@ -3100,13 +3098,14 @@ obj.func <- function(x, dataset){
   score[27] <- AAFE(predictions = preds_kim_IV_Fblood, observations = obs_kim_IV_Fblood)
   
   ########################################################################################
-  score[12] <- 10*score[12]
-  score[13] <- 10*score[13]
-  score[14] <- 10*score[14]
-  score[15] <- 10*score[15]
-  score[16] <- 10*score[16]
-  score[17] <- 10*score[17]
   # Estimate final score
+  
+  score[12] <- 20*score[12]
+  score[13] <- 20*score[13]
+  score[14] <- 20*score[14]
+  score[15] <- 20*score[15]
+  score[16] <- 20*score[16]
+  score[17] <- 20*score[17]
   
   final_score <- mean(score, na.rm = TRUE)
   return(final_score)
@@ -3165,7 +3164,7 @@ dzi_OR_Fserum_high$Concentration_microM <- dzi_OR_Fserum_high$Concentration_micr
 kim_OR_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_ORAL_kim_2016.xlsx")
 kim_IV_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_IV_kim_2016.xlsx")
 
-setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_2_saturable_binding/Training/AAFE/new_kim_apical_reduced_weight")
+setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_2_saturable_binding/Training/AAFE/new_kim_apical_koff_ct")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -3190,11 +3189,11 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
 # Male RAFOatp_k, Male RAFOat1, Male RAFOat3, Male RAFOatp_l,Male RAFNtcp
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
 
-N_pars <- 13 # Number of parameters to be fitted
-fit <-  c(rep(log(1),6), rep(log(1),2),log(1), log(0.1), rep(log(1e3),3))
+N_pars <- 12 # Number of parameters to be fitted
+fit <-  c(rep(log(1),6), rep(log(1),2),log(1), rep(log(1e3),3))
 
-lb	= c(rep(log(1e-3), 6), rep(log(1e-4),2), log(1e-3), log(1e-4), rep(log(1),3))
-ub = c(rep(log(1e3), 6),  rep(log(1e4),2), log(1e3),log(1e2), rep(log(1e6),3))
+lb	= c(rep(log(1e-3), 6), rep(log(1e-4),2), log(1e-3), rep(log(1),3))
+ub = c(rep(log(1e3), 6),  rep(log(1e4),2), log(1e3), rep(log(1e6),3))
 # Run the optimization algorithm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,
@@ -3205,7 +3204,7 @@ optimizer <- nloptr::nloptr( x0= fit,
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
-save.image("new_kim_apical_reduced_weight.RData")
+save.image("new_kim_apical_koff_ct.RData")
 
 
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
