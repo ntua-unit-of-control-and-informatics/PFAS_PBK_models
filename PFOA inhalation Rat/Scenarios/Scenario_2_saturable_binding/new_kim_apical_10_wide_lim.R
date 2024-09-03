@@ -45,9 +45,6 @@ create.params <- function(user.input){
     KmK_api <-  estimated_params[11] 
     
     
-    
-    
-    
     #permeabilities correction factor
     Ka <- 5.8e05 #mol/L
     kabs_st <- 0 #m/h
@@ -3099,6 +3096,130 @@ obj.func <- function(x, dataset){
   
   score[27] <- AAFE(predictions = preds_kim_IV_Fblood, observations = obs_kim_IV_Fblood)
   
+  
+  ##########################
+  #-------------------------
+  # Gustafsson Oral male blood
+  #-------------------------
+  ##########################
+  # Set up simulations for the 28th case, i.e. Gustafsson (2022) oral male blood
+  BW <- 0.5125  #kg, from Gustafsson et al., 2022
+  sex <- "M" 
+  admin.dose_per_g <- 0.364 # administered dose in mg PFOA/kg BW 
+  admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
+  admin.time <- 0 #time when doses are administered, in hours
+  admin.type <- "oral"
+  
+  
+  user_input <- list('BW'=BW,
+                     "admin.dose"= admin.dose,
+                     "admin.time" = admin.time, 
+                     "admin.type" = admin.type,
+                     "estimated_params" = estimated_params,
+                     "sex" = sex)
+  
+  params <- create.params(user_input)
+  inits <- create.inits(params)
+  events <- create.events(params)
+  
+  # sample_time: a vector of time points to solve the ODEs
+  sample_time= seq(0,48,0.2)
+  
+  # ode(): The solver of the ODEs
+  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                      y = inits, parms = params,
+                                      events = events,
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
+  
+  # We need to keep only the predictions for the relevant compartments for the time points 
+  # at which we have available data. 
+  
+  #======================================df28=========================================================
+  
+  exp_data <- dataset$df28 # retrieve data of Gustafsson (2022) Oral male blood
+  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
+  column_names <- c("Cplasma")
+  
+  preds_gus_OR_Mblood <- list()
+  # loop over compartments with available data
+  for (i in 1:length(unique(exp_data$Tissue))) {
+    compartment <- unique(exp_data$Tissue)[i]
+    #Retrieve time points at which measurements are available for compartment i
+    exp_time <- exp_data[exp_data$Tissue == compartment, 2]
+    
+    preds_gus_OR_Mblood [[i]] <- solution[solution$time %in% exp_time, column_names[i]]/1000
+  }
+  
+  
+  obs_gus_OR_Mblood <- list(exp_data[exp_data$Tissue == "Plasma", "concentration"])
+  
+  score[28] <- AAFE(predictions = preds_gus_OR_Mblood, observations = obs_gus_OR_Mblood)
+  
+  
+  ##########################
+  #-------------------------
+  # Gustafsson Oral male tissues
+  #-------------------------
+  ##########################
+  # Set up simulations for the 29th case, i.e. Gustafsson (2022) Inhalation male tissues
+  BW <- 0.5125  #kg, from Gustafsson et al., 2022
+  sex <- "M"
+  admin.dose_per_g <- 0.364 # administered dose in mg PFOA/kg BW 
+  admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
+  admin.time <- 0 #time when doses are administered, in hours
+  admin.type <- "oral"
+  
+  
+  user_input <- list('BW'=BW,
+                     "admin.dose"= admin.dose,
+                     "admin.time" = admin.time, 
+                     "admin.type" = admin.type,
+                     "estimated_params" = estimated_params,
+                     "sex" = sex )
+  
+  params <- create.params(user_input)
+  inits <- create.inits(params)
+  events <- create.events(params)
+  
+  # sample_time: a vector of time points to solve the ODEs
+  sample_time= seq(0,48,0.2)
+  
+  # ode(): The solver of the ODEs
+  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                      y = inits, parms = params,
+                                      events = events,
+                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
+  
+  # We need to keep only the predictions for the relevant compartments for the time points 
+  # at which we have available data. 
+  
+  #======================================df29=========================================================
+  
+  exp_data <- dataset$df29 # retrieve data of Gustafsson (2022) oral male tissues
+  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
+  column_names <- c("CalveolarLF","Cliver","Clungs", "Ckidney")
+  
+  preds_gus_OR_Mtissues <- list()
+  # loop over compartments with available data
+  for (i in 1:length(unique(exp_data$Tissue))) {
+    compartment <- unique(exp_data$Tissue)[i]
+    #Retrieve time points at which measurements are available for compartment i
+    exp_time <- exp_data[exp_data$Tissue == compartment, 2]
+    
+    preds_gus_OR_Mtissues [[i]] <- solution[solution$time %in% exp_time, column_names[i]]/1000
+  }
+  
+  
+  obs_gus_OR_Mtissues <- list( exp_data[exp_data$Tissue == "ALF", "concentration"],
+                               exp_data[exp_data$Tissue == "Liver", "concentration"],
+                               exp_data[exp_data$Tissue == "Lung", "concentration"], 
+                               exp_data[exp_data$Tissue == "Kidney", "concentration"]) 
+  
+  
+  
+  score[29] <- AAFE(predictions = preds_gus_OR_Mtissues, observations = obs_gus_OR_Mtissues)
+  
+  
   ########################################################################################
   score[12] <- 10*score[12]
   score[13] <- 10*score[13]
@@ -3164,6 +3285,8 @@ dzi_OR_Fserum_high <- openxlsx::read.xlsx("Data/Dzierlenga_serum_female_ORAL_hig
 dzi_OR_Fserum_high$Concentration_microM <- dzi_OR_Fserum_high$Concentration_microM * MW/1000 #convert from uM to ug/g
 kim_OR_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_ORAL_kim_2016.xlsx")
 kim_IV_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_IV_kim_2016.xlsx")
+gus_OR_Mblood <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Plasma Male rats_Oral.xlsx")
+gus_OR_Mtissues <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Tissues Male rats_Oral.xlsx")
 
 setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_2_saturable_binding/Training/AAFE/new_kim_apical_10_wide_lim")
 
@@ -3173,7 +3296,8 @@ dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mt
                 "df13" = Lup_OR_Furine, "df14" = Cui_OR_MurineL, "df15" = Cui_OR_MurineH, "df16" = Cui_OR_MfecesL,
                 "df17" = Cui_OR_MfecesH, "df18" = dzi_IV_Mserum, "df19" = dzi_OR_Mserum_low, "df20" = dzi_OR_Mserum_medium,
                 "df21" = dzi_OR_Mserum_high, "df22" = dzi_IV_Fserum, "df23" = dzi_OR_Fserum_low, "df24" = dzi_OR_Fserum_medium,
-                "df25" = dzi_OR_Fserum_high, "df26" = kim_OR_Fblood, "df27" = kim_IV_Fblood)
+                "df25" = dzi_OR_Fserum_high, "df26" = kim_OR_Fblood, "df27" = kim_IV_Fblood, "df28" = gus_OR_Mblood,
+                "df29" = gus_OR_Mtissues)
 
 
 #Initialise optimiser to NULL for better error handling later
@@ -4056,6 +4180,82 @@ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
 preds_kim_IV_Fblood <-  solution[, c("time", "Cplasma")]
 
 
+
+#################################################################################
+#--------------------------------------------------------------------------------
+#                                Gustafsson Oral male blood
+#-------------------------------------------------------------------------------
+#################################################################################
+
+# Set up simulations for the 28th case, i.e. Gustafsson Oral male blood
+BW <- 0.5125  #kg, from Gustafsson et al., 2022
+sex <- "M"
+admin.dose_per_g <- 0.364 # administered dose in mg PFOA/kg BW 
+admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
+admin.time <- 0 #time when doses are administered, in hours
+admin.type <- "oral"
+
+
+user_input <- list('BW'=BW,
+                   "admin.dose"= admin.dose,
+                   "admin.time" = admin.time, 
+                   "admin.type" = admin.type,
+                   "estimated_params" = estimated_params,
+                   "sex" = sex)
+
+
+params <- create.params(user_input)
+inits <- create.inits(params)
+events <- create.events(params)
+
+
+sample_time=seq(0,48,0.2)
+solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                    y = inits, parms = params,events = events,
+                                    method="lsodes",rtol = 1e-03, atol = 1e-03))
+
+preds_gus_OR_Mblood <-  solution[, c("time", "Cplasma")]
+
+
+
+#################################################################################
+#--------------------------------------------------------------------------------
+#                                Gustafsson Oral male tissues
+#-------------------------------------------------------------------------------
+#################################################################################
+
+# Set up simulations for the 29th case, i.e. Gustafsson Inhalation male tissues
+BW <- 0.5125  #kg, from Gustafsson et al., 2022
+sex <- "M" 
+admin.dose_per_g <- 0.364 # administered dose in mg PFOA/kg BW 
+admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
+admin.time <- 0 #time when doses are administered, in hours
+admin.type <- "oral"
+
+
+user_input <- list('BW'=BW,
+                   "admin.dose"= admin.dose,
+                   "admin.time" = admin.time, 
+                   "admin.type" = admin.type,
+                   "estimated_params" = estimated_params,
+                   "sex" = sex)
+
+
+params <- create.params(user_input)
+inits <- create.inits(params)
+events <- create.events(params)
+
+
+sample_time=seq(0,48,0.2)
+solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                    y = inits, parms = params,events = events,
+                                    method="lsodes",rtol = 1e-03, atol = 1e-03))
+
+preds_gus_OR_Mtissues <-  solution[, c("time", "CalveolarLF","Cliver", "Clungs", "Ckidney")]
+
+
+
+
 #convert ug/L, which is returned by the ODE function, to ug/g, which are the units in all the datasets
 
 preds_kudo_high[,2:dim(preds_kudo_high)[2]] <- preds_kudo_high[,2:dim(preds_kudo_high)[2]] /1000 
@@ -4079,6 +4279,9 @@ preds_dzi_OR_Fserum_medium[,2:dim(preds_dzi_OR_Fserum_medium)[2]] <- preds_dzi_O
 preds_dzi_OR_Fserum_high[,2:dim(preds_dzi_OR_Fserum_high)[2]] <- preds_dzi_OR_Fserum_high[,2:dim(preds_dzi_OR_Fserum_high)[2]] /1000
 preds_kim_OR_Fblood[,2:dim(preds_kim_OR_Fblood)[2]] <- preds_kim_OR_Fblood[,2:dim(preds_kim_OR_Fblood)[2]] /1000
 preds_kim_IV_Fblood[,2:dim(preds_kim_IV_Fblood)[2]] <- preds_kim_IV_Fblood[,2:dim(preds_kim_IV_Fblood)[2]] /1000
+preds_gus_OR_Mblood[,2:dim(preds_gus_OR_Mblood)[2]] <- preds_gus_OR_Mblood[,2:dim(preds_gus_OR_Mblood)[2]] /1000
+preds_gus_OR_Mtissues[,2:dim(preds_gus_OR_Mtissues)[2]] <- preds_gus_OR_Mtissues[,2:dim(preds_gus_OR_Mtissues)[2]] /1000
+
 
 # ######################################################################################
 #Plot the predictions against the observations
@@ -4285,6 +4488,21 @@ experiment27<- reshape(kim_IV_Fblood[c("Tissue" ,"Time_hours",
                        idvar = "Time_hours", timevar = "Tissue", direction = "wide")
 colnames(experiment27) <- c("Time",unique(kim_IV_Fblood$Tissue))
 
+
+# Convert Gustafsson Oral male blood from long to wide format using reshape
+experiment28 <- reshape(gus_OR_Mblood[c("Tissue" ,"Time_hours", 
+                                            "Concentration_microg_per_g_organ")], 
+                            idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+colnames(experiment28) <- c("Time",unique(gus_OR_Mblood$Tissue))
+
+
+# Convert Gustafsson Oral male tissues from long to wide format using reshape
+experiment29 <- reshape(gus_OR_Mtissues[c("Tissue" ,"Time_hours", 
+                                              "Concentration_microg_per_g_organ")], 
+                            idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+colnames(experiment29) <- c("Time",unique(gus_OR_Mtissues$Tissue))
+
+
 # Put the experiments in a list
 experiments <- list(experiment1 = experiment1, experiment2 = experiment2, experiment3 = experiment3, experiment4 = experiment4,
                     experiment5 = experiment5, experiment6 = experiment6, experiment7 = experiment7, experiment8 = experiment8,
@@ -4292,7 +4510,8 @@ experiments <- list(experiment1 = experiment1, experiment2 = experiment2, experi
                     experiment13 = experiment13,  experiment14 = experiment14, experiment15 = experiment15, experiment16 = experiment16,
                     experiment17 = experiment17, experiment18 = experiment18, experiment19 = experiment19, experiment20 = experiment20,
                     experiment21 = experiment21, experiment22 = experiment22, experiment23 = experiment23, experiment24 = experiment24,
-                    experiment25 = experiment25, experiment26 = experiment26, experiment27 = experiment27)
+                    experiment25 = experiment25, experiment26 = experiment26, experiment27 = experiment27,
+                    experiment28 = experiment28, experiment29 = experiment29)
 
 
 # Rename predictions so that they share the same name as the names of the experimental data dataframe
@@ -4336,6 +4555,10 @@ colnames(preds_kim_IV_Fblood) <- c ("Time", "Plasma")
 colnames(preds_kim_OR_Fblood) <- c ("Time", "Plasma")
 
 
+colnames(preds_gus_OR_Mblood) <- c ("Time", "Plasma")
+colnames(preds_gus_OR_Mtissues) <- c ("Time", "ALF", "Liver", "Lung", "Kidney")
+
+
 # Create a list containing the corresponding predictions
 simulations <- list(predictions1 = preds_kudo_high,  predictions2 = preds_kudo_low, predictions3 = preds_kim_IV_Mtissues, 
                     predictions4 = preds_kim_OR_Mtissues, predictions5 = preds_kim_IV_Ftissues, predictions6 = preds_kim_OR_Ftissues,
@@ -4345,8 +4568,8 @@ simulations <- list(predictions1 = preds_kudo_high,  predictions2 = preds_kudo_l
                     predictions16 =preds_Cui_OR_MfecesL, predictions17 =preds_Cui_OR_MfecesH, predictions18 =preds_dzi_IV_Mserum,
                     predictions19 =preds_dzi_OR_Mserum_low, predictions20 =preds_dzi_OR_Mserum_medium, predictions21 =preds_dzi_OR_Mserum_high, 
                     predictions22 =preds_dzi_IV_Fserum, predictions23 =preds_dzi_OR_Fserum_low, predictions24 =preds_dzi_OR_Fserum_medium,
-                    predictions25 =preds_dzi_OR_Fserum_high, predictions26 = preds_kim_OR_Fblood , 
-                    predictions27 = preds_kim_IV_Fblood)
+                    predictions25 =preds_dzi_OR_Fserum_high, predictions26 = preds_kim_OR_Fblood, 
+                    predictions27 = preds_kim_IV_Fblood, predictions28 = preds_gus_OR_Mblood, predictions29 = preds_gus_OR_Mtissues)
 
 
 # Iterate over all existing experiments and create the accompanying plots
