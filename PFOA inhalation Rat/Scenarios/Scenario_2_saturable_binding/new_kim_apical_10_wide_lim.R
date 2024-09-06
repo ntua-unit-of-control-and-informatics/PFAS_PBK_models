@@ -13,13 +13,12 @@ create.params <- function(user.input){
     if (sex == "M"){
       RAFOatp_k <- estimated_params[1]
       RAFOat1 <- estimated_params[2]
-      VmK_api <- estimated_params[12] 
       
       
     }else if(sex == "F"){
       RAFOatp_k <- estimated_params[3]
       RAFOat1 <- estimated_params[4]
-      VmK_api <- estimated_params[13] 
+
       
     }
     RAFOatp_l <- estimated_params[5]
@@ -28,21 +27,21 @@ create.params <- function(user.input){
     RAFOatp2_l <- RAFOatp_l
     RAFNtcp <- RAFOatp_l
     RAFOatp2_Int <- estimated_params[6]
-    f_fabp_avail <- estimated_params[7]
-    f_alb_avail <- estimated_params[8]
+    f_fabp_avail <- 1
+    f_alb_avail <- 1
     
-    P_liver_bile <- estimated_params[9] 
+    P_liver_bile <- estimated_params[7] 
     
     RAF_papp <- 1
     
-    koff_alb <- estimated_params[10] 
+    koff_alb <- 0.001
     koff_fabp <-  koff_alb
     koff_a2u <- koff_alb
     
-    
+    VmK_api <- 0
     VmK_baso <- 0
     KmK_baso <- 1e20
-    KmK_api <-  estimated_params[11] 
+    KmK_api <-   1e20
     
     
     #permeabilities correction factor
