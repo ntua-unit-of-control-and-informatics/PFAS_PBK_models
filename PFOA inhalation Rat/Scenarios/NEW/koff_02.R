@@ -2009,7 +2009,7 @@ obj.func <- function(x, dataset){
   exp_data <- dataset$df8 # retrieve data of Dzierlenga (2021) ORAL female tissues
   colnames(exp_data)[c(2,3)] <- c("time", "concentration")
   column_names <- c("Cliver","Ckidney","Cbrain" )
-  MW <- params$MW
+  MW <- 414.07
   
   preds_dzi_OR_Ftissues <- list()
   # loop over compartments with available data
@@ -2492,7 +2492,7 @@ obj.func <- function(x, dataset){
   admin.time <- 0 #time when doses are administered, in hours
   admin.type <- "iv"
   sex <- "M"
-  MW <- params$MW
+  MW <- 414.07
   
   
   user_input <- list('BW'=BW,
@@ -2554,7 +2554,7 @@ obj.func <- function(x, dataset){
   admin.time <- 0 #time when doses are administered, in hours
   admin.type <- "oral"
   sex <- "M"
-  MW <- params$MW
+  MW <- 414.07
   
   
   user_input <- list('BW'=BW,
@@ -2616,7 +2616,7 @@ obj.func <- function(x, dataset){
   admin.time <- 0 #time when doses are administered, in hours
   admin.type <- "oral"
   sex <- "M"
-  MW <- params$MW
+  MW <- 414.07
   
   
   user_input <- list('BW'=BW,
@@ -2679,7 +2679,7 @@ obj.func <- function(x, dataset){
   admin.time <- 0 #time when doses are administered, in hours
   admin.type <- "oral"
   sex <- "M"
-  MW <- params$MW
+  MW <- 414.07
   
   
   user_input <- list('BW'=BW,
@@ -2742,7 +2742,7 @@ obj.func <- function(x, dataset){
   admin.time <- 0 #time when doses are administered, in hours
   admin.type <- "iv"
   sex <- "F"
-  MW <- params$MW
+  MW <- 414.07
   
   
   user_input <- list('BW'=BW,
@@ -2805,7 +2805,7 @@ obj.func <- function(x, dataset){
   admin.time <- 0 #time when doses are administered, in hours
   admin.type <- "oral"
   sex <- "F"
-  MW <- params$MW
+  MW <- 414.07
   
   
   user_input <- list('BW'=BW,
@@ -2867,7 +2867,7 @@ obj.func <- function(x, dataset){
   admin.time <- 0 #time when doses are administered, in hours
   admin.type <- "oral"
   sex <- "F"
-  MW <- params$MW
+  MW <- 414.07
   
   
   user_input <- list('BW'=BW,
@@ -2930,7 +2930,7 @@ obj.func <- function(x, dataset){
   admin.time <- 0 #time when doses are administered, in hours
   admin.type <- "oral"
   sex <- "F"
-  MW <- params$MW
+  MW <- 414.07
   
   
   user_input <- list('BW'=BW,
@@ -3290,7 +3290,7 @@ kim_IV_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_IV_kim_2016.xlsx")
 gus_OR_Mblood <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Plasma Male rats_Oral.xlsx")
 gus_OR_Mtissues <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Tissues Male rats_Oral.xlsx")
 
-setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/NEW/Training/AAFE/koff_01")
+setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/NEW/Training/AAFE/koff_02")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -3332,7 +3332,7 @@ optimizer <- nloptr::nloptr( x0= fit,
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
-save.image("koff_01.RData")
+save.image("koff_02.RData")
 
 
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues

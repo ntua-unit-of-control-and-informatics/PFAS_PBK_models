@@ -2009,7 +2009,7 @@ obj.func <- function(x, dataset){
   exp_data <- dataset$df8 # retrieve data of Dzierlenga (2021) ORAL female tissues
   colnames(exp_data)[c(2,3)] <- c("time", "concentration")
   column_names <- c("Cliver","Ckidney","Cbrain" )
-  MW <- params$MW
+  MW <- 414.07
   
   preds_dzi_OR_Ftissues <- list()
   # loop over compartments with available data
@@ -2492,7 +2492,7 @@ obj.func <- function(x, dataset){
   admin.time <- 0 #time when doses are administered, in hours
   admin.type <- "iv"
   sex <- "M"
-  MW <- params$MW
+  MW <- 414.07
   
   
   user_input <- list('BW'=BW,
@@ -2554,7 +2554,7 @@ obj.func <- function(x, dataset){
   admin.time <- 0 #time when doses are administered, in hours
   admin.type <- "oral"
   sex <- "M"
-  MW <- params$MW
+  MW <- 414.07
   
   
   user_input <- list('BW'=BW,
@@ -2616,7 +2616,7 @@ obj.func <- function(x, dataset){
   admin.time <- 0 #time when doses are administered, in hours
   admin.type <- "oral"
   sex <- "M"
-  MW <- params$MW
+  MW <- 414.07
   
   
   user_input <- list('BW'=BW,
@@ -2679,7 +2679,7 @@ obj.func <- function(x, dataset){
   admin.time <- 0 #time when doses are administered, in hours
   admin.type <- "oral"
   sex <- "M"
-  MW <- params$MW
+  MW <- 414.07
   
   
   user_input <- list('BW'=BW,
@@ -2742,7 +2742,7 @@ obj.func <- function(x, dataset){
   admin.time <- 0 #time when doses are administered, in hours
   admin.type <- "iv"
   sex <- "F"
-  MW <- params$MW
+  MW <- 414.07
   
   
   user_input <- list('BW'=BW,
@@ -2805,7 +2805,7 @@ obj.func <- function(x, dataset){
   admin.time <- 0 #time when doses are administered, in hours
   admin.type <- "oral"
   sex <- "F"
-  MW <- params$MW
+  MW <- 414.07
   
   
   user_input <- list('BW'=BW,
@@ -2867,7 +2867,7 @@ obj.func <- function(x, dataset){
   admin.time <- 0 #time when doses are administered, in hours
   admin.type <- "oral"
   sex <- "F"
-  MW <- params$MW
+  MW <- 414.07
   
   
   user_input <- list('BW'=BW,
@@ -2930,7 +2930,7 @@ obj.func <- function(x, dataset){
   admin.time <- 0 #time when doses are administered, in hours
   admin.type <- "oral"
   sex <- "F"
-  MW <- params$MW
+  MW <- 414.07
   
   
   user_input <- list('BW'=BW,
