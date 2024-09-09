@@ -884,7 +884,7 @@ ode.func <- function(time, inits, params){
     MLuB <- MLuBf + MLuBb
     MLuF <- MLuFf + MLuFb
     MLuT <- MLuTf
-    MLuAF <- MLuAFf
+    MLuAF <- MLuAFf + MLuAFb
     CLuB <- MLuB/VLuB # blood concentration
     CLuBf <- MLuBf/VLuB
     CLuBb <- MLuBb/VLuB
