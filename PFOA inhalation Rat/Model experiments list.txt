@@ -1,7 +1,7 @@
 Model experiments list
 
-1.kudo (2007) high dose, tissues  (dose = 16.56 mg/kg PFOA)
-2.kudo (2007) low dose, tissues   (dose = 0.041 mg/kg PFOA)
+1.kudo (2007) high dose, tissues  (dose = 16.56 mg/kg PFOA) MALE, IV
+2.kudo (2007) low dose, tissues   (dose = 0.041 mg/kg PFOA) MALE, IV
 3.kim (2016) IV male tissues      (dose = 1 mg/kg PFOA)
 4.kim (2016) ORAL male tissues    (dose = 1 mg/kg PFOA)
 5.kim (2016) IV female tissues    (dose = 1 mg/kg PFOA)
@@ -27,5 +27,6 @@ Model experiments list
 25.Dzierlenga (2021) ORAL female serum high    (dose = 320 mg/kg PFOA)
 26.Kim (2016) ORAL female blood                (dose = 1 mg/kg PFOA)
 27.Kim (2016) IV female blood                  (dose = 1 mg/kg PFOA)
-
+28.Gustafsson (2022) ORAL male blood           (dose = 0.364 mg/kg PFOA)
+29.Gustafsson (2022) ORAL male tissues         (dose = 0.364 mg/kg PFOA)
 
