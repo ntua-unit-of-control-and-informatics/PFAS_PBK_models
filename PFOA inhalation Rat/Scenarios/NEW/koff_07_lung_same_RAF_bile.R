@@ -33,8 +33,6 @@ create.params <- function(user.input){
     f_fabp_avail <- 1
     f_alb_avail <- 1
     
-    P_liver_bile <- estimated_params[9] 
-    
     RAF_papp <- 1
     
     koff_alb <- 0.7
@@ -46,7 +44,7 @@ create.params <- function(user.input){
     KmK_baso <- 1e20
     KmK_api <-   1e20
     KLfabp <- (1.2e5+4e4+1.9e4)  #[L/mol]*1e-3 , value from Cheng et al. (2017)
-    Ka <-estimated_params[10] # 5.8e05 #mol/L
+    Ka <-estimated_params[9] # 5.8e05 #mol/L
     
     
     #permeabilities correction factor
@@ -714,7 +712,7 @@ create.params <- function(user.input){
                 'PeffA'=PeffA, 'PeffM'=PeffM, 'PeffR'=PeffR, 'PeffLu' = PeffLu,
                 'PeffSP'=PeffSP, 'PeffH'=PeffH, 'PeffBr'=PeffBr, 'PeffST' = PeffST,
                 'PeffIN'=PeffIN, 'PeffGo'=PeffGo,
-                'PeffSK' = PeffSK,  'PeffBo' = PeffBo,  "P_liver_bile" = P_liver_bile,
+                'PeffSK' = PeffSK,  'PeffBo' = PeffBo,  
                 
                 'Qcardiac'=Qcardiac, 'QBK'=QBK, 
                 'QBL'=QBL, 'QBLtot'=QBLtot,
@@ -3323,7 +3321,7 @@ kim_IV_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_IV_kim_2016.xlsx")
 gus_OR_Mblood <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Plasma Male rats_Oral.xlsx")
 gus_OR_Mtissues <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Tissues Male rats_Oral.xlsx")
 
-setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/NEW/Training/AAFE/koff_07_lung_same_RAF")
+setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/NEW/Training/AAFE/koff_07_lung_same_RAF_bile")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -3349,11 +3347,11 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
 # Male RAFOatp_k, Male RAFOat1, Male RAFOat3, Male RAFOatp_l,Male RAFNtcp
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
 
-N_pars <- 10 # Number of parameters to be fitted
-fit <-  c(rep(log(1),8), log(1),log(1e5))
+N_pars <- 9 # Number of parameters to be fitted
+fit <-  c(rep(log(1),8), log(1e5))
 
-lb    = c(rep(log(1e-10), 8),log(1e-3), log(1e3))
-ub = c(rep(log(1e10), 8),  log(1e3),log(1e6))
+lb = c(rep(log(1e-10), 8), log(1e3))
+ub = c(rep(log(1e10), 8), log(1e6))
 
 # Run the optimization algorithm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
@@ -3365,7 +3363,7 @@ optimizer <- nloptr::nloptr( x0= fit,
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
-save.image("koff_07_lung_same_RAF.RData")
+save.image("koff_07_lung_same_RAF_bile.RData")
 
 
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues

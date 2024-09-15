@@ -549,7 +549,7 @@ create.params <- function(user.input){
     VmLu_Oatp_bas_in_vitro= 9.3 #nmol/mg protein/min  (Weaver et al. 2010)
     VmLu_Oatp_bas_scaled = 60*VmLu_Oatp_bas_in_vitro*MW*lung_protein_per_gram*(VLu*1000)/1000   #physiologically scaled to in vivo, ug/h
     VmLu_Oatp_bas = VmLu_Oatp_bas_scaled*RAFOatp_lu_bas #in vivo value, in  ug/h
-    KmLu_Oatpb_as = KmK_Oatp #same as kidney
+    KmLu_Oatp_bas = KmK_Oatp #same as kidney
     
     #Intestine
     #oatp2b1-intestine
