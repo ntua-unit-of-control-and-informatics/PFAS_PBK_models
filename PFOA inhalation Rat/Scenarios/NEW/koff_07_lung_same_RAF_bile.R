@@ -1368,6 +1368,7 @@ ode.func <- function(time, inits, params){
     Cmuscle <-  (MMB + MMF+ MMT)/(VMB+VMF+VMT)
     Cadipose <-  (MAB + MAF+ MAT)/(VAB+VAF+VAT)
     Clungs <-  (MLuB + MLuF+ MLuT + MLuAF)/(VLuB+VLuF+VLuT+VLuAF)
+    Clungtissue <- (MLuB + MLuF+ MLuT)/(VLuB+VLuF+VLuT)
     Crest <-  (MRB + MRF+ MRT)/(VRB+VRF+VRT)
     Ccarcass <- (MMB+MMF+MMT+MAB+MAF+MAT+MRB+MRF+MRT+MBoB+MBoF+MBoT+MSKB+MSKF+MSKT)/(VM+VA+VR+VBo+VSK)
     Cfeces <- Mfeces/(Vfeces*feces_density)
@@ -1459,7 +1460,7 @@ ode.func <- function(time, inits, params){
     'Cblood'=Cblood, 'Mblood'=Mblood, 'Cplasma'=Cplasma, 
     'Ckidney'=Ckidney, 'Mkidney'=Mkidney, 'Cliver'=Cliver, 'Mliver'=Mliver, 
     'Cstomach'=Cstomach, 'Cintestine'=Cintestine, 'Cmuscle'=Cmuscle, 'Cadipose'=Cadipose,
-    'Clungs'=Clungs, 'Crest'=Crest, 'Ccarcass'=Ccarcass, 'Cfeces'=Cfeces,
+    'Clungs'=Clungs, 'Clungtissue'=Clungtissue, 'Crest'=Crest, 'Ccarcass'=Ccarcass, 'Cfeces'=Cfeces,
     'Curine'=Curine, 'Cspleen'=Cspleen, 'Cheart'=Cheart, 'Cbrain'=Cbrain, 
     'Mbrain'=Mbrain, 'Cgonads'=Cgonads, 'Cskin'=Cskin, 'Cbones'=Cbones, 'CalveolarLF' = CalveolarLF
     
@@ -3230,7 +3231,7 @@ obj.func <- function(x, dataset){
   
   exp_data <- dataset$df29 # retrieve data of Gustafsson (2022) oral male tissues
   colnames(exp_data)[c(2,3)] <- c("time", "concentration")
-  column_names <- c("CalveolarLF","Cliver","Clungs", "Ckidney")
+  column_names <- c("CalveolarLF","Cliver","Clungtissue", "Ckidney")
   
   preds_gus_OR_Mtissues <- list()
   # loop over compartments with available data
@@ -4284,7 +4285,7 @@ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
 
-preds_gus_OR_Mtissues <-  solution[, c("time", "CalveolarLF","Cliver", "Clungs", "Ckidney")]
+preds_gus_OR_Mtissues <-  solution[, c("time", "CalveolarLF","Cliver", "Clungtissue", "Ckidney")]
 
 
 
