@@ -1359,6 +1359,8 @@ ode.func <- function(time, inits, params){
     Cmuscle <-  (MMB + MMF+ MMT)/(VMB+VMF+VMT)
     Cadipose <-  (MAB + MAF+ MAT)/(VAB+VAF+VAT)
     Clungs <-  (MLuB + MLuF+ MLuT + MLuAF)/(VLuB+VLuF+VLuT+VLuAF)
+    Clungtissue <- (MLuB + MLuF+ MLuT)/(VLuB+VLuF+VLuT)
+    
     Crest <-  (MRB + MRF+ MRT)/(VRB+VRF+VRT)
     Ccarcass <- (MMB+MMF+MMT+MAB+MAF+MAT+MRB+MRF+MRT+MBoB+MBoF+MBoT+MSKB+MSKF+MSKT)/(VM+VA+VR+VBo+VSK)
     Cfeces <- Mfeces/(Vfeces*feces_density)
@@ -3221,7 +3223,7 @@ obj.func <- function(x, dataset){
   
   exp_data <- dataset$df29 # retrieve data of Gustafsson (2022) oral male tissues
   colnames(exp_data)[c(2,3)] <- c("time", "concentration")
-  column_names <- c("CalveolarLF","Cliver","Clungs", "Ckidney")
+  column_names <- c("CalveolarLF","Cliver","Clungtissue", "Ckidney")
   
   preds_gus_OR_Mtissues <- list()
   # loop over compartments with available data
@@ -3262,7 +3264,7 @@ obj.func <- function(x, dataset){
 
 #setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
 #setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
-setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
+setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
 
 MW <- 414.07 #g/mol
 source("Goodness-of-fit-metrics.R")
@@ -3312,7 +3314,7 @@ kim_IV_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_IV_kim_2016.xlsx")
 gus_OR_Mblood <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Plasma Male rats_Oral.xlsx")
 gus_OR_Mtissues <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Tissues Male rats_Oral.xlsx")
 
-setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/NEW/Training/AAFE/koff_07_lung_same_RAF")
+setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/NEW/Training/AAFE/koff_07_lung_same_RAF")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -3330,7 +3332,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0, 
-              "maxeval" = 300, 
+              "maxeval" = 500, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
