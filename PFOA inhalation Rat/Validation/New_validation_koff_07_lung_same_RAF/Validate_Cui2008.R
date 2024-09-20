@@ -41,9 +41,9 @@ solution_5 <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       method="lsodes",rtol = 1e-7, atol = 1e-7))
 
 # Carefully select the order so that it matches the experimental data presented in the xlsx file
-pred_comps <- c( "Cart", "Cliver", "Ckidney","Clungs","Cheart",
+pred_comps <- c( "CArt", "Cliver", "Ckidney","Clungs","Cheart",
                   "Cspleen", "Cgonads", "Cbrain" )
-solution_5 <- solution_5[solution_5$time == 28*24,'pred_comps']/1000 #[ug/L]/1000-->[ug/g]
+solution_5 <- solution_5[solution_5$time == 28*24, pred_comps]/1000 #[ug/L]/1000-->[ug/g]
 
 
 #20mg/kg dose
@@ -60,7 +60,7 @@ solution_20 <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                        y = inits, parms = parameters, events = events,
                                        method="lsodes",rtol = 1e-7, atol = 1e-7))
 
-solution_20 <- solution_20[solution_20$time == 28*24,'pred_comps']/1000 #[ug/L]/1000-->[ug/g]
+solution_20 <- solution_20[solution_20$time == 28*24,pred_comps]/1000 #[ug/L]/1000-->[ug/g]
 
 ##############################
 ### Load experimental data ###
