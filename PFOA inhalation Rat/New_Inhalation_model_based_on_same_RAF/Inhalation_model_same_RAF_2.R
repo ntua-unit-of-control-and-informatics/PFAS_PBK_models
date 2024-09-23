@@ -274,8 +274,8 @@ create.params <- function(user.input){
     PAUA <- ((1343.5+76.8)*1e-06)/0.288 #m2/kg, total surface area 1343.5 mm^2 for a 16-wk old male 288 g, Gross et al., 1982, https://pubmed.ncbi.nlm.nih.gov/7130058/
     #plus nasopharynx area 76.8 mm^2 calculated by Ménache et al., 1997, https://doi.org/10.1080/00984109708984003
     AUA <- PAUA*BW
-    PALF <- 27.2e-4/0.3 #27.2 cm2, BW=0.3 in the study--> 27.2e-4 m2/kg, Mercer et al., 1994 https://doi.org/10.1152/jappl.1987.62.4.1480
-    ALF <- PALF*BW
+    #PALF <- 27.2e-4/0.3 #27.2 cm2, BW=0.3 in the study--> 27.2e-4 m2/kg, Mercer et al., 1994 https://doi.org/10.1152/jappl.1987.62.4.1480
+    #ALF <- PALF*BW
     
     ###############################
     #-----------------------------#
@@ -486,7 +486,7 @@ create.params <- function(user.input){
     kINFINT = ((Papp/100) * AcIN)*1000 #m^3/h * 1000 --> L/h 
     kAFAT = ((Papp/100) * AcA)*1000 #m^3/h * 1000 --> L/h 
     kLuTLuF = ((Papp/100) * AcLu)*1000 #m^3/h * 1000 --> L/h
-    kLuTLuAF = ((Papp/100) * AcALF)*1000 #m^3/h * 1000 --> L/h
+    #kLuTLuAF = ((Papp/100) * AcALF)*1000 #m^3/h * 1000 --> L/h
     kSPFSPT = ((Papp/100) * AcSP)*1000 #m^3/h * 1000 --> L/h 
     kHFHT = ((Papp/100) * AcH)*1000 #m^3/h * 1000 --> L/h 
     kBrFBrT = ((Papp/100) * AcBr)*1000 #m^3/h * 1000 --> L/h 
@@ -564,9 +564,9 @@ create.params <- function(user.input){
     #Lung
     lung_protein_per_gram <- 134 # 134 mg/mL tissue --> 134 mg/g tissue, Figure 2, https://doi.org/10.1007/s00580-021-03242-z 
     kUAB <- kabsUA * RA_area #absorption rate from upper airways to blood
-    CLEal <- kCLEal * ALF #clearance rate from alveolar lining fluid to stomach, ALF in m^2
+    CLEal <- kCLEal * AcALF #clearance rate from alveolar lining fluid to stomach, AcALF in m^2
     CLEua <- kCLEua * AUA #clearance rate rate from upper airways to stomach, AUA in m^2
-    #kLuTLuAF <- kLuAF * ALF #transport rate from alveolar lining fluid to lung tissue, ALF in m^2
+    kLuTLuAF <- kLuAF * AcALF #transport rate from alveolar lining fluid to lung tissue, ALF in m^2
     
     #oatp-lung-ap (from ALF to tissue)
     VmLu_Oatp_ap_in_vitro= 9.3 #nmol/mg protein/min  (Weaver et al. 2010)
@@ -2279,7 +2279,7 @@ hind_INH_Fblood_medium <- openxlsx::read.xlsx("Inhalation_data/Hinderliter_2006_
 hind_INH_Fblood_high <- openxlsx::read.xlsx("Inhalation_data/Hinderliter_2006_female_plasma_single_High_dose.xlsx")
 
 #setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_2/Training/AAFE/NoStomachAbs")
-setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/New_Inhalation_model_based_on_same_RAF/Training/AAFE")
+setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/New_Inhalation_model_based_on_same_RAF/Training/AAFE_2")
 
 dataset <- list("df1" = gus_INH_Mblood, "df2" = gus_INH_Mtissues, 
                 "df3" = hind_INH_Mblood_low, "df4" = hind_INH_Mblood_medium,
@@ -2293,7 +2293,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0 ,
-              "maxeval" = 500, 
+              "maxeval" = 200, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
@@ -2304,10 +2304,10 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 
 
 N_pars <- 4 # Number of parameters to be fitted
-fit <-  c(log(1e2), log(1),log(1),log(1e2))
+fit <-  c(log(1e2), log(1),log(1),log(1))
 
 lb	= c(log(1e-5), log(1e-5),log(1e-5),log(1e-5))
-ub = c(log(1e5), log(1e5),log(1e5),log(1e5))
+ub = c(log(1e5), log(1e5),log(1e5),log(1e-5))
 
 
 # Run the optimization algorithmm to estimate the parameter values
@@ -2841,7 +2841,7 @@ for(i in 1:length(experiments_inh)){
          height = 10,
          units = "in")
 }
-save.image("Inhalation_model_same_RAF.RData")
+save.image("Inhalation_model_same_RAF_2.RData")
 
 
 
