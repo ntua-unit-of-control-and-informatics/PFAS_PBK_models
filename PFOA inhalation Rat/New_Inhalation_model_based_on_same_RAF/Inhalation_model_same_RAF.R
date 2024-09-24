@@ -1256,7 +1256,7 @@ ode.func <- function(time, inits, params){
     #interstitial fluid subcompartment
     dMKFf = QparaKi*(1-SKi)*CKBf+ PeffK*AK*(CKBf-CKFf) - kKFKT*(CKFf-CKTf) -
       (VmK_Oat1*CKFf/(KmK_Oat1+CKFf)) - (VmK_Oat3*CKFf/(KmK_Oat3+CKFf))  +
-      (VmK_baso*CKTf/(KmK_baso+CKTf)) +  koff_alb*CKFb*VKB - kon_alb*CalbKFf*CKFf*VKF
+      (VmK_baso*CKTf/(KmK_baso+CKTf)) +  koff_alb*CKFb*VKF - kon_alb*CalbKFf*CKFf*VKF
     #Kidney proximal tubule cells subcompartment
     dMKTf = kKFKT*(CKFf-CKTf) - kFKT*(CKTf - CFil) + (VmK_Oatp*CFil/(KmK_Oatp+CFil)) +
       (VmK_Oat1*CKFf/(KmK_Oat1+CKFf)) + (VmK_Oat3*CKFf/(KmK_Oat3+CKFf)) + 
@@ -1713,14 +1713,14 @@ obj.func <- function(x, dataset){
   BW <- 0.5125  #kg, from Gustafsson et al., 2022
   sex <- "M"
   inhalation_params=estimate_BFi_TVi(sex, BW)
-  BFi = inhalation_params["BFi"]# 1/h
-  TVi = inhalation_params["TVi"]# L
+  BFi = inhalation_params["BFi"]# breaths/h
+  TVi = inhalation_params["TVi"]# L per breath
   duration <- 0.375 #hours, 22.5 min
   admin.dose_per_g <- 0.164 # administered dose in mg PFOA/kg BW 
-  admin.dose_mg_per_m3 <- 300 # administered dose in mg/m^3 0.25-0.35 mg/L
-  depfr_AF <- (0.6107+0.0543)
+  #admin.dose_mg_per_L <- 1000*335 * 0.3/1000 # [ug PFOA/g dust] * [g dust/L]  administered dose in mg/m^3 0.25-0.35 mg/L
+  #depfr_AF <- (0.6107+0.0543)
   k = duration*24 #partition of administration packages
-  admin.dose <- rep((admin.dose_mg_per_m3*duration*BFi*TVi)/k, length.out = k) #ug PFOA, for 22.5 min inhalation
+  admin.dose <- rep((admin.dose_per_g*BW*1000)/k, length.out = k) #ug PFOA, for 22.5 min inhalation
   admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
   admin.type <- "inh"
   
@@ -1729,7 +1729,7 @@ obj.func <- function(x, dataset){
                      "admin.time" = admin.time, 
                      "admin.type" = admin.type,
                      "estimated_params" = estimated_params,
-                     "sex" = sex, "depfr_head" = depfr_head, "depfr_AF" = depfr_AF )
+                     "sex" = sex, "depfr_head" = 0, "depfr_AF" = 1 )
   
   params <- create.params(user_input)
   inits <- create.inits(params)
@@ -1775,43 +1775,7 @@ obj.func <- function(x, dataset){
   # Gustafsson Inhalation male tissues
   #-------------------------
   ##########################
-  # Set up simulations for the 2nd case, i.e. Gustafsson (2022) Inhalation male tissues
-  BW <- 0.5125  #kg, from Gustafsson et al., 2022
-  sex <- "M"
-  inhalation_params=estimate_BFi_TVi(sex, BW)
-  BFi = inhalation_params["BFi"]# 1/h
-  TVi = inhalation_params["TVi"]# L
-  duration <- 0.375 #hours, 22.5 min
-  admin.dose_per_g <- 0.164 # administered dose in mg PFOA/kg BW 
-  admin.dose_mg_per_m3 <- 300 # administered dose in mg/m^3 0.25-0.35 mg/L
-  depfr_AF <- (0.6107+0.0543)
-  k = duration*24 #partition of administration packages
-  admin.dose <- rep((admin.dose_mg_per_m3*duration*BFi*TVi)/k, length.out = k) #ug PFOA, for 22.5 min inhalation
-  admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
-  admin.type <- "inh"
-  
-  user_input <- list('BW'=BW,
-                     "admin.dose"= admin.dose,
-                     "admin.time" = admin.time, 
-                     "admin.type" = admin.type,
-                     "estimated_params" = estimated_params,
-                     "sex" = sex,  "depfr_head" = depfr_head, "depfr_AF" = depfr_AF )
-  
-  params <- create.params(user_input)
-  inits <- create.inits(params)
-  events <- create.events(params)
-  
-  # sample_time: a vector of time points to solve the ODEs
-  sample_time= seq(0,48,0.2)
-  
-  # ode(): The solver of the ODEs
-  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                      y = inits, parms = params,
-                                      events = events,
-                                      method="lsodes",rtol = 1e-03, atol = 1e-03))
-  
-  # We need to keep only the predictions for the relevant compartments for the time points 
-  # at which we have available data. 
+ 
   
   #======================================df2=========================================================
   
@@ -1923,7 +1887,7 @@ obj.func <- function(x, dataset){
   BFn = inhalation_params["BFn"]# 1/h
   TVn = inhalation_params["TVn"]# L
   duration <- 6 #hours
-  admin.dose_mg_per_m3 <- 10 # administered dose in mg/m^3
+  admin.dose_mg_per_m3 <- 9.8 # administered dose in mg/m^3
   depfr_head <- 0.3057
   depfr_AF <- (0.1195+0.0243)
   k = 6*duration
@@ -1991,7 +1955,7 @@ obj.func <- function(x, dataset){
   BFn = inhalation_params["BFn"]# 1/h
   TVn = inhalation_params["TVn"]# L
   duration <- 6 #hours
-  admin.dose_mg_per_m3 <- 25 # administered dose in mg/m^3
+  admin.dose_mg_per_m3 <- 27 # administered dose in mg/m^3
   depfr_head <- 0.3573
   depfr_AF <- (0.1618+0.0241)
   k = 6*duration
@@ -2128,7 +2092,7 @@ obj.func <- function(x, dataset){
   BFn = inhalation_params["BFn"]# 1/h
   TVn = inhalation_params["TVn"]# L
   duration <- 6 #hours
-  admin.dose_mg_per_m3 <- 10 # administered dose in mg/m^3
+  admin.dose_mg_per_m3 <- 9.8 # administered dose in mg/m^3
   depfr_head <- 0.3101
   depfr_AF <- (0.0939+0.0165)
   k = 6*duration
@@ -2195,7 +2159,7 @@ obj.func <- function(x, dataset){
   BFn = inhalation_params["BFn"]# 1/h
   TVn = inhalation_params["TVn"]# L
   duration <- 6 #hours
-  admin.dose_mg_per_m3 <- 25 # administered dose in mg/m^3
+  admin.dose_mg_per_m3 <- 27 # administered dose in mg/m^3
   depfr_head <- 0.3372
   depfr_AF <- (0.1327+0.0177)
   k = 6*duration
@@ -2407,7 +2371,7 @@ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
 
-preds_gus_INH_Mtissues <-  solution[, c("time", "CalveolarLF","Cliver", "Clungs", "Ckidney")]
+preds_gus_INH_Mtissues <-  solution[, c("time", "CalveolarLF","Cliver", "Clungtissues", "Ckidney")]
 
 
 
@@ -2418,7 +2382,7 @@ preds_gus_INH_Mtissues <-  solution[, c("time", "CalveolarLF","Cliver", "Clungs"
 #################################################################################
 
 # Set up simulations for the 3d case, i.e. Hinderliter Inhalation male single low
-BW <- 0.25  #kg, not reported in the study
+BW <- 0.225  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
 sex <- "M"
 inhalation_params=estimate_BFn_TVn(sex, BW)
 BFn = inhalation_params["BFn"]# 1/h
@@ -2462,7 +2426,7 @@ preds_hind_INH_Mblood_low <-  solution[, c("time", "Cplasma")]
 #################################################################################
 
 # Set up simulations for the 4th case, i.e. Hinderliter Inhalation male single medium
-BW <- 0.25  #kg, not reported in the study
+BW <- 0.225  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
 sex <- "M" 
 inhalation_params=estimate_BFn_TVn(sex, BW)
 BFn = inhalation_params["BFn"]# 1/h
@@ -2506,7 +2470,7 @@ preds_hind_INH_Mblood_medium <-  solution[, c("time", "Cplasma")]
 #################################################################################
 
 # Set up simulations for the 5th case, i.e. Hinderliter Inhalation male single high
-BW <- 0.25  #kg, not reported in the study
+BW <- 0.225  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
 sex <- "M"
 inhalation_params=estimate_BFn_TVn(sex, BW)
 BFn = inhalation_params["BFn"]# 1/h
@@ -2551,7 +2515,7 @@ preds_hind_INH_Mblood_high <-  solution[, c("time", "Cplasma")]
 #################################################################################
 
 # Set up simulations for the 6th case, i.e. Hinderliter Inhalation male single low
-BW <- 0.25  #kg, not reported in the study
+BW <- 0.225  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
 sex <- "F" 
 inhalation_params=estimate_BFn_TVn(sex, BW)
 BFn = inhalation_params["BFn"]# 1/h
@@ -2596,7 +2560,7 @@ preds_hind_INH_Fblood_low <-  solution[, c("time", "Cplasma")]
 #################################################################################
 
 # Set up simulations for the 7th case, i.e. Hinderliter Inhalation female single medium
-BW <- 0.25  #kg, not reported in the study
+BW <- 0.21  #kg, not reported in the study - 180-240 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
 sex <- "F" 
 inhalation_params=estimate_BFn_TVn(sex, BW)
 BFn = inhalation_params["BFn"]# 1/h
@@ -2640,7 +2604,7 @@ preds_hind_INH_Fblood_medium <-  solution[, c("time", "Cplasma")]
 #################################################################################
 
 # Set up simulations for the 8th case, i.e. Hinderliter Inhalation female single high
-BW <- 0.25  #kg, not reported in the study
+BW <- 0.21  #kg, not reported in the study - 180-240 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
 sex <- "F" 
 inhalation_params=estimate_BFn_TVn(sex, BW)
 BFn = inhalation_params["BFn"]# 1/h
