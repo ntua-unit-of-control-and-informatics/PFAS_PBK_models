@@ -13,7 +13,7 @@ create.params <- function(user.input){
     if (sex == "M"){
       RAFOatp_k <- estimated_params[1]
       RAFOat1 <- estimated_params[2]
-      RAFOatp_l <- estimated_params[3]
+      RAFOatp_l <-estimated_params[3]
       
       
     }else if(sex == "F"){
@@ -782,7 +782,7 @@ ode.func <- function(time, inits, params){
   with(as.list(c(inits, params)),{
     
     #====================PFOA mass balance at each tissue or fluid compartment==============================     
-    
+
     # Concentrations in ug/L
     
     # Blood concentration
@@ -1165,12 +1165,12 @@ ode.func <- function(time, inits, params){
     
     #Kidney
     #blood subcompartment
-    dMKBf = QBK*CArtf - QBK*CKBf - PeffK*AK*(CKBf-CKFf) - QparaKi*(1-SKi)*CKBf +
+    dMKBf =  QBK*CArtf - QBK*CKBf - PeffK*AK*(CKBf-CKFf) - QparaKi*(1-SKi)*CKBf +
       koff_alb*CKBb*VKB - kon_alb*CalbKBf*CKBf*VKB
     #interstitial fluid subcompartment
     dMKFf = QparaKi*(1-SKi)*CKBf+ PeffK*AK*(CKBf-CKFf) - kKFKT*(CKFf-CKTf) -
       (VmK_Oat1*CKFf/(KmK_Oat1+CKFf)) - (VmK_Oat3*CKFf/(KmK_Oat3+CKFf))  +
-      (VmK_baso*CKTf/(KmK_baso+CKTf)) +  koff_alb*CKFb*VKB - kon_alb*CalbKFf*CKFf*VKF
+      (VmK_baso*CKTf/(KmK_baso+CKTf)) +  koff_alb*CKFb*VKF - kon_alb*CalbKFf*CKFf*VKF
     #Kidney proximal tubule cells subcompartment
     dMKTf = kKFKT*(CKFf-CKTf) - kFKT*(CKTf - CFil) + (VmK_Oatp*CFil/(KmK_Oatp+CFil)) +
       (VmK_Oat1*CKFf/(KmK_Oat1+CKFf)) + (VmK_Oat3*CKFf/(KmK_Oat3+CKFf)) + 
@@ -1452,6 +1452,7 @@ ode.func <- function(time, inits, params){
     'Cblood'=Cblood, 'Mblood'=Mblood, 'Cplasma'=Cplasma, 
     'Ckidney'=Ckidney, 'Mkidney'=Mkidney, 'Cliver'=Cliver, 'Mliver'=Mliver, 
     'Cstomach'=Cstomach, 'Cintestine'=Cintestine, 'Cmuscle'=Cmuscle, 'Cadipose'=Cadipose,
+    "Clungtissue" = Clungtissue,
     'Clungs'=Clungs, 'Crest'=Crest, 'Ccarcass'=Ccarcass, 'Cfeces'=Cfeces,
     'Curine'=Curine, 'Cspleen'=Cspleen, 'Cheart'=Cheart, 'Cbrain'=Cbrain, 
     'Mbrain'=Mbrain, 'Cgonads'=Cgonads, 'Cskin'=Cskin, 'Cbones'=Cbones, 'CalveolarLF' = CalveolarLF
@@ -4277,7 +4278,7 @@ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
 
-preds_gus_OR_Mtissues <-  solution[, c("time", "CalveolarLF","Cliver", "Clungs", "Ckidney")]
+preds_gus_OR_Mtissues <-  solution[, c("time", "CalveolarLF","Cliver", "Clungtissue", "Ckidney")]
 
 
 

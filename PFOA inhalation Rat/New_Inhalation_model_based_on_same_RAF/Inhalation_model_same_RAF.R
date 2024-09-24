@@ -1,6 +1,6 @@
 #female increase in BW: 3.5 g/d
 #Male increase in BW: 5.9 g.d
-
+options(max.print=1000000)
 library(deSolve)
 
 create.params <- function(user.input){
@@ -1545,7 +1545,7 @@ ode.func <- function(time, inits, params){
     'Cblood'=Cblood, 'Mblood'=Mblood, 'Cplasma'=Cplasma, 
     'Ckidney'=Ckidney, 'Mkidney'=Mkidney, 'Cliver'=Cliver, 'Mliver'=Mliver, 
     'Cstomach'=Cstomach, 'Cintestine'=Cintestine, 'Cmuscle'=Cmuscle, 'Cadipose'=Cadipose,
-    'CUpperair'=CUpperair, 'CalveolarLF'=CalveolarLF,
+    'CUpperair'=CUpperair, 'CalveolarLF'=CalveolarLF, "Clungtissue" = Clungtissue,
     'Clungs'=Clungs, 'Crest'=Crest, 'Ccarcass'=Ccarcass, 'Cfeces'=Cfeces,
     'Curine'=Curine, 'Cspleen'=Cspleen, 'Cheart'=Cheart, 'Cbrain'=Cbrain, 
     'Mbrain'=Mbrain, 'Cgonads'=Cgonads, 'Cskin'=Cskin, 'Cbones'=Cbones 
