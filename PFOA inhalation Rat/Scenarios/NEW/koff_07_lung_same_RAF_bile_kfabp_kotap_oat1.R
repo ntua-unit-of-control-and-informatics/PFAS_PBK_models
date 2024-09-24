@@ -13,23 +13,21 @@ create.params <- function(user.input){
     if (sex == "M"){
       RAFOatp_k <- estimated_params[1]
       RAFOat1 <- estimated_params[2]
-      RAFOatp_l <- estimated_params[3]
-      
       
     }else if(sex == "F"){
-      RAFOatp_k <- estimated_params[4]
-      RAFOat1 <- estimated_params[5]
-      RAFOatp_l <- estimated_params[6]
-      
+      RAFOatp_k <- estimated_params[3]
+      RAFOat1 <- estimated_params[4]
       
     }
+    RAFOatp_l <- estimated_params[5]
+
     RAFOat3 <- RAFOat1
     RAFUrat <- RAFOatp_k
     RAFOatp2_l <- RAFOatp_l
-    RAFOatp_lu_ap <- estimated_params[7]
+    RAFOatp_lu_ap <- estimated_params[6]
     RAFOatp_lu_bas <- RAFOatp_lu_ap
     RAFNtcp <- RAFOatp_l
-    RAFOatp2_Int <- estimated_params[8]
+    RAFOatp2_Int <- estimated_params[7]
     f_fabp_avail <- 1
     f_alb_avail <- 1
     
@@ -43,7 +41,7 @@ create.params <- function(user.input){
     VmK_baso <- 0
     KmK_baso <- 1e20
     KmK_api <-   1e20
-    KLfabp <- (1.2e5+4e4+1.9e4)  #[L/mol]*1e-3 , value from Cheng et al. (2017)
+    KLfabp <- estimated_params[8]#(1.2e5+4e4+1.9e4)  #[L/mol]*1e-3 , value from Cheng et al. (2017)
     Ka <-estimated_params[9] # 5.8e05 #mol/L
     
     
@@ -1228,7 +1226,7 @@ ode.func <- function(time, inits, params){
     #Intestine tissue subcompartment
     dMINTf = kINFINT*(CINFf-CINT) + P_passive*CINL + (VmIn_Oatp2*CINL/(KmIn_Oatp2+CINL))
     #Intestine lumen
-    dMINL = QGE*CSTL - (Qfeces*CINL) - P_passive*CINL- 
+    dMINL = QGE*CSTL - (Qfeces*CINL) - P_passive*CINL + CLbile*Qbile - 
            (VmIn_Oatp2*CINL/(KmIn_Oatp2+CINL))
     
     
@@ -1346,7 +1344,7 @@ ode.func <- function(time, inits, params){
     dMBoTf = kBoFBoT*(CBoFf -CBoT)
     
     #Excreta#
-    dMfeces <- Qfeces*CINL+ CLbile*Qbile
+    dMfeces <- Qfeces*CINL
     dMurine <- Qurine*CFil
     dVurine = Qurine
     dVfeces = Qfeces
@@ -3321,7 +3319,7 @@ kim_IV_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_IV_kim_2016.xlsx")
 gus_OR_Mblood <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Plasma Male rats_Oral.xlsx")
 gus_OR_Mtissues <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Tissues Male rats_Oral.xlsx")
 
-setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/NEW/Training/AAFE/koff_07_lung_same_RAF_bile_no_reabs")
+setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/NEW/Training/AAFE/koff_07_lung_same_RAF_bile_kfabp_kotap_oat1")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -3339,7 +3337,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0, 
-              "maxeval" = 300, 
+              "maxeval" = 500, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
@@ -3348,10 +3346,10 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
 
 N_pars <- 9 # Number of parameters to be fitted
-fit <-  c(rep(log(1),8), log(1e5))
+fit <-  c(rep(log(1),7), log(1e5), log(1e5))
 
-lb = c(rep(log(1e-10), 8), log(1e3))
-ub = c(rep(log(1e10), 8), log(1e6))
+lb = c(rep(log(1e-10), 7), log(5e4), log(1e3))
+ub = c(rep(log(1e10), 7), log(1e6), log(1e6))
 
 # Run the optimization algorithm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
@@ -3363,7 +3361,7 @@ optimizer <- nloptr::nloptr( x0= fit,
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
-save.image("koff_07_lung_same_RAF_bile_no_reabs.RData")
+save.image("koff_07_lung_same_RAF_bile_kfabp_kotap_oat1.RData")
 
 
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
