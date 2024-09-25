@@ -2017,7 +2017,7 @@ obj.func <- function(x, dataset){
   #-------------------------
   ##########################
   # Set up simulations for the 6th case, i.e. Hinderliter Inhalation female single low
-  BW <- 0.225  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
+  BW <- 0.21  #kg, not reported in the study - 180-240 g average BW of female CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
   sex <- "F"
   inhalation_params=estimate_BFn_TVn(sex, BW)
   BFn = inhalation_params["BFn"]# 1/h
@@ -2086,7 +2086,7 @@ obj.func <- function(x, dataset){
   #-------------------------
   ##########################
   # Set up simulations for the 7th case, i.e. Hinderliter Inhalation female single low
-  BW <- 0.225  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
+  BW <- 0.21  #kg, not reported in the study - 180-240 g average BW of female CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
   sex <- "F"
   inhalation_params=estimate_BFn_TVn(sex, BW)
   BFn = inhalation_params["BFn"]# 1/h
@@ -2153,7 +2153,7 @@ obj.func <- function(x, dataset){
   #-------------------------
   ##########################
   # Set up simulations for the 8th case, i.e. Hinderliter Inhalation female single high
-  BW <- 0.225  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
+  BW <- 0.21  #kg, not reported in the study - 180-240 g average BW of female CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
   sex <- "F"
   inhalation_params=estimate_BFn_TVn(sex, BW)
   BFn = inhalation_params["BFn"]# 1/h
@@ -2514,8 +2514,8 @@ preds_hind_INH_Mblood_high <-  solution[, c("time", "Cplasma")]
 #-------------------------------------------------------------------------------
 #################################################################################
 
-# Set up simulations for the 6th case, i.e. Hinderliter Inhalation male single low
-BW <- 0.225  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
+# Set up simulations for the 6th case, i.e. Hinderliter Inhalation female single low
+BW <- 0.21  #kg, not reported in the study - 180-240 g average BW of female CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
 sex <- "F" 
 inhalation_params=estimate_BFn_TVn(sex, BW)
 BFn = inhalation_params["BFn"]# 1/h
