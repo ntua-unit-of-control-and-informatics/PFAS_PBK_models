@@ -1176,7 +1176,7 @@ ode.func <- function(time, inits, params){
     #interstitial fluid subcompartment
     dMKFf = QparaKi*(1-SKi)*CKBf+ PeffK*AK*(CKBf-CKFf) - kKFKT*(CKFf-CKTf) -
       (VmK_Oat1*CKFf/(KmK_Oat1+CKFf)) - (VmK_Oat3*CKFf/(KmK_Oat3+CKFf))  +
-      (VmK_baso*CKTf/(KmK_baso+CKTf)) +  koff_alb*CKFb*VKB - kon_alb*CalbKFf*CKFf*VKF
+      (VmK_baso*CKTf/(KmK_baso+CKTf)) +  koff_alb*CKFb*VKF - kon_alb*CalbKFf*CKFf*VKF
     #Kidney proximal tubule cells subcompartment
     dMKTf = kKFKT*(CKFf-CKTf) - kFKT*(CKTf - CFil) + (VmK_Oatp*CFil/(KmK_Oatp+CFil)) +
       (VmK_Oat1*CKFf/(KmK_Oat1+CKFf)) + (VmK_Oat3*CKFf/(KmK_Oat3+CKFf)) + 
@@ -3339,7 +3339,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0, 
-              "maxeval" = 500, 
+              "maxeval" = 300, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
