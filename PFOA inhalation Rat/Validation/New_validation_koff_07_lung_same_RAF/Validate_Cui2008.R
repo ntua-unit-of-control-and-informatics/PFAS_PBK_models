@@ -18,7 +18,7 @@ AAFE <- function(predictions, observations, times=NULL){
 #===============
 # Generate predictions
 #===============
-load("koff_07_lung_same_RAF.RData")
+load("koff_07_lung_same_RAF_bile.RData")
 # Body weight 
 BW <- 0.2 #kg
 sex <- "M"
