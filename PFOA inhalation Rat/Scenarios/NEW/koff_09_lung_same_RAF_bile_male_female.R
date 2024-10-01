@@ -39,13 +39,21 @@ create.params <- function(user.input){
     Ka <-estimated_params[6] # 5.8e05 from Rue et al. (2024)#mol/L
     
     if (sex == "F"){
-      RAFOatp_k <- estimated_params[1]* 8.505258e-01
-      RAFOat1 <- estimated_params[2]*1.700901e+04
-      RAFOatp_l <- estimated_params[3]*5.458991e-09
+      RAFOatp_k <- estimated_params[1]* estimated_params[7]
+      RAFOat1 <- estimated_params[2]*estimated_params[8]
+      RAFOatp_l <- estimated_params[3]*estimated_params[9]
       
-      RAFOatp_lu_ap <- 2.930010e-06
-      RAFOatp2_Int <- 50
-      Ka <- 50 # 5.8e05 #mol/L
+      RAFOatp_lu_ap <-  estimated_params[4]
+      RAFOatp2_Int <-  estimated_params[5]
+      Ka <- estimated_params[6] # 5.8e05 #mol/L
+      KLfabp <- estimated_params[10]#[L/mol]*1e-3 
+
+      RAFOat3 <- RAFOat1
+      RAFUrat <- RAFOatp_k
+      RAFOatp2_l <- RAFOatp_l
+      RAFOatp_lu_bas <- RAFOatp_lu_ap
+      RAFNtcp <- RAFOatp_l
+      f_fabp_avail <- 1
     }
     
     #permeabilities correction factor
@@ -1609,7 +1617,7 @@ obj.func_male <- function(x, dataset){
   
   # x: a vector with the values of the optimized parameters (it is not the x
   # from the odes!!!)
-  estimated_params <- exp(x)
+  estimated_params <- c(exp(x), rep(1,4))
   
   
   ##########################
@@ -2611,7 +2619,7 @@ obj.func_male <- function(x, dataset){
 
 obj.func_female <- function(x, dataset){
   score <- rep(NA, 12)
-  
+  estimated_params <- c( rep(1,6),exp(x),)
   # x: a vector with the values of the optimized parameters (it is not the x
   # from the odes!!!)
   estimated_params <- exp(x)
@@ -3287,8 +3295,8 @@ obj.func_female <- function(x, dataset){
   score[12] <- AAFE(predictions = preds_kim_IV_Fblood, observations = obs_kim_IV_Fblood)
   
   ########################################################################################
-  score[5] <- 20*score[8]
-  score[6] <- 20*score[9]
+  score[5] <- 20*score[5]
+  score[6] <- 20*score[6]
   # Estimate final score
   
   final_score <- mean(score, na.rm = TRUE)
@@ -3349,7 +3357,7 @@ kim_IV_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_IV_kim_2016.xlsx")
 gus_OR_Mblood <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Plasma Male rats_Oral.xlsx")
 gus_OR_Mtissues <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Tissues Male rats_Oral.xlsx")
 
-setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/NEW/Training/AAFE/koff_12_lung_same_RAF_bile")
+setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/NEW/Training/AAFE/koff_09_lung_same_RAF_bile_male_female")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -3367,7 +3375,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0, 
-              "maxeval" = 500, 
+              "maxeval" = 1000, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
@@ -3378,7 +3386,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
 N_pars <- 6 # Number of parameters to be fitted
 fit <-  c(rep(log(1),5), log(1e5))
 
-lb = c(rep(log(1e-10), 5), log(1e3))
+lb = c(rep(log(1e-20), 5), log(1e3))
 ub = c(rep(log(1e6), 5), log(1e6))
 
 # Run the optimization algorithm to estimate the parameter values
@@ -3396,10 +3404,10 @@ save.image("koff_09_lung_same_RAF_bile_male_female.RData")
 
 
 N_pars <- 4 # Number of parameters to be fitted
-fit <-  c(rep(log(1),3), log(1e5))
+fit <-  c(rep(log(0.1),3), log(1e5))
 
-lb = c(rep(log(1e-9), 3), log(1e3))
-ub = c(rep(log(1e3), 3), log(1e6))
+lb = log(c(1e-20,1e-2,1e-10,1e1 ))
+ub = log(c(1, 1e2, 1e2,1e6))
 # Run the optimization algorithm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func_female,
@@ -3412,7 +3420,7 @@ optimizer <- nloptr::nloptr( x0= fit,
 estimated_params_female <- exp(optimizer$solution)
 save.image("koff_09_lung_same_RAF_bile_male_female.RData")
 
-
+estimated_params <- c(estimated_params_male, estimated_params_female)
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
 BW <- 0.29  # body weight (kg)
 admin.dose_per_g <- 16.56 # administered dose in mg PFOA/kg BW 

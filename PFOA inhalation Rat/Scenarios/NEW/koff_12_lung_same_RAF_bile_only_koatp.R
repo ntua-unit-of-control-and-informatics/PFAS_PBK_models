@@ -3345,7 +3345,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0, 
-              "maxeval" = 300, 
+              "maxeval" = 1000, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
