@@ -20,7 +20,7 @@ AAFE <- function(predictions, observations, times=NULL){
 #===============
 
 
-load("koff_07_lung_same_RAF.RData")
+load("koff_07_lung_same_RAF_bile.RData")
 # Body weight 
 
 

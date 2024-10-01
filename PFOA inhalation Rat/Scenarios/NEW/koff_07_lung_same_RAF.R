@@ -606,7 +606,7 @@ create.params <- function(user.input){
     CalbSKF_init <- f_alb_avail*21/MW_albumin ##mg/mL-->  (mol/L) https://doi.org/10.1111/j.1748-1716.1973.tb05464.x -->Table 2: 2.1 g/100 mL
     
     #Interstitial/plasma concentration ratio (IPR)
-    #values from Kawai et al., 1994, Table C-I
+    #values from Kawai et al., 1994, https://doi.org/10.1007/BF02353860, Table C-I
     
     IPR_K = 0.5
     IPR_L = 0.5
