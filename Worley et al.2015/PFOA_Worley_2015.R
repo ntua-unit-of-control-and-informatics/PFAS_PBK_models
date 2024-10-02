@@ -94,7 +94,7 @@ create.params  <- function(user_input){
     
     #Kidney Parameters
     MK = MKC*BW*1000	#mass of the kidney (g)
-    PTC = MKC*6e7	#number of PTC (cells/kg BW) (based on 60 million PTC/gram kidney)
+    PTC = MK*6e7	#number of PTC (cells/kg BW) (based on 60 million PTC/gram kidney)
     VPTC = MK*VPTCC	#volume of proximal tubule cells (L)	
     MPTC = VPTC*1000 #mass of the proximal tubule cells (g) (assuming density 1 kg/L)	
     Vmax_basoC = (Vmax_baso_invitro*RAFbaso*PTC*protein*60*(MW/1e12)*1000)#Vmax of basolateral transporters (mg/h/kg BW)

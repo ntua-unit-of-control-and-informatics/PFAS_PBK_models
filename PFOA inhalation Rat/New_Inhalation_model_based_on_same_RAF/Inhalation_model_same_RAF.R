@@ -51,7 +51,7 @@ create.params <- function(user.input){
     kabsUA <- estimated_params[1]
     kCLEal <- estimated_params[2]
     kCLEua <- estimated_params[3]
-    kLuAF <- estimated_params[4]
+    
     
     #permeabilities correction factor
     kabs_st <- 0 #m/h
@@ -563,9 +563,9 @@ create.params <- function(user.input){
     
     #Lung
     lung_protein_per_gram <- 134 # 134 mg/mL tissue --> 134 mg/g tissue, Figure 2, https://doi.org/10.1007/s00580-021-03242-z 
-    kUAB <- kabsUA * RA_area #absorption rate from upper airways to blood
-    CLEal <- kCLEal * ALF #clearance rate from alveolar lining fluid to stomach, ALF in m^2
-    CLEua <- kCLEua * AUA #clearance rate rate from upper airways to stomach, AUA in m^2
+    kUAB <- kabsUA * RA_area * 1000#absorption rate from upper airways to blood, RA_area in m^2
+    CLEal <- kCLEal * ALF* 1000 #clearance rate from alveolar lining fluid to stomach, ALF in m^2
+    CLEua <- kCLEua * AUA * 1000#clearance rate rate from upper airways to stomach, AUA in m^2
     #kLuTLuAF <- kLuAF * ALF #transport rate from alveolar lining fluid to lung tissue, ALF in m^2
     
     #oatp-lung-ap (from ALF to tissue)
