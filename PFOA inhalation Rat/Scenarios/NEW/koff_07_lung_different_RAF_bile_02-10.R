@@ -395,9 +395,17 @@ create.params <- function(user.input){
     ##################################
     
     #Flow rate of fluids including feces, bile, urine and glomerular filtration rate (GFR), in L/h
-    
-    PQbile <- 90/1000/24 # [mL/d/kg BW]/1000/24 --> L/h/kg BW
-    Qbile <- PQbile * BW #L/h
+    # 
+    # PQbile <- 90/1000/24 # [mL/d/kg BW]/1000/24 --> L/h/kg BW
+    # Qbile <- PQbile * BW #L/h
+    if (sex == "M"){
+      PQbile = 0.206/2 #L/kg liver/h #source: https://doi.org/10.1038/s41598-019-46150-7
+      Qbile = PQbile* VL  #L/h
+    }else if (sex == "F"){
+      # Females have 44% more bile flow, source: doi:10.1042/cs0550253
+      PQbile = 0.206/2 #L/kg liver/h #
+      Qbile = 1.44* PQbile* VL  #L/h
+    }
     Qfeces <- (8.18/0.21)*BW #g/kg BW, based on Cui et al.(2010)
     feces_density <- 1.29 #g/cm^3 --> g/mL from Lupton 1986, Fig 1. Fiber free control diet, https://doi.org/10.1093/jn/116.1.164
     
