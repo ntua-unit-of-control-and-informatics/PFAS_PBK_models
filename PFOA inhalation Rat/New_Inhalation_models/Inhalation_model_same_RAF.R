@@ -32,9 +32,7 @@ create.params <- function(user.input){
     RAFOatp2_Int <- 7.876250e+01
     f_fabp_avail <- 1
     f_alb_avail <- 1
-    
-    P_liver_bile <- 8.001414e+00 
-    
+ 
     RAF_papp <- 1
     
     koff_alb <- 0.7
@@ -86,6 +84,9 @@ create.params <- function(user.input){
     PVLF <- 0.16  #pkSim
     VLF <- PVLF * PVL* BW #liver interstitial fluid volume kg=L
     VLT <- VL - VLF #liver tissue volume kg=L
+    PVLbile <- 47e-3/200 #mL/g BW,  https://doi.org/10.1016/S0002-9440(10)64679-2
+    VLbile <- PVLbile * BW #L
+    
     
     #Intestine (small and large)
     PVIN <- 2.24e-2 #Brown et al. 1997, p 416, Table 5: 1.4+0.84
@@ -461,6 +462,11 @@ create.params <- function(user.input){
     #Alveolar cells surface area (Type I and II), m^2
     AcALF = ((78.8*2*5320*1e-6) + (125*2*123*1e-6))*BW/0.29  #Stone et al., 1992, BW_ref = 0.29, values for each lung , https://doi.org/10.1165/ajrcmb/6.2.235
     
+    #canalicular surface area, m^2
+    rat_hep_surf_area = 22.95 * 1e2 # 22.95*1e6 cm2 --> m2,  https://doi.org/10.1074/jbc.271.12.6702
+    AcLBilec = 0.01 * 22.95 * 1e2 # m2 , canalicular membrane 1% of the surface area of the hepatocyte,https://www.ncbi.nlm.nih.gov/books/NBK470209/
+    
+    
     # Following the calculations of Lin et al. (2023) for Caco-2 cells
     ClINFT_unscaled= 18.1 #uL/min/mg protein, Kimura et al. 2017
     muscle_protein <- 158.45 #mg/g muscle (protein data from Cheek et al.,1971 
@@ -481,6 +487,7 @@ create.params <- function(user.input){
     
     kKFKT = ((Papp/100) * AcK)*1000 #m^3/h * 1000 --> L/h
     kLFLT = ((Papp/100) * AcL)*1000 #m^3/h * 1000 --> L/h
+    kLTLbile = ((Papp/100) * AcLBilec)*1000 #m^3/h * 1000 --> L/h
     kMFMT = ((Papp/100) * AcM)*1000 #m^3/h * 1000 --> L/h
     kSTFSTT = ((Papp/100) * AcST)*1000 #m^3/h * 1000 --> L/h 
     kINFINT = ((Papp/100) * AcIN)*1000 #m^3/h * 1000 --> L/h 
@@ -705,7 +712,7 @@ create.params <- function(user.input){
     
     return(list('VB'=VB, 'Vplasma'=Vplasma, 'VK'=VK, 'VKB'=VKB, 
                 'VKF'=VKF, 'VKT'=VKT, 'VFil'=VFil,
-                'VL'=VL, 'VLB'=VLB, 'VLF'=VLF, 'VLT'=VLT, 
+                'VL'=VL, 'VLB'=VLB, 'VLF'=VLF, 'VLT'=VLT, 'VLbile'=VLbile,
                 'VM'=VM, 'VMB'=VMB, 'VMF'=VMF, 'VMT'=VMT, 'VA'=VA, 'VAB'=VAB, 
                 'VAF'=VAF, 'VAT'=VAT, 'VUA'=VUA, 'VR'=VR, 'VRB'=VRB, 
                 'VRF'=VRF, 'VRT'=VRT, 'VVen' = VVen,
@@ -737,7 +744,7 @@ create.params <- function(user.input){
                 'PeffA'=PeffA, 'PeffM'=PeffM, 'PeffR'=PeffR, 'PeffLu' = PeffLu,
                 'PeffSP'=PeffSP, 'PeffH'=PeffH, 'PeffBr'=PeffBr, 'PeffST' = PeffST,
                 'PeffIN'=PeffIN, 'PeffGo'=PeffGo,
-                'PeffSK' = PeffSK,  'PeffBo' = PeffBo, 'PeffUA'=PeffUA, "P_liver_bile" = P_liver_bile,
+                'PeffSK' = PeffSK,  'PeffBo' = PeffBo, 'PeffUA'=PeffUA, 
                 
                 'Qcardiac'=Qcardiac, 'QBK'=QBK, 
                 'QBL'=QBL, 'QBLtot'=QBLtot,
@@ -793,7 +800,7 @@ create.params <- function(user.input){
                 
                 'Papp' = Papp, 'P_passive' = P_passive,
                 'kKFKT'=kKFKT, 'kFKT'=kFKT,  
-                'kLFLT'=kLFLT, 'kAFAT'=kAFAT, 
+                'kLFLT'=kLFLT, 'kLTLbile'=kLTLbile, 'kAFAT'=kAFAT, 
                 'kRFRT'=kRFRT,
                 'kabST'=kabST, 
                 'kMFMT'=kMFMT, 'kLuTLuF' =kLuTLuF, 'kLuTLuAF'=kLuTLuAF, 'kSPFSPT' =kSPFSPT,
@@ -911,6 +918,7 @@ ode.func <- function(time, inits, params){
     CLT <- MLT/VLT # tissue concentration
     CLTf <- MLTf/VLT
     CLTb <- MLTb/VLT
+    CLbile <- MLbile/VLbile #Bile  canaliculi
     
     #Stomach
     
@@ -1278,8 +1286,12 @@ ode.func <- function(time, inits, params){
       (VmL_Ntcp*CLFf/(KmL_Ntcp+CLFf)) + koff_alb*CLFb*VLF -kon_alb*CalbLFf*CLFf*VLF
     #Liver tissue subcompartment
     dMLTf = kLFLT*(CLFf-CLTf) + (VmL_Oatp*CLFf/(KmL_Oatp+CLFf)) + (VmL_Oatp2*CLFf/(KmL_Oatp2+CLFf))+
-      (VmL_Ntcp*CLFf/(KmL_Ntcp+CLFf)) -  P_liver_bile*Qbile*CLTf + koff_fabp*CLTb*VLT-
-      kon_fabp*CFabpLTf*CLTf*VLT
+      (VmL_Ntcp*CLFf/(KmL_Ntcp+CLFf)) + koff_fabp*CLTb*VLT-
+      kon_fabp*CFabpLTf*CLTf*VLT - kLTLbile*(CLTf-CLbile)
+    
+    #Bile  canaliculi subcompartment
+    
+    dMLbile = kLTLbile*(CLTf-CLbile) - CLbile*Qbile
     
     
     #Stomach
@@ -1305,7 +1317,7 @@ ode.func <- function(time, inits, params){
     #Intestine tissue subcompartment
     dMINTf = kINFINT*(CINFf-CINT) + P_passive*CINL + (VmIn_Oatp2*CINL/(KmIn_Oatp2+CINL))
     #Intestine lumen
-    dMINL = QGE*CSTL - (Qfeces*CINL) - P_passive*CINL + P_liver_bile*Qbile*CLTf - 
+    dMINL = QGE*CSTL - (Qfeces*CINL) - P_passive*CINL +  CLbile*Qbile - 
       (VmIn_Oatp2*CINL/(KmIn_Oatp2+CINL))
     
     
@@ -1439,8 +1451,8 @@ ode.func <- function(time, inits, params){
     Ckidney <- (MKB + MKF+ MKT)/(VKB+VKF+VKT)
     Mkidney <- MKB + MKF+ MKT
     
-    Cliver <- (MLB + MLF+ MLT)/(VLB+VLF+VLT)
-    Mliver <- MLB + MLF+ MLT
+    Cliver <- (MLB + MLF+ MLT + MLbile )/(VLB+VLF+VLT+VLbile)
+    Mliver <- MLB + MLF+ MLT + MLbile
     
     Cstomach <-  (MSTB + MSTF+ MSTT + MSTL)/(VSTB+VSTF+VSTT+VSTL)
     Cintestine <-  (MINB + MINF+ MINT+MINL)/(VINB+VINF+VINT+VINL)
@@ -1466,7 +1478,7 @@ ode.func <- function(time, inits, params){
     Cskin <-  (MSKB + MSKF+ MSKT)/(VSKB+VSKF+VSKT)
     Cbones <-  (MBoB + MBoF+ MBoT)/(VBoB+VBoF+VBoT)
     
-    
+    CalveolarLF <- (MLuAFf+MLuAFb)/VLuAF
     
     #Concentration calculation in each compartment 
     
@@ -1500,7 +1512,7 @@ ode.func <- function(time, inits, params){
             'dMArtf'=dMArtf, 'dMVenf'=dMVenf, 'dMKBf'=dMKBf, 
             'dMKFf'=dMKFf, 'dMKTf'=dMKTf,
             'dMFil'=dMFil,  'dMLBf'=dMLBf, 
-            'dMLFf'=dMLFf, 'dMLTf'=dMLTf,
+            'dMLFf'=dMLFf, 'dMLTf'=dMLTf, 'dMLbile'=dMLbile,
             
             'dMSTBf'=dMSTBf, 'dMSTFf'=dMSTFf, 'dMSTTf'=dMSTTf, 'dMSTL'=dMSTL,
             'dMINBf'=dMINBf, 'dMINFf'=dMINFf, 'dMINTf'=dMINTf,'dMINL'=dMINL,
@@ -1594,7 +1606,7 @@ create.inits <- function(parameters){
     
     Ca2uKTf<- Ca2uKT_init; CFabpKTf<- CFabpKT_init; MKTf<- 0; MKTb<- 0; 
     CFabpLTf<- CFabpLT_init; CalbLuAFf<- CalbLuAF_init;
-    MLTf<- 0; MLTb<- 0; MSTTf <- 0; MINTf <- 0; MMTf <- 0; MATf <- 0; MRTf <- 0; MLuTf <- 0;
+    MLTf<- 0; MLTb<- 0; MLbile <-0; MSTTf <- 0; MINTf <- 0; MMTf <- 0; MATf <- 0; MRTf <- 0; MLuTf <- 0;
     MLuAFf <- 0; MUA <- 0;  MLuAFb<- 0; MSPTf <- 0; MHTf <- 0; MBrTf <- 0;
     MGoTf <- 0; MSKTf <- 0; MBoTf <- 0;  
     
@@ -1630,7 +1642,7 @@ create.inits <- function(parameters){
              'MArtf'=MArtf, 'MVenf'=MVenf, 'MKBf'=MKBf, 
              'MKFf'=MKFf, 'MKTf'=MKTf,
              'MFil'=MFil,  'MLBf'=MLBf, 
-             'MLFf'=MLFf, 'MLTf'=MLTf,
+             'MLFf'=MLFf, 'MLTf'=MLTf, 'MLbile'=MLbile,
              
              'MSTBf'=MSTBf, 'MSTFf'=MSTFf, 'MSTTf'=MSTTf, 'MSTL'=MSTL,
              'MINBf'=MINBf, 'MINFf'=MINFf, 'MINTf'=MINTf,'MINL'=MINL,
@@ -2243,7 +2255,7 @@ hind_INH_Fblood_medium <- openxlsx::read.xlsx("Inhalation_data/Hinderliter_2006_
 hind_INH_Fblood_high <- openxlsx::read.xlsx("Inhalation_data/Hinderliter_2006_female_plasma_single_High_dose.xlsx")
 
 #setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_2/Training/AAFE/NoStomachAbs")
-setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/New_Inhalation_model_based_on_same_RAF/Training/AAFE")
+setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/New_Inhalation_models/Training/AAFE")
 
 dataset <- list("df1" = gus_INH_Mblood, "df2" = gus_INH_Mtissues, 
                 "df3" = hind_INH_Mblood_low, "df4" = hind_INH_Mblood_medium,
