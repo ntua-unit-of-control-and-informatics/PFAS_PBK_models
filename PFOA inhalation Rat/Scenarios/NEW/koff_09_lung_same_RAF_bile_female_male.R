@@ -10,11 +10,11 @@ create.params <- function(user.input){
     # Volume of tissue i as percentage of body weight (PVi, unitless) and % volume (Vi, m^3),
     #assuming the density of tissue is 1 g/mL.
     # Estimated parameters
-      RAFOatp_k <- estimated_params[1]
-      RAFOat1 <- estimated_params[2]
-      RAFOatp_l <- estimated_params[3]
-      
-     
+    RAFOatp_k <- estimated_params[1]
+    RAFOat1 <- estimated_params[2]
+    RAFOatp_l <- estimated_params[3]
+    
+    
     RAFOat3 <- RAFOat1
     RAFUrat <- RAFOatp_k
     RAFOatp2_l <- RAFOatp_l
@@ -38,7 +38,7 @@ create.params <- function(user.input){
     KLfabp <- (1.2e5+4e4+1.9e4)  #[L/mol]*1e-3 , value from Cheng et al. (2017)
     Ka <-estimated_params[6] # 5.8e05 from Rue et al. (2024)#mol/L
     
-    if (sex == "F"){
+    if (sex == "M"){
       RAFOatp_k <- estimated_params[1]* estimated_params[7]
       RAFOat1 <- estimated_params[2]*estimated_params[8]
       RAFOatp_l <- estimated_params[3]*estimated_params[9]
@@ -47,7 +47,7 @@ create.params <- function(user.input){
       RAFOatp2_Int <-  estimated_params[5]
       Ka <- estimated_params[6] # 5.8e05 #mol/L
       KLfabp <- estimated_params[10]#[L/mol]*1e-3 
-
+      
       RAFOat3 <- RAFOat1
       RAFUrat <- RAFOatp_k
       RAFOatp2_l <- RAFOatp_l
@@ -1246,7 +1246,7 @@ ode.func <- function(time, inits, params){
     dMINTf = kINFINT*(CINFf-CINT) + P_passive*CINL + (VmIn_Oatp2*CINL/(KmIn_Oatp2+CINL))
     #Intestine lumen
     dMINL = QGE*CSTL - (Qfeces*CINL) - P_passive*CINL + CLbile*Qbile - 
-           (VmIn_Oatp2*CINL/(KmIn_Oatp2+CINL))
+      (VmIn_Oatp2*CINL/(KmIn_Oatp2+CINL))
     
     
     #Muscle
@@ -1291,10 +1291,10 @@ ode.func <- function(time, inits, params){
       koff_alb*CLuFb*VLuF - kon_alb*CalbLuFf*CLuFf*VLuF - (VmLu_Oatp_bas*CLuFf/(KmLu_Oatp_bas+CLuFf))
     #Lung tissue
     dMLuTf =  - kLuTLuF*(CLuT-CLuFf) -  kLuTLuAF*(CLuT-CLuAFf) + (VmLu_Oatp_bas*CLuFf/(KmLu_Oatp_bas+CLuFf)) +
-                (VmLu_Oatp_ap*CLuAFf/(KmLu_Oatp_ap+CLuAFf))
+      (VmLu_Oatp_ap*CLuAFf/(KmLu_Oatp_ap+CLuAFf))
     #Alveolar lining fluid
     dMLuAFf =  kLuTLuAF*(CLuT-CLuAFf) + koff_alb*CLuAFb*VLuAF - kon_alb*CalbLuAFf*CLuAFf*VLuAF -
-               (VmLu_Oatp_ap*CLuAFf/(KmLu_Oatp_ap+CLuAFf))
+      (VmLu_Oatp_ap*CLuAFf/(KmLu_Oatp_ap+CLuAFf))
     
     
     #Spleen
@@ -1617,7 +1617,7 @@ obj.func_male <- function(x, dataset){
   
   # x: a vector with the values of the optimized parameters (it is not the x
   # from the odes!!!)
-  estimated_params <- c(exp(x), rep(1,4))
+  estimated_params <- c(rep(1,6), exp(x) )
   
   
   ##########################
@@ -1848,7 +1848,7 @@ obj.func_male <- function(x, dataset){
                               exp_data[exp_data$Tissue == "Heart", "concentration"])
   
   score[4] <- AAFE(predictions = preds_kim_OR_Mtissues, observations = obs_kim_OR_Mtissues)
-    
+  
   ##########################
   #-------------------------
   # Dzierlenga ORAL male tissues
@@ -2028,7 +2028,7 @@ obj.func_male <- function(x, dataset){
   
   score[7] <- AAFE(predictions = preds_kim_IV_Mblood, observations = obs_kim_IV_Mblood)
   
-    
+  
   ##########################
   #-------------------------
   # Cui ORAL male urine low
@@ -2481,7 +2481,7 @@ obj.func_male <- function(x, dataset){
   score[15] <- AAFE(predictions = preds_dzi_OR_Mserum_high, observations = obs_dzi_OR_Mserum_high)
   
   
- 
+  
   ##########################
   #-------------------------
   # Gustafsson Oral male blood
@@ -2619,7 +2619,7 @@ obj.func_male <- function(x, dataset){
 
 obj.func_female <- function(x, dataset){
   score <- rep(NA, 12)
-  estimated_params <- c( rep(1,6),exp(x),)
+  estimated_params <- c( exp(x),rep(1,4))
   # x: a vector with the values of the optimized parameters (it is not the x
   # from the odes!!!)
 
@@ -3356,7 +3356,7 @@ kim_IV_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_IV_kim_2016.xlsx")
 gus_OR_Mblood <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Plasma Male rats_Oral.xlsx")
 gus_OR_Mtissues <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Tissues Male rats_Oral.xlsx")
 
-setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/NEW/Training/AAFE/koff_09_lung_same_RAF_bile_male_female")
+setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/NEW/Training/AAFE/koff_09_lung_same_RAF_bile_female_male")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -3374,7 +3374,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0, 
-              "maxeval" = 1000, 
+              "maxeval" = 300, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
@@ -3390,25 +3390,6 @@ ub = c(rep(log(1e6), 5), log(1e6))
 
 # Run the optimization algorithm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
-                             eval_f = obj.func_male,
-                             lb	= lb,
-                             ub = ub,
-                             opts = opts,
-                             dataset = dataset)
-
-#estimated_params <- exp(optimizer$solution)
-estimated_params_male <- exp(optimizer$solution)
-save.image("koff_09_lung_same_RAF_bile_male_female.RData")
-
-
-
-N_pars <- 4 # Number of parameters to be fitted
-fit <-  c(rep(log(0.1),3), log(1e5))
-
-lb = log(c(1e-20,1e-2,1e-10,1e1 ))
-ub = log(c(1, 1e2, 1e2,1e6))
-# Run the optimization algorithm to estimate the parameter values
-optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func_female,
                              lb	= lb,
                              ub = ub,
@@ -3417,7 +3398,26 @@ optimizer <- nloptr::nloptr( x0= fit,
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params_female <- exp(optimizer$solution)
-save.image("koff_09_lung_same_RAF_bile_male_female.RData")
+save.image("koff_09_lung_same_RAF_bile_female_male.RData")
+
+
+
+N_pars <- 4 # Number of parameters to be fitted
+fit <-  c(rep(log(0.1),3), log(1e5))
+
+lb = log(c(1e-20,1e-20,1e-20,1e1 ))
+ub = log(c(1e20, 1e20, 1e20,1e6))
+# Run the optimization algorithm to estimate the parameter values
+optimizer_male <- nloptr::nloptr( x0= fit,
+                             eval_f = obj.func_male,
+                             lb	= lb,
+                             ub = ub,
+                             opts = opts,
+                             dataset = dataset)
+
+#estimated_params <- exp(optimizer$solution)
+estimated_params_male <- exp(optimizer$solution)
+save.image("koff_09_lung_same_RAF_bile_female_male.RData")
 
 estimated_params <- c(estimated_params_male, estimated_params_female)
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
