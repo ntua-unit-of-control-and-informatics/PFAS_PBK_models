@@ -11,25 +11,25 @@ create.params <- function(user.input){
     #assuming the density of tissue is 1 g/mL.
     # Estimated parameters
     if (sex == "M"){
-      RAFOatp_k <- estimated_params[1]
-      RAFOat1 <- estimated_params[2]
-      RAFOatp_l <- estimated_params[3]
+      RAFOatp_k <- 2.683341e+00
+      RAFOat1 <- 3.007561e+04
+      RAFOatp_l <- 1.852061e+02
       
       
     }else if(sex == "F"){
-      RAFOatp_k <- estimated_params[4]
-      RAFOat1 <- estimated_params[5]
-      RAFOatp_l <- estimated_params[6]
+      RAFOatp_k <- 2.776635e-19
+      RAFOat1 <- 2.207686e+05
+      RAFOatp_l <- 2.202331e-06
       
       
     }
     RAFOat3 <- RAFOat1
     RAFUrat <- RAFOatp_k
     RAFOatp2_l <- RAFOatp_l
-    RAFOatp_lu_ap <- estimated_params[7]
+    RAFOatp_lu_ap <- 8.526492e+00
     RAFOatp_lu_bas <- RAFOatp_lu_ap
     RAFNtcp <- RAFOatp_l
-    RAFOatp2_Int <- estimated_params[8]
+    RAFOatp2_Int <- 6.922875e+01
     f_fabp_avail <- 1
     f_alb_avail <- 1
     
@@ -45,7 +45,7 @@ create.params <- function(user.input){
     KmK_baso <- 1e20
     KmK_api <-   1e20
     KLfabp <- (1.2e5+4e4+1.9e4)  #[L/mol]*1e-3 , value from Cheng et al. (2017)
-    Ka <-estimated_params[9] # 5.8e05 #mol/L
+    Ka <- 5.323317e+04 # 5.8e05 #mol/L
     
     kabsUA <- estimated_params[1]
     kCLEal <- estimated_params[2]
