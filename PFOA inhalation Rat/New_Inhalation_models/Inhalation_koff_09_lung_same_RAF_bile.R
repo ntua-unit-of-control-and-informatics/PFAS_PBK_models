@@ -2240,7 +2240,7 @@ obj.func <- function(x, dataset){
 
 #setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
 #setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
-setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
+setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
 
 MW <- 414.07 #g/mol
 source("Goodness-of-fit-metrics.R")
@@ -2256,7 +2256,7 @@ hind_INH_Fblood_medium <- openxlsx::read.xlsx("Inhalation_data/Hinderliter_2006_
 hind_INH_Fblood_high <- openxlsx::read.xlsx("Inhalation_data/Hinderliter_2006_female_plasma_single_High_dose.xlsx")
 
 #setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_2/Training/AAFE/NoStomachAbs")
-setwd("C:/Users/dpjio/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/New_Inhalation_models/Training/AAFE/Inhalation_koff_09_lung_same_RAF_bile")
+setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/New_Inhalation_models/Training/AAFE/Inhalation_koff_09_lung_same_RAF_bile")
 
 dataset <- list("df1" = gus_INH_Mblood, "df2" = gus_INH_Mtissues, 
                 "df3" = hind_INH_Mblood_low, "df4" = hind_INH_Mblood_medium,
@@ -2281,7 +2281,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
 
 
 N_pars <- 3 # Number of parameters to be fitted
-fit <-  c(log(1e2), log(1),log(1))
+fit <-  c(log(1), log(1),log(1))
 
 lb	= c(log(1e-5), log(1e-5),log(1e-5))
 ub = c(log(1e5), log(1e5),log(1e5))
@@ -2384,7 +2384,7 @@ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
                                     method="lsodes",rtol = 1e-03, atol = 1e-03))
 
-preds_gus_INH_Mtissues <-  solution[, c("time", "CalveolarLF","Cliver", "Clungtissues", "Ckidney")]
+preds_gus_INH_Mtissues <-  solution[, c("time", "CalveolarLF","Cliver", "Clungtissue", "Ckidney")]
 
 
 
