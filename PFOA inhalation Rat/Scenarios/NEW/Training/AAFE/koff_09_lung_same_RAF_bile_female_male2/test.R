@@ -19,11 +19,11 @@ create.params <- function(user.input){
     RAFNtcp <- RAFOatp_l
     RAFOatp2_Int <-7.916832e+01
     f_fabp_avail <-  1
-    f_alb_avail <-  1
+    f_alb_avail <-  0.1
     
     RAF_papp <- 1
     
-    koff_alb <- 4
+    koff_alb <- 0.001
     koff_fabp <-  koff_alb
     koff_a2u <- koff_alb
     
@@ -32,7 +32,7 @@ create.params <- function(user.input){
     KmK_baso <- 1e20
     KmK_api <-   1e20
     KLfabp <- (1.2e5+4e4+1.9e4)  #[L/mol]*1e-3 , value from Cheng et al. (2017)
-    Ka <- 5.8e04# from Rue et al. (2024)#mol/L
+    Ka <- 5.8e05# from Rue et al. (2024)#mol/L
     
     if (sex == "M"){
       RAFOatp_k <- estimated_params[1]* estimated_params[7]
