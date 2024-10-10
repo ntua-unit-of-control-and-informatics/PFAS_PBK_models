@@ -2614,10 +2614,10 @@ obj.func_male <- function(x, dataset){
   
   
   ########################################################################################
-  score[8] <- 20*score[8]
-  score[9] <- 20*score[9]
-  score[10] <- 20*score[10]
-  score[11] <- 20*score[11]
+  score[8] <- score[8]
+  score[9] <- score[9]
+  score[10] <- score[10]
+  score[11] <- score[11]
   # Estimate final score
   
   final_score <- mean(score, na.rm = TRUE)
@@ -3302,8 +3302,8 @@ obj.func_female <- function(x, dataset){
   score[12] <- AAFE(predictions = preds_kim_IV_Fblood, observations = obs_kim_IV_Fblood)
   
   ########################################################################################
-  score[5] <- 20*score[5]
-  score[6] <- 20*score[6]
+  score[5] <- 1*score[5]
+  score[6] <- 1*score[6]
   # Estimate final score
   
   final_score <- mean(score, na.rm = TRUE)
@@ -3364,7 +3364,7 @@ kim_IV_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_IV_kim_2016.xlsx")
 gus_OR_Mblood <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Plasma Male rats_Oral.xlsx")
 gus_OR_Mtissues <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Tissues Male rats_Oral.xlsx")
 
-setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_Bladder/Training/AAFE/female_male_bladder_bile_transporter_Papp_ka_constant")
+setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_Bladder/Training/AAFE/female_male_bladder_bile_transporter_Papp_ka_constant_no_weights")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -3397,7 +3397,7 @@ lb = c(rep(log(1e-20), 6), rep(log(0.01),2))
 ub = c(rep(log(1e6), 6), rep(log(10),2) )
 
 # Run the optimization algorithm to estimate the parameter values
-optimizer_female <- nloptr::nloptr( x0= fit,
+optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func_female,
                              lb	= lb,
                              ub = ub,
@@ -3405,27 +3405,29 @@ optimizer_female <- nloptr::nloptr( x0= fit,
                              dataset = dataset)
 
 #estimated_params <- exp(optimizer$solution)
-estimated_params_female <<- exp(optimizer_female$solution)
-save.image("female_male_bladder_bile_transporter_Papp_ka_constant.RData")
+estimated_params_female <- exp(optimizer$solution)
+save.image("female_male_bladder_bile_transporter_Papp_ka_constant_no_weights.RData")
+
 
 
 
 N_pars <- 5 # Number of parameters to be fitted
 fit <-  c(rep(log(1),5))
 
-lb = log(rep(1e-10,5))
-ub = log(rep(1e10,5))
+lb = log(rep(1e-20,5))
+ub = log(rep(1e20,5))
 # Run the optimization algorithm to estimate the parameter values
 optimizer_male <- nloptr::nloptr( x0= fit,
-                             eval_f = obj.func_male,
-                             lb	= lb,
-                             ub = ub,
-                             opts = opts,
-                             dataset = dataset)
+                                  eval_f = obj.func_male,
+                                  lb	= lb,
+                                  ub = ub,
+                                  opts = opts,
+                                  dataset = dataset)
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params_male <- exp(optimizer_male$solution)
-save.image("female_male_bladder_bile_transporter_Papp_ka_constant.RData")
+save.image("female_male_bladder_bile_transporter_Papp_ka_constant_no_weights.RData")
+
 
 estimated_params <- c(estimated_params_male, estimated_params_female)
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
