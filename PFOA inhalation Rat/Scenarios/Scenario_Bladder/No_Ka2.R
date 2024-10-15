@@ -30,11 +30,12 @@ create.params <- function(user.input){
     RAFNtcp <- RAFOatp_l
     RAFOatp2_Int <- estimated_params[10]
     
-    RAF_papp <- estimated_params[11]
+    RAF_papp <- estimated_params[14]
     
-    f_fabp_avail <- estimated_params[12]
-    f_alb_avail <- estimated_params[13]
-
+    f_fabp_avail <- estimated_params[11]
+    f_alb_avail <- estimated_params[12]
+    f_filtrate <- estimated_params[13]
+    
     koff_alb <-100
     koff_fabp <-  koff_alb
     koff_a2u <- koff_alb
@@ -44,7 +45,7 @@ create.params <- function(user.input){
     KmK_baso <- 1e20
     KmK_api <-   1e20
     KLfabp <- (1.2e5+4e4+1.9e4)  #[L/mol]*1e-3 , value from Cheng et al. (2017)
-    Ka <- estimated_params[14] # 5.8e05 from Rue et al. (2024)#mol/L
+    Ka <-  7e4# 5.8e05 from Rue et al. (2024)#mol/L
     
     
     #permeabilities correction factor
@@ -70,17 +71,7 @@ create.params <- function(user.input){
     PVKF <- 0.2 #pkSim
     VKF <- PVKF * PVK * BW #kidney interstitial fluid volume kg=L
     VKT <- VK - VKF #kidney tissue volume kg=L
-    
-    #volumes of filtrate compartments, https://doi.org/10.1152/ajprenal.00219.2018, [μm^3]*1e-15 --> L
-    
-    VPT <- pi*((22.9/2)^2*9886*26980+(23.1/2)^2*11077*11020)*2*1e-15 # Proximal tubule (short- and long-looped)
-    VTDL <- pi*((15/2)^2*1500*26980+(15/2)^2*6200*11020)*2*1e-15 #Thin descending limb (short- and long-looped)
-    VThinAL <-  pi*((15/2)^2*4700*11020)*2*1e-15 #Thin ascending limb (long-looped)
-    VThickAL <- pi*((25.4/2)^2*1450*38000+(29/2)^2*2100*38000)*2*1e-15 #Thick ascending limb (Cortical and Medullary)
-    VDT <- pi*((39/2)*1452*26980+(43/2)^2*1650*11020)*2*1e-15 #Distal tubule (superficial+deep)
-    Vduct <- pi*((24/2)^2*2900*6000+(24/2)^2*2100*6000)*2*1e-15 #collecting duct (Cortical+Outer)
-    VFil_rest <- VTDL+VThinAL+VThickAL+VDT+Vduct
-    #VFil <- 0.25/1000 #renal filtrate volume in L,  from Cheng et al., 2017 (from Arthur, 1986; Bonvalet, 1981)
+    VFil <- 0.25/1000 #renal filtrate volume in L,  from Cheng et al., 2017 (from Arthur, 1986; Bonvalet, 1981)
     VBladder <- 0.001
     
     #Liver
@@ -431,20 +422,6 @@ create.params <- function(user.input){
     }
     QGE<- 0.54/BW^0.25 #gastric emptying time (1/(h*BW^0.25)); from Yang, 2013
     
-    #flows of filtrate compartments, https://doi.org/10.1152/ajprenal.00219.2018, nL/min ---> L/h 
-    
-    QPT <- (40.9*26980+39.7*11020)*2*1e-9*60 #proximal tubule flow (short +long)
-    
-    Q_scaling_factor = QGFR/QPT
-    #an den ta xreiastoume pouthena ta svinoume auta
-    
-    QTDL_reference <- (26.4*26980+26.3*11020)*2*1e-9*60 #Thin descending limb (short +long)
-    QTDL <- QTDL_reference*Q_scaling_factor
-    # QTAL <- 26.3*11020*2*1e-9*60 #Thin descending limb (short +long)
-    # QThinAL <- 8*11020*2*1e-9*60 #Thin ascending limb (long-looped)
-    # QThickAL <- (8.1*38000+8*38000)*2*1e-9*60 #Thick ascending limb (Cortical and Medullary)
-    # QDT <- 6*(26980+11020)*2*1e-9*60 #Distal tubule (short +long)
-    # Qduct <- Qurine
     
     #Overall mass transfer coefficients between subcompartments and passive
     #diffusion rate constants. See SI section S3-1 for details
@@ -465,15 +442,7 @@ create.params <- function(user.input){
     AcSK= 0.11*BW/BW_ref
     AcBo= 6.52*BW/BW_ref
     AcR= (AcK+AcL+AcST+AcIN+AcM+AcA+AcLu+AcSP+AcH+AcBr+AcGo+AcSK+AcBo)/13
-    # Surface areas of the different subcompartments of kidney filtrate
-    APT <-  2*pi*((22.9/2)*9886*26980+(23.1/2)*11077*11020)*2*n*1e-12 # Proximal tubule (short- and long-looped)
-    ATDL <- 2*pi*((15/2)*1500*26980+(15/2)*6200*11020)*2*n*1e-12 #Thin descending limb (short- and long-looped)
-    AThinAL <-  2*pi*((15/2)*4700*11020)*2*n*1e-12 #Thin ascending limb (long-looped)
-    AThickAL <- 2*pi*((25.4/2)*1450*38000+(29/2)*2100*38000)*2*n*1e-12 #Thick ascending limb (Cortical and Medullary)
-    ADT <- 2*pi*((39/2)*1452*26980+(43/2)*1650*11020)*2*n*1e-12 #Distal tubule (superficial+deep)
-    Aduct <- 2*pi*((24/2)*2900*6000+(24/2)*2100*6000)*2*n*1e-12 #collecting duct (Cortical+Outer)
-    AFil_rest <- ATDL+AThinAL+AThickAL+ADT+Aduct
-
+    
     #Alveolar cells surface area (Type I and II), m^2
     AcALF = ((78.8*2*5320*1e-6) + (125*2*123*1e-6))*BW/0.29  #Stone et al., 1992, BW_ref = 0.29, values for each lung , https://doi.org/10.1165/ajrcmb/6.2.235
     
@@ -481,7 +450,7 @@ create.params <- function(user.input){
     rat_hep_surf_area = 22.95 * 1e2 # 22.95*1e6 cm2 --> m2,  https://doi.org/10.1074/jbc.271.12.6702
     AcLBilec = 0.01 * 22.95 * 1e2 # m2 , canalicular membrane 1% of the surface area of the hepatocyte,https://www.ncbi.nlm.nih.gov/books/NBK470209/
     
-    # Following the calculations  of Lin et al. (2023) for Caco-2 cells
+    # Following the calculations of Lin et al. (2023) for Caco-2 cells
     ClINFT_unscaled= 18.1 #uL/min/mg protein, Kimura et al. 2017
     muscle_protein <- 158.45 #mg/g muscle (protein data from Cheek et al.,1971 
     #and muscle mass from Caster et al.,1956)
@@ -515,8 +484,7 @@ create.params <- function(user.input){
     kSKFSKT = ((Papp/100) * AcSK)*1000 #m^3/h * 1000 --> L/h
     kBoFBoT = ((Papp/100) * AcBo)*1000 #m^3/h * 1000 --> L/h
     kRFRT = ((Papp/100) * AcR)*1000 #m^3/h*1000 --> L/h 
-    kPTKT <- ((Papp/100) * APT) *1000 
-    kFilKT <- ((Papp/100) * AFil_rest)*1000 #m^3/h *1000 ---> L/h
+    kFKT <- ((Papp/100) * AK) * n*1000 #m^3/h *1000 ---> L/h
     
     
     #For all CMTs
@@ -728,7 +696,7 @@ create.params <- function(user.input){
     
     
     return(list('VB'=VB, 'Vplasma'=Vplasma, 'VK'=VK, 'VKB'=VKB, 
-                'VKF'=VKF, 'VKT'=VKT, 'VFil_rest'=VFil_rest, 'VPT' = VPT, 'VBladder' = VBladder,
+                'VKF'=VKF, 'VKT'=VKT, 'VFil'=VFil, 'VBladder' = VBladder,
                 'VL'=VL, 'VLB'=VLB, 'VLF'=VLF, 'VLT'=VLT, 'VLbile'=VLbile,
                 'VM'=VM, 'VMB'=VMB, 'VMF'=VMF, 'VMT'=VMT, 'VA'=VA, 'VAB'=VAB, 
                 'VAF'=VAF, 'VAT'=VAT, 'VR'=VR, 'VRB'=VRB, 
@@ -744,9 +712,6 @@ create.params <- function(user.input){
                 'VSTL'=VSTL, 'VINL'=VINL,
                 'VSK'=VSK,'VSKB'=VSKB, 'VSKF'=VSKF, 'VSKT'=VSKT,
                 'VBo'=VBo,'VBoB'=VBoB, 'VBoF'=VBoF, 'VBoT'=VBoT,
-                
-                "VPT" = VPT, "VTDL"= VTDL, "VThinAL"=VThinAL, "VThickAL"=VThickAL,
-                "VDT" = VDT, "Vduct"=Vduct,
                 
                 'AK'=AK, 'AKG'=AKG, 'AL'=AL, 
                 'AM'=AM, 'AA'=AA, 'AR'=AR, 'ALu'= ALu, 
@@ -770,7 +735,7 @@ create.params <- function(user.input){
                 'QBL'=QBL, 'QBLtot'=QBLtot,
                 'QBM'=QBM, 'QBA'=QBA,
                 'QBR'=QBR, 'QBLu'=QBLu, 'Qfeces'=Qfeces, 'feces_density'=feces_density,
-                'Qbile'=Qbile, 'QGFR'=QGFR,'Qurine'=Qurine, 
+                'Qbile'=Qbile, 'QGFR'=QGFR,'Qurine'=Qurine, "f_filtrate" = f_filtrate,
                 'QBSP'=QBSP, 'QBH'=QBH, 'QBBr'=QBBr, 'QBST'=QBST,
                 'QBIN'=QBIN, 'QGE'=QGE,
                 'QBGo'=QBGo,
@@ -780,10 +745,6 @@ create.params <- function(user.input){
                 "QparaMu" = QparaMu,"QparaAd" = QparaAd,"QparaRe" = QparaRe,"QparaLu" = QparaLu,
                 "QparaSp" = QparaSp,"QparaHt" = QparaHt,"QparaBr" = QparaBr,"QparaGo" = QparaGo,
                 "QparaSk" = QparaSk,"QparaBo" = QparaBo,
-                
-                "QPT" = QPT, 'QTDL' = QTDL,
-                # "QTDL"= QTDL, "QTAL"= QTAL, "QThinAL"=QThinAL, "QThickAL"=QThickAL,
-                # "QDT" = QDT, "Qduct"=Qduct,
                 
                 'CalbB_init'= CalbB_init, 'CalbKF_init'=CalbKF_init, 'CalbLF_init'=CalbLF_init,
                 'CalbMF_init'=CalbMF_init, 'CalbAF_init'=CalbAF_init, 'CalbRF_init'=CalbRF_init,
@@ -824,7 +785,7 @@ create.params <- function(user.input){
                 'VmK_baso' = VmK_baso,'VmK_api' = VmK_api,
                 
                 'Papp' = Papp, 'P_passive' = P_passive,
-                'kKFKT'=kKFKT, 'kFilKT'=kFilKT, 'kPTKT' = kPTKT,  
+                'kKFKT'=kKFKT, 'kFKT'=kFKT,  
                 'kLFLT'=kLFLT, 'kLTLbile'=kLTLbile,  'kAFAT'=kAFAT, 
                 'kRFRT'=kRFRT,
                 'kabST'=kabST, 
@@ -873,8 +834,7 @@ ode.func <- function(time, inits, params){
     CKT <- MKT/VKT # tissue concentration
     CKTf <- MKTf/VKT
     CKTb <- MKTb/VKT
-    CPT <- MPT/VPT
-    CFil <- MFil/VFil_rest# rest of the filtrate concentration
+    CFil <- MFil/VFil# filtrate concentration
     CBladder <- MBladder/VBladder
     
     #Liver
@@ -1236,21 +1196,15 @@ ode.func <- function(time, inits, params){
       (VmK_Oat1*CKFf/(KmK_Oat1+CKFf)) - (VmK_Oat3*CKFf/(KmK_Oat3+CKFf))  +
       (VmK_baso*CKTf/(KmK_baso+CKTf)) +  koff_alb*CKFb*VKF - kon_alb*CalbKFf*CKFf*VKF
     #Kidney proximal tubule cells subcompartment
-    dMKTf = kKFKT*(CKFf-CKTf) - kPTKT*(CKTf - CPT) -kFilKT*(CKTf - CFil) +
-      (VmK_Oatp*CPT/(KmK_Oatp+CPT)) + (VmK_Urat*CPT/(KmK_Urat+CPT))+
-      (VmK_Oat1*CKFf/(KmK_Oat1+CKFf)) + (VmK_Oat3*CKFf/(KmK_Oat3+CKFf)) - 
-      (VmK_baso*CKTf/(KmK_baso+CKTf)) -(VmK_api*CKTf/(KmK_api+CKTf))+
+    dMKTf = kKFKT*(CKFf-CKTf) - kFKT*(CKTf - CFil) + (VmK_Oatp*CFil/(KmK_Oatp+CFil)) +
+      (VmK_Oat1*CKFf/(KmK_Oat1+CKFf)) + (VmK_Oat3*CKFf/(KmK_Oat3+CKFf)) + 
+      (VmK_Urat*CFil/(KmK_Urat+CFil))  - (VmK_baso*CKTf/(KmK_baso+CKTf)) -
+      (VmK_api*CKTf/(KmK_api+CKTf))+
       koff_fabp*CKTb*VKT + koff_a2u*CKTb*VKT -kon_fabp*CFabpKTf*CKTf*VKT - kon_a2u*Ca2uKTf*CKTf*VKT
     
-    #Proximal tubule
-    dMPT =  QGFR*CArtf + kPTKT*(CKTf - CPT) - (VmK_Oatp*CPT/(KmK_Oatp+CPT)) - 
-      (VmK_Urat*CPT/(KmK_Urat+CPT)) + (VmK_api*CKTf/(KmK_api+CKTf))- QTDL*CPT
-    
-    #Rest of the filtrate
-    dMFil =  QTDL*CPT + kFilKT*(CKTf - CFil) - (Qurine*CFil)
-    # Bladder
-    dMBladder = Qurine*CFil - Qurine*CBladder
-    
+    dMFil =  QGFR*CArtf + kFKT*(CKTf - CFil) - (VmK_Oatp*CFil/(KmK_Oatp+CFil)) - 
+      (VmK_Urat*CFil/(KmK_Urat+CFil)) + (VmK_api*CKTf/(KmK_api+CKTf))- (f_filtrate*QGFR*CFil)
+    dMBladder = f_filtrate*QGFR*CFil - Qurine*CBladder
     
     #Liver
     #blood subcompartment
@@ -1422,7 +1376,7 @@ ode.func <- function(time, inits, params){
     Mblood <- MVen +MArt
     Cplasma <- Cblood/(1-Hct)
     
-    Ckidney <- (MKB + MKF+ MKT + MPT + MFil)/(VKB+VKF+VKT)    
+    Ckidney <- (MKB + MKF+ MKT+MFil)/(VKB+VKF+VKT+VFil)    
     Mkidney <- MKB + MKF+ MKT
     
     Cliver <- (MLB + MLF+ MLT + MLbile )/(VLB+VLF+VLT+VLbile)
@@ -1481,7 +1435,7 @@ ode.func <- function(time, inits, params){
             
             'dMArtf'=dMArtf, 'dMVenf'=dMVenf, 'dMKBf'=dMKBf, 
             'dMKFf'=dMKFf, 'dMKTf'=dMKTf,
-            'dMFil'=dMFil, 'dMPT' = dMPT,  'dMBladder' = dMBladder, 'dMLBf'=dMLBf, 
+            'dMFil'=dMFil,  'dMBladder' = dMBladder, 'dMLBf'=dMLBf, 
             'dMLFf'=dMLFf, 'dMLTf'=dMLTf, 'dMLbile'=dMLbile,
             
             'dMSTBf'=dMSTBf, 'dMSTFf'=dMSTFf, 'dMSTTf'=dMSTTf, 'dMSTL'=dMSTL,
@@ -1577,7 +1531,7 @@ create.inits <- function(parameters){
     MLuAFf <- 0; MLuAFb<- 0; MSPTf <- 0; MHTf <- 0; MBrTf <- 0;
     MGoTf <- 0; MSKTf <- 0; MBoTf <- 0;  
     
-    MFil <-0; MPT <- 0; MBladder <- 0; Murine <-0;MSTL <-0;  MINL <-0;
+    MFil <-0; MBladder <- 0; Murine <-0;MSTL <-0;  MINL <-0;
     Mfeces <-0;  Vurine <-0; Vfeces <-0
     
     return(c('CalbVenf' = CalbVenf, 'CalbArtf' = CalbArtf, 
@@ -1608,7 +1562,7 @@ create.inits <- function(parameters){
              
              'MArtf'=MArtf, 'MVenf'=MVenf, 'MKBf'=MKBf, 
              'MKFf'=MKFf, 'MKTf'=MKTf,
-             'MFil'=MFil, 'MPT' = MPT, 'MBladder' = MBladder,  'MLBf'=MLBf, 
+             'MFil'=MFil, 'MBladder' = MBladder,  'MLBf'=MLBf, 
              'MLFf'=MLFf, 'MLTf'=MLTf, 'MLbile'= MLbile,
              
              'MSTBf'=MSTBf, 'MSTFf'=MSTFf, 'MSTTf'=MSTTf, 'MSTL'=MSTL,
@@ -3382,7 +3336,7 @@ kim_IV_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_IV_kim_2016.xlsx")
 gus_OR_Mblood <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Plasma Male rats_Oral.xlsx")
 gus_OR_Mtissues <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Tissues Male rats_Oral.xlsx")
 
-setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_Bladder/Training/AAFE/full_params_PT")
+setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_Bladder/Training/AAFE/No_Ka2")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -3409,10 +3363,10 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
 
 N_pars <- 14 # Number of parameters to be fitted
-fit <-  c(rep(log(1),13), log(1e5) )
+fit <-  c(rep(log(1),13), log(1) )
 
-lb = c(rep(log(1e-20), 10), log(0.01),rep(log(0.1),2),  log(1e4))
-ub = c(rep(log(1e7), 10),log(100), rep(log(20),2),  log(1e6) )
+lb = c(rep(log(1e-20), 10), rep(log(0.1),3),  log(1e-2))
+ub = c(rep(log(1e7), 10), rep(log(2),3),  log(1e2) )
 
 # Run the optimization algorithm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
@@ -3424,7 +3378,7 @@ optimizer <- nloptr::nloptr( x0= fit,
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
-save.image("full_params_PT.RData")
+save.image("No_Ka2.RData")
 
 
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
