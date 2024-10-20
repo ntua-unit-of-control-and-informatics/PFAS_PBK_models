@@ -28,10 +28,9 @@ create.params <- function(user.input){
     RAFNtcp <- RAFOatp_l
     RAFOatp2_Int <- estimated_params[9]
     
-    RAF_papp <- estimated_params[10]
-    
-    f_fabp_avail <- estimated_params[11]
-    f_alb_avail <- estimated_params[12]
+    RAF_papp <- 1
+    f_fabp_avail <- 1
+    f_alb_avail <- 1
 
     koff_alb <-100
     koff_fabp <-  koff_alb
@@ -42,7 +41,7 @@ create.params <- function(user.input){
     KmK_baso <- 1e20
     KmK_api <-   1e20
     KLfabp <- (1.2e5+4e4+1.9e4)  #[L/mol]*1e-3 , value from Cheng et al. (2017)
-    Ka <- estimated_params[13] # 5.8e05 from Rue et al. (2024)#mol/L
+    Ka <- estimated_params[10] # 5.8e05 from Rue et al. (2024)#mol/L
     
     
     #permeabilities correction factor
@@ -3423,14 +3422,14 @@ obj.func <- function(x, dataset){
   
   
   ########################################################################################
-  score[12] <- 20*score[12]
-  score[13] <- 20*score[13]
-  score[14] <- 20*score[14]
-  score[15] <- 20*score[15]
-  score[16] <- 20*score[16]
-  score[17] <- 20*score[17]
-  score[18] <- 20*score[18]
-  score[19] <- 20*score[19]
+  score[12] <- 10*score[12]
+  score[13] <- 10*score[13]
+  score[14] <- 10*score[14]
+  score[15] <- 10*score[15]
+  score[16] <- 10*score[16]
+  score[17] <- 10*score[17]
+  score[18] <- 10*score[18]
+  score[19] <- 10*score[19]
   
   # Estimate final score
   
@@ -3442,7 +3441,7 @@ obj.func <- function(x, dataset){
 ################################################################################
 
 
-setwd("C:/Users/Ioannis/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
+setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
 
 MW <- 414.07 #g/mol
 source("Goodness-of-fit-metrics.R")
@@ -3490,7 +3489,7 @@ kim_IV_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_IV_kim_2016.xlsx")
 gus_OR_Mblood <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Plasma Male rats_Oral.xlsx")
 gus_OR_Mtissues <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Tissues Male rats_Oral.xlsx")
 
-setwd("C:/Users/Ioannis/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_Bladder/Training/AAFE/full_params_PT_excreta")
+setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_Bladder/Training/AAFE/few_params_PT_excreta_not_restricted")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -3517,11 +3516,11 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
 # Male RAFOatp_k, Male RAFOat1, Male RAFOat3, Male RAFOatp_l,Male RAFNtcp
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
 
-N_pars <- 13 # Number of parameters to be fitted
-fit <-  c(rep(log(1),12), log(1e5) )
+N_pars <- 10 # Number of parameters to be fitted
+fit <-  c(rep(log(1),9), log(1e5) )
 
-lb = c(rep(log(1e-3), 4),rep(log(1e-20), 2),rep(log(1e-3), 3), rep(log(0.1),3),  log(5e4))
-ub = c(rep(log(1e3), 4),rep(log(1e-7), 2), rep(log(1e-3), 3),  rep(log(10),3),  log(6e5) )
+lb = c(rep(log(1e-20),9),  log(5e4))
+ub = c(rep(log(1e8),  9),  log(6e5) )
 
 # Run the optimization algorithm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
@@ -3533,7 +3532,7 @@ optimizer <- nloptr::nloptr( x0= fit,
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
-save.image("full_params_PT_excreta_restricted.RData")
+save.image("few_params_PT_excreta_not_restricted.RData")
 
 
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
