@@ -3490,7 +3490,7 @@ kim_IV_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_IV_kim_2016.xlsx")
 gus_OR_Mblood <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Plasma Male rats_Oral.xlsx")
 gus_OR_Mtissues <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Tissues Male rats_Oral.xlsx")
 
-setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_Bladder/Training/AAFE/full_params_PT_excreta_not_restricted")
+setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_Bladder/Training/AAFE/full_params_PT_excreta_not_restricted")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -3534,6 +3534,7 @@ optimizer <- nloptr::nloptr( x0= fit,
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
 save.image("full_params_PT_excreta_not_restricted.RData")
+
 
 
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
@@ -3891,7 +3892,7 @@ inits <- create.inits(params)
 events <- create.events(params)
 
 # sample_time: a vector of time points to solve the ODEs
-sample_time=seq(0,384,1)
+sample_time=seq(0,672,1)
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -4584,60 +4585,69 @@ experiment11 <- reshape(Lup_OR_Ftissues[c("Tissue" ,"Time_hours",
                         idvar = "Time_hours", timevar = "Tissue", direction = "wide")
 colnames(experiment11) <- c("Time",unique(Lup_OR_Ftissues$Tissue))
 
+
 # Convert Kemper ORAL female feces from long to wide format using reshape
-experiment12 <- reshape(Kemp_OR_Ffeces[c("Tissue" ,"Time_hours", 
-                                         "Mass_mg")], 
-                        idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+experiment12 <- reshape(Kemp_OR_Ffeces[c("Tissue" ,"Time_h", 
+                                         "Cum_dose_%")], 
+                        idvar = "Time_h", timevar = "Tissue", direction = "wide")
 colnames(experiment12) <- c("Time",unique(Kemp_OR_Ffeces$Tissue))
-# Change original data with cumulative data
-experiment12$Feces <- obs_Kemp_OR_Ffeces_cum
+experiment12$Feces = (experiment12$Feces/100)*0.2*25
+
 
 # Convert Kemper ORAL male feces from long to wide format using reshape
-experiment13 <- reshape(Kemp_OR_Mfeces[c("Tissue" ,"Time_hours", 
-                                         "Mass_mg")], 
-                        idvar = "Time_hours", timevar = "Tissue", direction = "wide")
-colnames(experiment13) <- c("Time",unique(Lup_OR_Furine$Tissue))
-# Change original data with cumulative data
-experiment13$Urine <- obs_Kemp_OR_Mfeces
+experiment13 <- reshape(Kemp_OR_Mfeces[c("Tissue" ,"Time_h", 
+                                         "Cum_dose_%")], 
+                        idvar = "Time_h", timevar = "Tissue", direction = "wide")
+colnames(experiment13) <- c("Time",unique(Kemp_OR_Ffeces$Tissue))
+experiment13$Feces = (experiment13$Feces/100)*0.3*25
 
 
 # Convert Kemper ORAL female urine low from long to wide format using reshape
-experiment14 <- reshape(Kemp_OR_Furine_low [c("Tissue" ,"Time_hours", 
-                                              "Mass_mg")], 
-                        idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+experiment14 <- reshape(Kemp_OR_Furine_low [c("Tissue" ,"Time_h", 
+                                              "Cum_dose_%")], 
+                        idvar = "Time_h", timevar = "Tissue", direction = "wide")
 colnames(experiment14) <- c("Time",unique(Kemp_OR_Furine_low$Tissue))
+experiment14$Urine = (experiment14$Urine/100)*0.2*1
+
 
 # Convert Kemper ORAL female urine med from long to wide format using reshape
-experiment15 <- reshape(Kemp_OR_Furine_med[c("Tissue" ,"Time_hours", 
-                                             "Mass_mg")], 
-                        idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+experiment15 <- reshape(Kemp_OR_Furine_med[c("Tissue" ,"Time_h", 
+                                             "Cum_dose_%")], 
+                        idvar = "Time_h", timevar = "Tissue", direction = "wide")
 colnames(experiment15) <- c("Time",unique(Kemp_OR_Furine_med$Tissue))
-
+experiment15$Urine = (experiment15$Urine/100)*0.2*5
 
 # Convert Kemper ORAL female urine high from long to wide format using reshape
-experiment16 <- reshape(Kemp_OR_Furine_high[c("Tissue" ,"Time_hours", 
-                                              "Mass_mg")], 
-                        idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+experiment16 <- reshape(Kemp_OR_Furine_high[c("Tissue" ,"Time_h", 
+                                              "Cum_dose_%")], 
+                        idvar = "Time_h", timevar = "Tissue", direction = "wide")
 colnames(experiment16) <- c("Time",unique(Kemp_OR_Furine_high$Tissue))
+experiment16$Urine = (experiment16$Urine/100)*0.2*25
+
 
 # Convert Kemper ORAL male urine low from long to wide format using reshape
-experiment17 <- reshape(Kemp_OR_Murine_low [c("Tissue" ,"Time_hours", 
-                                              "Mass_mg")], 
-                        idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+experiment17 <- reshape(Kemp_OR_Murine_low [c("Tissue" ,"Time_h", 
+                                              "Cum_dose_%")], 
+                        idvar = "Time_h", timevar = "Tissue", direction = "wide")
 colnames(experiment17) <- c("Time",unique(Kemp_OR_Murine_low$Tissue))
+experiment17$Urine = (experiment17$Urine/100)*0.3*1
+
 
 # Convert Kemper ORAL male urine med from long to wide format using reshape
-experiment18 <- reshape(Kemp_OR_Murine_med[c("Tissue" ,"Time_hours", 
-                                             "Mass_mg")], 
-                        idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+experiment18 <- reshape(Kemp_OR_Murine_med[c("Tissue" ,"Time_h", 
+                                             "Cum_dose_%")], 
+                        idvar = "Time_h", timevar = "Tissue", direction = "wide")
 colnames(experiment18) <- c("Time",unique(Kemp_OR_Murine_med$Tissue))
+experiment18$Urine = (experiment18$Urine/100)*0.3*5
 
 
 # Convert Kemper ORAL male urine high from long to wide format using reshape
-experiment19 <- reshape(Kemp_OR_Murine_high[c("Tissue" ,"Time_hours", 
-                                              "Mass_mg")], 
-                        idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+experiment19 <- reshape(Kemp_OR_Murine_high[c("Tissue" ,"Time_h", 
+                                              "Cum_dose_%")], 
+                        idvar = "Time_h", timevar = "Tissue", direction = "wide")
 colnames(experiment19) <- c("Time",unique(Kemp_OR_Furine_high$Tissue))
+experiment19$Urine = (experiment19$Urine/100)*0.3*25
+
 
 # Convert Dzierlenga 2021, IV male serum from long to wide format using reshape
 experiment20 <- reshape(dzi_IV_Mserum[c("Tissue" ,"Time_hours", 
@@ -4689,14 +4699,14 @@ colnames(experiment27) <- c("Time",unique(dzi_OR_Fserum_high$Tissue))
 
 #Convert Kim 2016, ORAL female serum long to wide format using reshape
 experiment28 <- reshape(kim_OR_Fblood[c("Tissue" ,"Time_hours", 
-                                        "Mass_mg")], 
+                                        "Concentration_microg_per_g_organ")], 
                         idvar = "Time_hours", timevar = "Tissue", direction = "wide")
 colnames(experiment28) <- c("Time",unique(kim_OR_Fblood$Tissue))
 
 
 #Convert Kim 2016, IV female serum long to wide format using reshape
 experiment29<- reshape(kim_IV_Fblood[c("Tissue" ,"Time_hours", 
-                                       "Mass_mg")], 
+                                       "Concentration_microg_per_g_organ")], 
                        idvar = "Time_hours", timevar = "Tissue", direction = "wide")
 colnames(experiment29) <- c("Time",unique(kim_IV_Fblood$Tissue))
 
