@@ -1,6 +1,6 @@
 library(deSolve)
 #setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation")
-setwd("C:/Users/Ioannis/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/full_params_PT_excreta_restricted")
+setwd("C:/Users/Ioannis/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/full_params_PT_excreta_restricted_Ka_58")
 
 #  absolute average fold error
 AAFE <- function(predictions, observations, times=NULL){
@@ -18,7 +18,7 @@ AAFE <- function(predictions, observations, times=NULL){
 #===============
 # Generate predictions
 #===============
-load("full_params_PT_excreta_restricted.RData")
+load("full_params_PT_excreta_restricted_Ka_58.RData")
 # Body weight 
 BW <- 0.2 #kg
 sex <- "M"
@@ -96,5 +96,5 @@ print(paste0("The AAFE on the tissue data of Cui et al. (2010) was ", AAFE_Cui))
 
 write.csv(results_df,
           #"C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_results/Cui_2008_results.csv",
-          "C:/Users/Ioannis/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/full_params_PT_excreta_restricted/Cui_2008_results.csv",
+          "C:/Users/Ioannis/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/full_params_PT_excreta_restricted_Ka_58/Cui_2008_results.csv",
           row.names =F)
