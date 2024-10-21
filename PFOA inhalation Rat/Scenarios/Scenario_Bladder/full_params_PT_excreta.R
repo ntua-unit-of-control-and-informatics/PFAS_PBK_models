@@ -169,8 +169,8 @@ create.params <- function(user.input){
     VBr <- PVBr * BW
     PVBrB <- 0.03 #Brown et al. 1997, p 458, Table 30
     VBrB <- PVBrB * PVBr * BW #volume of the blood of brain kg=L
-    PVBrF <- 17.5/100 * PVBr
-    VBrF <- PVBrF * BW #https://doi.org/10.1016/j.pneurobio.2015.12.007 --> The IS occupies 15% to 20% of the total brain volume, brain IF volume kg=L 
+    PVBrF <- 17.5/100 * PVBr #https://doi.org/10.1016/j.pneurobio.2015.12.007 --> The IS occupies 15% to 20% of the total brain volume, brain IF volume kg=L 
+    VBrF <- PVBrF * BW 
     VBrT <- VBr - VBrF #brain tissue volume kg=L
     
     #gonads
