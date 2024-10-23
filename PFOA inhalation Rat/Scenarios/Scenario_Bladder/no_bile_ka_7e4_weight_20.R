@@ -13,26 +13,26 @@ create.params <- function(user.input){
     if(sex == "M"){
       RAFOatp_k <- estimated_params[1]
       RAFOat1 <- estimated_params[3]
-      RAFbile_transp <- estimated_params[5]
+      RAFbile_transp <- 0
     }else{
       RAFOatp_k <- estimated_params[2]
       RAFOat1 <- estimated_params[4]
-      RAFbile_transp <- estimated_params[6]
+      RAFbile_transp <- 0
     }
-    RAFOatp_l <- estimated_params[7]
+    RAFOatp_l <- estimated_params[5]
     RAFUrat <- RAFOatp_k
     RAFOat3 <- RAFOat1
     RAFOatp2_l <- RAFOatp_l
-    RAFOatp_lu_ap <- estimated_params[8]
+    RAFOatp_lu_ap <- estimated_params[6]
     RAFOatp_lu_bas <- RAFOatp_lu_ap
     RAFNtcp <- RAFOatp_l
-    RAFOatp2_Int <- estimated_params[9]
+    RAFOatp2_Int <- estimated_params[7]
     
     RAF_papp <- 1
-    f_fabp_avail <- 1
-    f_alb_avail <- 1
-
-    koff_alb <-100
+    f_fabp_avail <- estimated_params[8]
+    f_alb_avail <- estimated_params[9]
+    
+    koff_alb <-  estimated_params[10]
     koff_fabp <-  koff_alb
     koff_a2u <- koff_alb
     
@@ -41,7 +41,7 @@ create.params <- function(user.input){
     KmK_baso <- 1e20
     KmK_api <-   1e20
     KLfabp <- (1.2e5+4e4+1.9e4)  #[L/mol]*1e-3 , value from Cheng et al. (2017)
-    Ka <- estimated_params[10] # 5.8e05 from Rue et al. (2024)#mol/L
+    Ka <- 7e4 # 5.8e05 from Rue et al. (2024)#mol/L
     
     
     #permeabilities correction factor
@@ -414,7 +414,7 @@ create.params <- function(user.input){
       PQbile = 0.206/2 #L/kg liver/h #
       Qbile = 1.44* PQbile* VL  #L/h
     }
-    Qfeces <- (8.18/0.21)*BW #g/kg BW, based on Cui et al.(2010)
+    Qfeces <- (8.18/0.21)*BW/24/1000 #g/kg BW, based on Cui et al.(2010)
     feces_density <- 1.29 #g/cm^3 --> g/mL from Lupton 1986, Fig 1. Fiber free control diet, https://doi.org/10.1093/jn/116.1.164
     
     if (sex == "M"){
@@ -470,7 +470,7 @@ create.params <- function(user.input){
     ADT <- 2*pi*((39/2)*1452*26980+(43/2)*1650*11020)*2*n*1e-12 #Distal tubule (superficial+deep)
     Aduct <- 2*pi*((24/2)*2900*6000+(24/2)*2100*6000)*2*n*1e-12 #collecting duct (Cortical+Outer)
     AFil_rest <- ATDL+AThinAL+AThickAL+ADT+Aduct
-
+    
     #Alveolar cells surface area (Type I and II), m^2
     AcALF = ((78.8*2*5320*1e-6) + (125*2*123*1e-6))*BW/0.29  #Stone et al., 1992, BW_ref = 0.29, values for each lung , https://doi.org/10.1165/ajrcmb/6.2.235
     
@@ -2320,11 +2320,11 @@ obj.func <- function(x, dataset){
   events <- create.events(parameters)
   inits <- create.inits (parameters)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                                y = inits, parms = parameters, events = events,
-                                                method="lsodes",rtol = 1e-04, atol = 1e-04))
- 
+                                      y = inits, parms = parameters, events = events,
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
-   # We need to keep only the predictions for the relevant compartments for the time points 
+  
+  # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
   
   #======================================df12=========================================================
@@ -2346,7 +2346,7 @@ obj.func <- function(x, dataset){
     preds_Kemp_OR_Ffeces [[i]] <- solution[rounded_soltime %in% rounded_time, column_names[i]]/1000
   }
   
- 
+  
   obs_Kemp_OR_Ffeces <- c(exp_data[exp_data$Tissue == "Feces", "concentration"])
   # Estimate cumulative fecal mass
   obs_Kemp_OR_Ffeces <- (obs_Kemp_OR_Ffeces/100)*admin.dose/1000
@@ -2372,8 +2372,8 @@ obj.func <- function(x, dataset){
                                      "sex" = sex))
   events <- create.events(parameters)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                                y = inits, parms = parameters, events = events,
-                                                method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      y = inits, parms = parameters, events = events,
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   
   #======================================df13=========================================================
@@ -2427,8 +2427,8 @@ obj.func <- function(x, dataset){
   events <- create.events(parameters)
   inits <- create.inits (parameters)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                               y = inits, parms = parameters, events = events,
-                                               method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      y = inits, parms = parameters, events = events,
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   
   #======================================df14=========================================================
@@ -2457,7 +2457,7 @@ obj.func <- function(x, dataset){
   
   score[14] <- AAFE(predictions = preds_Kemp_OR_Furine_low, observations = obs_Kemp_OR_Furine_low)
   
- 
+  
   
   # Set up simulations for the 15th case, i.e.Kemper 2003 (Worley) ORAL female urine MEDIUM
   
@@ -2470,8 +2470,8 @@ obj.func <- function(x, dataset){
                                      "sex" = sex))
   events <- create.events(parameters)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                               y = inits, parms = parameters, events = events,
-                                               method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      y = inits, parms = parameters, events = events,
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   
   #======================================df15=========================================================
@@ -2512,8 +2512,8 @@ obj.func <- function(x, dataset){
                                      "sex" = sex))
   events <- create.events(parameters)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                                y = inits, parms = parameters, events = events,
-                                                method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      y = inits, parms = parameters, events = events,
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   
   #======================================df16=========================================================
@@ -2562,8 +2562,8 @@ obj.func <- function(x, dataset){
                                      "sex" = sex))
   events <- create.events(parameters)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                               y = inits, parms = parameters, events = events,
-                                               method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      y = inits, parms = parameters, events = events,
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   
   #======================================df17=========================================================
@@ -2604,8 +2604,8 @@ obj.func <- function(x, dataset){
                                      "sex" = sex))
   events <- create.events(parameters)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                               y = inits, parms = parameters, events = events,
-                                               method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      y = inits, parms = parameters, events = events,
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   #======================================df18========================================================= 
   
@@ -2676,7 +2676,7 @@ obj.func <- function(x, dataset){
   
   score[19] <- AAFE(predictions = preds_Kemp_OR_Murine_high, observations = obs_Kemp_OR_Murine_high)
   
- 
+  
   
   ##########################
   #-------------------------
@@ -3489,7 +3489,7 @@ kim_IV_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_IV_kim_2016.xlsx")
 gus_OR_Mblood <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Plasma Male rats_Oral.xlsx")
 gus_OR_Mtissues <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Tissues Male rats_Oral.xlsx")
 
-setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_Bladder/Training/AAFE/few_params_PT_excreta_not_restricted")
+setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_Bladder/Training/AAFE/no_bile_ka_7e4_weight_20")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -3517,10 +3517,10 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
 
 N_pars <- 10 # Number of parameters to be fitted
-fit <-  c(rep(log(1),9), log(1e5) )
+fit <-  c(rep(log(1),10))
 
-lb = c(rep(log(1e-20),9),  log(5e4))
-ub = c(rep(log(1e8),  9),  log(6e5) )
+lb = c(rep(log(1e-20),7),  rep(log(0.01), 3))
+ub = c(rep(log(1e10),  7),  rep(log(100), 3))
 
 # Run the optimization algorithm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
@@ -3532,7 +3532,7 @@ optimizer <- nloptr::nloptr( x0= fit,
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
-save.image("few_params_PT_excreta_not_restricted.RData")
+save.image("no_bile_ka_7e4_weight_20.RData")
 
 
 
