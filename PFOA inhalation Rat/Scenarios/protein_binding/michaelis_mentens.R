@@ -723,6 +723,7 @@ create.params <- function(user.input){
     kon_a2u <- Ka2u * koff_a2u#1/M/s
     kon_fabp <- KLfabp * koff_fabp #1/M/s
     
+    kd_albumin = 1/ka
     
     return(list('VB'=VB, 'Vplasma'=Vplasma, 'VK'=VK, 'VKB'=VKB, 
                 'VKF'=VKF, 'VKT'=VKT, 'VFil_rest'=VFil_rest, 'VPT' = VPT, 'VBladder' = VBladder,
@@ -798,7 +799,7 @@ create.params <- function(user.input){
                 
                 'Ca2uKT_init'=Ca2uKT_init,'CFabpKT_init'=CFabpKT_init,'CFabpLT_init'=CFabpLT_init, 
                 
-                'Ka'=Ka, 'Ka2u'=Ka2u, 'KLfabp'=KLfabp,
+                'Ka'=Ka, 'Ka2u'=Ka2u, 'KLfabp'=KLfabp,"kd_albumin" = kd_albumin, 
                 
                 "koff_alb" = koff_alb, "koff_a2u" = koff_a2u, "koff_fabp" = koff_fabp,
                 "kon_alb" = kon_alb, "kon_a2u" = kon_a2u, "kon_fabp" = kon_fabp,
@@ -1055,128 +1056,16 @@ ode.func <- function(time, inits, params){
     CBoFb <- MBoFb/VBoF
     CBoT <- MBoT/VBoT # tissue concentration
     
-    #Calculation of free and bound PFOA in venous blood
-    dCalbVenf <- koff_alb*CVenb/MW/1e6 - kon_alb*CalbVenf*CVenf/MW/1e6
-    
-    #Calculation of free and bound PFOA in arterial blood
-    dCalbArtf <- koff_alb*CArtb/MW/1e6 - kon_alb*CalbArtf*CArtf/MW/1e6
-    
-    #--------------------------------------------------------------
-    #Calculation of free concentrations in organ blood
-    #--------------------------------------------------------------
-    
-    #Calculation of free and bound PFOA in kidney blood
-    dCalbKBf <- koff_alb*CKBb/MW/1e6 - kon_alb*CalbKBf*CKBf/MW/1e6
-    
-    #Calculation of free and bound PFOA in liver blood
-    dCalbLBf <- koff_alb*CLBb/MW/1e6 - kon_alb*CalbLBf*CLBf/MW/1e6
-    
-    #Calculation of free and bound PFOA in stomach blood
-    dCalbSTBf <- koff_alb*CSTBb/MW/1e6 - kon_alb*CalbSTBf*CSTBf/MW/1e6
-    
-    #Calculation of free and bound PFOA in intestine blood
-    dCalbINBf <- koff_alb*CINBb/MW/1e6 - kon_alb*CalbINBf*CINBf/MW/1e6
-    
-    #Calculation of free and bound PFOA in muscle blood
-    dCalbMBf <- koff_alb*CMBb/MW/1e6 - kon_alb*CalbMBf*CMBf/MW/1e6
-    
-    #Calculation of free and bound PFOA in adipose blood
-    dCalbABf <- koff_alb*CABb/MW/1e6 - kon_alb*CalbABf*CABf/MW/1e6
-    
-    #Calculation of free and bound PFOA in Rest-of-the-body blood
-    dCalbRBf <- koff_alb*CRBb/MW/1e6 - kon_alb*CalbRBf*CRBf/MW/1e6
-    
-    #Calculation of free and bound PFOA in lungs blood
-    dCalbLuBf <- koff_alb*CLuBb/MW/1e6 - kon_alb*CalbLuBf*CLuBf/MW/1e6 
-    
-    #Calculation of free and bound PFOA in spleen blood
-    dCalbSPBf <- koff_alb*CSPBb/MW/1e6  - kon_alb*CalbSPBf*CSPBf/MW/1e6 
-    
-    #Calculation of free and bound PFOA in heart blood
-    dCalbHBf <- koff_alb*CHBb/MW/1e6  - kon_alb*CalbHBf*CHBf/MW/1e6 
-    
-    #Calculation of free and bound PFOA in brain blood
-    dCalbBrBf <- koff_alb*CBrBb/MW/1e6  - kon_alb*CalbBrBf*CBrBf/MW/1e6 
-    
-    #Calculation of free and bound PFOA in gonad blood
-    dCalbGoBf <- koff_alb*CGoBb/MW/1e6  - kon_alb*CalbGoBf*CGoBf/MW/1e6 
-    
-    #Calculation of free and bound PFOA in skin blood
-    dCalbSKBf <- koff_alb*CSKBb/MW/1e6  - kon_alb*CalbSKBf*CSKBf/MW/1e6 
-    
-    #Calculation of free and bound PFOA in bone blood
-    dCalbBoBf <- koff_alb*CBoBb/MW/1e6  - kon_alb*CalbBoBf*CBoBf/MW/1e6
-    
-    #--------------------------------------------------------------
-    #Calculation of free concentrations in organ interstitial fluid
-    #--------------------------------------------------------------
-    
-    #Calculation of free and bound PFOA in kidney interstitial fluid
-    dCalbKFf <- koff_alb*CKFb/MW/1e6 - kon_alb*CalbKFf*CKFf/MW/1e6
-    
-    #Calculation of free and bound PFOA in liver interstitial fluid
-    dCalbLFf <- koff_alb*CLFb/MW/1e6 - kon_alb*CalbLFf*CLFf/MW/1e6
-    
-    #Calculation of free and bound PFOA in stomach interstitial fluid
-    dCalbSTFf <- koff_alb*CSTFb/MW/1e6 - kon_alb*CalbSTFf*CSTFf/MW/1e6
-    
-    #Calculation of free and bound PFOA in intestine interstitial fluid
-    dCalbINFf <- koff_alb*CINFb/MW/1e6 - kon_alb*CalbINFf*CINFf/MW/1e6
-    
-    #Calculation of free and bound PFOA in muscle interstitial fluid
-    dCalbMFf <- koff_alb*CMFb/MW/1e6 - kon_alb*CalbMFf*CMFf/MW/1e6
-    
-    #Calculation of free and bound PFOA in adipose interstitial fluid
-    dCalbAFf <- koff_alb*CAFb/MW/1e6 - kon_alb*CalbAFf*CAFf/MW/1e6
-    
-    #Calculation of free and bound PFOA in Rest-of-the-body interstitial fluid
-    dCalbRFf <- koff_alb*CRFb/MW/1e6 - kon_alb*CalbRFf*CRFf/MW/1e6
-    
-    #Calculation of free and bound PFOA in lungs interstitial fluid
-    dCalbLuFf <- koff_alb*CLuFb/MW/1e6 - kon_alb*CalbLuFf*CLuFf/MW/1e6
-    
-    #Calculation of free and bound PFOA in spleen interstitial fluid
-    dCalbSPFf <- koff_alb*CSPFb/MW/1e6 - kon_alb*CalbSPFf*CSPFf/MW/1e6
-    
-    #Calculation of free and bound PFOA in heart interstitial fluid
-    dCalbHFf <- koff_alb*CHFb/MW/1e6 - kon_alb*CalbHFf*CHFf/MW/1e6
-    
-    #Calculation of free and bound PFOA in brain interstitial fluid
-    dCalBrFf <- koff_alb*CBrFb/MW/1e6 - kon_alb*CalBrFf*CBrFf/MW/1e6
-    
-    #Calculation of free and bound PFOA in gonad interstitial fluid
-    dCalbGoFf <- koff_alb*CGoFb/MW/1e6 - kon_alb*CalbGoFf*CGoFf/MW/1e6
-    
-    #Calculation of free and bound PFOA in skin interstitial fluid
-    dCalbSKFf <- koff_alb*CSKFb/MW/1e6 - kon_alb*CalbSKFf*CSKFf/MW/1e6
-    
-    #Calculation of free and bound PFOA in bone interstitial fluid
-    dCalbBoFf <- koff_alb*CBoFb/MW/1e6 - kon_alb*CalbBoFf*CBoFf/MW/1e6
-    
-    #-------------------------------------------------------------------
-    #Calculation of free concentrations in organ where we have tissue binding
-    #-------------------------------------------------------------------
-    
-    
-    #Calculation of free and bound PFOA in kidney Tissue
-    dCa2uKTf <- koff_a2u*CKTb/MW/1e6 - kon_a2u*Ca2uKTf*CKTf/MW/1e6
-    dCFabpKTf <- koff_fabp*CKTb/MW/1e6 - kon_fabp*CFabpKTf*CKTf/MW/1e6
-    
-    
-    #Calculation of free and bound PFOA in liver tissue
-    dCFabpLTf <- koff_fabp*CLTb/MW/1e6 - kon_fabp*CFabpLTf*CLTf/MW/1e6
-    
-    #Calculation of free and bound PFOA in alveolar lining fluid
-    dCalbLuAFf = koff_alb*CLuAFb/MW/1e6 - kon_alb*CalbLuAFf*CLuAFf/MW/1e6
+  
     
     # Bound PFOA
     #Blood
-    dMVenb <-  kon_alb*CalbVenf*CVenf*VVen -  koff_alb*CVenb*VVen
-    dMArtb <- kon_alb*CalbArtf*CArtf*VArt -  koff_alb*CArtb*VArt 
-    dMKBb <- kon_alb*CalbKBf*CKBf*VKB - koff_alb*CKBb*VKB
-    dMLBb <- kon_alb*CalbLBf*CLBf*VLB - koff_alb*CLBb*VLB
-    dMSTBb <- kon_alb*CalbSTBf*CSTBf*VSTB - koff_alb*CSTBb*VSTB
-    dMINBb <- kon_alb*CalbINBf*CINBf*VINB - koff_alb*CINBb*VINB 
+    dMVenb <- B_alb_max * CVenf/(CVenf + kd_albumin)
+    dMArtb <- kon_alb*CalbArtf*CArtf*VArt -  koff_alb*CArtb*VArt + kns * CVenf
+    dMKBb <- kon_alb*CalbKBf*CKBf*VKB - koff_alb*CKBb*VKB + kns * CVenf
+    dMLBb <- kon_alb*CalbLBf*CLBf*VLB - koff_alb*CLBb*VLB + kns * CVenf
+    dMSTBb <- kon_alb*CalbSTBf*CSTBf*VSTB - koff_alb*CSTBb*VSTB + kns * CVenf
+    dMINBb <- kon_alb*CalbINBf*CINBf*VINB - koff_alb*CINBb*VINB + kns * CVenf
     dMMBb <- kon_alb*CalbMBf*CMBf*VMB - koff_alb*CMBb*VMB
     dMABb <- kon_alb*CalbABf*CABf*VAB - koff_alb*CABb*VAB
     dMRBb <- kon_alb*CalbRBf*CRBf*VRB - koff_alb*CRBb*VRB
@@ -1207,8 +1096,19 @@ ode.func <- function(time, inits, params){
     #Tissue
     dMKTb <- kon_a2u*Ca2uKTf*CKTf*VKT + kon_fabp*CFabpKTf*CKTf*VKT -
       koff_fabp*CKTb*VKT - koff_a2u*CKTb*VKT
-    dMLTb <-  kon_fabp*CFabpLTf*CLTf*VLT - koff_fabp*CLTb*VLT
-    
+    dMLTb <- kon_fabp*CFabpLTf*CLTf*VLT - koff_fabp*CLTb*VLT
+    dMSTTb <- 
+    dMINTb <- 
+    dMMTb <- 
+    dMATb <- 
+    dMRTb <- 
+    dMLuTb <- kon_alb*CalbLuFf*CLuFf*VLuF - koff_alb*CLuFb*VLuF
+    dMSPTb <- kon_alb*CalbSPFf*CSPFf*VSPF - koff_alb*CSPFb*VSPF
+    dMHTb <- kon_alb*CalbHFf*CHFf*VHF - koff_alb*CHFb*VHF
+    dMBrTb <- kon_alb*CalBrFf*CBrFf*VBrF - koff_alb*CBrFb*VBrF 
+    dMGoTb <- kon_alb*CalbGoFf*CGoFf*VGoF - koff_alb*CGoFb*VGoF 
+    dMSKTb <- kon_alb*CalbSKFf*CSKFf*VSKF - koff_alb*CSKFb*VSKF
+    dMBoTb <- kon_alb*CalbBoFf*CBoFf*VBoF - koff_alb*CBoFb*VBoF
     #Alveolar lining fluid
     dMLuAFb <-  kon_alb*CalbLuAFf*CLuAFf*VLuAF -  koff_alb*CLuAFb*VLuAF
     
@@ -1217,7 +1117,7 @@ ode.func <- function(time, inits, params){
     #Arterial Blood
     dMArtf = QBLu*CLuBf - CArtf*(QBK+QBL+QBM+QBA+QBR+QBSP+QBH+QBBr+
                                    QBST+QBIN+QBGo+QBSK+QBBo) - QGFR*CArtf +
-      koff_alb*CArtb*VArt - kon_alb*CalbArtf*CArtf*VArt
+      koff_alb*CArtb*VArt - kon_alb*CalbArtf*CArtf*VArt -  kns * CArtf
     
     #Venous Blood
     dMVenf = - CVenf*QBLu + QBK*CKBf + QBLtot*CLBf + QBM*CMBf + QBA*CABf + QBR*CRBf+
@@ -3489,7 +3389,7 @@ kim_IV_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_IV_kim_2016.xlsx")
 gus_OR_Mblood <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Plasma Male rats_Oral.xlsx")
 gus_OR_Mtissues <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Tissues Male rats_Oral.xlsx")
 
-setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_Bladder/Training/AAFE/no_bile_ka_7e4_weight_20")
+setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/protein_binding/Training/AAFE/non_specific_binding")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -3532,7 +3432,7 @@ optimizer <- nloptr::nloptr( x0= fit,
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
-save.image("no_bile_ka_7e4_weight_20.RData")
+save.image("non_specific_binding.RData")
 
 
 

@@ -1171,12 +1171,12 @@ ode.func <- function(time, inits, params){
     
     # Bound PFOA
     #Blood
-    dMVenb <-  kon_alb*CalbVenf*CVenf*VVen -  koff_alb*CVenb*VVen
-    dMArtb <- kon_alb*CalbArtf*CArtf*VArt -  koff_alb*CArtb*VArt 
-    dMKBb <- kon_alb*CalbKBf*CKBf*VKB - koff_alb*CKBb*VKB
-    dMLBb <- kon_alb*CalbLBf*CLBf*VLB - koff_alb*CLBb*VLB
-    dMSTBb <- kon_alb*CalbSTBf*CSTBf*VSTB - koff_alb*CSTBb*VSTB
-    dMINBb <- kon_alb*CalbINBf*CINBf*VINB - koff_alb*CINBb*VINB 
+    dMVenb <-  kon_alb*CalbVenf*CVenf*VVen -  koff_alb*CVenb*VVen + kns * CVenf
+    dMArtb <- kon_alb*CalbArtf*CArtf*VArt -  koff_alb*CArtb*VArt + kns * CVenf
+    dMKBb <- kon_alb*CalbKBf*CKBf*VKB - koff_alb*CKBb*VKB + kns * CVenf
+    dMLBb <- kon_alb*CalbLBf*CLBf*VLB - koff_alb*CLBb*VLB + kns * CVenf
+    dMSTBb <- kon_alb*CalbSTBf*CSTBf*VSTB - koff_alb*CSTBb*VSTB + kns * CVenf
+    dMINBb <- kon_alb*CalbINBf*CINBf*VINB - koff_alb*CINBb*VINB + kns * CVenf
     dMMBb <- kon_alb*CalbMBf*CMBf*VMB - koff_alb*CMBb*VMB
     dMABb <- kon_alb*CalbABf*CABf*VAB - koff_alb*CABb*VAB
     dMRBb <- kon_alb*CalbRBf*CRBf*VRB - koff_alb*CRBb*VRB
@@ -1207,8 +1207,19 @@ ode.func <- function(time, inits, params){
     #Tissue
     dMKTb <- kon_a2u*Ca2uKTf*CKTf*VKT + kon_fabp*CFabpKTf*CKTf*VKT -
       koff_fabp*CKTb*VKT - koff_a2u*CKTb*VKT
-    dMLTb <-  kon_fabp*CFabpLTf*CLTf*VLT - koff_fabp*CLTb*VLT
-    
+    dMLTb <- kon_fabp*CFabpLTf*CLTf*VLT - koff_fabp*CLTb*VLT
+    dMSTTb <- 
+    dMINTb <- 
+    dMMTb <- 
+    dMATb <- 
+    dMRTb <- 
+    dMLuTb <- kon_alb*CalbLuFf*CLuFf*VLuF - koff_alb*CLuFb*VLuF
+    dMSPTb <- kon_alb*CalbSPFf*CSPFf*VSPF - koff_alb*CSPFb*VSPF
+    dMHTb <- kon_alb*CalbHFf*CHFf*VHF - koff_alb*CHFb*VHF
+    dMBrTb <- kon_alb*CalBrFf*CBrFf*VBrF - koff_alb*CBrFb*VBrF 
+    dMGoTb <- kon_alb*CalbGoFf*CGoFf*VGoF - koff_alb*CGoFb*VGoF 
+    dMSKTb <- kon_alb*CalbSKFf*CSKFf*VSKF - koff_alb*CSKFb*VSKF
+    dMBoTb <- kon_alb*CalbBoFf*CBoFf*VBoF - koff_alb*CBoFb*VBoF
     #Alveolar lining fluid
     dMLuAFb <-  kon_alb*CalbLuAFf*CLuAFf*VLuAF -  koff_alb*CLuAFb*VLuAF
     
@@ -1217,7 +1228,7 @@ ode.func <- function(time, inits, params){
     #Arterial Blood
     dMArtf = QBLu*CLuBf - CArtf*(QBK+QBL+QBM+QBA+QBR+QBSP+QBH+QBBr+
                                    QBST+QBIN+QBGo+QBSK+QBBo) - QGFR*CArtf +
-      koff_alb*CArtb*VArt - kon_alb*CalbArtf*CArtf*VArt
+      koff_alb*CArtb*VArt - kon_alb*CalbArtf*CArtf*VArt -  kns * CArtf
     
     #Venous Blood
     dMVenf = - CVenf*QBLu + QBK*CKBf + QBLtot*CLBf + QBM*CMBf + QBA*CABf + QBR*CRBf+
@@ -3489,7 +3500,7 @@ kim_IV_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_IV_kim_2016.xlsx")
 gus_OR_Mblood <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Plasma Male rats_Oral.xlsx")
 gus_OR_Mtissues <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Tissues Male rats_Oral.xlsx")
 
-setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Scenario_Bladder/Training/AAFE/no_bile_ka_7e4_weight_20")
+setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/protein_binding/Training/AAFE/non_specific_binding")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -3532,7 +3543,7 @@ optimizer <- nloptr::nloptr( x0= fit,
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
-save.image("no_bile_ka_7e4_weight_20.RData")
+save.image("non_specific_binding.RData")
 
 
 
