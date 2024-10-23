@@ -32,7 +32,7 @@ Kemper_Feces_M_25_Loc <- Kemper_excreta_Loccisano_results[Kemper_excreta_Loccisa
 Kemper_Feces_M_25_Loc$Experiment <- "Kemper_Loc | 25mg/kg | Feces | M"
 
 #Results from Worley
-Kemper_excreta_Worley_results <- read.csv("Kemper_2003_Excreta_Worley_results.csv", header = T)
+Kemper_excreta_Worley_results <- read.csv("Kemper_2003_Excreta_Worley_results.csv", header = T,)
 
 Kemper_Urine_F_1_Wor <- Kemper_excreta_Worley_results[Kemper_excreta_Worley_results$Dose == 1 & 
                                                            Kemper_excreta_Worley_results$Tissue  == "Urine" &
