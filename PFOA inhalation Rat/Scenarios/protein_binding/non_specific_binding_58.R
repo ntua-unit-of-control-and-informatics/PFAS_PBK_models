@@ -41,7 +41,7 @@ create.params <- function(user.input){
     KmK_baso <- 1e20
     KmK_api <-   1e20
     KLfabp <- (1.2e5+4e4+1.9e4)  #[L/mol]*1e-3 , value from Cheng et al. (2017)
-    Ka <- 7e4 # 5.8e05 from Rue et al. (2024)#mol/L
+    Ka <- 5.8e5 # 5.8e05 from Rue et al. (2024)#mol/L
     kns <- estimated_params[11]
     
     #permeabilities correction factor
@@ -3751,7 +3751,7 @@ Kemp_OR_Ffeces_low <- openxlsx::read.xlsx("Data/PFOA_Feces_female_oral_1_mg_per_
 Kemp_OR_Mfeces_low <- openxlsx::read.xlsx("Data/PFOA_Feces_male_oral_1_mg_per_kg-Loc.xlsx")
 
 
-setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/protein_binding/non_specific_binding")
+setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/protein_binding/non_specific_binding_58")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -3795,7 +3795,7 @@ optimizer <- nloptr::nloptr( x0= fit,
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
-save.image("non_specific_binding.RData")
+save.image("non_specific_binding_58.RData")
 
 
 
