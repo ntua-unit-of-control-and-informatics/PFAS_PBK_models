@@ -13,12 +13,12 @@ create.params <- function(user.input){
     if(sex == "M"){
       RAFOatp_k <- estimated_params[1]
       RAFOat1 <- estimated_params[3]
-      RAFbile_transp <- estimated_params[5]
+      CL_int <- estimated_params[5] #uL/min/million hepatocytes
     }else{
       RAFOatp_k <- estimated_params[2]
       RAFOat1 <- estimated_params[4]
-      RAFbile_transp <- estimated_params[6]
-      
+      CL_int <- estimated_params[6] #uL/min/million hepatocytes
+   
     }
     RAFOatp_l <- estimated_params[7]
     RAFUrat <- RAFOatp_k
@@ -42,9 +42,8 @@ create.params <- function(user.input){
     KmK_baso <- 1e20
     KmK_api <-   1e20
     KLfabp <- (1.2e5+4e4+1.9e4)  #[L/mol]*1e-3 , value from Cheng et al. (2017)
-    Ka <- 5.8e5# 5.8e05 from Rue et al. (2024)#mol/L
-    
-    
+    Ka <- 7e4# 5.8e05 from Rue et al. (2024)#mol/L
+
     #permeabilities correction factor
     kabs_st <- 0 #m/h
     #units conversion from Cheng 2017R, time-> h, PFOA mass->ng, tissues mass-> g
@@ -67,19 +66,73 @@ create.params <- function(user.input){
     VKB <- PVKB * PVK * BW #kidney blood volume kg=L
     PVKF <- 0.2 #pkSim
     VKF <- PVKF * PVK * BW #kidney interstitial fluid volume kg=L
-    VKT <- VK - VKF #kidney tissue volume kg=L
     
-    #volumes of filtrate compartments, https://doi.org/10.1152/ajprenal.00219.2018, [μm^3]*1e-15 --> L
+    # Here we assume that the length of each segment of the renal tubule is 
+    # analogous to the body weight of the kidney in order to obtain
+    # volumes and surface areas as a function of BW
+    Vki_ref <- 2.9/1000 # Gilmer et al. (2018) handled data from Sperber, 1944 (Thesis: “Studies on the Mammalian Kidney")
+    #Total Length of renal tubules, from Gilmer et al. (2018) [https://doi.org/10.1152/ajprenal.00219.2018.]
+    LPT_slp <- (VK/Vki_ref)*(9886*1e-6)*26980*2 #m, Proximal tubule (short-looped nephrons)
+    LPT_llp <- (VK/Vki_ref)*(11077*1e-6 )*11020*2#m, Proximal tubule (long-looped nephrons)
+    LPT <- LPT_slp+LPT_llp
+    LTDL_slp <- (VK/Vki_ref)*(1500*1e-6)*26980*2 #m, Thin descending limb (short-looped nephrons)
+    LTDL_llp <- (VK/Vki_ref)*(6200*1e-6)*11020*2 #m, Thin descending limb (long-looped nephrons)
+    LThinAL <-(VK/Vki_ref)* (4700*1e-6)*11020*2 #m, Thin ascending limb (long-looped nephrons)
+    LThickAL_cort <- (VK/Vki_ref)*(1450*1e-6)*38000*2 #m, Cortical thick ascending limb
+    LThickAL_med <- (VK/Vki_ref)*(2100*1e-6)*38000*2 #m, Medullary thick ascending limb 
+    LDT_sup <- (VK/Vki_ref)*(1452*1e-6)*26980*2 #m, Distal tubule* (superficial)
+    LDT_deep <- (VK/Vki_ref)*(1650*1e-6)*11020*2 #m, Distal tubule* (deep) 
+    LDT <- LDT_sup + LDT_deep
+    Lduct_cort <- (VK/Vki_ref)*(2900*1e-6)*6000*2#m, Cortical collecting duct 
+    Lduct_med <-  (VK/Vki_ref)*(2100*1e-6)*6000*2 #m, Outer medullary collecting duct 
+
+    # Renal tubule radius per compartment
+    RPT_slp <- (22.9/2)*1e-6 #m, Proximal tubule (short-looped nephrons)
+    RPT_llp <-(23.1/2)*1e-6#m, Proximal tubule (long-looped nephrons)
+    RTDL_slp <- (15/2)*1e-6 #m, Thin descending limb (short-looped nephrons)
+    RTDL_llp <- (15/2)*1e-6 #m, Thin descending limb (long-looped nephrons)
+    RThinAL <- (15/2)*1e-6 #m, #Thin ascending limb (long-looped nephrons)
+    RThickAL_cort <- (25.4/2)*1e-6 #m, Cortical thick ascending limb
+    RThickAL_med <- (29/2)*1e-6 #m, Medullary thick ascending limb 
+    RDT_sup <- (39/2)*1e-6 #m, Distal tubule* (superficial)
+    RDT_deep <- (43/2)*1e-6 #m, Distal tubule* (deep) 
+    Rduct_cort <- (24/2)*1e-6 #m, Cortical collecting duct 
+    Rduct_med <-  (24/2)*1e-6 #m, Outer medullary collecting duct 
     
-    VPT <- pi*((22.9/2)^2*9886*26980+(23.1/2)^2*11077*11020)*2*1e-15 # Proximal tubule (short- and long-looped)
-    VTDL <- pi*((15/2)^2*1500*26980+(15/2)^2*6200*11020)*2*1e-15 #Thin descending limb (short- and long-looped)
-    VThinAL <-  pi*((15/2)^2*4700*11020)*2*1e-15 #Thin ascending limb (long-looped)
-    VThickAL <- pi*((25.4/2)^2*1450*38000+(29/2)^2*2100*38000)*2*1e-15 #Thick ascending limb (Cortical and Medullary)
-    VDT <- pi*((39/2)*1452*26980+(43/2)^2*1650*11020)*2*1e-15 #Distal tubule (superficial+deep)
-    Vduct <- pi*((24/2)^2*2900*6000+(24/2)^2*2100*6000)*2*1e-15 #collecting duct (Cortical+Outer)
-    VFil_rest <- VTDL+VThinAL+VThickAL+VDT+Vduct
+    #volumes of filtrate compartments,[μm^3]*1e-15 --> L
+    VPT <- 2*pi*((RPT_slp^2)*LPT_slp + (RPT_llp^2)*LPT_llp)*1e3 # Proximal tubule (short- and long-looped)
+    VTDL <- 2*pi*( (RTDL_slp^2)*LTDL_slp+(RTDL_llp^2)*LTDL_llp)*1e3 #Thin descending limb (short- and long-looped)
+    VThinAL <-  2*pi*((RThinAL^2)*LThinAL)*1e3 #Thin ascending limb (long-looped)
+    VThickAL <- 2*pi*((RThickAL_cort^2)*LThickAL_cort+(RThickAL_med^2)*LThickAL_med)*1e3 #Thick ascending limb (Cortical and Medullary)
+    VDAL <- VTDL + VThinAL+ VThickAL # Loop of Henle
+    VDT <- 2*pi*((RDT_sup^2)*LDT_sup+(RDT_deep^2)*LDT_deep)*1e3#Distal tubule (superficial+deep)
+    VCD <- 2*pi*((Rduct_cort^2)*Lduct_cort+(Rduct_med^2)*Rduct_med)*1e3 #collecting duct (Cortical+Outer)
+    VFil <-  VPT+VDAL+VDT+VCD #L
     #VFil <- 0.25/1000 #renal filtrate volume in L,  from Cheng et al., 2017 (from Arthur, 1986; Bonvalet, 1981)
-    VBladder <- 0.001
+    # We hypothesize that when kidney is weighted the renal tubule content remains inside 
+    VKT <- VK - VKF - VFil#kidney tissue volume kg=L
+    
+    #Wang et al. (2024) [https://doi.org/10.1038/s41598-024-53270-2] state that "More than 80% of 
+    # renal cortical cells are tubular epithelial cells". By assuming that this percentage holds for
+    # the medulla region, we have that the total fraction of tubular cells is 0.8
+    f_tubular <- 0.8
+    # Clark et al. (2019) [https://doi.org/10.1016/j.kint.2018.11.028] 
+    # state that "Proximal tubule cells account for roughly 52% of the estimated
+    # 206 million tubule epithelial cells per kidney. However, they account for approximately 69% of 
+    # total tubule protein mass by virtue of their large size compared with other renal tubule cells".
+    # Thus, here we assume that the volume is analogous to the protein mass:
+    f_PTC_prot_to_tub_prot <- 0.6939
+    f_DALC_prot_to_tub_prot <- (0.0339 + 0.1156)
+    f_DTC_prot_to_tub_prot <- 0.08
+    f_CDC_prot_to_tub_prot <- 0.0766
+    
+    VPTC <- f_tubular*f_PTC_prot_to_tub_prot*VKT #for comparison, for 300g male rat we have 0.38mL and Worley and Fisher have 0.34 mL
+    VDALC <- f_tubular*f_DALC_prot_to_tub_prot*VKT #for comparison, for 300g male rat we have 0.38mL and Worley and Fisher have 0.34 mL
+    VDTC <- f_tubular*f_DTC_prot_to_tub_prot*VKT #for comparison, for 300g male rat we have 0.38mL and Worley and Fisher have 0.34 mL
+    VCDC <- f_tubular*f_CDC_prot_to_tub_prot*VKT #for comparison, for 300g male rat we have 0.38mL and Worley and Fisher have 0.34 mL
+    VKTrest <- (1-f_tubular)*VKT
+        
+    VBladder <- 0.001 #https://doi.org/10.1152/physrev.00038.2003 (CHECK)
     
     #Liver
     PVL <- 3.66e-2 #Brown et al. 1997
@@ -213,9 +266,23 @@ create.params <- function(user.input){
     #values from pkSim "Endothelial Surface area", Niederalt et al., 2018, https://doi.org/10.1007/s10928-017-9559-4
     
     PAK <- 231.7e-4/0.23 #m^2/kg
-    AK <- PAK * BW #kidney surface area (m^2)
-    PAKG <- 68.90e-4 #Kirkman and Stowell, 1942, https://doi.org/10.1002/ar.1090820310
-    AKG <- PAKG * VK * 1e3 #the surface area of glomerular capillary (m^2)
+    AK_total <- PAK * BW #kidney surface area (m^2)
+    
+    #PAKG <- 68.90e-4 #Kirkman and Stowell, 1942, https://doi.org/10.1002/ar.1090820310
+    #AKG <- PAKG * VK * 1e3 #the surface area of glomerular capillary (m^2)
+    
+    #Peritubular capillary density in From Gazzard et al. (2024) [https://doi.org/10.1002/ar.25576] 
+    d_peritubular <- 0.024 #um^2/um^3,
+    VK_gazzard <- 0.00363
+    Vcortex <- 1295*VK/VK_gazzard #mm^3, NEED TO RECHECK IF IT REFERS TO ONE OF BOTH KIDNEYS
+    A_peritubular <- (d_peritubular*Vcortex*1e3/1e6) #m^2
+    A_peritubular_PTC <- A_peritubular * LPT/ (LPT + LDT)
+    A_peritubular_DTC <- A_peritubular * LDT/ (LPT + LDT)
+    
+    # Rest of kidney capillaries after subtracting the peritubular capillaries
+    # We assume that these capillaries are in contact with the interstitial space
+    AK_rest <- AK_total - A_peritubular
+    
     PAL <- 1136e-4/0.23 #m^2/kg
     AL <- PAL * BW #liver surface area (m^2)
     
@@ -238,7 +305,7 @@ create.params <- function(user.input){
     d_ileum <- 3.36 #cm
     
     SA <- 2*pi*(d_duodenum/2)*L_duodenum + 2*pi*(d_jejunum/2)*L_jejunum + 2*pi*(d_ileum/2)*L_ileum #cm^2
-    n <- 5 #enlargement factor of apical membrane of proximal tubule or enterocytes
+    n <- 5 #enlargement factor of enterocyte apical membrane
     PAINL <- n * SA * 1e-4/0.195 #m^2/kg, scaled to reference body weight
     AINL <- PAINL*BW #m^2
     
@@ -429,27 +496,34 @@ create.params <- function(user.input){
     }
     QGE<- 0.54/BW^0.25 #gastric emptying time (1/(h*BW^0.25)); from Yang, 2013
     
-    #flows of filtrate compartments, https://doi.org/10.1152/ajprenal.00219.2018, nL/min ---> L/h 
-    
-    QPT <- (40.9*26980+39.7*11020)*2*1e-9*60 #proximal tubule flow (short +long)
-    
-    Q_scaling_factor = QGFR/QPT
-    #an den ta xreiastoume pouthena ta svinoume auta
-    
-    QTDL_reference <- (26.4*26980+26.3*11020)*2*1e-9*60 #Thin descending limb (short +long)
-    QTDL <- QTDL_reference*Q_scaling_factor
-    # QTAL <- 26.3*11020*2*1e-9*60 #Thin descending limb (short +long)
-    # QThinAL <- 8*11020*2*1e-9*60 #Thin ascending limb (long-looped)
-    # QThickAL <- (8.1*38000+8*38000)*2*1e-9*60 #Thick ascending limb (Cortical and Medullary)
-    # QDT <- 6*(26980+11020)*2*1e-9*60 #Distal tubule (short +long)
-    # Qduct <- Qurine
+    #flows of filtrate compartments from Gilmer et al. (2018) 
+    # [https://doi.org/10.1152/ajprenal.00219.2018], nL/min ---> L/h 
+    QPT_ref <- (40.9*26980+39.7*11020)*2*1e-9*60 #L/h, proximal tubule flow (short +long)
+    QTDL_ref <- (26.4*26980+26.3*11020)*2*1e-9*60 #L/h, Thin descending limb (short +long)
+    QTAL_ref <- 8 * 38000*2*1e-9*60 #L/h, Thin+thick (short +long) ascending 
+    QDT_ref <- (6*26980 + 6*11020)*2*1e-9*60  #  Distal tubule (short + long)
+    QCD_ref <- 14.4* 6000*2*1e-9*60  #  collecting duct (Cortical + medullary)
+
+    # The values from Gilmer et al. (2018) are BW invariant. So since the GFR
+    # we use is scaled to BW and GFR = QPT, we scale these values based on the
+    # current GFR.
+    Q_scaling_factor = QGFR/QPT_ref
+
+    QPT <- Q_scaling_factor * QPT_ref #L/h, proximal tubule flow (short +long)
+    QTDL <- Q_scaling_factor * QTDL_ref #L/h, Thin descending limb (short +long)
+    QTAL <- Q_scaling_factor * QTAL_ref #L/h, Thin+thick (short +long) ascending 
+    QDT <- Q_scaling_factor * QDT_ref  #L/h, Distal tubule (short + long)
+    QCD <- Q_scaling_factor * QCD_ref  #L/h, collecting duct (Cortical + medullary)
     
     #Overall mass transfer coefficients between subcompartments and passive
     #diffusion rate constants. See SI section S3-1 for details
     
-    #Surface areas Interstitial - Intracellular PKSim (m^2)
+    #Surface areas Interstitial - Intracellular (m^2), from PKSim 
     BW_ref <- 0.23
-    AcK= 437.16*BW/BW_ref
+    AcK_total= 437.16*BW/BW_ref
+    AcK_DALC <- AcK_total*VDALC/(VDALC+VCDC+VKTrest) # surface area of decending/ascending limb cells (loop of Henle)
+    AcK_CDC <- AcK_total*VDALC/(VDALC+VCDC+VKTrest) # surface area of collecting duct cells 
+    AcKTrest <- AcK_total* VKTrest/(VDALC+VCDC+VKTrest)
     AcL= 84.45*BW/BW_ref
     AcST= 1007.31*BW/BW_ref
     AcIN= (400.94+152.39) *BW/BW_ref # small+large intestine
@@ -462,22 +536,27 @@ create.params <- function(user.input){
     AcGo= 2.01*BW/BW_ref
     AcSK= 0.11*BW/BW_ref
     AcBo= 6.52*BW/BW_ref
-    AcR= (AcK+AcL+AcST+AcIN+AcM+AcA+AcLu+AcSP+AcH+AcBr+AcGo+AcSK+AcBo)/13
-    # Surface areas of the different subcompartments of kidney filtrate
-    APT <-  2*pi*((22.9/2)*9886*26980+(23.1/2)*11077*11020)*2*n*1e-12 # Proximal tubule (short- and long-looped)
-    ATDL <- 2*pi*((15/2)*1500*26980+(15/2)*6200*11020)*2*n*1e-12 #Thin descending limb (short- and long-looped)
-    AThinAL <-  2*pi*((15/2)*4700*11020)*2*n*1e-12 #Thin ascending limb (long-looped)
-    AThickAL <- 2*pi*((25.4/2)*1450*38000+(29/2)*2100*38000)*2*n*1e-12 #Thick ascending limb (Cortical and Medullary)
-    ADT <- 2*pi*((39/2)*1452*26980+(43/2)*1650*11020)*2*n*1e-12 #Distal tubule (superficial+deep)
-    Aduct <- 2*pi*((24/2)*2900*6000+(24/2)*2100*6000)*2*n*1e-12 #collecting duct (Cortical+Outer)
-    AFil_rest <- ATDL+AThinAL+AThickAL+ADT+Aduct
+    # We don't have data for the surface area of IS-IC for the rest of the body, thus 
+    # we naively assume an average:
+    AcR= mean(c(AcK_total,AcL,AcST,AcIN,AcM,AcA,AcLu,AcSP,AcH,AcBr,AcGo,AcSK,AcBo))
+    
+    n <- 5 #enlargement factor of the apical membrane of tubule cells
+    # Surface areas of the different subcompartments of kidney filtrate, m^2
+    APT <-  2*pi*((RPT_slp/2)*LPT_slp*26980+(RPT_llp/2)*LPT_llp*11020)*2*n*1e-12 # Proximal tubule (short- and long-looped)
+    ATDL <- 2*pi*((RTDL_slp/2)*LTDL_slp*26980+(RTDL_llp/2)*LTDL_llp*11020)*2*n*1e-12 #Thin descending limb (short- and long-looped)
+    AThinAL <-  2*pi*((RThinAL/2)*LThinAL*11020)*2*n*1e-12 #Thin ascending limb (long-looped)
+    AThickAL <- 2*pi*((RThickAL_cort/2)*LThickAL_cort*38000+(RThickAL_med/2)*LThickAL_med*38000)*2*n*1e-12 #Thick ascending limb (Cortical and Medullary)
+    ADAL <- ATDL + AThinAL + AThickAL
+    ADT <- 2*pi*((RDT_sup/2)*LDT_sup*26980+(RDT_deep/2)*LDT_deep*11020)*2*n*1e-12 #Distal tubule (superficial+deep)
+    ACD <- 2*pi*((Rduct_cort/2)*Lduct_cort*6000+(Lduct_med/2)*Lduct_med*6000)*2*n*1e-12 #collecting duct (Cortical+Outer)
+    AFil <- APT + ADAL + ADT + ACD
     
     #Alveolar cells surface area (Type I and II), m^2
     AcALF = ((78.8*2*5320*1e-6) + (125*2*123*1e-6))*BW/0.29  #Stone et al., 1992, BW_ref = 0.29, values for each lung , https://doi.org/10.1165/ajrcmb/6.2.235
     
-    #canalicular surface area, m^2
-    rat_hep_surf_area = 22.95 * 1e2 # 22.95*1e6 cm2 --> m2,  https://doi.org/10.1074/jbc.271.12.6702
-    AcLBilec = 0.01 * 22.95 * 1e2 # m2 , canalicular membrane 1% of the surface area of the hepatocyte,https://www.ncbi.nlm.nih.gov/books/NBK470209/
+    # #canalicular surface area, m^2
+    # rat_hep_surf_area = 22.95 * 1e2 # 22.95*1e6 cm2 --> m2,  https://doi.org/10.1074/jbc.271.12.6702
+    # AcLBilec = 0.01 * 22.95 * 1e2 # m2 , canalicular membrane 1% of the surface area of the hepatocyte,https://www.ncbi.nlm.nih.gov/books/NBK470209/
     
     # Following the calculations  of Lin et al. (2023) for Caco-2 cells
     ClINFT_unscaled= 18.1 #uL/min/mg protein, Kimura et al. 2017
@@ -490,16 +569,16 @@ create.params <- function(user.input){
     Awell = 9 #cm^2 (for a 35 mm culture dish)
     Swell = 1.12 #cm^2
     well_protein = 0.346 #mg protein
-    P = (well_protein * Awell)/Swell #mg protein/well
-    Papp = RAF_papp*(ClINFT_unscaled*60*1e-03*P)/(Awell *2) #cm/h
+    protein_per_well = (well_protein * Awell)/Swell #mg protein/well
+    Papp_LIN = RAF_papp*(ClINFT_unscaled*60*1e-06*1e3*protein_per_well)/(Awell *2) #cm/h
+    Papp_RYU = RAF_papp*1.46e-6*3600 # cm/h, from Ryu et al. (2024) [https://doi.org/10.1016/j.chemosphere.2024.142390]
+    # We consider the value derived from Lin et al. (2023) very large, thus we use the Ryu et al. (2024) value
+    Papp = Papp_RYU
     P_passive = ( (Papp/100) * AINL)*1000 #L/h
     
-    
-    #passive diffusion rates
-    
-    kKFKT = ((Papp/100) * AcK)*1000 #m^3/h * 1000 --> L/h
+    #passive diffusion rates, in L/h
     kLFLT = ((Papp/100) * AcL)*1000 #m^3/h * 1000 --> L/h
-    kLTLbile = ((Papp/100) * AcLBilec)*1000 #m^3/h * 1000 --> L/h
+    #kLTLbile = ((Papp/100) * AcLBilec)*1000 #m^3/h * 1000 --> L/h
     kMFMT = ((Papp/100) * AcM)*1000 #m^3/h * 1000 --> L/h
     kSTFSTT = ((Papp/100) * AcST)*1000 #m^3/h * 1000 --> L/h 
     kINFINT = ((Papp/100) * AcIN)*1000 #m^3/h * 1000 --> L/h 
@@ -513,9 +592,17 @@ create.params <- function(user.input){
     kSKFSKT = ((Papp/100) * AcSK)*1000 #m^3/h * 1000 --> L/h
     kBoFBoT = ((Papp/100) * AcBo)*1000 #m^3/h * 1000 --> L/h
     kRFRT = ((Papp/100) * AcR)*1000 #m^3/h*1000 --> L/h 
-    kPTKT <- ((Papp/100) * APT) *1000 
-    kFilKT <- ((Papp/100) * AFil_rest)*1000 #m^3/h *1000 ---> L/h
     
+    #Diffusion rates in L/h between renal tubule filtrate and tubule cells
+    kPtcTu <- ((Papp/100) * APT) *1000 #diffusion between proximal tubule cells and tubule filtrate
+    kDalcTu <- ((Papp/100) * ADAL) *1000 #diffusion between descending/ascending cells and tubule filtrate
+    kDtcTu <- ((Papp/100) * ADT) *1000 #diffusion between distal tubule cells and tubule filtrate
+    kCdcTu <- ((Papp/100) * ACD) *1000 #diffusion between collecting duct cells and tubule filtrate
+    
+    #Diffusion rates in L/h between  tubule cells and interstitial space
+    kDalcF <- ((Papp/100) * AcK_DALC) *1000 #diffusion between proximal tubule cells and interstitial space
+    kCdcF <- ((Papp/100) * AcK_CDC) *1000 #diffusion between descending/ascending cells and interstitial space
+    kKTrestF  <- ((Papp/100) * AcKTrest) *1000 #diffusion between rest of kidney cells and interstitial space
     
     #For all CMTs
     MW = 414.07 #g/mol, PFOA molecular weight
@@ -529,28 +616,29 @@ create.params <- function(user.input){
     kidney_cells = 1.47e07 #cells/g https://doi.org/10.1038/s41598-024-53270-2
     kidney_cells_total <- kidney_cells* (1000*VKT)
     kidney_protein_total <- kidney_protein_per_gram* (1000*VKT) #mg
+    PTC_protein <- f_tubular*f_PTC_prot_to_tub_prot*kidney_protein_total
     
     #Oatp kidney
     VmK_Oatp_in_vitro <- 9.3 #nmol/mg protein/min (Weaver et al. 2010)
-    VmK_Oatp_scaled <- 60*VmK_Oatp_in_vitro*MW*kidney_protein_total/1000  #physiologically scaled to in vivo, ug/h
+    VmK_Oatp_scaled <- 60*VmK_Oatp_in_vitro*MW*PTC_protein/1000  #physiologically scaled to in vivo, ug/h
     VmK_Oatp <- VmK_Oatp_scaled*RAFOatp_k #in vivo value, in  ug/h
     KmK_Oatp=  126.4*MW# [umol/L] * g/mol  --> ug/L, from Weaver et al. (2010)
     
     #oat1 kidney
     VmK_Oat1_in_vitro= 2.6 #nmol/mg protein/min (Weaver et al. 2010)
-    VmK_Oat1_scaled = 60*VmK_Oat1_in_vitro*MW*kidney_protein_total/1000 #physiologically scaled to in vivo, ug/h
+    VmK_Oat1_scaled = 60*VmK_Oat1_in_vitro*MW*PTC_protein/1000 #physiologically scaled to in vivo, ug/h
     VmK_Oat1= VmK_Oat1_scaled*RAFOat1 #in vivo value, in   ug/h
     KmK_Oat1= 43.2 * MW #umol/L (Weaver et al. 2010) --> ug/L
     
     #oat3 kidney
     VmK_Oat3_in_vitro= 3.8 #nmol/mg protein/min  (Weaver et al. 2010)
-    VmK_Oat3_scaled = 60*VmK_Oat3_in_vitro*MW*kidney_protein_total/1000 #physiologically scaled to in vivo, ug/h
+    VmK_Oat3_scaled = 60*VmK_Oat3_in_vitro*MW*PTC_protein/1000 #physiologically scaled to in vivo, ug/h
     VmK_Oat3 = VmK_Oat3_scaled*RAFOat3 #in vivo value, in   ug/h
     KmK_Oat3= 65.7 * MW #umol/L (Weaver et al. 2010) --> ug/L
     
     #Urat1 kidney
     VmK_Urat_in_vitro= 1520e-3 #nmol/mg protein/min  (Lin et al. 2023)
-    VmK_Urat_scaled = 60*VmK_Urat_in_vitro*MW*kidney_protein_total/1000 #physiologically scaled to in vivo, ug/h
+    VmK_Urat_scaled = 60*VmK_Urat_in_vitro*MW*PTC_protein/1000 #physiologically scaled to in vivo, ug/h
     VmK_Urat = VmK_Urat_scaled*RAFUrat #in vivo value, in   ug/h
     KmK_Urat = 820.04 * MW #umol/L (Lin et al. 2023) --> ug/L
     
@@ -559,7 +647,11 @@ create.params <- function(user.input){
     rat_weight_addis <- 200 #g, average rat weight in Addis, 1936
     rat_liver_weight_addis <- rat_weight_addis*0.0366 # liver fraction to BW, Brown (1997)
     liver_protein_per_gram <- liver_protein_per_rat/rat_liver_weight_addis #mg or protein/g liver
-    liver_cells = 117*10^6 #hepatocytes per g of liver (Sohlenius-Sternbeck et al. 2006) (2e09 cells: https://bionumbers.hms.harvard.edu/bionumber.aspx?s=n&v=4&id=110895)
+    #Total liver cells:2e09  https://bionumbers.hms.harvard.edu/bionumber.aspx?s=n&v=4&id=110895)
+    HEPGL <- 104  #million hepatocytes/gram of rat liver (Fattah et al., 2016. https://doi.org/10.1124/dmd.115.066381 )
+    #HEPGL_human = 117*1e6 #hepatocytes per g of liver (Sohlenius-Sternbeck et al. 2006) 
+    # Scaled hepatobiliary clearance
+    CL_hepatobiliary <- CL_int*1e-6*HEPGL*VL*60L #L/h
     
     #oatp1-liver
     VmL_Oatp_in_vitro= 9.3 #nmol/mg protein/min  (Weaver et al. 2010)
@@ -581,12 +673,11 @@ create.params <- function(user.input){
     VmL_Ntcp = VmL_Ntcp_scaled*RAFNtcp #in vivo value, in  ug/h
     KmL_Ntcp= 20 * MW #umol/L, Ruggiero et al. 2021 --> ug/L
     
-    #bile_transp_liver
-    Vmbile_transp_in_vitro= mean(c(VmL_Oatp_in_vitro,VmL_Oatp2_in_vitro, VmL_Ntcp_in_vitro )) #nmol/mg protein/min  (mean value from other liver transporters)
-    Vmbile_transp_scaled = 60*Vmbile_transp_in_vitro*MW*liver_protein_per_gram*(VL*1000)/1000   #physiologically scaled to in vivo, ug/h
-    Vmbile_transp = Vmbile_transp_scaled*RAFbile_transp #in vivo value, in  ug/h
-    Kmbile_transp = mean(c(KmL_Ntcp,KmL_Oatp2, KmL_Oatp )) #same as kidney
-    
+    # #bile_transp_liver
+    # Vmbile_transp_in_vitro= mean(c(VmL_Oatp_in_vitro,VmL_Oatp2_in_vitro, VmL_Ntcp_in_vitro )) #nmol/mg protein/min  (mean value from other liver transporters)
+    # Vmbile_transp_scaled = 60*Vmbile_transp_in_vitro*MW*liver_protein_per_gram*(VL*1000)/1000   #physiologically scaled to in vivo, ug/h
+    # Vmbile_transp = Vmbile_transp_scaled*RAFbile_transp #in vivo value, in  ug/h
+    # Kmbile_transp = mean(c(KmL_Ntcp,KmL_Oatp2, KmL_Oatp )) #same as kidney
     
     #Lung
     lung_protein_per_gram <- 134 # 134 mg/mL tissue --> 134 mg/g tissue, Figure 2, https://doi.org/10.1007/s00580-021-03242-z 
@@ -634,11 +725,12 @@ create.params <- function(user.input){
     PeffSK <- Papp*10 #mm/h
     PeffBo <- Papp*10 #mm/h
     
+    Mr_albumin <- 66500#g/mol
+    CalbB_init  <- f_alb_avail*mean(c(593,551, 591, 509, 535))*1e-6 #mol/L, from Rose & Klemcke (2015) [PMID: 26424242]
     #Albumin concentration in blood and interstitial fluid compartments(mol/m^3 = 1e-6* nmol/g)
+    #CalbB_init <- f_alb_avail*486*1e-06 # #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
     
-    CalbB_init <- f_alb_avail*486*1e-06 # #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
-    
-    
+    #Albumin concentration in interstitial fluid compartments(mol/m^3 = 1e-6* nmol/g)
     CalbKF_init <- f_alb_avail*243*1e-6 # #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
     CalbLF_init <- f_alb_avail*243*1e-6 # #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
     CalbSTF_init <- f_alb_avail*146*1e-6 # [umol/L]*1e-6 -->(mol/L), same as Gut (assumption)
@@ -650,12 +742,11 @@ create.params <- function(user.input){
     CalbLuF_init <- f_alb_avail*CalbINF_init #assumption 
     CalbLuAF_init <- f_alb_avail*10/100 * CalbB_init #based on Woods et al. 2015 statement https://doi.org/10.1016/j.jconrel.2015.05.269
     
-    MW_albumin <- 66500#g/mol
     CalbSPF_init <- f_alb_avail*243e-6 #[umol/L]*1e-6 -->(mol/L), same as liver (assumption)
-    CalbGoF_init <- f_alb_avail*41/MW_albumin #mg/mL-->  (mol/L) from https://doi.org/10.1210/endo-116-5-1983 --> 41 mg/mL, MW=65 kg/mol
-    CalbHF_init <- f_alb_avail* 65/MW_albumin##mg/mL--> (mol/L) https://doi.org/10.1007/s12291-010-0042-x --> 6.5 g/100 g tissue, MW=65 kg/mol 
-    CalbBrF_init <- f_alb_avail*8e-2/MW_albumin  ##mg/mL--> (mol/L) https://doi.org/10.1016/0014-4886(90)90158-O --> 0.08 g/L, MW=65 kg/mol 
-    CalbSKF_init <- f_alb_avail*21/MW_albumin ##mg/mL-->  (mol/L) https://doi.org/10.1111/j.1748-1716.1973.tb05464.x -->Table 2: 2.1 g/100 mL
+    CalbGoF_init <- f_alb_avail*41/Mr_albumin #mg/mL-->  (mol/L) from https://doi.org/10.1210/endo-116-5-1983 --> 41 mg/mL, MW=65 kg/mol
+    CalbHF_init <- f_alb_avail* 65/Mr_albumin##mg/mL--> (mol/L) https://doi.org/10.1007/s12291-010-0042-x --> 6.5 g/100 g tissue, MW=65 kg/mol 
+    CalbBrF_init <- f_alb_avail*8e-2/Mr_albumin  ##mg/mL--> (mol/L) https://doi.org/10.1016/0014-4886(90)90158-O --> 0.08 g/L, MW=65 kg/mol 
+    CalbSKF_init <- f_alb_avail*21/Mr_albumin ##mg/mL-->  (mol/L) https://doi.org/10.1111/j.1748-1716.1973.tb05464.x -->Table 2: 2.1 g/100 mL
     
     #Interstitial/plasma concentration ratio (IPR)
     #values from Kawai et al., 1994, Table C-I
@@ -674,7 +765,6 @@ create.params <- function(user.input){
     IPR_Go = 0.5 #assumption
     IPR_Bo = 0.5 #assumption
     IPR_R = (IPR_K+IPR_L+IPR_ST+IPR_IN+IPR_M+IPR_A+IPR_Lu+IPR_Sp+IPR_H+IPR_SK+IPR_Br+IPR_Go+IPR_Bo)/13 #average IPR of all the included organs (kg=L)
-    
     
     CalbKB_init <- CalbKF_init*(1/IPR_K) 
     CalbLB_init <- CalbLF_init*(1/IPR_L) 
@@ -702,6 +792,7 @@ create.params <- function(user.input){
       Ca2uKT_init <- 0 #mol/L
     }
     
+    
     #LFABP concentration in kidney and liver tissue (mol/m^3)
     L_FABP_L = 28.2e-3*liver_protein_per_rat/VLT #mg/L, 28.2 ug/mg cytosolic protein from https://doi.org/10.1016/S0021-9258(18)34463-6
     #cytosolic protein is 96.3% of the total liver protein, https://doi.org/10.18632/aging.101009
@@ -726,7 +817,11 @@ create.params <- function(user.input){
     
     
     return(list('VB'=VB, 'Vplasma'=Vplasma, 'VK'=VK, 'VKB'=VKB, 
-                'VKF'=VKF, 'VKT'=VKT, 'VFil_rest'=VFil_rest, 'VPT' = VPT, 'VBladder' = VBladder,
+                'VKF'=VKF, 'VKT'=VKT, 'VFil'=VFil,'VBladder' = VBladder, 
+                'VPT' = VPT, 'VDAL' = VDAL, 'VDT' = VDT, 'VCD' = VCD,
+                'VPTC' = VPTC, 'VDALC' = VDALC, 'VDTC' = VDTC, 'VCDC' = VCDC,
+                 'VKTrest' = VKTrest,
+                
                 'VL'=VL, 'VLB'=VLB, 'VLF'=VLF, 'VLT'=VLT, 'VLbile'=VLbile,
                 'VM'=VM, 'VMB'=VMB, 'VMF'=VMF, 'VMT'=VMT, 'VA'=VA, 'VAB'=VAB, 
                 'VAF'=VAF, 'VAT'=VAT, 'VR'=VR, 'VRB'=VRB, 
@@ -743,11 +838,10 @@ create.params <- function(user.input){
                 'VSK'=VSK,'VSKB'=VSKB, 'VSKF'=VSKF, 'VSKT'=VSKT,
                 'VBo'=VBo,'VBoB'=VBoB, 'VBoF'=VBoF, 'VBoT'=VBoT,
                 
-                "VPT" = VPT, "VTDL"= VTDL, "VThinAL"=VThinAL, "VThickAL"=VThickAL,
-                "VDT" = VDT, "Vduct"=Vduct,
-                
-                'AK'=AK, 'AKG'=AKG, 'AL'=AL, 
-                'AM'=AM, 'AA'=AA, 'AR'=AR, 'ALu'= ALu, 
+         
+                'AK_rest'=AK_rest, 'A_peritubular_PTC' = A_peritubular_PTC, 
+                'A_peritubular_DTC' = A_peritubular_DTC,
+                'AL'=AL, 'AM'=AM, 'AA'=AA, 'AR'=AR, 'ALu'= ALu, 
                 'ASP'=ASP, 'AH'=AH, 'ABr'=ABr, 'AST'= AST,
                 'AIN'=AIN, 'AGo'=AGo,
                 'ASK'= ASK, 'ABo'=ABo,
@@ -756,7 +850,6 @@ create.params <- function(user.input){
                 "SMu" = SMu,"SAd" = SAd,"SRe" = SRe,"SLu" = SLu,
                 "SSp" = SSp,"SHt" = SHt,"SBr" = SBr,"SGo" = SGo,
                 "SSk" = SSk,"SBo" = SBo,
-                
                 
                 'PeffK'=PeffK, 'PeffL'=PeffL, 
                 'PeffA'=PeffA, 'PeffM'=PeffM, 'PeffR'=PeffR, 'PeffLu' = PeffLu,
@@ -779,9 +872,7 @@ create.params <- function(user.input){
                 "QparaSp" = QparaSp,"QparaHt" = QparaHt,"QparaBr" = QparaBr,"QparaGo" = QparaGo,
                 "QparaSk" = QparaSk,"QparaBo" = QparaBo,
                 
-                "QPT" = QPT, 'QTDL' = QTDL,
-                # "QTDL"= QTDL, "QTAL"= QTAL, "QThinAL"=QThinAL, "QThickAL"=QThickAL,
-                # "QDT" = QDT, "Qduct"=Qduct,
+                "QPT" = QPT, "QTDL" = QTDL, "QTAL" = QTAL, "QDT" = QDT, "QCD" = QCD, 
                 
                 'CalbB_init'= CalbB_init, 'CalbKF_init'=CalbKF_init, 'CalbLF_init'=CalbLF_init,
                 'CalbMF_init'=CalbMF_init, 'CalbAF_init'=CalbAF_init, 'CalbRF_init'=CalbRF_init,
@@ -804,11 +895,12 @@ create.params <- function(user.input){
                 "koff_alb" = koff_alb, "koff_a2u" = koff_a2u, "koff_fabp" = koff_fabp,
                 "kon_alb" = kon_alb, "kon_a2u" = kon_a2u, "kon_fabp" = kon_fabp,
                 
+                "CL_hepatobiliary" = CL_hepatobiliary,
                 'VmL_Oatp'=VmL_Oatp, 'KmL_Oatp'= KmL_Oatp, 'VmL_Ntcp'= VmL_Ntcp,
                 'VmL_Oatp2'=VmL_Oatp2, 'KmL_Oatp2'= KmL_Oatp2, 
                 'VmIn_Oatp2'=VmIn_Oatp2, 'KmIn_Oatp2'= KmIn_Oatp2,
                 'KmL_Ntcp'= KmL_Ntcp,'VmK_Oatp'= VmK_Oatp, 
-                'Vmbile_transp' = Vmbile_transp,    'Kmbile_transp' = Kmbile_transp,
+                #'Vmbile_transp' = Vmbile_transp,    'Kmbile_transp' = Kmbile_transp,
                 'KmK_Oatp'=KmK_Oatp, 'VmLu_Oatp_ap'= VmLu_Oatp_ap,
                 'KmLu_Oatp_ap'=KmLu_Oatp_ap, 'VmLu_Oatp_bas'= VmLu_Oatp_bas,
                 'KmLu_Oatp_bas'=KmLu_Oatp_bas,
@@ -822,8 +914,9 @@ create.params <- function(user.input){
                 'VmK_baso' = VmK_baso,'VmK_api' = VmK_api,
                 
                 'Papp' = Papp, 'P_passive' = P_passive,
-                'kKFKT'=kKFKT, 'kFilKT'=kFilKT, 'kPTKT' = kPTKT,  
-                'kLFLT'=kLFLT, 'kLTLbile'=kLTLbile,  'kAFAT'=kAFAT, 
+                'kKTrestF'=kKTrestF, 'kCdcF' = kCdcF, 'kDalcF' = kDalcF,
+                'kPtcTu'=kPtcTu, 'kDalcTu' = kDalcTu, 'kDtcTu' = kDtcTu, 'kCdcTu' = kCdcTu, 
+                'kLFLT'=kLFLT,  'kAFAT'=kAFAT, 
                 'kRFRT'=kRFRT,
                 'kabST'=kabST, 
                 'kMFMT'=kMFMT, 'kLuTLuF' =kLuTLuF, 'kLuTLuAF'=kLuTLuAF, 'kSPFSPT' =kSPFSPT,
@@ -832,7 +925,12 @@ create.params <- function(user.input){
                 'kSKFSKT' =kSKFSKT, 'kBoFBoT'=kBoFBoT,
                 
                 "admin.time" = admin.time, "admin.dose" = admin.dose,
-                "admin.type" = admin.type, "MW"=MW
+                "admin.type" = admin.type, "MW"=MW,
+                
+                'f_tubular' =  f_tubular,  'f_PTC_prot_to_tub_prot' = f_PTC_prot_to_tub_prot, 
+                'f_DALC_prot_to_tub_prot' = f_DALC_prot_to_tub_prot, 
+                'f_DTC_prot_to_tub_prot' = f_DTC_prot_to_tub_prot , 
+                'f_CDC_prot_to_tub_prot' = f_CDC_prot_to_tub_prot 
     ))
     
   })
@@ -861,22 +959,39 @@ ode.func <- function(time, inits, params){
     
     MKB <- MKBf + MKBb
     MKF <- MKFf + MKFb
-    MKT <- MKTf + MKTb
     CKB <- MKB/VKB # blood concentration
     CKBf <- MKBf/VKB
     CKBb <- MKBb/VKB
     CKF <- MKF/VKF  #interstitial fluid concentration
     CKFf <- MKFf/VKF
     CKFb <- MKFb/VKF
+    
+    CKTrestf <- MKTrestf/VKTrest
+    CKTrestb <- MKTrestb/VKTrest
+    CPTCf <- MPTCf/VPTC
+    CPTCb <- MPTCb/VPTC
+    CDALCf <- MDALCf/VDALC
+    CDALCb <- MDALCb/VDALC
+    CDTCf <- MDTCf/VDTC
+    CDTCb <- MDTCb/VDTC
+    CCDCf <- MCDCf/VCDC
+    CCDCb <- MCDCb/VCDC
+    
+    MKTf <- MKTrestf + MPTCf + MDALCf + MDTCf + MCDCf
+    MKTb <- MKTrestb + MPTCb + MDALCb + MDTCb + MCDCb
+    MKT <- MKTf + MKTb
+    Mfil <- MPT+MDAL+MDT+MCD
+    CKTb <- MKTf/VKT
+    CKTf <- MKTb/VKT
     CKT <- MKT/VKT # tissue concentration
-    CKTf <- MKTf/VKT
-    CKTb <- MKTb/VKT
-    CPT <- MPT/VPT
-    CFil <- MFil/VFil_rest# rest of the filtrate concentration
+    #renal filtrate
+    CPT <- MPT/VPT #proximal tubule
+    CDAL <- MDAL/ VDAL # tubule
+    CDT <- MDT/ VDT #distal tubule
+    CCD <- MCD/ VCD #proximal tubule
     CBladder <- MBladder/VBladder
     
     #Liver
-    
     MLB <- MLBf + MLBb
     MLF <- MLFf + MLFb
     MLT <- MLTf + MLTb
@@ -902,22 +1017,21 @@ ode.func <- function(time, inits, params){
     CSTF <- MSTF/VSTF  #interstitial fluid concentration
     CSTFf <- MSTFf/VSTF
     CSTFb <- MSTFb/VSTF
-    CSTT <- MSTT/VSTT # tissue concentration
-    
+    CSTTf <- MSTTf/VSTT # tissue concentration
+
     #Intestine
     
     MINB <- MINBf + MINBb
     MINF <- MINFf + MINFb
-    MINT <- MINTf
+    MINT <- MINTf 
     CINB <- MINB/VINB # blood concentration
     CINBf <- MINBf/VINB
     CINBb <- MINBb/VINB
     CINF <- MINF/VINF  #Interstitial fluid concentration
     CINFf <- MINFf/VINF
     CINFb <- MINFb/VINF
-    CINT <- MINT/VINT # tissue concentration
-    
-    
+    CINTf <- MINTf/VINT # tissue concentration
+
     #Stomach and Intestine lumens
     CSTL = MSTL/VSTL # Stomach Lumen concentration
     CINL = MINL/VINL # Intestine Lumen concentration
@@ -926,46 +1040,46 @@ ode.func <- function(time, inits, params){
     
     MMB <- MMBf + MMBb
     MMF <- MMFf + MMFb
-    MMT <- MMTf
+    MMT <- MMTf 
     CMB <- MMB/VMB # blood concentration
     CMBf <- MMBf/VMB
     CMBb <- MMBb/VMB
     CMF <- MMF/VMF  #Interstitial fluid concentration
     CMFf <- MMFf/VMF
     CMFb <- MMFb/VMF
-    CMT <-  MMT/VMT # tissue concentration
-    
+    CMTf <-  MMTf/VMT # tissue concentration
+
     #Adipose
     
     MAB <- MABf + MABb
     MAF <- MAFf + MAFb
-    MAT <- MATf
+    MAT <- MATf 
     CAB <- MAB/VAB # blood concentration
     CABf <- MABf/VAB
     CABb <- MABb/VAB
     CAF <- MAF/VAF  #Interstitial fluid concentration
     CAFf <- MAFf/VAF
     CAFb <- MAFb/VAF
-    CAT <- MAT/VAT # tissue concentration
-    
+    CATf <- MATf/VAT # tissue concentration
+
     #Rest-of-the-body
     
     MRB <- MRBf + MRBb
     MRF <- MRFf + MRFb
-    MRT <- MRTf
+    MRT <- MRTf 
     CRB <- MRB/VRB # blood concentration
     CRBf <- MRBf/VRB
     CRBb <- MRBb/VRB
     CRF <- MRF/VRF  #Interstitial fluid concentration
     CRFf <- MRFf/VRF
     CRFb <- MRFb/VRF
-    CRT <- MRT/VRT # tissue concentration
-    
+    CRTf <- MRTf/VRT # tissue concentration
+
     #Lung
     
     MLuB <- MLuBf + MLuBb
     MLuF <- MLuFf + MLuFb
-    MLuT <- MLuTf
+    MLuT <- MLuTf 
     MLuAF <- MLuAFf + MLuAFb
     CLuB <- MLuB/VLuB # blood concentration
     CLuBf <- MLuBf/VLuB
@@ -973,7 +1087,7 @@ ode.func <- function(time, inits, params){
     CLuF <- MLuF/VLuF  #Interstitial fluid concentration
     CLuFf <- MLuFf/VLuF
     CLuFb <- MLuFb/VLuF
-    CLuT <- MLuT/VLuT #tissue concentration
+    CLuTf <- MLuTf/VLuT #tissue concentration
     CLuAF <- MLuAF/VLuAF #alveolar lining fluid concentration
     CLuAFf <- MLuAFf/VLuAF
     CLuAFb <- MLuAFb/VLuAF
@@ -982,80 +1096,79 @@ ode.func <- function(time, inits, params){
     
     MSPB <- MSPBf + MSPBb
     MSPF <- MSPFf + MSPFb
-    MSPT <- MSPTf
+    MSPT <- MSPTf 
     CSPB <- MSPB/VSPB # blood concentration
     CSPBf <- MSPBf/VSPB
     CSPBb <- MSPBb/VSPB
     CSPF <- MSPF/VSPF  #Interstitial fluid concentration
     CSPFf <- MSPFf/VSPF
     CSPFb <- MSPFb/VSPF
-    CSPT <-  MSPT/VSPT # tissue concentration
+    CSPTf <-  MSPTf/VSPT # tissue concentration
     
     #Heart
-    
     MHB <- MHBf + MHBb
     MHF <- MHFf + MHFb
-    MHT <- MHTf
+    MHT <- MHTf 
     CHB <- MHB/VHB # blood concentration
     CHBf <- MHBf/VHB
     CHBb <- MHBb/VHB
     CHF <- MHF/VHF  #Interstitial fluid concentration
     CHFf <- MHFf/VHF
     CHFb <- MHFb/VHF
-    CHT <- MHT/VHT # tissue concentration
-    
+    CHTf <- MHTf/VHT # tissue concentration
+
     #Brain
     
     MBrB <- MBrBf + MBrBb
     MBrF <- MBrFf + MBrFb
-    MBrT <- MBrTf
+    MBrT <- MBrTf 
     CBrB <- MBrB/VBrB # blood concentration
     CBrBf <- MBrBf/VBrB
     CBrBb <- MBrBb/VBrB
     CBrF <- MBrF/VBrF  #Interstitial fluid concentration
     CBrFf <- MBrFf/VBrF
     CBrFb <- MBrFb/VBrF
-    CBrT <-  MBrT/VBrT # tissue concentration
-    
+    CBrTf <-  MBrTf/VBrT # tissue concentration
+
     #gonads
     
     MGoB <- MGoBf + MGoBb
     MGoF <- MGoFf + MGoFb
-    MGoT <- MGoTf
+    MGoT <- MGoTf 
     CGoB <- MGoB/VGoB # blood concentration
     CGoBf <- MGoBf/VGoB
     CGoBb <- MGoBb/VGoB
     CGoF <- MGoF/VGoF  #Interstitial fluid concentration
     CGoFf <- MGoFf/VGoF
     CGoFb <- MGoFb/VGoF
-    CGoT <-  MGoT/VGoT # tissue concentration
-    
+    CGoTf <-  MGoTf/VGoT # tissue concentration
+
     #Skin
     
     MSKB <- MSKBf + MSKBb
     MSKF <- MSKFf + MSKFb
-    MSKT <- MSKTf
+    MSKT <- MSKTf 
     CSKB <- MSKB/VSKB # blood concentration
     CSKBf <- MSKBf/VSKB
     CSKBb <- MSKBb/VSKB
     CSKF <- MSKF/VSKF  #Interstitial fluid concentration
     CSKFf <- MSKFf/VSKF
     CSKFb <- MSKFb/VSKF
-    CSKT <- MSKT/VSKT # tissue concentration
-    
+    CSKTf <- MSKTf/VSKT # tissue concentration
+
     #Bones
     
     MBoB <- MBoBf + MBoBb
     MBoF <- MBoFf + MBoFb
-    MBoT <- MBoTf
+    MBoT <- MBoTf 
     CBoB <- MBoB/VBoB # blood concentration
     CBoBf <- MBoBf/VBoB
     CBoBb <- MBoBb/VBoB
     CBoF <- MBoF/VBoF  #Interstitial fluid concentration
     CBoFf <- MBoFf/VBoF
     CBoFb <- MBoFb/VBoF
-    CBoT <- MBoT/VBoT # tissue concentration
-    
+    CBoTf <- MBoTf/VBoT # tissue concentration
+
     #Calculation of free and bound PFOA in venous blood
     dCalbVenf <- koff_alb*CVenb/MW/1e6 - kon_alb*CalbVenf*CVenf/MW/1e6
     
@@ -1157,12 +1270,18 @@ ode.func <- function(time, inits, params){
     #-------------------------------------------------------------------
     #Calculation of free concentrations in organ where we have tissue binding
     #-------------------------------------------------------------------
-    
-    
     #Calculation of free and bound PFOA in kidney Tissue
-    dCa2uKTf <- koff_a2u*CKTb/MW/1e6 - kon_a2u*Ca2uKTf*CKTf/MW/1e6
-    dCFabpKTf <- koff_fabp*CKTb/MW/1e6 - kon_fabp*CFabpKTf*CKTf/MW/1e6
+    dCa2uPTCf <- koff_a2u*CPTCb/MW/1e6 - kon_a2u*Ca2uPTCf*CPTCf/MW/1e6
+    dCa2uDALCf <- koff_a2u*CDALCb/MW/1e6 - kon_a2u*Ca2uDALCf*CDALCf/MW/1e6
+    dCa2uDTCf <- koff_a2u*CDTCb/MW/1e6 - kon_a2u*Ca2uDTCf*CDTCf/MW/1e6
+    dCa2uCDCf <- koff_a2u*CCDCb/MW/1e6 - kon_a2u*Ca2uCDCf*CCDCf/MW/1e6
+    dCa2uKTrestf <- koff_a2u*CKTrestb/MW/1e6 - kon_a2u*Ca2uKTrestf*CKTrestf/MW/1e6
     
+    dCFabpPTCf <- koff_fabp*CPTCb/MW/1e6 - kon_fabp*CFabpPTCf*CPTCf/MW/1e6
+    dCFabpDALCf <- koff_fabp*CDALCb/MW/1e6 - kon_fabp*CFabpDALCf*CDALCf/MW/1e6
+    dCFabpDTCf <- koff_fabp*CDTCb/MW/1e6 - kon_fabp*CFabpDTCf*CDTCf/MW/1e6
+    dCFabpCDCf <- koff_fabp*CCDCb/MW/1e6 - kon_fabp*CFabpCDCf*CCDCf/MW/1e6
+    dCFabpKTrestf <- koff_fabp*CKTrestb/MW/1e6 - kon_fabp*CFabpKTrestf*CKTrestf/MW/1e6
     
     #Calculation of free and bound PFOA in liver tissue
     dCFabpLTf <- koff_fabp*CLTb/MW/1e6 - kon_fabp*CFabpLTf*CLTf/MW/1e6
@@ -1172,111 +1291,156 @@ ode.func <- function(time, inits, params){
     
     # Bound PFOA
     #Blood
-    dMVenb <-  kon_alb*CalbVenf*CVenf*VVen -  koff_alb*CVenb*VVen
+    dMVenb <-  kon_alb*CalbVenf*CVenf*VVen -  koff_alb*CVenb*VVen 
     dMArtb <- kon_alb*CalbArtf*CArtf*VArt -  koff_alb*CArtb*VArt 
-    dMKBb <- kon_alb*CalbKBf*CKBf*VKB - koff_alb*CKBb*VKB
-    dMLBb <- kon_alb*CalbLBf*CLBf*VLB - koff_alb*CLBb*VLB
+    dMKBb <- kon_alb*CalbKBf*CKBf*VKB - koff_alb*CKBb*VKB 
+    dMLBb <- kon_alb*CalbLBf*CLBf*VLB - koff_alb*CLBb*VLB 
     dMSTBb <- kon_alb*CalbSTBf*CSTBf*VSTB - koff_alb*CSTBb*VSTB
     dMINBb <- kon_alb*CalbINBf*CINBf*VINB - koff_alb*CINBb*VINB 
-    dMMBb <- kon_alb*CalbMBf*CMBf*VMB - koff_alb*CMBb*VMB
-    dMABb <- kon_alb*CalbABf*CABf*VAB - koff_alb*CABb*VAB
-    dMRBb <- kon_alb*CalbRBf*CRBf*VRB - koff_alb*CRBb*VRB
-    dMLuBb <- kon_alb*CalbLuBf*CLuBf*VLuB - koff_alb*CLuBb*VLuB
-    dMSPBb <- kon_alb*CalbSPBf*CSPBf*VSPB - koff_alb*CSPBb*VSPB
+    dMMBb <- kon_alb*CalbMBf*CMBf*VMB - koff_alb*CMBb*VMB 
+    dMABb <- kon_alb*CalbABf*CABf*VAB - koff_alb*CABb*VAB 
+    dMRBb <- kon_alb*CalbRBf*CRBf*VRB - koff_alb*CRBb*VRB 
+    dMLuBb <- kon_alb*CalbLuBf*CLuBf*VLuB - koff_alb*CLuBb*VLuB 
+    dMSPBb <- kon_alb*CalbSPBf*CSPBf*VSPB - koff_alb*CSPBb*VSPB 
     dMHBb <- kon_alb*CalbHBf*CHBf*VHB - koff_alb*CHBb*VHB
     dMBrBb <- kon_alb*CalbBrBf*CBrBf*VBrB - koff_alb*CBrBb*VBrB
-    dMGoBb <- kon_alb*CalbGoBf*CGoBf*VGoB - koff_alb*CGoBb*VGoB
-    dMSKBb <- kon_alb*CalbSKBf*CSKBf*VSKB - koff_alb*CSKBb*VSKB
-    dMBoBb <- kon_alb*CalbBoBf*CBoBf*VBoB - koff_alb*CBoBb*VBoB
+    dMGoBb <- kon_alb*CalbGoBf*CGoBf*VGoB - koff_alb*CGoBb*VGoB 
+    dMSKBb <- kon_alb*CalbSKBf*CSKBf*VSKB - koff_alb*CSKBb*VSKB 
+    dMBoBb <- kon_alb*CalbBoBf*CBoBf*VBoB - koff_alb*CBoBb*VBoB 
     
     #Interstitial fluid
     dMKFb <- kon_alb*CalbKFf*CKFf*VKF - koff_alb*CKFb*VKF 
-    dMLFb <- kon_alb*CalbLFf*CLFf*VLF - koff_alb*CLFb*VLF
-    dMSTFb <- kon_alb*CalbSTFf*CSTFf*VSTF - koff_alb*CSTFb*VSTF
+    dMLFb <- kon_alb*CalbLFf*CLFf*VLF - koff_alb*CLFb*VLF 
+    dMSTFb <- kon_alb*CalbSTFf*CSTFf*VSTF - koff_alb*CSTFb*VSTF 
     dMINFb <- kon_alb*CalbINFf*CINFf*VINF - koff_alb*CINFb*VINF
     dMMFb <- kon_alb*CalbMFf*CMFf*VMF - koff_alb*CMFb*VMF 
     dMAFb <- kon_alb*CalbAFf*CAFf*VAF - koff_alb*CAFb*VAF 
-    dMRFb <- kon_alb*CalbRFf*CRFf*VRF - koff_alb*CRFb*VRF
-    dMLuFb <- kon_alb*CalbLuFf*CLuFf*VLuF - koff_alb*CLuFb*VLuF
-    dMSPFb <- kon_alb*CalbSPFf*CSPFf*VSPF - koff_alb*CSPFb*VSPF
-    dMHFb <- kon_alb*CalbHFf*CHFf*VHF - koff_alb*CHFb*VHF
+    dMRFb <- kon_alb*CalbRFf*CRFf*VRF - koff_alb*CRFb*VRF 
+    dMLuFb <- kon_alb*CalbLuFf*CLuFf*VLuF - koff_alb*CLuFb*VLuF 
+    dMSPFb <- kon_alb*CalbSPFf*CSPFf*VSPF - koff_alb*CSPFb*VSPF 
+    dMHFb <- kon_alb*CalbHFf*CHFf*VHF - koff_alb*CHFb*VHF 
     dMBrFb <- kon_alb*CalBrFf*CBrFf*VBrF - koff_alb*CBrFb*VBrF 
     dMGoFb <- kon_alb*CalbGoFf*CGoFf*VGoF - koff_alb*CGoFb*VGoF 
-    dMSKFb <- kon_alb*CalbSKFf*CSKFf*VSKF - koff_alb*CSKFb*VSKF
-    dMBoFb <- kon_alb*CalbBoFf*CBoFf*VBoF - koff_alb*CBoFb*VBoF
-    
+    dMSKFb <- kon_alb*CalbSKFf*CSKFf*VSKF - koff_alb*CSKFb*VSKF 
+    dMBoFb <- kon_alb*CalbBoFf*CBoFf*VBoF - koff_alb*CBoFb*VBoF 
+  
     #Tissue
-    dMKTb <- kon_a2u*Ca2uKTf*CKTf*VKT + kon_fabp*CFabpKTf*CKTf*VKT -
-      koff_fabp*CKTb*VKT - koff_a2u*CKTb*VKT
-    dMLTb <-  kon_fabp*CFabpLTf*CLTf*VLT - koff_fabp*CLTb*VLT
+    dMPTCb <- kon_a2u*Ca2uPTCf*CPTCf*VPTC + kon_fabp*CFabpPTCf*CPTCf*VPTC -
+              koff_fabp*CPTCb*VPTC - koff_a2u*CPTCb*VPTC 
     
+    dMDALCb <- kon_a2u*Ca2uDALCf*CDALCf*VDALC + kon_fabp*CFabpDALCf*CDALCf*VDALC -
+               koff_fabp*CDALCb*VDALC - koff_a2u*CDALCb*VDALC 
+    
+    dMDTCb <- kon_a2u*Ca2uDTCf*CDTCf*VDTC + kon_fabp*CFabpDTCf*CDTCf*VDTC -
+              koff_fabp*CDTCb*VDTC - koff_a2u*CDTCb*VDTC 
+   
+    dMCDCb <- kon_a2u*Ca2uCDCf*CCDCf*VCDC + kon_fabp*CFabpCDCf*CCDCf*VCDC -
+              koff_fabp*CCDCb*VCDC - koff_a2u*CCDCb*VCDC
+   
+    dMKTrestb <- kon_a2u*Ca2uKTrestf*CKTrestf*VKTrest + kon_fabp*CFabpKTrestf*CKTrestf*VKTrest -
+                 koff_fabp*CKTrestb*VKTrest - koff_a2u*CKTrestb*VKTrest 
+    
+    dMLTb <- kon_fabp*CFabpLTf*CLTf*VLT - koff_fabp*CLTb*VLT 
+   
     #Alveolar lining fluid
-    dMLuAFb <-  kon_alb*CalbLuAFf*CLuAFf*VLuAF -  koff_alb*CLuAFb*VLuAF
+    dMLuAFb <-  kon_alb*CalbLuAFf*CLuAFf*VLuAF -  koff_alb*CLuAFb*VLuAF 
     
     #====================================================================================================================
     
     #Arterial Blood
     dMArtf = QBLu*CLuBf - CArtf*(QBK+QBL+QBM+QBA+QBR+QBSP+QBH+QBBr+
                                    QBST+QBIN+QBGo+QBSK+QBBo) - QGFR*CArtf +
-      koff_alb*CArtb*VArt - kon_alb*CalbArtf*CArtf*VArt
+             koff_alb*CArtb*VArt - kon_alb*CalbArtf*CArtf*VArt 
     
     #Venous Blood
     dMVenf = - CVenf*QBLu + QBK*CKBf + QBLtot*CLBf + QBM*CMBf + QBA*CABf + QBR*CRBf+
-      QBH*CHBf + QBBr*CBrBf+ QBGo*CGoBf + QBSK*CSKBf + QBBo*CBoBf +
-      koff_alb*CVenb*VVen - kon_alb*CalbVenf*CVenf*VVen
+               QBH*CHBf + QBBr*CBrBf+ QBGo*CGoBf + QBSK*CSKBf + QBBo*CBoBf+
+               koff_alb*CVenb*VVen - kon_alb*CalbVenf*CVenf*VVen 
     
     #Kidney
     #blood subcompartment
-    dMKBf = QBK*CArtf - QBK*CKBf - PeffK*AK*(CKBf-CKFf) - QparaKi*(1-SKi)*CKBf +
-      koff_alb*CKBb*VKB - kon_alb*CalbKBf*CKBf*VKB
+    dMKBf = QBK*CArtf - QBK*CKBf - PeffK*AK_rest*(CKBf-CKFf)  - PeffK*A_peritubular_PTC*(CKBf-CPTCf) -
+            PeffK*A_peritubular_DTC*(CKBf-CDTCf) - QparaKi*(1-SKi)*CKBf -
+            (VmK_Oat1*CKBf/(KmK_Oat1+CKBf)) - (VmK_Oat3*CKBf/(KmK_Oat3+CKBf))+ (VmK_baso*CPTCf/(KmK_baso+CPTCf))+
+            koff_alb*CKBb*VKB - kon_alb*CalbKBf*CKBf*VKB
+    
     #interstitial fluid subcompartment
-    dMKFf = QparaKi*(1-SKi)*CKBf+ PeffK*AK*(CKBf-CKFf) - kKFKT*(CKFf-CKTf) -
-      (VmK_Oat1*CKFf/(KmK_Oat1+CKFf)) - (VmK_Oat3*CKFf/(KmK_Oat3+CKFf))  +
-      (VmK_baso*CKTf/(KmK_baso+CKTf)) +  koff_alb*CKFb*VKF - kon_alb*CalbKFf*CKFf*VKF
-    #Kidney proximal tubule cells subcompartment
-    dMKTf = kKFKT*(CKFf-CKTf) - kPTKT*(CKTf - CPT) -kFilKT*(CKTf - CFil) +
-      (VmK_Oatp*CPT/(KmK_Oatp+CPT)) + (VmK_Urat*CPT/(KmK_Urat+CPT))+
-      (VmK_Oat1*CKFf/(KmK_Oat1+CKFf)) + (VmK_Oat3*CKFf/(KmK_Oat3+CKFf)) - 
-      (VmK_baso*CKTf/(KmK_baso+CKTf)) -(VmK_api*CKTf/(KmK_api+CKTf))+
-      koff_fabp*CKTb*VKT + koff_a2u*CKTb*VKT -kon_fabp*CFabpKTf*CKTf*VKT - kon_a2u*Ca2uKTf*CKTf*VKT
+    dMKFf = QparaKi*(1-SKi)*CKBf+ PeffK*AK_rest*(CKBf-CKFf) - kDalcF*(CKFf-CDALCf) -
+            kCdcF*(CKFf-CCDCf)   - kKTrestF*(CKFf-CKTrestf) + 
+            koff_alb*CKFb*VKF - kon_alb*CalbKFf*CKFf*VKF
     
-    #Proximal tubule
-    dMPT =  QGFR*CArtf + kPTKT*(CKTf - CPT) - (VmK_Oatp*CPT/(KmK_Oatp+CPT)) - 
-      (VmK_Urat*CPT/(KmK_Urat+CPT)) + (VmK_api*CKTf/(KmK_api+CKTf))- QTDL*CPT
+    #proximal tubule  cells subcompartment
+    dMPTCf =  PeffK*A_peritubular_PTC*(CKBf-CPTCf)  - kPtcTu*(CPTCf - CPT)  +
+             (VmK_Oatp*CPT/(KmK_Oatp+CPT)) + (VmK_Urat*CPT/(KmK_Urat+CPT))+
+             (VmK_Oat1*CKBf/(KmK_Oat1+CKBf)) + (VmK_Oat3*CKBf/(KmK_Oat3+CKBf)) - 
+             (VmK_baso*CPTCf/(KmK_baso+CPTCf)) -(VmK_api*CPTCf/(KmK_api+CPTCf))-
+             (kon_a2u*Ca2uPTCf*CPTCf*VPTC + kon_fabp*CFabpPTCf*CPTCf*VPTC -
+             koff_fabp*CPTCb*VPTC - koff_a2u*CPTCb*VPTC) 
     
-    #Rest of the filtrate
-    dMFil =  QTDL*CPT + kFilKT*(CKTf - CFil) - (Qurine*CFil)
+    #Tubule cells in Loop of Henle 
+    dMDALCf =  kDalcF*(CKFf-CDALCf) - kDalcTu*(CDALCf - CDAL)- 
+               (kon_a2u*Ca2uDALCf*CDALCf*VDALC + kon_fabp*CFabpDALCf*CDALCf*VDALC -
+                  koff_fabp*CDALCb*VDALC - koff_a2u*CDALCb*VDALC )
+    
+    #Distal convoluted tubule cells 
+    dMDTCf =   PeffK*A_peritubular_DTC*(CKBf-CDTCf)- kDtcTu*(CDTCf - CDT)-
+               (kon_a2u*Ca2uDTCf*CDTCf*VDTC + kon_fabp*CFabpDTCf*CDTCf*VDTC -
+                  koff_fabp*CDTCb*VDTC - koff_a2u*CDTCb*VDTC )
+    
+    #Collecting duct cells 
+    dMCDCf =  kCdcF*(CKFf-CCDCf) - kCdcTu*(CCDCf - CCD)- 
+              (kon_a2u*Ca2uCDCf*CCDCf*VCDC + kon_fabp*CFabpCDCf*CCDCf*VCDC -
+                 koff_fabp*CCDCb*VCDC - koff_a2u*CCDCb*VCDC)
+    
+    #Rest of kidney tissue subcompartment
+    dMKTrestf =  kKTrestF*(CKFf-CKTrestf)- 
+                (kon_a2u*Ca2uKTrestf*CKTrestf*VKTrest + kon_fabp*CFabpKTrestf*CKTrestf*VKTrest -
+                   koff_fabp*CKTrestb*VKTrest - koff_a2u*CKTrestb*VKTrest)
+    
+    #Proximal convoluted tubule
+    dMPT =  QGFR*CArtf + kPtcTu*(CPTCf - CPT) - (VmK_Oatp*CPT/(KmK_Oatp+CPT)) - 
+            (VmK_Urat*CPT/(KmK_Urat+CPT)) + (VmK_api*CPTCf/(KmK_api+CPTCf))- QTDL*CPT
+      
+    #Descending limb, Ascending limb (Loop of Henle )
+    dMDAL =  QTDL*CPT + kDalcTu*(CDALCf - CDAL)  -  QDT*CDAL
+    
+    # Distal convoluted tubule 
+    dMDT =   QDT*CDAL + kDtcTu*(CDTCf - CDT) -  QCD*CDT
+    
+    #Collecting duct
+    dMCD = QCD*CDT + kCdcTu*(CCDCf - CCD) - Qurine*CCD
+    
     # Bladder
-    dMBladder = Qurine*CFil - Qurine*CBladder
+    dMBladder = Qurine*CCD - Qurine*CBladder
     
     
     #Liver
     #blood subcompartment
     dMLBf = QBL*CArtf + QBSP*CSPBf + QBIN*CINBf + QBST*CSTBf - 
       QBLtot*CLBf - PeffL*AL*(CLBf-CLFf) - QparaLi*(1-SLi)*CLBf +
-      koff_alb*CLBb*VLB -kon_alb*CalbLBf*CLBf*VLB
+      koff_alb*CLBb*VLB -kon_alb*CalbLBf*CLBf*VLB 
     #interstitial fluid subcompartment 
     dMLFf =  QparaLi*(1-SLi)*CLBf + PeffL*AL*(CLBf-CLFf) - kLFLT*(CLFf-CLTf) - 
       (VmL_Oatp*CLFf/(KmL_Oatp+CLFf)) - (VmL_Oatp2*CLFf/(KmL_Oatp2+CLFf)) -
-      (VmL_Ntcp*CLFf/(KmL_Ntcp+CLFf)) + koff_alb*CLFb*VLF -kon_alb*CalbLFf*CLFf*VLF
+      (VmL_Ntcp*CLFf/(KmL_Ntcp+CLFf)) + koff_alb*CLFb*VLF -kon_alb*CalbLFf*CLFf*VLF 
     #Liver tissue subcompartment
     dMLTf = kLFLT*(CLFf-CLTf) + (VmL_Oatp*CLFf/(KmL_Oatp+CLFf)) + (VmL_Oatp2*CLFf/(KmL_Oatp2+CLFf))+
       (VmL_Ntcp*CLFf/(KmL_Ntcp+CLFf)) + koff_fabp*CLTb*VLT-
-      kon_fabp*CFabpLTf*CLTf*VLT - kLTLbile*(CLTf-CLbile) - (Vmbile_transp*CLTf/(Kmbile_transp+CLTf))
+      kon_fabp*CFabpLTf*CLTf*VLT - CL_hepatobiliary*CLTf
     #Bile  canaliculi subcompartment
-    dMLbile = kLTLbile*(CLTf-CLbile) + (Vmbile_transp*CLTf/(Kmbile_transp+CLTf)) - CLbile*Qbile
+    dMLbile = CL_hepatobiliary*CLTf - CLbile*Qbile
     
     
     
     #Stomach
     #blood subcompartment
     dMSTBf = QBST*CArtf - QBST*CSTBf - PeffST*AST*(CSTBf-CSTFf) -  QparaSt*(1-SSt)*CSTBf +
-      koff_alb*CSTBb*VSTB-kon_alb*CalbSTBf*CSTBf*VSTB
+      koff_alb*CSTBb*VSTB-kon_alb*CalbSTBf*CSTBf*VSTB 
     #interstitial fluid subcompartment 
-    dMSTFf = QparaSt*(1-SSt)*CSTBf + PeffST*AST*(CSTBf-CSTFf) - kSTFSTT*(CSTFf-CSTT) +
-      koff_alb*CSTFb*VSTF - kon_alb*CalbSTFf*CSTFf*VSTF
+    dMSTFf = QparaSt*(1-SSt)*CSTBf + PeffST*AST*(CSTBf-CSTFf) - kSTFSTT*(CSTFf-CSTTf) +
+      koff_alb*CSTFb*VSTF - kon_alb*CalbSTFf*CSTFf*VSTF 
     #Stomach tissue subcompartment
-    dMSTTf = kSTFSTT*(CSTFf-CSTT) + kabST*CSTL
+    dMSTTf = kSTFSTT*(CSTFf-CSTTf) + kabST*CSTL 
     #Stomach lumen
     dMSTL = - QGE*CSTL -kabST*CSTL 
     
@@ -1286,10 +1450,10 @@ ode.func <- function(time, inits, params){
     dMINBf = QBIN*CArtf - QBIN*CINBf - PeffIN*AIN*(CINBf-CINFf) - QparaIn*(1-SIn)*CINBf +
       koff_alb*CINBb*VINB - kon_alb*CalbINBf*CINBf*VINB
     #interstitial fluid subcompartment 
-    dMINFf = QparaIn*(1-SIn)*CINBf + PeffIN*AIN*(CINBf-CINFf) - kINFINT*(CINFf-CINT) +
+    dMINFf = QparaIn*(1-SIn)*CINBf + PeffIN*AIN*(CINBf-CINFf) - kINFINT*(CINFf-CINTf) +
       koff_alb*CINFb*VINF - kon_alb*CalbINFf*CINFf*VINF
     #Intestine tissue subcompartment
-    dMINTf = kINFINT*(CINFf-CINT) + P_passive*CINL + (VmIn_Oatp2*CINL/(KmIn_Oatp2+CINL))
+    dMINTf = kINFINT*(CINFf-CINTf) + P_passive*CINL + (VmIn_Oatp2*CINL/(KmIn_Oatp2+CINL)) 
     #Intestine lumen
     dMINL = QGE*CSTL - (Qfeces*CINL) - P_passive*CINL + CLbile*Qbile - 
       (VmIn_Oatp2*CINL/(KmIn_Oatp2+CINL))
@@ -1298,12 +1462,12 @@ ode.func <- function(time, inits, params){
     #Muscle
     #blood subcompartment
     dMMBf = QBM*CArtf - QBM*CMBf - PeffM*AM*(CMBf-CMFf) - QparaMu*(1-SMu)*CMBf +
-      koff_alb*CMBb*VMB - kon_alb*CalbMBf*CMBf*VMB
+      koff_alb*CMBb*VMB - kon_alb*CalbMBf*CMBf*VMB 
     #interstitial fluid subcompartment 
-    dMMFf = QparaMu*(1-SMu)*CMBf + PeffM*AM*(CMBf-CMFf) - kMFMT*(CMFf- CMT) +
+    dMMFf = QparaMu*(1-SMu)*CMBf + PeffM*AM*(CMBf-CMFf) - kMFMT*(CMFf- CMTf) +
       koff_alb*CMFb*VMF - kon_alb*CalbMFf*CMFf*VMF
     #Muscle tissue subcompartment 
-    dMMTf = kMFMT*(CMFf- CMT)
+    dMMTf = kMFMT*(CMFf- CMTf) 
     
     
     #Adipose
@@ -1311,10 +1475,10 @@ ode.func <- function(time, inits, params){
     dMABf = QBA*CArtf - QBA*CABf - PeffA*AA*(CABf-CAFf) - QparaAd*(1-SAd)*CABf +
       koff_alb*CABb*VAB - kon_alb*CalbABf*CABf*VAB
     #interstitial fluid subcompartment 
-    dMAFf = QparaAd*(1-SAd)*CABf + PeffA*AA*(CABf-CAFf) - kAFAT*(CAFf-CAT) +
-      koff_alb*CAFb*VAF - kon_alb*CalbAFf*CAFf*VAF
+    dMAFf = QparaAd*(1-SAd)*CABf + PeffA*AA*(CABf-CAFf) - kAFAT*(CAFf-CATf) +
+      koff_alb*CAFb*VAF - kon_alb*CalbAFf*CAFf*VAF 
     #Adipose tissue subcompartment 
-    dMATf =  kAFAT*(CAFf-CAT) 
+    dMATf =  kAFAT*(CAFf-CATf)
     
     
     #Rest of body
@@ -1322,91 +1486,91 @@ ode.func <- function(time, inits, params){
     dMRBf = QBR*CArtf - QBR*CRBf - PeffR*AR*(CRBf-CRFf) - QparaRe*(1-SRe)*CRBf +
       koff_alb*CRBb*VRB - kon_alb*CalbRBf*CRBf*VRB
     #interstitial fluid subcompartment 
-    dMRFf = QparaRe*(1-SRe)*CRBf + PeffR*AR*(CRBf-CRFf) - kRFRT*(CRFf -CRT) +
-      koff_alb*CRFb*VRF - kon_alb*CalbRFf*CRFf*VRF
+    dMRFf = QparaRe*(1-SRe)*CRBf + PeffR*AR*(CRBf-CRFf) - kRFRT*(CRFf -CRTf) +
+      koff_alb*CRFb*VRF - kon_alb*CalbRFf*CRFf*VRF 
     #Rest of body tissue subcompartment 
-    dMRTf = kRFRT*(CRFf -CRT) 
+    dMRTf = kRFRT*(CRFf -CRTf) 
     
     
     #Lung 
     #blood subcompartment
     dMLuBf = CVenf*QBLu - QBLu*CLuBf - PeffLu*ALu*(CLuBf-CLuFf) - QparaLu*(1-SLu)*CLuBf +
-      koff_alb*CLuBb*VLuB - kon_alb*CalbLuBf*CLuBf*VLuB
+      koff_alb*CLuBb*VLuB - kon_alb*CalbLuBf*CLuBf*VLuB 
     #interstitial fluid subcompartment
-    dMLuFf = QparaLu*(1-SLu)*CLuBf + PeffLu*ALu*(CLuBf-CLuFf) + kLuTLuF*(CLuT-CLuFf) + 
-      koff_alb*CLuFb*VLuF - kon_alb*CalbLuFf*CLuFf*VLuF - (VmLu_Oatp_bas*CLuFf/(KmLu_Oatp_bas+CLuFf))
+    dMLuFf = QparaLu*(1-SLu)*CLuBf + PeffLu*ALu*(CLuBf-CLuFf) + kLuTLuF*(CLuTf-CLuFf) + 
+      koff_alb*CLuFb*VLuF - kon_alb*CalbLuFf*CLuFf*VLuF - (VmLu_Oatp_bas*CLuFf/(KmLu_Oatp_bas+CLuFf)) 
     #Lung tissue
-    dMLuTf =  - kLuTLuF*(CLuT-CLuFf) -  kLuTLuAF*(CLuT-CLuAFf) + (VmLu_Oatp_bas*CLuFf/(KmLu_Oatp_bas+CLuFf)) +
-      (VmLu_Oatp_ap*CLuAFf/(KmLu_Oatp_ap+CLuAFf))
+    dMLuTf =  - kLuTLuF*(CLuTf-CLuFf) -  kLuTLuAF*(CLuTf-CLuAFf) + (VmLu_Oatp_bas*CLuFf/(KmLu_Oatp_bas+CLuFf)) +
+      (VmLu_Oatp_ap*CLuAFf/(KmLu_Oatp_ap+CLuAFf)) 
     #Alveolar lining fluid
-    dMLuAFf =  kLuTLuAF*(CLuT-CLuAFf) + koff_alb*CLuAFb*VLuAF - kon_alb*CalbLuAFf*CLuAFf*VLuAF -
-      (VmLu_Oatp_ap*CLuAFf/(KmLu_Oatp_ap+CLuAFf))
+    dMLuAFf =  kLuTLuAF*(CLuTf-CLuAFf) + koff_alb*CLuAFb*VLuAF - kon_alb*CalbLuAFf*CLuAFf*VLuAF -
+      (VmLu_Oatp_ap*CLuAFf/(KmLu_Oatp_ap+CLuAFf)) 
     
     
     #Spleen
     #blood subcompartment
     dMSPBf = QBSP*CArtf - QBSP*CSPBf - PeffSP*ASP*(CSPBf-CSPFf) - QparaSp*(1-SSp)*CSPBf + 
-      koff_alb*CSPBb*VSPB - kon_alb*CalbSPBf*CSPBf*VSPB 
+      koff_alb*CSPBb*VSPB - kon_alb*CalbSPBf*CSPBf*VSPB
     #interstitial fluid subcompartment 
-    dMSPFf = QparaSp*(1-SSp)*CSPBf + PeffSP*ASP*(CSPBf-CSPFf) - kSPFSPT*(CSPFf -CSPT) +
-      koff_alb*CSPFb*VSPF - kon_alb*CalbSPFf*CSPFf*VSPF
+    dMSPFf = QparaSp*(1-SSp)*CSPBf + PeffSP*ASP*(CSPBf-CSPFf) - kSPFSPT*(CSPFf -CSPTf) +
+      koff_alb*CSPFb*VSPF - kon_alb*CalbSPFf*CSPFf*VSPF 
     #Spleen tissue subcompartment 
-    dMSPTf = kSPFSPT*(CSPFf -CSPT) 
+    dMSPTf = kSPFSPT*(CSPFf -CSPTf)
     
     
     #Heart
     #blood subcompartment
     dMHBf = QBH*CArtf - QBH*CHBf - PeffH*AH*(CHBf-CHFf) - QparaHt*(1-SHt)*CHBf + 
-      koff_alb*CHBb*VHB - kon_alb*CalbHBf*CHBf*VHB
+      koff_alb*CHBb*VHB - kon_alb*CalbHBf*CHBf*VHB 
     #interstitial fluid subcompartment 
-    dMHFf = QparaHt*(1-SHt)*CHBf + PeffH*AH*(CHBf-CHFf) - kHFHT*(CHFf -CHT) + 
-      koff_alb*CHFb*VHF - kon_alb*CalbHFf*CHFf*VHF
+    dMHFf = QparaHt*(1-SHt)*CHBf + PeffH*AH*(CHBf-CHFf) - kHFHT*(CHFf -CHTf) + 
+      koff_alb*CHFb*VHF - kon_alb*CalbHFf*CHFf*VHF 
     #Heart tissue subcompartment 
-    dMHTf = kHFHT*(CHFf -CHT) 
+    dMHTf = kHFHT*(CHFf -CHTf) 
     
     
     #Brain
     #blood subcompartment
     dMBrBf = QBBr*CArtf - QBBr*CBrBf - PeffBr*ABr*(CBrBf-CBrFf) - QparaBr*(1-SBr)*CBrBf + 
-      koff_alb*CBrBb*VBrB - kon_alb*CalbBrBf*CBrBf*VBrB
+      koff_alb*CBrBb*VBrB - kon_alb*CalbBrBf*CBrBf*VBrB 
     #interstitial fluid subcompartment 
-    dMBrFf = QparaBr*(1-SBr)*CBrBf + PeffBr*ABr*(CBrBf-CBrFf) - kBrFBrT*(CBrFf -CBrT) +
-      koff_alb*CBrFb*VBrF - kon_alb*CalBrFf*CBrFf*VBrF
+    dMBrFf = QparaBr*(1-SBr)*CBrBf + PeffBr*ABr*(CBrBf-CBrFf) - kBrFBrT*(CBrFf -CBrTf) +
+      koff_alb*CBrFb*VBrF - kon_alb*CalBrFf*CBrFf*VBrF 
     #Brain tissue subcompartment 
-    dMBrTf = kBrFBrT*(CBrFf -CBrT) 
+    dMBrTf = kBrFBrT*(CBrFf -CBrTf) 
     
     
     #Gonads
     #blood subcompartment
     dMGoBf = QBGo*CArtf - QBGo*CGoBf - PeffGo*AGo*(CGoBf-CGoFf) - QparaGo*(1-SGo)*CGoBf +
-      koff_alb*CGoBb*VGoB - kon_alb*CalbGoBf*CGoBf*VGoB
+      koff_alb*CGoBb*VGoB - kon_alb*CalbGoBf*CGoBf*VGoB 
     #interstitial fluid subcompartment 
-    dMGoFf = QparaGo*(1-SGo)*CGoBf + PeffGo*AGo*(CGoBf-CGoFf) - kGoFGoT*(CGoFf -CGoT) +
-      koff_alb*CGoFb*VGoF - kon_alb*CalbGoFf*CGoFf*VGoF
+    dMGoFf = QparaGo*(1-SGo)*CGoBf + PeffGo*AGo*(CGoBf-CGoFf) - kGoFGoT*(CGoFf -CGoTf) +
+      koff_alb*CGoFb*VGoF - kon_alb*CalbGoFf*CGoFf*VGoF 
     #gonads tissue subcompartment 
-    dMGoTf = kGoFGoT*(CGoFf -CGoT) 
+    dMGoTf = kGoFGoT*(CGoFf -CGoTf) 
     
     
     #Skin
     #blood subcompartment
     dMSKBf = QBSK*CArtf - QBSK*CSKBf - PeffSK*ASK*(CSKBf-CSKFf) - QparaSk*(1-SSk)*CSKBf +
-      koff_alb*CSKBb*VSKB - kon_alb*CalbSKBf*CSKBf*VSKB
+      koff_alb*CSKBb*VSKB - kon_alb*CalbSKBf*CSKBf*VSKB 
     #interstitial fluid subcompartment
-    dMSKFf = QparaSk*(1-SSk)*CSKBf + PeffSK*ASK*(CSKBf-CSKFf) - kSKFSKT*(CSKFf -CSKT) +
+    dMSKFf = QparaSk*(1-SSk)*CSKBf + PeffSK*ASK*(CSKBf-CSKFf) - kSKFSKT*(CSKFf -CSKTf) +
       koff_alb*CSKFb*VSKF - kon_alb*CalbSKFf*CSKFf*VSKF
     #Skin tissue subcompartment
-    dMSKTf = kSKFSKT*(CSKFf -CSKT)
+    dMSKTf = kSKFSKT*(CSKFf -CSKTf) 
     
     
     #Bones
     #blood subcompartment
     dMBoBf = QBBo*CArtf - QBBo*CBoBf - PeffBo*ABo*(CBoBf-CBoFf) - QparaBo*(1-SBo)*CBoBf +
-      koff_alb*CBoBb*VBoB - kon_alb*CalbBoBf*CBoBf*VBoB
+      koff_alb*CBoBb*VBoB - kon_alb*CalbBoBf*CBoBf*VBoB 
     #interstitial fluid subcompartment
-    dMBoFf = QparaBo*(1-SBo)*CBoBf + PeffBo*ABo*(CBoBf-CBoFf) - kBoFBoT*(CBoFf -CBoT) +
-      koff_alb*CBoFb*VBoF -  kon_alb*CalbBoFf*CBoFf*VBoF
+    dMBoFf = QparaBo*(1-SBo)*CBoBf + PeffBo*ABo*(CBoBf-CBoFf) - kBoFBoT*(CBoFf -CBoTf) +
+      koff_alb*CBoFb*VBoF -  kon_alb*CalbBoFf*CBoFf*VBoF 
     #Bones tissue subcompartment
-    dMBoTf = kBoFBoT*(CBoFf -CBoT)
+    dMBoTf = kBoFBoT*(CBoFf -CBoTf) 
     
     #Excreta#
     dMfeces <- Qfeces*CINL
@@ -1420,9 +1584,9 @@ ode.func <- function(time, inits, params){
     Mblood <- MVen +MArt
     Cplasma <- Cblood/(1-Hct)
     
-    Ckidney <- (MKB + MKF+ MKT + MPT + MFil)/(VKB+VKF+VKT)    
-    Mkidney <- MKB + MKF+ MKT
-    
+    Mkidney <- MKB + MKF+ MKT + Mfil
+    Ckidney <- Mkidney/VK    
+
     Cliver <- (MLB + MLF+ MLT + MLbile )/(VLB+VLF+VLT+VLbile)
     Mliver <- MLB + MLF+ MLT + MLbile
     
@@ -1461,7 +1625,10 @@ ode.func <- function(time, inits, params){
             'dCalbMFf' = dCalbMFf, 'dCalbAFf' = dCalbAFf,'dCalbRFf' = dCalbRFf,
             'dCalbLuFf' = dCalbLuFf, 'dCalbSPFf' = dCalbSPFf, 'dCalbHFf' = dCalbHFf,
             'dCalBrFf' = dCalBrFf, 'dCalbGoFf' = dCalbGoFf, 'dCalbSKFf' = dCalbSKFf,
-            'dCalbBoFf' = dCalbBoFf, 'dCa2uKTf' = dCa2uKTf, 'dCFabpKTf' = dCFabpKTf,
+            'dCalbBoFf' = dCalbBoFf, 'dCa2uPTCf' = dCa2uPTCf, 'dCa2uDALCf' = dCa2uDALCf,
+            'dCa2uDTCf' = dCa2uDTCf, 'dCa2uCDCf' = dCa2uCDCf, 'dCa2uKTrestf' = dCa2uKTrestf,
+            'dCFabpPTCf' = dCFabpPTCf, 'dCFabpDALCf' = dCFabpDALCf, 'dCFabpDTCf' = dCFabpDTCf,
+            'dCFabpCDCf' = dCFabpCDCf, 'dCFabpKTrestf' = dCFabpKTrestf,
             'dCFabpLTf' = dCFabpLTf, 'dCalbLuAFf' = dCalbLuAFf,
             
             
@@ -1474,12 +1641,18 @@ ode.func <- function(time, inits, params){
             'dMAFb' = dMAFb, 'dMRFb' = dMRFb, 'dMLuFb' = dMLuFb, 
             'dMSPFb' = dMSPFb,  'dMHFb' = dMHFb, 'dMBrFb' = dMBrFb, 
             'dMGoFb' = dMGoFb, 'dMSKFb' = dMSKFb, 'dMBoFb' = dMBoFb,
-            'dMKTb' = dMKTb, 'dMLTb' = dMLTb, 'dMLuAFb'=dMLuAFb,
+            'dMPTCb' = dMPTCb, 'dMDALCb' = dMDALCb, 'dMDTCb' = dMDTCb,
+            'dMCDCb' = dMCDCb, 'dMKTrestb' = dMKTrestb,
+            'dMLTb' = dMLTb, 'dMLuAFb'=dMLuAFb,
             
             
             'dMArtf'=dMArtf, 'dMVenf'=dMVenf, 'dMKBf'=dMKBf, 
-            'dMKFf'=dMKFf, 'dMKTf'=dMKTf,
-            'dMFil'=dMFil, 'dMPT' = dMPT,  'dMBladder' = dMBladder, 'dMLBf'=dMLBf, 
+            'dMKFf'=dMKFf,  'dMPTCf' = dMPTCf, 'dMDALCf' = dMDALCf,  
+            'dMDTCf' = dMDTCf, 'dMCDCf' = dMCDCf,
+            'dMKTrestf' = dMKTrestf, 'dMPT' = dMPT,  'dMDAL' = dMDAL,
+            'dMDT' =  dMDT, 'dMCD' = dMCD,
+            
+            'dMBladder' = dMBladder, 'dMLBf'=dMLBf, 
             'dMLFf'=dMLFf, 'dMLTf'=dMLTf, 'dMLbile'=dMLbile,
             
             'dMSTBf'=dMSTBf, 'dMSTFf'=dMSTFf, 'dMSTTf'=dMSTTf, 'dMSTL'=dMSTL,
@@ -1502,23 +1675,23 @@ ode.func <- function(time, inits, params){
     
     'CVen'=CVen, 'CVenb'=CVenb, 'CVenf'=CVenf, 'CArt'=CArt, 'CArtf'=CArtf, 'CArtb'=CArtb,
     'CKB'=CKB, 'CKBf'=CKBf, 'CKBb'=CKBb, 'CKF'=CKF, 'CKFf'=CKFf, 'CKFb'=CKFb, 'CKT'=CKT,
-    'CKTf'=CKTf, 'CKTb'=CKTb, 'CFil'=CFil, 'CBladder' = CBladder, 'CLB'=CLB, 'CLBf'=CLBf, 'CLBb'=CLBb, 
+    'CKTf'=CKTf, 'CKTb'=CKTb,  'CBladder' = CBladder, 'CLB'=CLB, 'CLBf'=CLBf, 'CLBb'=CLBb, 
     'CLF'=CLF, 'CLFf'=CLFf, 'CLFb'=CLFb, 'CLT'=CLT, 'CLTf'=CLTf, 'CLTb'=CLTb, 
     'CSTB'=CSTB, 'CSTBf'=CSTBf, 'CSTBb'=CSTBb, 'CSTF'=CSTF, 'CSTFf'=CSTFf, 'CSTFb'=CSTFb,
-    'CSTT'=CSTT, 'CINB'=CINB, 'CINBf'=CINBf, 'CINBb'=CINBb, 'CINF'=CINF, 'CINFf'=CINFf,
-    'CINFb'=CINFb, 'CINT'=CINT, 'CSTL'=CSTL, 'CINL'=CINL, 'CMB'=CMB, 'CMBf'=CMBf,
-    'CMBb'=CMBb, 'CMF'=CMF, 'CMFf'=CMFf, 'CMFb'=CMFb, 'CMT'=CMT, 'CAB'=CAB, 'CABf'=CABf,
-    'CABb'=CABb, 'CAF'=CAF, 'CAFf'=CAFf, 'CAFb'=CAFb, 'CAT'=CAT, 'CRB'=CRB, 'CRBf'=CRBf,
-    'CRBb'=CRBb, 'CRF'=CRF, 'CRFf'=CRFf, 'CRFb'=CRFb, 'CRT'=CRT, 'CLuB'=CLuB,
-    'CLuBf'=CLuBf, 'CLuBb'=CLuBb, 'CLuF'=CLuF, 'CLuFf'=CLuFf, 'CLuFb'=CLuFb, 'CLuT'=CLuT,
+    'CSTTf'=CSTTf, 'CINB'=CINB, 'CINBf'=CINBf, 'CINBb'=CINBb, 'CINF'=CINF, 'CINFf'=CINFf,
+    'CINFb'=CINFb, 'CINTf'=CINTf, 'CSTL'=CSTL, 'CINL'=CINL, 'CMB'=CMB, 'CMBf'=CMBf,
+    'CMBb'=CMBb, 'CMF'=CMF, 'CMFf'=CMFf, 'CMFb'=CMFb, 'CMTf'=CMTf, 'CAB'=CAB, 'CABf'=CABf,
+    'CABb'=CABb, 'CAF'=CAF, 'CAFf'=CAFf, 'CAFb'=CAFb, 'CATf'=CATf, 'CRB'=CRB, 'CRBf'=CRBf,
+    'CRBb'=CRBb, 'CRF'=CRF, 'CRFf'=CRFf, 'CRFb'=CRFb, 'CRTf'=CRTf, 'CLuB'=CLuB,
+    'CLuBf'=CLuBf, 'CLuBb'=CLuBb, 'CLuF'=CLuF, 'CLuFf'=CLuFf, 'CLuFb'=CLuFb, 'CLuTf'=CLuTf,
     'CLuAF'=CLuAF, 'CLuAFf'=CLuAFf, 'CLuAFb'=CLuAFb, 'CSPB'=CSPB, 'CSPBf'=CSPBf, 
-    'CSPBb'=CSPBb, 'CSPF'=CSPF, 'CSPFf'=CSPFf, 'CSPFb'=CSPFb, 'CSPT'=CSPT, 'CHB'=CHB,
-    'CHBf'=CHBf, 'CHBb'=CHBb, 'CHF'=CHF, 'CHFf'=CHFf, 'CHFb'=CHFb, 'CHT'=CHT,
+    'CSPBb'=CSPBb, 'CSPF'=CSPF, 'CSPFf'=CSPFf, 'CSPFb'=CSPFb, 'CSPTf'=CSPTf,  'CHB'=CHB,
+    'CHBf'=CHBf, 'CHBb'=CHBb, 'CHF'=CHF, 'CHFf'=CHFf, 'CHFb'=CHFb, 'CHTf'=CHTf, 
     'CBrB'=CBrB, 'CBrBf'=CBrBf, 'CBrBb'=CBrBb, 'CBrF'=CBrF, 'CBrFf'=CBrFf, 'CBrFb'=CBrFb,
-    'CBrT'=CBrT, 'CGoB'=CGoB, 'CGoBf'=CGoBf, 'CGoBb'=CGoBb, 'CGoF'=CGoF, 'CGoFf'=CGoFf, 
-    'CGoFb'=CGoFb, 'CGoT'=CGoT, 'CSKB'=CSKB, 'CSKBf'=CSKBf, 'CSKBb'=CSKBb, 'CSKF'=CSKF,
-    'CSKFf'=CSKFf, 'CSKFb'=CSKFb, 'CSKT'=CSKT, 'CBoB'=CBoB, 'CBoBf'=CBoBf, 'CBoBb'=CBoBb,
-    'CBoF'=CBoF, 'CBoFf'=CBoFf, 'CBoFb'=CBoFb, 'CBoT'=CBoT,
+    'CBrTf'=CBrTf, 'CGoB'=CGoB, 'CGoBf'=CGoBf, 'CGoBb'=CGoBb, 'CGoF'=CGoF, 'CGoFf'=CGoFf, 
+    'CGoFb'=CGoFb, 'CGoTf'=CGoTf, 'CSKB'=CSKB, 'CSKBf'=CSKBf, 'CSKBb'=CSKBb, 'CSKF'=CSKF,
+    'CSKFf'=CSKFf, 'CSKFb'=CSKFb, 'CSKTf'=CSKTf, 'CBoB'=CBoB, 'CBoBf'=CBoBf, 'CBoBb'=CBoBb,
+    'CBoF'=CBoF, 'CBoFf'=CBoFf, 'CBoFb'=CBoFb, 'CBoTf'=CBoTf, 
     
     'Cblood'=Cblood, 'Mblood'=Mblood, 'Cplasma'=Cplasma, 
     'Ckidney'=Ckidney, 'Mkidney'=Mkidney, 'Cliver'=Cliver, 'Mliver'=Mliver, 
@@ -1568,14 +1741,23 @@ create.inits <- function(parameters){
     CalbGoFf<- CalbGoF_init; MGoFf<- 0; MGoFb<- 0; 
     CalbSKFf<- CalbSKF_init; MSKFf<- 0; MSKFb<- 0;
     CalbBoFf<- CalbBoF_init; MBoFf<- 0; MBoFb<- 0;
+    Ca2uPTCf = Ca2uKT_init; Ca2uDALCf =  Ca2uKT_init;
+    Ca2uDTCf =  Ca2uKT_init; Ca2uCDCf =  Ca2uKT_init; Ca2uKTrestf = Ca2uKT_init;
+    CFabpPTCf =  CFabpKT_init; CFabpDALCf = CFabpKT_init; CFabpDTCf = CFabpKT_init;
+    CFabpCDCf = CFabpKT_init; CFabpKTrestf =CFabpKT_init;
     
-    Ca2uKTf<- Ca2uKT_init; CFabpKTf<- CFabpKT_init; MKTf<- 0; MKTb<- 0; 
+    MPTCf <- 0;MDALCf <- 0;
+    MDTCf <- 0; MCDCf <- 0;
+    MKTrestf <- 0; MPT <- 0;  MDAL<- 0;
+    MDT <- 0; MCD <- 0;
+    
     CFabpLTf<- CFabpLT_init; CalbLuAFf<- CalbLuAF_init;
-    MLTf<- 0; MLTb<- 0; MLbile <-0; MSTTf <- 0; MINTf <- 0; MMTf <- 0; MATf <- 0; MRTf <- 0; MLuTf <- 0;
-    MLuAFf <- 0; MLuAFb<- 0; MSPTf <- 0; MHTf <- 0; MBrTf <- 0;
-    MGoTf <- 0; MSKTf <- 0; MBoTf <- 0;  
+    MLTf<- 0; MLTb<- 0;  MPTCb = 0; MDALCb = 0; MDTCb = 0
+    MCDCb = 0; MKTrestb = 0; MLbile <-0; MSTTf <- 0;  MINTf <- 0; MLuTf <- 0; 
+    MLuAFf <- 0; MLuAFb<- 0; MSPTf <- 0; MHTf <- 0;  MBrTf <- 0;
+    MGoTf <- 0;  MSKTf <- 0; MBoTf <- 0; MMTf <- 0; MATf <- 0; MRTf <- 0;
     
-    MFil <-0; MPT <- 0; MBladder <- 0; Murine <-0;MSTL <-0;  MINL <-0;
+    MPT <- 0; MBladder <- 0; Murine <-0;MSTL <-0;  MINL <-0;
     Mfeces <-0;  Vurine <-0; Vfeces <-0
     
     return(c('CalbVenf' = CalbVenf, 'CalbArtf' = CalbArtf, 
@@ -1588,7 +1770,11 @@ create.inits <- function(parameters){
              'CalbMFf' = CalbMFf, 'CalbAFf' = CalbAFf,'CalbRFf' = CalbRFf,
              'CalbLuFf' = CalbLuFf, 'CalbSPFf' = CalbSPFf, 'CalbHFf' = CalbHFf,
              'CalBrFf' = CalBrFf, 'CalbGoFf' = CalbGoFf, 'CalbSKFf' = CalbSKFf,
-             'CalbBoFf' = CalbBoFf, 'Ca2uKTf' = Ca2uKTf, 'CFabpKTf' = CFabpKTf,
+             'CalbBoFf' = CalbBoFf, 
+             'Ca2uPTCf' = Ca2uPTCf, 'Ca2uDALCf' =  Ca2uDALCf,
+             'Ca2uDTCf' =  Ca2uDTCf, 'Ca2uCDCf' =  Ca2uCDCf, 'Ca2uKTrestf' = Ca2uKTrestf,
+             'CFabpPTCf' =  CFabpPTCf, 'CFabpDALCf' = CFabpDALCf, 'CFabpDTCf' = CFabpDTCf,
+             'CFabpCDCf' = CFabpCDCf, 'CFabpKTrestf' =CFabpKTrestf,
              'CFabpLTf' = CFabpLTf, 'CalbLuAFf' = CalbLuAFf,
              
              
@@ -1601,12 +1787,18 @@ create.inits <- function(parameters){
              'MAFb' = MAFb, 'MRFb' = MRFb, 'MLuFb' = MLuFb, 
              'MSPFb' = MSPFb,  'MHFb' = MHFb, 'MBrFb' = MBrFb, 
              'MGoFb' = MGoFb, 'MSKFb' = MSKFb, 'MBoFb' = MBoFb,
-             'MKTb' = MKTb, 'MLTb' = MLTb, 'MLuAFb'=MLuAFb,
+             'MPTCb' = MPTCb, 'MDALCb' = MDALCb, 'MDTCb' = MDTCb,
+             'MCDCb' = MCDCb, 'MKTrestb' = MKTrestb, 'MLTb' = MLTb, 
              
+             'MLuAFb'=MLuAFb,
              
              'MArtf'=MArtf, 'MVenf'=MVenf, 'MKBf'=MKBf, 
-             'MKFf'=MKFf, 'MKTf'=MKTf,
-             'MFil'=MFil, 'MPT' = MPT, 'MBladder' = MBladder,  'MLBf'=MLBf, 
+             'MKFf'=MKFf,  'MPTCf' = MPTCf, 'MDALCf' = MDALCf,  
+             'MDTCf' = MDTCf, 'MCDCf' = MCDCf,
+             'MKTrestf' = MKTrestf, 'MPT' = MPT,  'MDAL' = MDAL,
+             'MDT' =  MDT, 'MCD' = MCD,
+             
+             'MBladder' = MBladder,  'MLBf'=MLBf, 
              'MLFf'=MLFf, 'MLTf'=MLTf, 'MLbile'= MLbile,
              
              'MSTBf'=MSTBf, 'MSTFf'=MSTFf, 'MSTTf'=MSTTf, 'MSTL'=MSTL,
@@ -1694,7 +1886,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -1754,7 +1946,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -1815,7 +2007,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -1869,7 +2061,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -1922,7 +2114,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -1976,7 +2168,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -2030,7 +2222,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -2090,7 +2282,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -2152,7 +2344,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -2212,7 +2404,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -2273,7 +2465,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -2298,7 +2490,7 @@ obj.func <- function(x, dataset){
   
   ##########################
   #-------------------------
-  # Kemper 2003 (Loccisano)
+  # Kemper 2003 (Loccisano) part 1
   #-------------------------
   ##########################
   
@@ -2322,7 +2514,7 @@ obj.func <- function(x, dataset){
   inits <- create.inits (parameters)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = parameters, events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   
   # We need to keep only the predictions for the relevant compartments for the time points 
@@ -2330,11 +2522,11 @@ obj.func <- function(x, dataset){
   
   #======================================df12=========================================================
   
-  exp_data <- dataset$df12 # retrieve data of Kemper 2003  (Loccisano) ORAL female feces
+  exp_data <- dataset$df12 # retrieve data of Kemper 2003  (Loccisano) ORAL female feces HIGH
   colnames(exp_data)[c(2,3)] <- c("time", "concentration")
   column_names <- c("Mfeces")
   
-  preds_Kemp_OR_Ffeces <- list()
+  preds_Kemp_OR_Ffeces_high <- list()
   # loop over compartments with available data
   for (i in 1:length(unique(exp_data$Tissue))) {
     compartment <- unique(exp_data$Tissue)[i]
@@ -2344,18 +2536,18 @@ obj.func <- function(x, dataset){
     rounded_soltime <- round(solution$time)
     
     
-    preds_Kemp_OR_Ffeces [[i]] <- solution[rounded_soltime %in% rounded_time, column_names[i]]/1000
+    preds_Kemp_OR_Ffeces_high [[i]] <- solution[rounded_soltime %in% rounded_time, column_names[i]]/1000
   }
   
   
-  obs_Kemp_OR_Ffeces <- c(exp_data[exp_data$Tissue == "Feces", "concentration"])
+  obs_Kemp_OR_Ffeces_high <- c(exp_data[exp_data$Tissue == "Feces", "concentration"])
   # Estimate cumulative fecal mass
-  obs_Kemp_OR_Ffeces <- (obs_Kemp_OR_Ffeces/100)*admin.dose/1000
+  obs_Kemp_OR_Ffeces_high <- (obs_Kemp_OR_Ffeces_high/100)*admin.dose/1000
   
-  score[12] <- AAFE(predictions = preds_Kemp_OR_Ffeces, observations = obs_Kemp_OR_Ffeces)
+  score[12] <- AAFE(predictions = preds_Kemp_OR_Ffeces_high, observations = obs_Kemp_OR_Ffeces_high)
   
   
-  # Set up simulations for the 13th case, i.e.Kemper 2003 (Loccisano) ORAL male feces
+  # Set up simulations for the 13th case, i.e.Kemper 2003 (Loccisano) ORAL male feces HIGH
   
   sex <- "M"
   BW <- 0.3 #kg
@@ -2374,7 +2566,7 @@ obj.func <- function(x, dataset){
   events <- create.events(parameters)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = parameters, events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   
   #======================================df13=========================================================
@@ -2383,7 +2575,7 @@ obj.func <- function(x, dataset){
   colnames(exp_data)[c(2,3)] <- c("time", "concentration")
   column_names <- c("Mfeces")
   
-  preds_Kemp_OR_Mfeces <- list()
+  preds_Kemp_OR_Mfeces_high <- list()
   # loop over compartments with available data
   for (i in 1:length(unique(exp_data$Tissue))) {
     compartment <- unique(exp_data$Tissue)[i]
@@ -2392,15 +2584,15 @@ obj.func <- function(x, dataset){
     rounded_time <- round(exp_time)
     rounded_soltime <- round(solution$time)
     
-    preds_Kemp_OR_Mfeces [[i]] <- solution[rounded_soltime %in% rounded_time, column_names[i]]/1000
+    preds_Kemp_OR_Mfeces_high [[i]] <- solution[rounded_soltime %in% rounded_time, column_names[i]]/1000
   }
   
   
-  obs_Kemp_OR_Mfeces <- c(exp_data[exp_data$Tissue == "Feces", "concentration"])
+  obs_Kemp_OR_Mfeces_high <- c(exp_data[exp_data$Tissue == "Feces", "concentration"])
   # Estimate cumulative fecal mass
-  obs_Kemp_OR_Mfeces <- (obs_Kemp_OR_Mfeces/100)*admin.dose/1000
+  obs_Kemp_OR_Mfeces_high <- (obs_Kemp_OR_Mfeces_high/100)*admin.dose/1000
   
-  score[13] <- AAFE(predictions = preds_Kemp_OR_Mfeces, observations = obs_Kemp_OR_Mfeces)
+  score[13] <- AAFE(predictions = preds_Kemp_OR_Mfeces_high, observations = obs_Kemp_OR_Mfeces_high)
   
   
   ##########################
@@ -2429,7 +2621,7 @@ obj.func <- function(x, dataset){
   inits <- create.inits (parameters)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = parameters, events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   
   #======================================df14=========================================================
@@ -2472,7 +2664,7 @@ obj.func <- function(x, dataset){
   events <- create.events(parameters)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = parameters, events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   
   #======================================df15=========================================================
@@ -2514,7 +2706,7 @@ obj.func <- function(x, dataset){
   events <- create.events(parameters)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = parameters, events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   
   #======================================df16=========================================================
@@ -2564,7 +2756,7 @@ obj.func <- function(x, dataset){
   events <- create.events(parameters)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = parameters, events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   
   #======================================df17=========================================================
@@ -2606,7 +2798,7 @@ obj.func <- function(x, dataset){
   events <- create.events(parameters)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = parameters, events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   #======================================df18========================================================= 
   
@@ -2648,7 +2840,7 @@ obj.func <- function(x, dataset){
   events <- create.events(parameters)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = parameters, events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   
   #======================================df19=========================================================
@@ -2713,7 +2905,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -2775,7 +2967,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -2837,7 +3029,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -2900,7 +3092,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -2963,7 +3155,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -3026,7 +3218,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -3088,7 +3280,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -3151,7 +3343,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -3210,7 +3402,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -3270,7 +3462,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -3331,7 +3523,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -3390,7 +3582,7 @@ obj.func <- function(x, dataset){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
   
   # We need to keep only the predictions for the relevant compartments for the time points 
   # at which we have available data. 
@@ -3422,15 +3614,231 @@ obj.func <- function(x, dataset){
   score[31] <- AAFE(predictions = preds_gus_OR_Mtissues, observations = obs_gus_OR_Mtissues)
   
   
+  
+  ##########################
+  #-------------------------
+  # Kemper 2003 (Loccisano) part 2
+  #-------------------------
+  ##########################
+  
+  # Set up simulations for the 12th case, i.e.Kemper 2003 (Loccisano) ORAL female feces MEDIUM
+  
+  sex <- "F"
+  BW <- 0.2 #kg
+  sample_time <- seq(0,192,1)
+  admin.type <-"oral"
+  admin.dose <- 5 * BW*1000 #ug
+  admin.time <- 0
+  
+  #Female, oral 25mg/kg dose
+  parameters <-   create.params(list('BW'=BW,
+                                     "admin.dose"= admin.dose,
+                                     "admin.time" = admin.time, 
+                                     "admin.type" = admin.type,
+                                     "estimated_params" = estimated_params,
+                                     "sex" = sex))
+  events <- create.events(parameters)
+  inits <- create.inits (parameters)
+  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                      y = inits, parms = parameters, events = events,
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+  
+  
+  # We need to keep only the predictions for the relevant compartments for the time points 
+  # at which we have available data. 
+  
+  #======================================df32=========================================================
+  
+  exp_data <- dataset$df32 # retrieve data of Kemper 2003  (Loccisano) ORAL female feces MEDIUM
+  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
+  column_names <- c("Mfeces")
+  
+  preds_Kemp_OR_Ffeces_med <- list()
+  # loop over compartments with available data
+  for (i in 1:length(unique(exp_data$Tissue))) {
+    compartment <- unique(exp_data$Tissue)[i]
+    #Retrieve time points at which measurements are available for compartment i
+    exp_time <- exp_data[exp_data$Tissue == compartment, 2]
+    rounded_time <- round(exp_time)
+    rounded_soltime <- round(solution$time)
+    
+    
+    preds_Kemp_OR_Ffeces_med [[i]] <- solution[rounded_soltime %in% rounded_time, column_names[i]]/1000
+  }
+  
+  
+  obs_Kemp_OR_Ffeces_med <- c(exp_data[exp_data$Tissue == "Feces", "concentration"])
+  # Estimate cumulative fecal mass
+  obs_Kemp_OR_Ffeces_med <- (obs_Kemp_OR_Ffeces_med/100)*admin.dose/1000
+  
+  score[32] <- AAFE(predictions = preds_Kemp_OR_Ffeces_med, observations = obs_Kemp_OR_Ffeces_med)
+  
+  
+  # Set up simulations for the 13th case, i.e.Kemper 2003 (Loccisano) ORAL male feces MEDIUM
+  
+  sex <- "M"
+  BW <- 0.3 #kg
+  sample_time <- seq(0,672,1)
+  admin.type <-"oral"
+  admin.dose <- 5 * BW*1000 #ug
+  admin.time <- 0
+  
+  
+  parameters <-   create.params(list('BW'=BW,
+                                     "admin.dose"= admin.dose,
+                                     "admin.time" = admin.time, 
+                                     "admin.type" = admin.type,
+                                     "estimated_params" = estimated_params,
+                                     "sex" = sex))
+  events <- create.events(parameters)
+  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                      y = inits, parms = parameters, events = events,
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+  
+  
+  #======================================df33=========================================================
+  
+  exp_data <- dataset$df33 # retrieve data of Kemper 2003  (Loccisano) ORAL male feces MEDIUM
+  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
+  column_names <- c("Mfeces")
+  
+  preds_Kemp_OR_Mfeces_med <- list()
+  # loop over compartments with available data
+  for (i in 1:length(unique(exp_data$Tissue))) {
+    compartment <- unique(exp_data$Tissue)[i]
+    #Retrieve time points at which measurements are available for compartment i
+    exp_time <- exp_data[exp_data$Tissue == compartment, 2]
+    rounded_time <- round(exp_time)
+    rounded_soltime <- round(solution$time)
+    
+    preds_Kemp_OR_Mfeces_med [[i]] <- solution[rounded_soltime %in% rounded_time, column_names[i]]/1000
+  }
+  
+  
+  obs_Kemp_OR_Mfeces_med <- c(exp_data[exp_data$Tissue == "Feces", "concentration"])
+  # Estimate cumulative fecal mass
+  obs_Kemp_OR_Mfeces_med <- (obs_Kemp_OR_Mfeces_med/100)*admin.dose/1000
+  
+  score[33] <- AAFE(predictions = preds_Kemp_OR_Mfeces_med, observations = obs_Kemp_OR_Mfeces_med)
+  
+  
+  # Set up simulations for the 12th case, i.e.Kemper 2003 (Loccisano) ORAL female feces LOW
+  
+  sex <- "F"
+  BW <- 0.2 #kg
+  sample_time <- seq(0,192,1)
+  admin.type <-"oral"
+  admin.dose <- 1 * BW*1000 #ug
+  admin.time <- 0
+  
+  #Female, oral 25mg/kg dose
+  parameters <-   create.params(list('BW'=BW,
+                                     "admin.dose"= admin.dose,
+                                     "admin.time" = admin.time, 
+                                     "admin.type" = admin.type,
+                                     "estimated_params" = estimated_params,
+                                     "sex" = sex))
+  events <- create.events(parameters)
+  inits <- create.inits (parameters)
+  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                      y = inits, parms = parameters, events = events,
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+  
+  
+  # We need to keep only the predictions for the relevant compartments for the time points 
+  # at which we have available data. 
+  
+  #======================================df34=========================================================
+  
+  exp_data <- dataset$df34 # retrieve data of Kemper 2003  (Loccisano) ORAL female feces LOW
+  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
+  column_names <- c("Mfeces")
+  
+  preds_Kemp_OR_Ffeces_low <- list()
+  # loop over compartments with available data
+  for (i in 1:length(unique(exp_data$Tissue))) {
+    compartment <- unique(exp_data$Tissue)[i]
+    #Retrieve time points at which measurements are available for compartment i
+    exp_time <- exp_data[exp_data$Tissue == compartment, 2]
+    rounded_time <- round(exp_time)
+    rounded_soltime <- round(solution$time)
+    
+    
+    preds_Kemp_OR_Ffeces_low [[i]] <- solution[rounded_soltime %in% rounded_time, column_names[i]]/1000
+  }
+  
+  
+  obs_Kemp_OR_Ffeces_low <- c(exp_data[exp_data$Tissue == "Feces", "concentration"])
+  # Estimate cumulative fecal mass
+  obs_Kemp_OR_Ffeces_low <- (obs_Kemp_OR_Ffeces_low/100)*admin.dose/1000
+  
+  score[34] <- AAFE(predictions = preds_Kemp_OR_Ffeces_low, observations = obs_Kemp_OR_Ffeces_low)
+  
+  
+  # Set up simulations for the 13th case, i.e.Kemper 2003 (Loccisano) ORAL male feces LOW
+  
+  sex <- "M"
+  BW <- 0.3 #kg
+  sample_time <- seq(0,672,1)
+  admin.type <-"oral"
+  admin.dose <- 1 * BW*1000 #ug
+  admin.time <- 0
+  
+  
+  parameters <-   create.params(list('BW'=BW,
+                                     "admin.dose"= admin.dose,
+                                     "admin.time" = admin.time, 
+                                     "admin.type" = admin.type,
+                                     "estimated_params" = estimated_params,
+                                     "sex" = sex))
+  events <- create.events(parameters)
+  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                      y = inits, parms = parameters, events = events,
+                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+  
+  
+  #======================================df35=========================================================
+  
+  exp_data <- dataset$df35 # retrieve data of Kemper 2003  (Loccisano) ORAL male feces MEDIUM
+  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
+  column_names <- c("Mfeces")
+  
+  preds_Kemp_OR_Mfeces_low <- list()
+  # loop over compartments with available data
+  for (i in 1:length(unique(exp_data$Tissue))) {
+    compartment <- unique(exp_data$Tissue)[i]
+    #Retrieve time points at which measurements are available for compartment i
+    exp_time <- exp_data[exp_data$Tissue == compartment, 2]
+    rounded_time <- round(exp_time)
+    rounded_soltime <- round(solution$time)
+    
+    preds_Kemp_OR_Mfeces_low [[i]] <- solution[rounded_soltime %in% rounded_time, column_names[i]]/1000
+  }
+  
+  
+  obs_Kemp_OR_Mfeces_low <- c(exp_data[exp_data$Tissue == "Feces", "concentration"])
+  # Estimate cumulative fecal mass
+  obs_Kemp_OR_Mfeces_low <- (obs_Kemp_OR_Mfeces_low/100)*admin.dose/1000
+  
+  score[35] <- AAFE(predictions = preds_Kemp_OR_Mfeces_low, observations = obs_Kemp_OR_Mfeces_low)
+  
+  
+  
+  
+  
   ########################################################################################
-  score[12] <- 10*score[12]
-  score[13] <- 10*score[13]
-  score[14] <- 10*score[14]
-  score[15] <- 10*score[15]
-  score[16] <- 10*score[16]
-  score[17] <- 10*score[17]
-  score[18] <- 10*score[18]
-  score[19] <- 10*score[19]
+  # score[12] <- 2*score[12]
+  # score[13] <- 2*score[13]
+  # score[14] <- 2*score[14]
+  # score[15] <- 2*score[15]
+  # score[16] <- 2*score[16]
+  # score[17] <- 2*score[17]
+  # score[18] <- 2*score[18]
+  # score[19] <- 2*score[19]
+  # score[32] <- 2*score[32]
+  # score[33] <- 2*score[33]
+  # score[34] <- 2*score[34]
+  # score[35] <- 2*score[35]
   
   # Estimate final score
   
@@ -3461,8 +3869,8 @@ dzi_OR_Ftissues$Concentration_microM <- dzi_OR_Ftissues$Concentration_microM* MW
 kim_OR_Mblood <- openxlsx::read.xlsx("Data/PFOA_male_blood_ORAL_kim_2016.xlsx")
 kim_IV_Mblood <- openxlsx::read.xlsx("Data/PFOA_male_blood_IV_kim_2016.xlsx")
 Lup_OR_Ftissues <- openxlsx::read.xlsx("Data/PFOA_female_tissues_Lupton_2020.xlsx")
-Kemp_OR_Ffeces <- openxlsx::read.xlsx("Data/PFOA_Feces_female_oral_25_mg_per_kg-Loc.xlsx")
-Kemp_OR_Mfeces <- openxlsx::read.xlsx("Data/PFOA_Feces_male_oral_25_mg_per_kg-Loc.xlsx")
+Kemp_OR_Ffeces_high <- openxlsx::read.xlsx("Data/PFOA_Feces_female_oral_25_mg_per_kg-Loc.xlsx")
+Kemp_OR_Mfeces_high <- openxlsx::read.xlsx("Data/PFOA_Feces_male_oral_25_mg_per_kg-Loc.xlsx")
 Kemp_OR_Furine_low <- openxlsx::read.xlsx("Data/PFOA_Urine_female_oral_1_mg_per_kg.xlsx")
 Kemp_OR_Furine_med <- openxlsx::read.xlsx("Data/PFOA_Urine_female_oral_5_mg_per_kg.xlsx")
 Kemp_OR_Furine_high <- openxlsx::read.xlsx("Data/PFOA_Urine_female_oral_25_mg_per_kg.xlsx")
@@ -3489,18 +3897,24 @@ kim_OR_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_ORAL_kim_2016.xlsx"
 kim_IV_Fblood <- openxlsx::read.xlsx("Data/PFOA_female_blood_IV_kim_2016.xlsx")
 gus_OR_Mblood <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Plasma Male rats_Oral.xlsx")
 gus_OR_Mtissues <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Tissues Male rats_Oral.xlsx")
+Kemp_OR_Ffeces_med <- openxlsx::read.xlsx("Data/PFOA_Feces_female_oral_5_mg_per_kg-Loc.xlsx")
+Kemp_OR_Mfeces_med <- openxlsx::read.xlsx("Data/PFOA_Feces_male_oral_5_mg_per_kg-Loc.xlsx")
+Kemp_OR_Ffeces_low <- openxlsx::read.xlsx("Data/PFOA_Feces_female_oral_1_mg_per_kg-Loc.xlsx")
+Kemp_OR_Mfeces_low <- openxlsx::read.xlsx("Data/PFOA_Feces_male_oral_1_mg_per_kg-Loc.xlsx")
 
-setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/protein_binding/non_specific_binding_ka_58_koff_estimated_fprotein_unity_common_RAFLiver_different_RAFBile")
+
+setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/proximal_tubule/detailed_kidney_anatomy_ka74")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
-                "df9" = kim_OR_Mblood, "df10" = kim_IV_Mblood, "df11" = Lup_OR_Ftissues, "df12" = Kemp_OR_Ffeces,
-                "df13" = Kemp_OR_Mfeces, "df14" = Kemp_OR_Furine_low, "df15" = Kemp_OR_Furine_med, "df16" = Kemp_OR_Furine_high,
+                "df9" = kim_OR_Mblood, "df10" = kim_IV_Mblood, "df11" = Lup_OR_Ftissues, "df12" = Kemp_OR_Ffeces_high,
+                "df13" = Kemp_OR_Mfeces_high, "df14" = Kemp_OR_Furine_low, "df15" = Kemp_OR_Furine_med, "df16" = Kemp_OR_Furine_high,
                 "df17" = Kemp_OR_Murine_low, "df18" = Kemp_OR_Murine_med, "df19" = Kemp_OR_Murine_high, 
                 "df20" = dzi_IV_Mserum, "df21" = dzi_OR_Mserum_low, "df22" = dzi_OR_Mserum_medium,
                 "df23" = dzi_OR_Mserum_high, "df24" = dzi_IV_Fserum, "df25" = dzi_OR_Fserum_low, "df26" = dzi_OR_Fserum_medium,
                 "df27" = dzi_OR_Fserum_high, "df28" = kim_OR_Fblood, "df29" = kim_IV_Fblood, "df30" = gus_OR_Mblood,
-                "df31" = gus_OR_Mtissues)
+                "df31" = gus_OR_Mtissues, "df32" = Kemp_OR_Ffeces_med,"df33" = Kemp_OR_Mfeces_med,
+                "df34" = Kemp_OR_Ffeces_low,"df35" = Kemp_OR_Mfeces_low)
 
 
 #Initialise optimiser to NULL for better error handling later
@@ -3509,7 +3923,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0, 
-              "maxeval" = 500, 
+              "maxeval" = 300, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
@@ -3518,10 +3932,11 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
 
 N_pars <- 10 # Number of parameters to be fitted
-fit <-  c(rep(log(1),9), log(10))
+fit <-  c(rep(log(1),10))
 
-lb = c(rep(log(1e-20),9),  log(1e-2))
-ub = c(rep(log(1e10),  9),  log(1e2))
+lb = c(rep(log(1e-20),9), log(1e-4))
+ub = c(rep(log(1e10),  9), log(1e2) )
+
 
 # Run the optimization algorithm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
@@ -3533,7 +3948,7 @@ optimizer <- nloptr::nloptr( x0= fit,
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
-save.image("non_specific_binding_ka_58_koff_estimated_fprotein_unity_common_RAFLiver_different_RAFBile.RData")
+save.image("detailed_kidney_anatomy_ka74.RData")
 
 
 
@@ -3561,7 +3976,7 @@ events <- create.events(params)
 sample_time=seq(0,2,0.01)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 preds_kudo_high <-  solution[, c("time","Cblood","Cliver","Ckidney", "Ccarcass","Clungs", 
                                  "Cspleen", "Cheart","Cbrain", "Cgonads", "Cstomach", 
@@ -3576,7 +3991,7 @@ events <- create.events(params)
 sample_time=seq(0,2,0.01)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 preds_kudo_low <- solution[, c("time","Cblood","Cliver","Ckidney", "Ccarcass","Clungs", 
                                "Cspleen", "Cheart","Cbrain", "Cgonads", "Cstomach", 
@@ -3607,7 +4022,7 @@ events <- create.events(params)
 sample_time=seq(0,288,1)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 preds_kim_IV_Mtissues <-  solution[, c("time", "Cliver","Ckidney", "Clungs", 
                                        "Cspleen", "Cheart")]
@@ -3637,7 +4052,7 @@ events <- create.events(params)
 sample_time=seq(0,288,1)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 preds_kim_OR_Mtissues <-  solution[, c("time", "Cliver","Ckidney", "Clungs", 
                                        "Cspleen", "Cheart")]
@@ -3666,7 +4081,7 @@ events <- create.events(params)
 sample_time=seq(0,24,1)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 preds_kim_IV_Ftissues <-  solution[, c("time", "Cliver","Ckidney", "Clungs", 
                                        "Cspleen", "Cheart")]
@@ -3695,7 +4110,7 @@ events <- create.events(params)
 sample_time=seq(0,24,1)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 preds_kim_OR_Ftissues <-  solution[, c("time", "Cliver","Ckidney", "Clungs", 
                                        "Cspleen", "Cheart")]
@@ -3725,7 +4140,7 @@ events <- create.events(params)
 sample_time=seq(0,864,1)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 preds_dzi_OR_Mtissues <-  solution[, c("time", "Cliver","Ckidney", "Cbrain")]
 
@@ -3754,7 +4169,7 @@ events <- create.events(params)
 sample_time=seq(0,24,1)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 preds_dzi_OR_Ftissues <-  solution[, c("time", "Cliver","Ckidney", "Cbrain")]
 
@@ -3790,7 +4205,7 @@ events <- create.events(params)
 sample_time=seq(0,288,1)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 preds_kim_OR_Mblood <-  solution[, c("time", "Cplasma")]
 
@@ -3820,7 +4235,7 @@ sample_time=seq(0,288,1)
 
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 preds_kim_IV_Mblood <-  solution[, c("time", "Cplasma")]
 
@@ -3859,7 +4274,7 @@ events <- create.events(params)
 sample_time=seq(0,384,1)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 preds_Lup_OR_Ftissues <-  solution[, c("time", "Cliver","Ckidney", "Cblood", "Cskin")]
 
@@ -3867,11 +4282,11 @@ preds_Lup_OR_Ftissues <-  solution[, c("time", "Cliver","Ckidney", "Cblood", "Cs
 
 ##########################
 #-------------------------
-# Kemper 2003 (Loccisano)
+# Kemper 2003 (Loccisano) part 1
 #-------------------------
 ##########################
 
-# Set up simulations for the 12th case, i.e.Kemper 2003 (Loccisano) ORAL female feces
+# Set up simulations for the 12th case, i.e.Kemper 2003 (Loccisano) ORAL female feces HIGH
 
 sex <- "F"
 BW <- 0.2 #kg
@@ -3898,12 +4313,12 @@ sample_time=seq(0,672,1)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,
                                     events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
-preds_Kemp_OR_Ffeces <-  solution[, c("time", "Mfeces")]
+preds_Kemp_OR_Ffeces_high <-  solution[, c("time", "Mfeces")]
 
 
-# Set up simulations for the 13th case, i.e.Kemper 2003 (Loccisano) ORAL male feces
+# Set up simulations for the 13th case, i.e.Kemper 2003 (Loccisano) ORAL male feces HIGH
 
 sex <- "M"
 BW <- 0.3 #kg
@@ -3922,10 +4337,10 @@ parameters <-   create.params(list('BW'=BW,
 events <- create.events(parameters)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = parameters, events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 
-preds_Kemp_OR_Mfeces <-  solution[, c("time", "Mfeces")]
+preds_Kemp_OR_Mfeces_high <-  solution[, c("time", "Mfeces")]
 
 
 ##########################
@@ -3954,7 +4369,7 @@ events <- create.events(parameters)
 inits <- create.inits (parameters)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = parameters, events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 
 preds_Kemp_OR_Furine_low <-  solution[, c("time", "Murine")]
@@ -3972,7 +4387,7 @@ parameters <-   create.params(list('BW'=BW,
 events <- create.events(parameters)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = parameters, events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 
 preds_Kemp_OR_Furine_med <-  solution[, c("time", "Murine")]
@@ -3990,7 +4405,7 @@ parameters <-   create.params(list('BW'=BW,
 events <- create.events(parameters)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = parameters, events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 
 preds_Kemp_OR_Furine_high <-  solution[, c("time", "Murine")]
@@ -4015,7 +4430,7 @@ parameters <-   create.params(list('BW'=BW,
 events <- create.events(parameters)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = parameters, events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 preds_Kemp_OR_Murine_low <-  solution[, c("time", "Murine")]
 
@@ -4032,7 +4447,7 @@ parameters <-   create.params(list('BW'=BW,
 events <- create.events(parameters)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = parameters, events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 
 preds_Kemp_OR_Murine_med <-  solution[, c("time", "Murine")]
@@ -4050,7 +4465,7 @@ parameters <-   create.params(list('BW'=BW,
 events <- create.events(parameters)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = parameters, events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 
 preds_Kemp_OR_Murine_high <-  solution[, c("time", "Murine")]
@@ -4082,7 +4497,7 @@ sample_time <- c(0, 0.083, 0.25, 0.5, 1, 3, 6, seq(12, 1200, 4))
 
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 preds_dzi_IV_Mserum <-  solution[, c("time", "Cplasma")]
 
@@ -4114,7 +4529,7 @@ sample_time <- c(0, 0.25, 1, 3, 6, seq(12, 1200, 4))
 
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 preds_dzi_OR_Mserum_low <-  solution[, c("time", "Cplasma")]
 
@@ -4145,7 +4560,7 @@ sample_time <- c(0, 0.25, 1, 3, 6, seq(12, 1200, 4))
 
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 preds_dzi_OR_Mserum_medium <-  solution[, c("time", "Cplasma")]
 
@@ -4176,7 +4591,7 @@ sample_time <- c(0, 0.25, 1, 3, 6, seq(12, 1200, 4))
 
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 preds_dzi_OR_Mserum_high <-  solution[, c("time", "Cplasma")]
 
@@ -4207,7 +4622,7 @@ sample_time <- c(0, 0.083, 0.25, seq(0.5, 192, 0.5))
 
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 preds_dzi_IV_Fserum <-  solution[, c("time", "Cplasma")]
 
@@ -4238,7 +4653,7 @@ sample_time <- seq(0, 96, 0.25)
 
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 preds_dzi_OR_Fserum_low <-  solution[, c("time", "Cplasma")]
 
@@ -4269,7 +4684,7 @@ sample_time <- c(0, 0.25, seq(1, 192, 0.5))
 
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 preds_dzi_OR_Fserum_medium <-  solution[, c("time", "Cplasma")]
 
@@ -4301,7 +4716,7 @@ sample_time <- seq(0, 96, 0.25)
 
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 preds_dzi_OR_Fserum_high <-  solution[, c("time", "Cplasma")]
 
@@ -4337,7 +4752,7 @@ events <- create.events(params)
 sample_time=seq(0,24,1)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 preds_kim_OR_Fblood <-  solution[, c("time", "Cplasma")]
 
@@ -4367,7 +4782,7 @@ sample_time=seq(0,24,1)
 
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 preds_kim_IV_Fblood <-  solution[, c("time", "Cplasma")]
 
@@ -4404,7 +4819,7 @@ events <- create.events(params)
 sample_time=seq(0,48,0.2)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 preds_gus_OR_Mblood <-  solution[, c("time", "Cplasma")]
 
@@ -4441,11 +4856,130 @@ events <- create.events(params)
 sample_time=seq(0,48,0.2)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
 
 preds_gus_OR_Mtissues <-  solution[, c("time", "CalveolarLF","Cliver", "Clungtissue", "Ckidney")]
 
 
+
+##########################
+#-------------------------
+# Kemper 2003 (Loccisano) part 2
+#-------------------------
+##########################
+
+# Set up simulations for the 32nd case, i.e.Kemper 2003 (Loccisano) ORAL female feces MEDIUM
+
+sex <- "F"
+BW <- 0.2 #kg
+sample_time <- seq(0,192,1)
+admin.type <-"oral"
+admin.dose <- 5 * BW*1000 #ug
+admin.time <- 0
+
+user_input <- list('BW'=BW,
+                   "admin.dose"= admin.dose,
+                   "admin.time" = admin.time, 
+                   "admin.type" = admin.type,
+                   "estimated_params" = estimated_params,
+                   "sex" = sex)
+
+params <- create.params(user_input)
+inits <- create.inits(params)
+events <- create.events(params)
+
+# sample_time: a vector of time points to solve the ODEs
+sample_time=seq(0,192,1)
+
+# ode(): The solver of the ODEs
+solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                    y = inits, parms = params,
+                                    events = events,
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+
+preds_Kemp_OR_Ffeces_med <-  solution[, c("time", "Mfeces")]
+
+
+# Set up simulations for the 33d case, i.e.Kemper 2003 (Loccisano) ORAL male feces MEDIUM
+
+sex <- "M"
+BW <- 0.3 #kg
+sample_time <- seq(0,672,1)
+admin.type <-"oral"
+admin.dose <- 5 * BW*1000 #ug
+admin.time <- 0
+
+
+parameters <-   create.params(list('BW'=BW,
+                                   "admin.dose"= admin.dose,
+                                   "admin.time" = admin.time, 
+                                   "admin.type" = admin.type,
+                                   "estimated_params" = estimated_params,
+                                   "sex" = sex))
+events <- create.events(parameters)
+solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                    y = inits, parms = parameters, events = events,
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+
+
+preds_Kemp_OR_Mfeces_med <-  solution[, c("time", "Mfeces")]
+
+
+# Set up simulations for the 34th case, i.e.Kemper 2003 (Loccisano) ORAL female feces LOW
+
+sex <- "F"
+BW <- 0.2 #kg
+sample_time <- seq(0,192,1)
+admin.type <-"oral"
+admin.dose <- 1 * BW*1000 #ug
+admin.time <- 0
+
+user_input <- list('BW'=BW,
+                   "admin.dose"= admin.dose,
+                   "admin.time" = admin.time, 
+                   "admin.type" = admin.type,
+                   "estimated_params" = estimated_params,
+                   "sex" = sex)
+
+params <- create.params(user_input)
+inits <- create.inits(params)
+events <- create.events(params)
+
+# sample_time: a vector of time points to solve the ODEs
+sample_time=seq(0,192,1)
+
+# ode(): The solver of the ODEs
+solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                    y = inits, parms = params,
+                                    events = events,
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+
+preds_Kemp_OR_Ffeces_low <-  solution[, c("time", "Mfeces")]
+
+
+# Set up simulations for the 35th case, i.e.Kemper 2003 (Loccisano) ORAL male feces LOW
+
+sex <- "M"
+BW <- 0.3 #kg
+sample_time <- seq(0,672,1)
+admin.type <-"oral"
+admin.dose <- 1 * BW*1000 #ug
+admin.time <- 0
+
+
+parameters <-   create.params(list('BW'=BW,
+                                   "admin.dose"= admin.dose,
+                                   "admin.time" = admin.time, 
+                                   "admin.type" = admin.type,
+                                   "estimated_params" = estimated_params,
+                                   "sex" = sex))
+events <- create.events(parameters)
+solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
+                                    y = inits, parms = parameters, events = events,
+                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+
+
+preds_Kemp_OR_Mfeces_low <-  solution[, c("time", "Mfeces")]
 
 
 #convert ug/L, which is returned by the ODE function, to ug/g, which are the units in all the datasets
@@ -4461,8 +4995,8 @@ preds_dzi_OR_Ftissues[,2:dim(preds_dzi_OR_Ftissues)[2]] <- preds_dzi_OR_Ftissues
 preds_kim_OR_Mblood[,2:dim(preds_kim_OR_Mblood)[2]] <- preds_kim_OR_Mblood[,2:dim(preds_kim_OR_Mblood)[2]] /1000
 preds_kim_IV_Mblood[,2:dim(preds_kim_IV_Mblood)[2]] <- preds_kim_IV_Mblood[,2:dim(preds_kim_IV_Mblood)[2]] /1000
 preds_Lup_OR_Ftissues[,2:dim(preds_Lup_OR_Ftissues)[2]] <- preds_Lup_OR_Ftissues[,2:dim(preds_Lup_OR_Ftissues)[2]] /1000
-preds_Kemp_OR_Ffeces[,2:dim(preds_Kemp_OR_Ffeces)[2]] <- preds_Kemp_OR_Ffeces[,2:dim(preds_Kemp_OR_Ffeces)[2]] /1000
-preds_Kemp_OR_Mfeces[,2:dim(preds_Kemp_OR_Mfeces)[2]] <- preds_Kemp_OR_Mfeces[,2:dim(preds_Kemp_OR_Mfeces)[2]] /1000
+preds_Kemp_OR_Ffeces_high[,2:dim(preds_Kemp_OR_Ffeces_high)[2]] <- preds_Kemp_OR_Ffeces_high[,2:dim(preds_Kemp_OR_Ffeces_high)[2]] /1000
+preds_Kemp_OR_Mfeces_high[,2:dim(preds_Kemp_OR_Mfeces_high)[2]] <- preds_Kemp_OR_Mfeces_high[,2:dim(preds_Kemp_OR_Mfeces_high)[2]] /1000
 preds_Kemp_OR_Furine_low[,2:dim(preds_Kemp_OR_Furine_low)[2]] <- preds_Kemp_OR_Furine_low[,2:dim(preds_Kemp_OR_Furine_low)[2]] /1000
 preds_Kemp_OR_Furine_med[,2:dim(preds_Kemp_OR_Furine_med)[2]] <- preds_Kemp_OR_Furine_med[,2:dim(preds_Kemp_OR_Furine_med)[2]] /1000
 preds_Kemp_OR_Furine_high[,2:dim(preds_Kemp_OR_Furine_high)[2]] <- preds_Kemp_OR_Furine_high[,2:dim(preds_Kemp_OR_Furine_high)[2]] /1000
@@ -4481,6 +5015,10 @@ preds_kim_OR_Fblood[,2:dim(preds_kim_OR_Fblood)[2]] <- preds_kim_OR_Fblood[,2:di
 preds_kim_IV_Fblood[,2:dim(preds_kim_IV_Fblood)[2]] <- preds_kim_IV_Fblood[,2:dim(preds_kim_IV_Fblood)[2]] /1000
 preds_gus_OR_Mblood[,2:dim(preds_gus_OR_Mblood)[2]] <- preds_gus_OR_Mblood[,2:dim(preds_gus_OR_Mblood)[2]] /1000
 preds_gus_OR_Mtissues[,2:dim(preds_gus_OR_Mtissues)[2]] <- preds_gus_OR_Mtissues[,2:dim(preds_gus_OR_Mtissues)[2]] /1000
+preds_Kemp_OR_Ffeces_med[,2:dim(preds_Kemp_OR_Ffeces_med)[2]] <- preds_Kemp_OR_Ffeces_med[,2:dim(preds_Kemp_OR_Ffeces_med)[2]] /1000
+preds_Kemp_OR_Mfeces_med[,2:dim(preds_Kemp_OR_Mfeces_med)[2]] <- preds_Kemp_OR_Mfeces_med[,2:dim(preds_Kemp_OR_Mfeces_med)[2]] /1000
+preds_Kemp_OR_Ffeces_low[,2:dim(preds_Kemp_OR_Ffeces_low)[2]] <- preds_Kemp_OR_Ffeces_low[,2:dim(preds_Kemp_OR_Ffeces_low)[2]] /1000
+preds_Kemp_OR_Mfeces_low[,2:dim(preds_Kemp_OR_Mfeces_low)[2]] <- preds_Kemp_OR_Mfeces_low[,2:dim(preds_Kemp_OR_Mfeces_low)[2]] /1000
 
 
 # ######################################################################################
@@ -4587,18 +5125,18 @@ colnames(experiment11) <- c("Time",unique(Lup_OR_Ftissues$Tissue))
 
 
 # Convert Kemper ORAL female feces from long to wide format using reshape
-experiment12 <- reshape(Kemp_OR_Ffeces[c("Tissue" ,"Time_h", 
-                                         "Cum_dose_%")], 
+experiment12 <- reshape(Kemp_OR_Ffeces_high[c("Tissue" ,"Time_h", 
+                                              "Cum_dose_%")], 
                         idvar = "Time_h", timevar = "Tissue", direction = "wide")
-colnames(experiment12) <- c("Time",unique(Kemp_OR_Ffeces$Tissue))
+colnames(experiment12) <- c("Time",unique(Kemp_OR_Ffeces_high$Tissue))
 experiment12$Feces = (experiment12$Feces/100)*0.2*25
 
 
 # Convert Kemper ORAL male feces from long to wide format using reshape
-experiment13 <- reshape(Kemp_OR_Mfeces[c("Tissue" ,"Time_h", 
-                                         "Cum_dose_%")], 
+experiment13 <- reshape(Kemp_OR_Mfeces_high[c("Tissue" ,"Time_h", 
+                                              "Cum_dose_%")], 
                         idvar = "Time_h", timevar = "Tissue", direction = "wide")
-colnames(experiment13) <- c("Time",unique(Kemp_OR_Ffeces$Tissue))
+colnames(experiment13) <- c("Time",unique(Kemp_OR_Mfeces_high$Tissue))
 experiment13$Feces = (experiment13$Feces/100)*0.3*25
 
 
@@ -4725,6 +5263,38 @@ experiment31 <- reshape(gus_OR_Mtissues[c("Tissue" ,"Time_hours",
 colnames(experiment31) <- c("Time",unique(gus_OR_Mtissues$Tissue))
 
 
+# Convert Kemper ORAL female feces medium from long to wide format using reshape
+experiment32 <- reshape(Kemp_OR_Ffeces_med[c("Tissue" ,"Time_h", 
+                                             "Cum_dose_%")], 
+                        idvar = "Time_h", timevar = "Tissue", direction = "wide")
+colnames(experiment32) <- c("Time",unique(Kemp_OR_Ffeces_med$Tissue))
+experiment32$Feces = (experiment32$Feces/100)*0.2*5
+
+
+# Convert Kemper ORAL male feces medium from long to wide format using reshape
+experiment33 <- reshape(Kemp_OR_Mfeces_med[c("Tissue" ,"Time_h", 
+                                             "Cum_dose_%")], 
+                        idvar = "Time_h", timevar = "Tissue", direction = "wide")
+colnames(experiment33) <- c("Time",unique(Kemp_OR_Mfeces_med$Tissue))
+experiment33$Feces = (experiment33$Feces/100)*0.3*5
+
+
+# Convert Kemper ORAL female feces low from long to wide format using reshape
+experiment34 <- reshape(Kemp_OR_Ffeces_low[c("Tissue" ,"Time_h", 
+                                             "Cum_dose_%")], 
+                        idvar = "Time_h", timevar = "Tissue", direction = "wide")
+colnames(experiment34) <- c("Time",unique(Kemp_OR_Ffeces_low$Tissue))
+experiment34$Feces = (experiment34$Feces/100)*0.2*1
+
+
+# Convert Kemper ORAL male feces low from long to wide format using reshape
+experiment35 <- reshape(Kemp_OR_Mfeces_low[c("Tissue" ,"Time_h", 
+                                             "Cum_dose_%")], 
+                        idvar = "Time_h", timevar = "Tissue", direction = "wide")
+colnames(experiment35) <- c("Time",unique(Kemp_OR_Mfeces_low$Tissue))
+experiment35$Feces = (experiment35$Feces/100)*0.3*1
+
+
 # Put the experiments in a list
 experiments <- list(experiment1 = experiment1, experiment2 = experiment2, experiment3 = experiment3, experiment4 = experiment4,
                     experiment5 = experiment5, experiment6 = experiment6, experiment7 = experiment7, experiment8 = experiment8,
@@ -4733,7 +5303,8 @@ experiments <- list(experiment1 = experiment1, experiment2 = experiment2, experi
                     experiment17 = experiment17, experiment18 = experiment18, experiment19 = experiment19, experiment20 = experiment20,
                     experiment21 = experiment21, experiment22 = experiment22, experiment23 = experiment23, experiment24 = experiment24,
                     experiment25 = experiment25, experiment26 = experiment26, experiment27 = experiment27,
-                    experiment28 = experiment28, experiment29 = experiment29, experiment30 = experiment30, experiment31 = experiment31)
+                    experiment28 = experiment28, experiment29 = experiment29, experiment30 = experiment30, experiment31 = experiment31,
+                    experiment32 = experiment32,experiment33 = experiment33,experiment34 = experiment34,experiment35 = experiment35)
 
 
 # Rename predictions so that they share the same name as the names of the experimental data dataframe
@@ -4755,8 +5326,8 @@ colnames(preds_kim_OR_Mblood) <- c ("Time", "Plasma")
 colnames(preds_kim_IV_Mblood) <- c ("Time", "Plasma")
 
 colnames(preds_Lup_OR_Ftissues) <- c ("Time", "Liver","Kidney","Blood","Skin")
-colnames(preds_Kemp_OR_Ffeces) <- c ("Time", "Feces")
-colnames(preds_Kemp_OR_Mfeces) <- c ("Time", "Feces")
+colnames(preds_Kemp_OR_Ffeces_high) <- c ("Time", "Feces")
+colnames(preds_Kemp_OR_Mfeces_high) <- c ("Time", "Feces")
 
 colnames(preds_Kemp_OR_Furine_low) <- c ("Time", "Urine")
 colnames(preds_Kemp_OR_Furine_med) <- c ("Time", "Urine")
@@ -4780,20 +5351,25 @@ colnames(preds_kim_OR_Fblood) <- c ("Time", "Plasma")
 
 colnames(preds_gus_OR_Mblood) <- c ("Time", "Plasma")
 colnames(preds_gus_OR_Mtissues) <- c ("Time", "ALF", "Liver", "Lung", "Kidney")
-
+colnames(preds_Kemp_OR_Ffeces_med) <- c ("Time", "Feces")
+colnames(preds_Kemp_OR_Mfeces_med) <- c ("Time", "Feces")
+colnames(preds_Kemp_OR_Ffeces_low) <- c ("Time", "Feces")
+colnames(preds_Kemp_OR_Mfeces_low) <- c ("Time", "Feces")
 
 # Create a list containing the corresponding predictions
 simulations <- list(predictions1 = preds_kudo_high,  predictions2 = preds_kudo_low, predictions3 = preds_kim_IV_Mtissues, 
                     predictions4 = preds_kim_OR_Mtissues, predictions5 = preds_kim_IV_Ftissues, predictions6 = preds_kim_OR_Ftissues,
                     predictions7 = preds_dzi_OR_Mtissues, predictions8 = preds_dzi_OR_Ftissues, predictions9 = preds_kim_OR_Mblood,
-                    predictions10 = preds_kim_IV_Mblood, predictions11 = preds_Lup_OR_Ftissues, predictions12 = preds_Kemp_OR_Ffeces,
-                    predictions13 = preds_Kemp_OR_Mfeces, predictions14 = preds_Kemp_OR_Furine_low, predictions15 = preds_Kemp_OR_Furine_med,
+                    predictions10 = preds_kim_IV_Mblood, predictions11 = preds_Lup_OR_Ftissues, predictions12 = preds_Kemp_OR_Mfeces_high,
+                    predictions13 = preds_Kemp_OR_Mfeces_high, predictions14 = preds_Kemp_OR_Furine_low, predictions15 = preds_Kemp_OR_Furine_med,
                     predictions16 =preds_Kemp_OR_Furine_high, predictions17 = preds_Kemp_OR_Murine_low, predictions18 = preds_Kemp_OR_Murine_med,
                     predictions19 =preds_Kemp_OR_Murine_high, prediction20 =preds_dzi_IV_Mserum, predictions21 =preds_dzi_OR_Mserum_low,
                     predictions22 =preds_dzi_OR_Mserum_medium, predictions23 =preds_dzi_OR_Mserum_high, 
                     predictions24 =preds_dzi_IV_Fserum, predictions24 =preds_dzi_OR_Fserum_low, predictions26 =preds_dzi_OR_Fserum_medium,
                     predictions27 =preds_dzi_OR_Fserum_high, predictions28 = preds_kim_OR_Fblood, 
-                    predictions29 = preds_kim_IV_Fblood, predictions30 = preds_gus_OR_Mblood, predictions31 = preds_gus_OR_Mtissues)
+                    predictions29 = preds_kim_IV_Fblood, predictions30 = preds_gus_OR_Mblood, predictions31 = preds_gus_OR_Mtissues,
+                    predictions32 = preds_Kemp_OR_Mfeces_med, predictions33 = preds_Kemp_OR_Mfeces_med,
+                    predictions34 = preds_Kemp_OR_Mfeces_low, predictions35 = preds_Kemp_OR_Mfeces_low)
 
 
 # Iterate over all existing experiments and create the accompanying plots

@@ -1225,6 +1225,10 @@ ode.func <- function(time, inits, params){
       QBH*CHBf + QBBr*CBrBf+ QBGo*CGoBf + QBSK*CSKBf + QBBo*CBoBf +
       koff_alb*CVenb*VVen - kon_alb*CalbVenf*CVenf*VVen
     
+    VmK_Oatp = 0; VmK_Urat = 0 ;VmK_Oat1=0; VmK_Oat3 = 0; VmK_baso=0; VmK_api=0
+    kKFKT = 0
+    kFilKT = 0
+    
     #Kidney
     #blood subcompartment
     dMKBf = QBK*CArtf - QBK*CKBf - PeffK*AK*(CKBf-CKFf) - QparaKi*(1-SKi)*CKBf +
@@ -1502,7 +1506,7 @@ ode.func <- function(time, inits, params){
     
     'CVen'=CVen, 'CVenb'=CVenb, 'CVenf'=CVenf, 'CArt'=CArt, 'CArtf'=CArtf, 'CArtb'=CArtb,
     'CKB'=CKB, 'CKBf'=CKBf, 'CKBb'=CKBb, 'CKF'=CKF, 'CKFf'=CKFf, 'CKFb'=CKFb, 'CKT'=CKT,
-    'CKTf'=CKTf, 'CKTb'=CKTb, 'CFil'=CFil, 'CBladder' = CBladder, 'CLB'=CLB, 'CLBf'=CLBf, 'CLBb'=CLBb, 
+    'CKTf'=CKTf, 'CKTb'=CKTb, "CPT" = CPT,'CFil'=CFil, 'CBladder' = CBladder, 'CLB'=CLB, 'CLBf'=CLBf, 'CLBb'=CLBb, 
     'CLF'=CLF, 'CLFf'=CLFf, 'CLFb'=CLFb, 'CLT'=CLT, 'CLTf'=CLTf, 'CLTb'=CLTb, 
     'CSTB'=CSTB, 'CSTBf'=CSTBf, 'CSTBb'=CSTBb, 'CSTF'=CSTF, 'CSTFf'=CSTFf, 'CSTFb'=CSTFb,
     'CSTT'=CSTT, 'CINB'=CINB, 'CINBf'=CINBf, 'CINBb'=CINBb, 'CINF'=CINF, 'CINFf'=CINFf,
@@ -1533,7 +1537,6 @@ ode.func <- function(time, inits, params){
 }
 
 #Initial condition for each compartment.
-
 create.inits <- function(parameters){
   with(as.list(parameters),{
     
@@ -1809,7 +1812,7 @@ obj.func <- function(x, dataset){
   events <- create.events(params)
   
   # sample_time: a vector of time points to solve the ODEs
-  sample_time=seq(0,288,1)
+  sample_time=seq(0,1,0.01)
   
   # ode(): The solver of the ODEs
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,

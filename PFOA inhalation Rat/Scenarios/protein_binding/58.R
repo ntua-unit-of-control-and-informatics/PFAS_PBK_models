@@ -42,7 +42,7 @@ create.params <- function(user.input){
     KmK_api <-   1e20
     KLfabp <- (1.2e5+4e4+1.9e4)  #[L/mol]*1e-3 , value from Cheng et al. (2017)
     Ka <- 5.8e5 # 5.8e05 from Rue et al. (2024)#mol/L
-    kns <- estimated_params[11]
+    kns <- 0
     
     #permeabilities correction factor
     kabs_st <- 0 #m/h
@@ -1056,7 +1056,7 @@ ode.func <- function(time, inits, params){
     
     MBoB <- MBoBf + MBoBb
     MBoF <- MBoFf + MBoFb
-    MBoT <- MBoTf
+    MBoT <- MBoTf +  MBoTb
     CBoB <- MBoB/VBoB # blood concentration
     CBoBf <- MBoBf/VBoB
     CBoBb <- MBoBb/VBoB
@@ -3779,11 +3779,11 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
 # Male RAFOatp_k, Male RAFOat1, Male RAFOat3, Male RAFOatp_l,Male RAFNtcp
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
 
-N_pars <- 11 # Number of parameters to be fitted
-fit <-  c(rep(log(1),11))
+N_pars <- 10 # Number of parameters to be fitted
+fit <-  c(rep(log(1),10))
 
-lb = c(rep(log(1e-20),7),  rep(log(0.01), 4))
-ub = c(rep(log(1e10),  7),  rep(log(100), 4))
+lb = c(rep(log(1e-20),7),  rep(log(0.01), 3))
+ub = c(rep(log(1e10),  7),  rep(log(100), 3))
 
 # Run the optimization algorithm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
