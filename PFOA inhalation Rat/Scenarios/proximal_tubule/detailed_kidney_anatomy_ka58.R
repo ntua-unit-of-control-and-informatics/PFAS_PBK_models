@@ -3903,7 +3903,7 @@ Kemp_OR_Ffeces_low <- openxlsx::read.xlsx("Data/PFOA_Feces_female_oral_1_mg_per_
 Kemp_OR_Mfeces_low <- openxlsx::read.xlsx("Data/PFOA_Feces_male_oral_1_mg_per_kg-Loc.xlsx")
 
 
-setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/proximal_tubule/detailed_kidney_anatomy_ka58")
+setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/proximal_tubule/detailed_kidney_anatomy_ka58")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -5368,8 +5368,8 @@ simulations <- list(predictions1 = preds_kudo_high,  predictions2 = preds_kudo_l
                     predictions24 =preds_dzi_IV_Fserum, predictions24 =preds_dzi_OR_Fserum_low, predictions26 =preds_dzi_OR_Fserum_medium,
                     predictions27 =preds_dzi_OR_Fserum_high, predictions28 = preds_kim_OR_Fblood, 
                     predictions29 = preds_kim_IV_Fblood, predictions30 = preds_gus_OR_Mblood, predictions31 = preds_gus_OR_Mtissues,
-                    predictions32 = preds_Kemp_OR_Mfeces_med, predictions33 = preds_Kemp_OR_Mfeces_med,
-                    predictions34 = preds_Kemp_OR_Mfeces_low, predictions35 = preds_Kemp_OR_Mfeces_low)
+                    predictions32 = preds_Kemp_OR_Ffeces_med, predictions33 = preds_Kemp_OR_Mfeces_med,
+                    predictions34 = preds_Kemp_OR_Ffeces_low, predictions35 = preds_Kemp_OR_Mfeces_low)
 
 
 # Iterate over all existing experiments and create the accompanying plots

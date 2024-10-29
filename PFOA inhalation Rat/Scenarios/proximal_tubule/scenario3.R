@@ -1,3 +1,4 @@
+# Check notes for description of scenario
 #female increase in BW: 3.5 g/d
 #Male increase in BW: 5.9 g.d
 
@@ -11,28 +12,29 @@ create_variable_params <- function(BW, sex, estimated_params){
   # Estimated parameters
   if(sex == "M"){
     RAFOatp_k <- estimated_params[1]
-    RAFOat1 <- estimated_params[3]
-    CL_int <- estimated_params[5] #uL/min/million hepatocytes
+    CLfeces_unscaled <- estimated_params[10] #in L/h/BW^(-0.25), scaling similar to Loccisano et al. (2012)
+    
   }else{
     RAFOatp_k <- estimated_params[2]
-    RAFOat1 <- estimated_params[4]
-    CL_int <- estimated_params[6] #uL/min/million hepatocytes
+    CLfeces_unscaled <- estimated_params[11] #in L/h/BW^(-0.25), scaling similar to Loccisano et al. (2012)
     
   }
-  RAFOatp_l <- estimated_params[7]
+  RAFOat3 <- estimated_params[3]
+  CL_int <- estimated_params[4] #uL/min/million hepatocytes
+  RAFOatp_l <- estimated_params[5]
   RAFUrat <- RAFOatp_k
-  RAFOat3 <- RAFOat1
+  RAFOat1 <- 0
   RAFOatp2_l <- RAFOatp_l
-  RAFOatp_lu_ap <- estimated_params[8]
+  RAFOatp_lu_ap <- estimated_params[6]
   RAFOatp_lu_bas <- RAFOatp_lu_ap
   RAFNtcp <- RAFOatp_l
-  RAFOatp2_Int <- estimated_params[9]
+  RAFOatp2_Int <- estimated_params[7]
   
-  RAF_papp <- 1
+  Papp <- estimated_params[8]
   f_fabp_avail <- 1
   f_alb_avail <- 1
   
-  koff_alb <-  estimated_params[10]
+  koff_alb <-  estimated_params[9]
   koff_fabp <-  koff_alb
   koff_a2u <- koff_alb
   
@@ -41,17 +43,32 @@ create_variable_params <- function(BW, sex, estimated_params){
   KmK_baso <- 1e20
   KmK_api <-   1e20
   KLfabp <- (1.2e5+4e4+1.9e4)  #[L/mol]*1e-3 , value from Cheng et al. (2017)
-  Ka <- estimated_params[11]# 5.8e05 from Rue et al. (2024)#mol/L
-  CLfeces <- estimated_params[12]
+  Ka <- 5.8e05 # 5.8e05 from Ryu et al. (2024)#mol/L
+  CLfeces <- CLfeces_unscaled*BW^(-0.25)  #in L/h
   
+  #In order to scale transporter Vmax, we need to have the tissue weight to estimate
+  # tissue protein
+  PVIN <- 2.24e-2 #Brown et al. 1997, p 416, Table 5: 1.4+0.84
+  VIN <- PVIN * BW #intestine volume kg=L
+  
+  #Liver
+  PVL <- 3.66e-2 #Brown et al. 1997
+  VL <- PVL * BW #liver volume kg=L
+  
+  PVLu <- 0.48e-2 #Brown et al. 1997, p 418-19 mean of values for male rat
+  VLu <- PVLu * BW
+  
+  #Kidney
+  PVK <- 7.3e-3 #Brown et al. 1997
+  VK <- PVK * BW #kidney volume kg=L 
+  
+  # These are explained thoroughly in a later section
+  f_tubular <- 0.8
+  f_PTC_prot_to_tub_prot <- 0.6939
+
   MW = 414.07 #g/mol, PFOA molecular weight
-  VIN <-2.24e-2 * BW #intestine volume, in L
-  VL <- 3.66e-2  * BW #liver volume, in L
-  VK <- 7.3e-3 * BW #kidney volume, in L
-  VLu <- 0.48e-2 * BW #Lung volume, in L
-  
   muscle_protein <- 158.45 #mg/g muscle (protein data from Cheek et al.,1971 
-  #and muscle mass from Caster et al.,1956)
+  #and muscle mass from Caster et al.,1956) ***DO WE BELIEVE THAT THIS IS PER GRAM OF TOTAL ORGAN OR TISSUE?
   intestine_protein <- muscle_protein
   intestine_protein_total <- intestine_protein*(1000*VIN)
   
@@ -60,9 +77,6 @@ create_variable_params <- function(BW, sex, estimated_params){
   rat_weight_addis <- 200 #g, average rat weight in Addis, 1936
   rat_kidney_weight_addis <- rat_weight_addis*0.0073 # kidney fraction to BW, Brown (1997)
   kidney_protein_per_gram <- kidney_protein_per_rat/rat_kidney_weight_addis #mg of protein/g kidney
-  
-  f_tubular <- 0.8
-  f_PTC_prot_to_tub_prot <- 0.6939
   
   kidney_cells = 1.47e07 #cells/g https://doi.org/10.1038/s41598-024-53270-2
   kidney_cells_total <- kidney_cells* (1000*VK)
@@ -124,12 +138,6 @@ create_variable_params <- function(BW, sex, estimated_params){
   VmL_Ntcp = VmL_Ntcp_scaled*RAFNtcp #in vivo value, in  ug/h
   KmL_Ntcp= 20 * MW #umol/L, Ruggiero et al. 2021 --> ug/L
   
-  # #bile_transp_liver
-  # Vmbile_transp_in_vitro= mean(c(VmL_Oatp_in_vitro,VmL_Oatp2_in_vitro, VmL_Ntcp_in_vitro )) #nmol/mg protein/min  (mean value from other liver transporters)
-  # Vmbile_transp_scaled = 60*Vmbile_transp_in_vitro*MW*liver_protein_per_gram*(VL*1000)/1000   #physiologically scaled to in vivo, ug/h
-  # Vmbile_transp = Vmbile_transp_scaled*RAFbile_transp #in vivo value, in  ug/h
-  # Kmbile_transp = mean(c(KmL_Ntcp,KmL_Oatp2, KmL_Oatp )) #same as kidney
-  
   #Lung
   lung_protein_per_gram <- 134 # 134 mg/mL tissue --> 134 mg/g tissue, Figure 2, https://doi.org/10.1007/s00580-021-03242-z 
   
@@ -158,27 +166,40 @@ create_variable_params <- function(BW, sex, estimated_params){
   #Albumin concentration in blood and interstitial fluid compartments(mol/m^3 = 1e-6* nmol/g)
   #CalbB_init <- f_alb_avail*486*1e-06 # #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
   
+  CalbKB_init <- CalbB_init
+  CalbLB_init <- CalbB_init
+  CalbSTB_init <- CalbB_init
+  CalbINB_init <- CalbB_init
+  CalbMB_init <- CalbB_init
+  CalbAB_init <- CalbB_init
+  CalbRB_init <- CalbB_init
+  CalbBoB_init <- CalbB_init
+  CalbLuB_init <- CalbB_init
+  CalbSPB_init <- CalbB_init
+  CalbGoB_init <- CalbB_init
+  CalbHB_init <- CalbB_init
+  CalbBrB_init <- CalbB_init
+  CalbSKB_init <- CalbB_init
+  
   #Albumin concentration in interstitial fluid compartments(mol/m^3 = 1e-6* nmol/g)
-  CalbKF_init <- f_alb_avail*243*1e-6 # #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
-  CalbLF_init <- f_alb_avail*243*1e-6 # #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
-  CalbSTF_init <- f_alb_avail*146*1e-6 # [umol/L]*1e-6 -->(mol/L), same as Gut (assumption)
-  CalbINF_init <- f_alb_avail*146*1e-6 #[umol/L]*1e-6 -->(mol/L), same as Gut (assumption)
-  CalbMF_init <- f_alb_avail*146*1e-6 #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
-  CalbAF_init <- f_alb_avail*73*1e-6 #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
-  CalbRF_init <- f_alb_avail*73*1e-6 #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
-  CalbBoF_init <-f_alb_avail* 73*1e-6 #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
-  CalbLuF_init <- f_alb_avail*CalbINF_init #assumption 
-  CalbLuAF_init <- f_alb_avail*10/100 * CalbB_init #based on Woods et al. 2015 statement https://doi.org/10.1016/j.jconrel.2015.05.269
-  
-  CalbSPF_init <- f_alb_avail*243e-6 #[umol/L]*1e-6 -->(mol/L), same as liver (assumption)
-  CalbGoF_init <- f_alb_avail*41/Mr_albumin #mg/mL-->  (mol/L) from https://doi.org/10.1210/endo-116-5-1983 --> 41 mg/mL, MW=65 kg/mol
-  CalbHF_init <- f_alb_avail* 65/Mr_albumin##mg/mL--> (mol/L) https://doi.org/10.1007/s12291-010-0042-x --> 6.5 g/100 g tissue, MW=65 kg/mol 
-  CalbBrF_init <- f_alb_avail*8e-2/Mr_albumin  ##mg/mL--> (mol/L) https://doi.org/10.1016/0014-4886(90)90158-O --> 0.08 g/L, MW=65 kg/mol 
-  CalbSKF_init <- f_alb_avail*21/Mr_albumin ##mg/mL-->  (mol/L) https://doi.org/10.1111/j.1748-1716.1973.tb05464.x -->Table 2: 2.1 g/100 mL
-  
+  # CalbKF_init <- f_alb_avail*243*1e-6 # #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
+  # CalbLF_init <- f_alb_avail*243*1e-6 # #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
+  # CalbSTF_init <- f_alb_avail*146*1e-6 # [umol/L]*1e-6 -->(mol/L), same as Gut (assumption)
+  # CalbINF_init <- f_alb_avail*146*1e-6 #[umol/L]*1e-6 -->(mol/L), same as Gut (assumption)
+  # CalbMF_init <- f_alb_avail*146*1e-6 #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
+  # CalbAF_init <- f_alb_avail*.*1e-6 #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
+  # CalbRF_init <- f_alb_avail*73*1e-6 #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
+  # CalbBoF_init <-f_alb_avail* 73*1e-6 #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
+  # CalbLuF_init <- f_alb_avail*CalbINF_init #assumption 
+  # 
+  # CalbSPF_init <- f_alb_avail*243e-6 #[umol/L]*1e-6 -->(mol/L), same as liver (assumption)
+  # CalbGoF_init <- f_alb_avail*41/Mr_albumin #mg/mL-->  (mol/L) from https://doi.org/10.1210/endo-116-5-1983 --> 41 mg/mL, MW=65 kg/mol
+  # CalbHF_init <- f_alb_avail* 65/Mr_albumin##mg/mL--> (mol/L) https://doi.org/10.1007/s12291-010-0042-x --> 6.5 g/100 g tissue, MW=65 kg/mol 
+  # CalbBrF_init <- f_alb_avail*8e-2/Mr_albumin  ##mg/mL--> (mol/L) https://doi.org/10.1016/0014-4886(90)90158-O --> 0.08 g/L, MW=65 kg/mol 
+  # CalbSKF_init <- f_alb_avail*21/Mr_albumin ##mg/mL-->  (mol/L) https://doi.org/10.1111/j.1748-1716.1973.tb05464.x -->Table 2: 2.1 g/100 mL
+  # 
   #Interstitial/plasma concentration ratio (IPR)
   #values from Kawai et al., 1994, Table C-I
-  
   IPR_K = 0.5
   IPR_L = 0.5
   IPR_ST = 0.5
@@ -194,20 +215,22 @@ create_variable_params <- function(BW, sex, estimated_params){
   IPR_Bo = 0.5 #assumption
   IPR_R = (IPR_K+IPR_L+IPR_ST+IPR_IN+IPR_M+IPR_A+IPR_Lu+IPR_Sp+IPR_H+IPR_SK+IPR_Br+IPR_Go+IPR_Bo)/13 #average IPR of all the included organs (kg=L)
   
-  CalbKB_init <- CalbKF_init*(1/IPR_K) 
-  CalbLB_init <- CalbLF_init*(1/IPR_L) 
-  CalbSTB_init <- CalbLF_init*(1/IPR_ST)
-  CalbINB_init <- CalbINF_init*(1/IPR_IN)
-  CalbMB_init <- CalbMF_init*(1/IPR_M)
-  CalbAB_init <- CalbAF_init*(1/IPR_A)
-  CalbRB_init <- CalbRF_init*(1/IPR_R)
-  CalbBoB_init <- CalbBoF_init*(1/IPR_Bo)
-  CalbLuB_init <- CalbLuF_init*(1/IPR_Lu)
-  CalbSPB_init <- CalbSPF_init*(1/IPR_Sp)
-  CalbGoB_init <- CalbGoF_init*(1/IPR_Go)
-  CalbHB_init <- CalbHF_init*(1/IPR_H)
-  CalbBrB_init <- CalbBrF_init*(1/IPR_Br)
-  CalbSKB_init <- CalbSKF_init*(1/IPR_SK)
+  CalbKF_init  <- CalbKB_init* IPR_K
+  CalbLF_init <- CalbLB_init* IPR_L 
+  CalbSTF_init <- CalbSTB_init* IPR_ST
+  CalbINF_init <- CalbINB_init* IPR_IN
+  CalbMF_init <- CalbMB_init* IPR_M
+  CalbAF_init <- CalbAB_init* IPR_A
+  CalbRF_init <- CalbRB_init* IPR_R
+  CalbBoF_init <- CalbBoB_init* IPR_Bo
+  CalbLuF_init <- CalbLuB_init* IPR_Lu
+  CalbSPF_init <- CalbSPB_init* IPR_Sp
+  CalbGoF_init <- CalbGoB_init* IPR_Go
+  CalbHF_init <- CalbHB_init* IPR_H
+  CalbBrF_init <- CalbBrB_init* IPR_Br
+  CalbSKF_init <- CalbSKB_init* IPR_SK
+  CalbLuAF_init <- 10/100 * CalbB_init #based on Woods et al. 2015 statement https://doi.org/10.1016/j.jconrel.2015.05.269
+  
   
   #Alpha2mu-globulin concentration in kidney tissue (mol/L)
   if (sex == "M"){
@@ -311,7 +334,7 @@ create_fixed_params <- function(user.input){
     VK <- PVK * BW #kidney volume kg=L 
     PVKB <- 0.16 #Brown et al. 1997
     VKB <- PVKB * PVK * BW #kidney blood volume kg=L
-    PVKF <- 0.2 #pkSim
+    PVKF <- 0.13 # Wolgast et al. (1981) [https//doi.org/10.1152/ajprenal.1981.241.2.F105]
     VKF <- PVKF * PVK * BW #kidney interstitial fluid volume kg=L
     
     # Here we assume that the length of each segment of the renal tubule is 
@@ -355,7 +378,6 @@ create_fixed_params <- function(user.input){
     VDT <- 2*pi*((RDT_sup^2)*LDT_sup+(RDT_deep^2)*LDT_deep)*1e3#Distal tubule (superficial+deep)
     VCD <- 2*pi*((Rduct_cort^2)*Lduct_cort+(Rduct_med^2)*Rduct_med)*1e3 #collecting duct (Cortical+Outer)
     VFil <-  VPT+VDAL+VDT+VCD #L
-    #VFil <- 0.25/1000 #renal filtrate volume in L,  from Cheng et al., 2017 (from Arthur, 1986; Bonvalet, 1981)
     # We hypothesize that when kidney is weighted the renal tubule content remains inside 
     VKT <- VK - VKF - VFil#kidney tissue volume kg=L
     
@@ -512,24 +534,17 @@ create_fixed_params <- function(user.input){
     ##Capillary surface area for each tissue (Ai) as percentage of body weight (m^2/kg),
     #values from pkSim "Endothelial Surface area", Niederalt et al., 2018, https://doi.org/10.1007/s10928-017-9559-4
     
-    PAK <- 231.7e-4/0.23 #m^2/kg
-    AK_total <- PAK * BW #kidney surface area (m^2)
-    
-    #PAKG <- 68.90e-4 #Kirkman and Stowell, 1942, https://doi.org/10.1002/ar.1090820310
-    #AKG <- PAKG * VK * 1e3 #the surface area of glomerular capillary (m^2)
-    
     #Peritubular capillary density in From Gazzard et al. (2024) [https://doi.org/10.1002/ar.25576] 
     d_peritubular <- 0.024 #um^2/um^3,
-    VK_gazzard <- 0.00363
-    Vcortex <- 1295*VK/VK_gazzard #mm^3, NEED TO RECHECK IF IT REFERS TO ONE OF BOTH KIDNEYS
+    VK_gazzard <- 0.00363#L
+    Vcortex <- 2*1295*VK/VK_gazzard #mm^3, NEED TO RECHECK IF IT REFERS TO ONE OF BOTH KIDNEYS
     A_peritubular <- (d_peritubular*Vcortex*1e3/1e6) #m^2
-    A_peritubular_PTC <- A_peritubular * LPT/ (LPT + LDT)
-    A_peritubular_DTC <- A_peritubular * LDT/ (LPT + LDT)
+    A_peritubular_PTC <- A_peritubular * VPTC/ (VPTC + VDALC)
+    A_peritubular_DTC <- A_peritubular * VDALC/ (VPTC + VDALC)
     
     # Rest of kidney capillaries after subtracting the peritubular capillaries
     # We assume that these capillaries are in contact with the interstitial space
-    AK_rest <- AK_total - A_peritubular
-    
+
     PAL <- 1136e-4/0.23 #m^2/kg
     AL <- PAL * BW #liver surface area (m^2)
     
@@ -807,14 +822,6 @@ create_fixed_params <- function(user.input){
     
     # Following the calculations  of Lin et al. (2023) for Caco-2 cells
     ClINFT_unscaled= 18.1 #uL/min/mg protein, Kimura et al. 2017
-    muscle_protein <- 158.45 #mg/g muscle (protein data from Cheek et al.,1971 
-    #and muscle mass from Caster et al.,1956)
-    intestine_protein <- muscle_protein
-    intestine_protein_total <- intestine_protein*(1000*VINT)
-    muscle_protein <- 158.45 #mg/g muscle (protein data from Cheek et al.,1971 
-    #and muscle mass from Caster et al.,1956)
-    
-    
     Awell = 9 #cm^2 (for a 35 mm culture dish)
     Swell = 1.12 #cm^2
     well_protein = 0.346 #mg protein
@@ -825,8 +832,8 @@ create_fixed_params <- function(user.input){
     #  Lin et al. (2023) used data from kimura et al. (2017) [http://dx.doi.org/10.1016/j.toxlet.2017.05.012]
     # which is more appropriate for 
     # For endothelial and cellular permeability we use the Ryu et al. (2024) value
-    Papp = Papp_RYU
-    P_passive = ( (Papp_LIN/100) * AINL)*1000 #L/h
+    #Papp = Papp_RYU
+    P_passive = ( (Papp/100) * AINL)*1000 #L/h
     
     #passive diffusion rates, in L/h
     kLFLT = ((Papp/100) * AcL)*1000 #m^3/h * 1000 --> L/h
@@ -1391,13 +1398,13 @@ ode.func <- function(time, inits, params){
                koff_alb*CVenb*VVen - kon_alb*CalbVenf*CVenf*VVen 
     #Kidney
     #blood subcompartment
-    dMKBf = QBK*CArtf - QBK*CKBf - PeffK*AK_rest*(CKBf-CKFf)  - PeffK*A_peritubular_PTC*(CKBf-CPTCf) -
+    dMKBf = QBK*CArtf - QBK*CKBf   - PeffK*A_peritubular_PTC*(CKBf-CPTCf) -
             PeffK*A_peritubular_DTC*(CKBf-CDTCf) - QparaKi*(1-SKi)*CKBf -
             (VmK_Oat1*CKBf/(KmK_Oat1+CKBf)) - (VmK_Oat3*CKBf/(KmK_Oat3+CKBf))+ (VmK_baso*CPTCf/(KmK_baso+CPTCf))+
             koff_alb*CKBb*VKB - kon_alb*CalbKBf*CKBf*VKB
     
     #interstitial fluid subcompartment
-    dMKFf = QparaKi*(1-SKi)*CKBf+ PeffK*AK_rest*(CKBf-CKFf) - kDalcF*(CKFf-CDALCf) -
+    dMKFf = QparaKi*(1-SKi)*CKBf - kDalcF*(CKFf-CDALCf) -
             kCdcF*(CKFf-CCDCf)   - kKTrestF*(CKFf-CKTrestf) + 
             koff_alb*CKFb*VKF - kon_alb*CalbKFf*CKFf*VKF
     
@@ -1707,7 +1714,12 @@ ode.func <- function(time, inits, params){
     
     'CVen'=CVen, 'CVenb'=CVenb, 'CVenf'=CVenf, 'CArt'=CArt, 'CArtf'=CArtf, 'CArtb'=CArtb,
     'CKB'=CKB, 'CKBf'=CKBf, 'CKBb'=CKBb, 'CKF'=CKF, 'CKFf'=CKFf, 'CKFb'=CKFb, 'CKT'=CKT,
-    'CKTf'=CKTf, 'CKTb'=CKTb,  'CBladder' = CBladder, 'CLB'=CLB, 'CLBf'=CLBf, 'CLBb'=CLBb, 
+    'CKTf'=CKTf, 'CKTb'=CKTb,  'CBladder' = CBladder,'CKTrestf' = CKTrestf,
+    'CKTrestb' =CKTrestb, 'CPTCf' = CPTCf,
+    'CPTCb' = CPTCb, 'CDALCf' = CDALCf, 'CDALCb' = CDALCb,
+    'CDTCf' = CDTCf, 'CDTCb' = CDTCb, 'CCDCf' = CCDCf,
+    'CCDCb' = CCDCb, 'CPT' = CPT, 'CDAL' = CDAL, 'CDT' = CDT, 'CCD' = CCD,
+    'CLB'=CLB, 'CLBf'=CLBf, 'CLBb'=CLBb, 
     'CLF'=CLF, 'CLFf'=CLFf, 'CLFb'=CLFb, 'CLT'=CLT, 'CLTf'=CLTf, 'CLTb'=CLTb, 
     'CSTB'=CSTB, 'CSTBf'=CSTBf, 'CSTBb'=CSTBb, 'CSTF'=CSTF, 'CSTFf'=CSTFf, 'CSTFb'=CSTFb,
     'CSTTf'=CSTTf, 'CINB'=CINB, 'CINBf'=CINBf, 'CINBb'=CINBb, 'CINF'=CINF, 'CINFf'=CINFf,
@@ -1723,7 +1735,7 @@ ode.func <- function(time, inits, params){
     'CBrTf'=CBrTf, 'CGoB'=CGoB, 'CGoBf'=CGoBf, 'CGoBb'=CGoBb, 'CGoF'=CGoF, 'CGoFf'=CGoFf, 
     'CGoFb'=CGoFb, 'CGoTf'=CGoTf, 'CSKB'=CSKB, 'CSKBf'=CSKBf, 'CSKBb'=CSKBb, 'CSKF'=CSKF,
     'CSKFf'=CSKFf, 'CSKFb'=CSKFb, 'CSKTf'=CSKTf, 'CBoB'=CBoB, 'CBoBf'=CBoBf, 'CBoBb'=CBoBb,
-    'CBoF'=CBoF, 'CBoFf'=CBoFf, 'CBoFb'=CBoFb, 'CBoTf'=CBoTf, 
+    'CBoF'=CBoF, 'CBoFf'=CBoFf, 'CBoFb'=CBoFb, 'CBoTf'=CBoTf,     
     
     'Cblood'=Cblood, 'Mblood'=Mblood, 'Cplasma'=Cplasma, 
     'Ckidney'=Ckidney, 'Mkidney'=Mkidney, 'Cliver'=Cliver, 'Mliver'=Mliver, 
@@ -3598,7 +3610,7 @@ Kemp_OR_Ffeces_low <- openxlsx::read.xlsx("Data/PFOA_Feces_female_oral_1_mg_per_
 Kemp_OR_Mfeces_low <- openxlsx::read.xlsx("Data/PFOA_Feces_male_oral_1_mg_per_kg-Loc.xlsx")
 
 
-setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/proximal_tubule/detailed_kidney_anatomy_2ParamSets")
+setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/proximal_tubule/scenario3")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -3624,16 +3636,25 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
               "maxeval" = 500, 
               "print_level" = 1)
 
+ClINFT_unscaled= 18.1 #uL/min/mg protein, Kimura et al. 2017
+Awell = 9 #cm^2 (for a 35 mm culture dish)
+Swell = 1.12 #cm^2
+well_protein = 0.346 #mg protein
+protein_per_well = (well_protein * Awell)/Swell #mg protein/well
+Papp_Kimura = (ClINFT_unscaled*60*1e-06*1e3*protein_per_well)/Awell  #cm/h,at  pH = 6.0
+Papp_RYU = 1.46e-6*3600 # cm/h, at pH = 7.4 from Ryu et al. (2024) [https://doi.org/10.1016/j.chemosphere.2024.142390]
+
+
 # Create initial conditions (zero initialisation)
 #Parameter names:
 # Male RAFOatp_k, Male RAFOat1, Male RAFOat3, Male RAFOatp_l,Male RAFNtcp
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
 
-N_pars <- 12 # Number of parameters to be fitted
-fit <-  c(rep(log(0.01),10), log(1e5), log(0.01))
+N_pars <- 11 # Number of parameters to be fitted
+fit <-  c(rep(log(1),7), log(mean(c(Papp_Kimura,Papp_RYU))), log(1),rep(log(1e-3),2))
 
-lb = c(rep(log(1e-20),9), log(1e-4),log(1e4), log(1e-6))
-ub = c(rep(log(1e10),  9), log(1e2) ,log(1e6),  log(1e2) )
+lb = c(rep(log(1e-20),7), log(Papp_RYU),log(1e-2), rep(log(1e-4),2))
+ub = c(rep(log(1e10),  7), log(Papp_Kimura) ,log(10),  rep(log(1e1),2))
 
 parameters <- create_all_fixed_params()
 # Run the optimization algorithm to estimate the parameter values
@@ -3647,7 +3668,7 @@ optimizer <- nloptr::nloptr( x0= fit,
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
-save.image("detailed_kidney_anatomy_2ParamSets.RData")
+save.image("scenario3.RData")
 
 
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues

@@ -1,3 +1,4 @@
+# Check notes for description of scenario
 #female increase in BW: 3.5 g/d
 #Male increase in BW: 5.9 g.d
 
@@ -11,28 +12,25 @@ create_variable_params <- function(BW, sex, estimated_params){
   # Estimated parameters
   if(sex == "M"){
     RAFOatp_k <- estimated_params[1]
-    RAFOat1 <- estimated_params[3]
-    CL_int <- estimated_params[5] #uL/min/million hepatocytes
   }else{
     RAFOatp_k <- estimated_params[2]
-    RAFOat1 <- estimated_params[4]
-    CL_int <- estimated_params[6] #uL/min/million hepatocytes
-    
   }
-  RAFOatp_l <- estimated_params[7]
+  RAFOat3 <- estimated_params[3]
+  CL_int <- estimated_params[4] #uL/min/million hepatocytes
+  RAFOatp_l <- estimated_params[5]
   RAFUrat <- RAFOatp_k
-  RAFOat3 <- RAFOat1
+  RAFOat1 <- 0
   RAFOatp2_l <- RAFOatp_l
-  RAFOatp_lu_ap <- estimated_params[8]
+  RAFOatp_lu_ap <- estimated_params[6]
   RAFOatp_lu_bas <- RAFOatp_lu_ap
   RAFNtcp <- RAFOatp_l
-  RAFOatp2_Int <- estimated_params[9]
+  RAFOatp2_Int <- estimated_params[7]
   
-  RAF_papp <- 1
+  RAF_papp <- estimated_params[8]
   f_fabp_avail <- 1
   f_alb_avail <- 1
   
-  koff_alb <-  estimated_params[10]
+  koff_alb <-  estimated_params[9]
   koff_fabp <-  koff_alb
   koff_a2u <- koff_alb
   
@@ -41,12 +39,20 @@ create_variable_params <- function(BW, sex, estimated_params){
   KmK_baso <- 1e20
   KmK_api <-   1e20
   KLfabp <- (1.2e5+4e4+1.9e4)  #[L/mol]*1e-3 , value from Cheng et al. (2017)
-  Ka <- estimated_params[11]# 5.8e05 from Rue et al. (2024)#mol/L
-  CLfeces <- estimated_params[12]
+  Ka <- 5.8e05 # 5.8e05 from Rue et al. (2024)#mol/L
+  CLfeces_unscaled <- estimated_params[10] #in L/h/BW^(-0.25)
+  CLfeces <- CLfeces_unscaled*BW^(-0.25)  #in L/h
   
   MW = 414.07 #g/mol, PFOA molecular weight
   VIN <-2.24e-2 * BW #intestine volume, in L
-  VL <- 3.66e-2  * BW #liver volume, in L
+  
+  #Liver
+  PVL <- 3.66e-2 #Brown et al. 1997
+  VL <- PVL * BW #liver volume kg=L
+  PVLF <- 0.16  #pkSim
+  VLF <- PVLF * PVL* BW #liver interstitial fluid volume kg=L
+  VLT <- VL - VLF #liver tissue volume kg=L
+  
   VK <- 7.3e-3 * BW #kidney volume, in L
   VLu <- 0.48e-2 * BW #Lung volume, in L
   
@@ -106,42 +112,36 @@ create_variable_params <- function(BW, sex, estimated_params){
   
   #oatp1-liver
   VmL_Oatp_in_vitro= 9.3 #nmol/mg protein/min  (Weaver et al. 2010)
-  VmL_Oatp_scaled = 60*VmL_Oatp_in_vitro*MW*liver_protein_per_gram*(VL*1000)/1000   #physiologically scaled to in vivo, ug/h
+  VmL_Oatp_scaled = 60*VmL_Oatp_in_vitro*MW*liver_protein_per_gram*(VLT*1000)/1000   #physiologically scaled to in vivo, ug/h
   VmL_Oatp = VmL_Oatp_scaled*RAFOatp_l #in vivo value, in  ug/h
   KmL_Oatp = KmK_Oatp #same as kidney
   
   #oatp2b1-liver
   VmL_Oatp2_in_vitro= 1493e-3 #nmol/mg protein/min  (Lin et al. 2023)
   #physiologically scaled to in vivo
-  VmL_Oatp2_scaled = 60*VmL_Oatp2_in_vitro*MW*liver_protein_per_gram*(VL*1000)/1000  #ug/h
+  VmL_Oatp2_scaled = 60*VmL_Oatp2_in_vitro*MW*liver_protein_per_gram*(VLT*1000)/1000  #ug/h
   VmL_Oatp2 = VmL_Oatp2_scaled*RAFOatp2_l #in vivo value, in  ug/h
   KmL_Oatp2 = 148.68*MW #umol/L (Lin et al. 2023) --> ug/L
   
   #Ntcp liver
   VmL_Ntcp_in_vitro= 3#nmol/mg protein/min   Ruggiero et al. 2021
   #physiologically scaled to in vivo
-  VmL_Ntcp_scaled = 60*VmL_Ntcp_in_vitro*MW*liver_protein_per_gram*(VL*1000)/1000 # ug/h 
+  VmL_Ntcp_scaled = 60*VmL_Ntcp_in_vitro*MW*liver_protein_per_gram*(VLT*1000)/1000 # ug/h 
   VmL_Ntcp = VmL_Ntcp_scaled*RAFNtcp #in vivo value, in  ug/h
   KmL_Ntcp= 20 * MW #umol/L, Ruggiero et al. 2021 --> ug/L
-  
-  # #bile_transp_liver
-  # Vmbile_transp_in_vitro= mean(c(VmL_Oatp_in_vitro,VmL_Oatp2_in_vitro, VmL_Ntcp_in_vitro )) #nmol/mg protein/min  (mean value from other liver transporters)
-  # Vmbile_transp_scaled = 60*Vmbile_transp_in_vitro*MW*liver_protein_per_gram*(VL*1000)/1000   #physiologically scaled to in vivo, ug/h
-  # Vmbile_transp = Vmbile_transp_scaled*RAFbile_transp #in vivo value, in  ug/h
-  # Kmbile_transp = mean(c(KmL_Ntcp,KmL_Oatp2, KmL_Oatp )) #same as kidney
   
   #Lung
   lung_protein_per_gram <- 134 # 134 mg/mL tissue --> 134 mg/g tissue, Figure 2, https://doi.org/10.1007/s00580-021-03242-z 
   
   #oatp-lung-ap (from ALF to tissue)
   VmLu_Oatp_ap_in_vitro= 9.3 #nmol/mg protein/min  (Weaver et al. 2010)
-  VmLu_Oatp_ap_scaled = 60*VmLu_Oatp_ap_in_vitro*MW*lung_protein_per_gram*(VLu*1000)/1000   #physiologically scaled to in vivo, ug/h
+  VmLu_Oatp_ap_scaled = 60*VmLu_Oatp_ap_in_vitro*MW*lung_protein_per_gram*(VLuT*1000)/1000   #physiologically scaled to in vivo, ug/h
   VmLu_Oatp_ap = VmLu_Oatp_ap_scaled*RAFOatp_lu_ap #in vivo value, in  ug/h
   KmLu_Oatp_ap = KmK_Oatp #same as kidney
   
   #oatp-lung-bas (from IS to tissue)
   VmLu_Oatp_bas_in_vitro= 9.3 #nmol/mg protein/min  (Weaver et al. 2010)
-  VmLu_Oatp_bas_scaled = 60*VmLu_Oatp_bas_in_vitro*MW*lung_protein_per_gram*(VLu*1000)/1000   #physiologically scaled to in vivo, ug/h
+  VmLu_Oatp_bas_scaled = 60*VmLu_Oatp_bas_in_vitro*MW*lung_protein_per_gram*(VLuT*1000)/1000   #physiologically scaled to in vivo, ug/h
   VmLu_Oatp_bas = VmLu_Oatp_bas_scaled*RAFOatp_lu_bas #in vivo value, in  ug/h
   KmLu_Oatp_bas = KmK_Oatp #same as kidney
   
@@ -164,7 +164,7 @@ create_variable_params <- function(BW, sex, estimated_params){
   CalbSTF_init <- f_alb_avail*146*1e-6 # [umol/L]*1e-6 -->(mol/L), same as Gut (assumption)
   CalbINF_init <- f_alb_avail*146*1e-6 #[umol/L]*1e-6 -->(mol/L), same as Gut (assumption)
   CalbMF_init <- f_alb_avail*146*1e-6 #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
-  CalbAF_init <- f_alb_avail*73*1e-6 #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
+  CalbAF_init <- f_alb_avail*.*1e-6 #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
   CalbRF_init <- f_alb_avail*73*1e-6 #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
   CalbBoF_init <-f_alb_avail* 73*1e-6 #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
   CalbLuF_init <- f_alb_avail*CalbINF_init #assumption 
@@ -178,7 +178,6 @@ create_variable_params <- function(BW, sex, estimated_params){
   
   #Interstitial/plasma concentration ratio (IPR)
   #values from Kawai et al., 1994, Table C-I
-  
   IPR_K = 0.5
   IPR_L = 0.5
   IPR_ST = 0.5
@@ -512,24 +511,17 @@ create_fixed_params <- function(user.input){
     ##Capillary surface area for each tissue (Ai) as percentage of body weight (m^2/kg),
     #values from pkSim "Endothelial Surface area", Niederalt et al., 2018, https://doi.org/10.1007/s10928-017-9559-4
     
-    PAK <- 231.7e-4/0.23 #m^2/kg
-    AK_total <- PAK * BW #kidney surface area (m^2)
-    
-    #PAKG <- 68.90e-4 #Kirkman and Stowell, 1942, https://doi.org/10.1002/ar.1090820310
-    #AKG <- PAKG * VK * 1e3 #the surface area of glomerular capillary (m^2)
-    
     #Peritubular capillary density in From Gazzard et al. (2024) [https://doi.org/10.1002/ar.25576] 
     d_peritubular <- 0.024 #um^2/um^3,
     VK_gazzard <- 0.00363
-    Vcortex <- 1295*VK/VK_gazzard #mm^3, NEED TO RECHECK IF IT REFERS TO ONE OF BOTH KIDNEYS
+    Vcortex <- 2*1295*VK/VK_gazzard #mm^3, NEED TO RECHECK IF IT REFERS TO ONE OF BOTH KIDNEYS
     A_peritubular <- (d_peritubular*Vcortex*1e3/1e6) #m^2
     A_peritubular_PTC <- A_peritubular * LPT/ (LPT + LDT)
     A_peritubular_DTC <- A_peritubular * LDT/ (LPT + LDT)
     
     # Rest of kidney capillaries after subtracting the peritubular capillaries
     # We assume that these capillaries are in contact with the interstitial space
-    AK_rest <- AK_total - A_peritubular
-    
+
     PAL <- 1136e-4/0.23 #m^2/kg
     AL <- PAL * BW #liver surface area (m^2)
     

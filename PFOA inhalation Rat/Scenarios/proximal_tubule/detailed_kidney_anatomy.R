@@ -127,9 +127,9 @@ create.params <- function(user.input){
     f_CDC_prot_to_tub_prot <- 0.0766
     
     VPTC <- f_tubular*f_PTC_prot_to_tub_prot*VKT #for comparison, for 300g male rat we have 0.38mL and Worley and Fisher have 0.34 mL
-    VDALC <- f_tubular*f_DALC_prot_to_tub_prot*VKT #for comparison, for 300g male rat we have 0.38mL and Worley and Fisher have 0.34 mL
-    VDTC <- f_tubular*f_DTC_prot_to_tub_prot*VKT #for comparison, for 300g male rat we have 0.38mL and Worley and Fisher have 0.34 mL
-    VCDC <- f_tubular*f_CDC_prot_to_tub_prot*VKT #for comparison, for 300g male rat we have 0.38mL and Worley and Fisher have 0.34 mL
+    VDALC <- f_tubular*f_DALC_prot_to_tub_prot*VKT 
+    VDTC <- f_tubular*f_DTC_prot_to_tub_prot*VKT 
+    VCDC <- f_tubular*f_CDC_prot_to_tub_prot*VKT
     VKTrest <- (1-f_tubular)*VKT
         
     VBladder <- 0.001 #https://doi.org/10.1152/physrev.00038.2003 (CHECK)
@@ -274,7 +274,7 @@ create.params <- function(user.input){
     #Peritubular capillary density in From Gazzard et al. (2024) [https://doi.org/10.1002/ar.25576] 
     d_peritubular <- 0.024 #um^2/um^3,
     VK_gazzard <- 0.00363
-    Vcortex <- 1295*VK/VK_gazzard #mm^3, NEED TO RECHECK IF IT REFERS TO ONE OF BOTH KIDNEYS
+    Vcortex <- 2*1295*VK/VK_gazzard #mm^3, NEED TO RECHECK IF IT REFERS TO ONE OF BOTH KIDNEYS
     A_peritubular <- (d_peritubular*Vcortex*1e3/1e6) #m^2
     A_peritubular_PTC <- A_peritubular * LPT/ (LPT + LDT)
     A_peritubular_DTC <- A_peritubular * LDT/ (LPT + LDT)
@@ -291,7 +291,7 @@ create.params <- function(user.input){
     PASTL<- 33.77e-4/0.23 #m^2/kg
     ASTL<- PASTL * VSTL #stomach lumen surface area (m^2)
     
-    PAIN <- 74.82e-4/0.23 #m^2/kg
+    PAIN <- (74.82e-4+20.4e-4)/0.23 #m^2/kg #large and small intestine
     AIN <- PAIN * BW #intestine surface area (m^2)
     
     #Calculations of rat intestinal lumen surface area based on Kothari et al. (2020),https://doi.org/10.1002/btm2.10146
@@ -482,7 +482,7 @@ create.params <- function(user.input){
       # Females have 44% more bile flow, source: doi:10.1042/cs0550253
       Qbile = 1.44* PQbile* VL  #L/h
     }
-    Qfeces <- 100*(8.18/0.21)*BW/24/1000 #g/kg BW, based on Cui et al.(2010)
+    Qfeces <-(8.18/0.21)*BW/24/1000 #g/kg BW, based on Cui et al.(2010)
     feces_density <- 1.29 #g/cm^3 --> g/mL from Lupton 1986, Fig 1. Fiber free control diet, https://doi.org/10.1093/jn/116.1.164
     
     if (sex == "M"){
@@ -2143,7 +2143,7 @@ obj.func <- function(x, dataset){
   # Kim ORAL female tissues
   #-------------------------
   ##########################
-  # Set up simulations for the 6th case, i.e. kim (2016) IV female tissues
+  # Set up simulations for the 6th case, i.e. kim (2016) oral female tissues
   BW <- 0.25 #kg, from Kim et al. 2018
   admin.dose_per_g <- 1 # administered dose in mg PFOA/kg BW 
   admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
@@ -3904,7 +3904,7 @@ Kemp_OR_Ffeces_low <- openxlsx::read.xlsx("Data/PFOA_Feces_female_oral_1_mg_per_
 Kemp_OR_Mfeces_low <- openxlsx::read.xlsx("Data/PFOA_Feces_male_oral_1_mg_per_kg-Loc.xlsx")
 
 
-setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/proximal_tubule/detailed_kidney_anatomy")
+setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/proximal_tubule/detailed_kidney_anatomy")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -5369,8 +5369,8 @@ simulations <- list(predictions1 = preds_kudo_high,  predictions2 = preds_kudo_l
                     predictions24 =preds_dzi_IV_Fserum, predictions24 =preds_dzi_OR_Fserum_low, predictions26 =preds_dzi_OR_Fserum_medium,
                     predictions27 =preds_dzi_OR_Fserum_high, predictions28 = preds_kim_OR_Fblood, 
                     predictions29 = preds_kim_IV_Fblood, predictions30 = preds_gus_OR_Mblood, predictions31 = preds_gus_OR_Mtissues,
-                    predictions32 = preds_Kemp_OR_Mfeces_med, predictions33 = preds_Kemp_OR_Mfeces_med,
-                    predictions34 = preds_Kemp_OR_Mfeces_low, predictions35 = preds_Kemp_OR_Mfeces_low)
+                    predictions32 = preds_Kemp_OR_Ffeces_med, predictions33 = preds_Kemp_OR_Mfeces_med,
+                    predictions34 = preds_Kemp_OR_Ffeces_low, predictions35 = preds_Kemp_OR_Mfeces_low)
 
 
 # Iterate over all existing experiments and create the accompanying plots
