@@ -4,7 +4,8 @@
 
 library(deSolve)
 
-create_variable_params <- function(BW, sex, estimated_params){
+create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
+  
   # BW in kg
   # Cheng and Ng 2017 Table S1
   # Volume of tissue i as percentage of body weight (PVi, unitless) and % volume (Vi, m^3),
@@ -17,7 +18,7 @@ create_variable_params <- function(BW, sex, estimated_params){
   }else{
     RAFOatp_k <- estimated_params[2]
     CL_int <- estimated_params[11] #uL/min/million hepatocytes
-
+    
   }
   RAFOat3 <- estimated_params[3]
   RAFOatp_l <- estimated_params[4]
@@ -65,7 +66,7 @@ create_variable_params <- function(BW, sex, estimated_params){
   # These are explained thoroughly in a later section
   f_tubular <- 0.8
   f_PTC_prot_to_tub_prot <- 0.6939
-
+  
   MW = 414.07 #g/mol, PFOA molecular weight
   muscle_protein <- 158.45 #mg/g muscle (protein data from Cheek et al.,1971 
   #and muscle mass from Caster et al.,1956) ***DO WE BELIEVE THAT THIS IS PER GRAM OF TOTAL ORGAN OR TISSUE?
@@ -266,6 +267,69 @@ create_variable_params <- function(BW, sex, estimated_params){
   kon_a2u <- Ka2u * koff_a2u#1/M/s
   kon_fabp <- KLfabp * koff_fabp #1/M/s
   
+  # Following the calculations  of Lin et al. (2023) for Caco-2 cells
+  ClINFT_unscaled= 18.1 #uL/min/mg protein, Kimura et al. 2017
+  Awell = 9 #cm^2 (for a 35 mm culture dish)
+  Swell = 1.12 #cm^2
+  well_protein = 0.346 #mg protein
+  protein_per_well = (well_protein * Awell)/Swell #mg protein/well
+  RAF_papp <- 1 
+  Papp_LIN = RAF_papp*(ClINFT_unscaled*60*1e-06*1e3*protein_per_well)/(Awell *2) #cm/h,at  pH = 6.0
+  Papp_RYU = RAF_papp*1.46e-6*3600 # cm/h, at pH = 7.4 from Ryu et al. (2024) [https://doi.org/10.1016/j.chemosphere.2024.142390]
+  #  Lin et al. (2023) used data from kimura et al. (2017) [http://dx.doi.org/10.1016/j.toxlet.2017.05.012]
+  # which is more appropriate for 
+  # For endothelial and cellular permeability we use the Ryu et al. (2024) value
+  #Papp = Papp_RYU
+  P_passive = ( (Papp/100) * fixed_params$AINL)*1000 #L/h
+  
+  #passive diffusion rates, in L/h
+  kLFLT = ((Papp/100) * fixed_params$AcL)*1000 #m^3/h * 1000 --> L/h
+  #kLTLbile = ((Papp/100) * AcLBilec)*1000 #m^3/h * 1000 --> L/h
+  kMFMT = ((Papp/100) * fixed_params$AcM)*1000 #m^3/h * 1000 --> L/h
+  kSTFSTT = ((Papp/100) * fixed_params$AcST)*1000 #m^3/h * 1000 --> L/h 
+  kINFINT = ((Papp/100) * fixed_params$AcIN)*1000 #m^3/h * 1000 --> L/h 
+  kAFAT = ((Papp/100) * fixed_params$AcA)*1000 #m^3/h * 1000 --> L/h 
+  kLuTLuF = ((Papp/100) * fixed_params$AcLu)*1000 #m^3/h * 1000 --> L/h
+  kLuTLuAF = ((Papp/100) * fixed_params$AcALF)*1000 #m^3/h * 1000 --> L/h
+  kSPFSPT = ((Papp/100) * fixed_params$AcSP)*1000 #m^3/h * 1000 --> L/h 
+  kHFHT = ((Papp/100) * fixed_params$AcH)*1000 #m^3/h * 1000 --> L/h 
+  kBrFBrT = ((Papp/100) * fixed_params$AcBr)*1000 #m^3/h * 1000 --> L/h 
+  kGoFGoT = ((Papp/100) * fixed_params$AcGo)*1000 #m^3/h * 1000 --> L/h 
+  kSKFSKT = ((Papp/100) * fixed_params$AcSK)*1000 #m^3/h * 1000 --> L/h
+  kBoFBoT = ((Papp/100) * fixed_params$AcBo)*1000 #m^3/h * 1000 --> L/h
+  kRFRT = ((Papp/100) * fixed_params$AcR)*1000 #m^3/h*1000 --> L/h 
+  
+  #Diffusion rates in L/h between renal tubule filtrate and tubule cells
+  kPtcTu <- ((Papp/100) * fixed_params$APT) *1000 #diffusion between proximal tubule cells and tubule filtrate
+  kDalcTu <- ((Papp/100) * fixed_params$ADAL) *1000 #diffusion between descending/ascending cells and tubule filtrate
+  kDtcTu <- ((Papp/100) * fixed_params$ADT) *1000 #diffusion between distal tubule cells and tubule filtrate
+  kCdcTu <- ((Papp/100) * fixed_params$ACD) *1000 #diffusion between collecting duct cells and tubule filtrate
+  
+  #Diffusion rates in L/h between  tubule cells and interstitial space
+  kDalcF <- ((Papp/100) * fixed_params$AcK_DALC) *1000 #diffusion between proximal tubule cells and interstitial space
+  kCdcF <- ((Papp/100) * fixed_params$AcK_CDC) *1000 #diffusion between descending/ascending cells and interstitial space
+  kKTrestF  <- ((Papp/100) * fixed_params$AcKTrest) *1000 #diffusion between rest of kidney cells and interstitial space
+  
+  #Effective permeability (Peff, in mm/h) for blood (B), liver(L), kidney(K),
+  #stomach(ST),intestine (IN), adipose(A), muscle(M), spleen (SP), heart (H), 
+  #brain (Br), gonads (Go), rest of body(R). Similar to Lin et al. (2023) [https://doi.org/10.1021/acs.est.2c05642.]
+  # we devide the effective permeability by 2 to account for the resistance at both
+  # the apical and basolateral side of the endothelium
+  
+  PeffK <- Papp*10/2 #mm/h
+  PeffL <- Papp*10/2 #mm/h
+  PeffST <- Papp*10/2 #mm/h
+  PeffIN <- Papp*10/2 #mm/h
+  PeffA <- Papp*10/2 #mm/h
+  PeffM <- Papp*10/2 #mm/h
+  PeffR <- Papp*10/2 #mm/h
+  PeffLu <- Papp*10/2 #mm/h
+  PeffSP <- Papp*10/2 #mm/h
+  PeffH <- Papp*10/2 #mm/h
+  PeffBr <- Papp*10/2 #mm/h
+  PeffGo <- Papp*10/2 #mm/h
+  PeffSK <- Papp*10/2 #mm/h
+  PeffBo <- Papp*10/2 #mm/h
   
   return(list(
     
@@ -305,11 +369,26 @@ create_variable_params <- function(BW, sex, estimated_params){
     'VmK_Urat'=VmK_Urat, 'KmK_Urat'=KmK_Urat, 
     
     'KmK_baso' = KmK_baso, 'KmK_api' = KmK_api,
-    'VmK_baso' = VmK_baso,'VmK_api' = VmK_api
+    'VmK_baso' = VmK_baso,'VmK_api' = VmK_api,
+    
+    'Papp' = Papp, 'P_passive' = P_passive,
+    'kKTrestF'=kKTrestF, 'kCdcF' = kCdcF, 'kDalcF' = kDalcF,
+    'kPtcTu'=kPtcTu, 'kDalcTu' = kDalcTu, 'kDtcTu' = kDtcTu, 'kCdcTu' = kCdcTu, 
+    'kLFLT'=kLFLT,  'kAFAT'=kAFAT, 
+    'kRFRT'=kRFRT,
+    'kMFMT'=kMFMT, 'kLuTLuF' =kLuTLuF, 'kLuTLuAF'=kLuTLuAF, 'kSPFSPT' =kSPFSPT,
+    'kSTFSTT' =kSTFSTT, 'kINFINT' =kINFINT, 'kHFHT' =kHFHT,
+    'kBrFBrT' =kBrFBrT, 'kGoFGoT' =kGoFGoT,
+    'kSKFSKT' =kSKFSKT, 'kBoFBoT'=kBoFBoT,
+    
+    'PeffK'=PeffK, 'PeffL'=PeffL, 
+    'PeffA'=PeffA, 'PeffM'=PeffM, 'PeffR'=PeffR, 'PeffLu' = PeffLu,
+    'PeffSP'=PeffSP, 'PeffH'=PeffH, 'PeffBr'=PeffBr, 'PeffST' = PeffST,
+    'PeffIN'=PeffIN, 'PeffGo'=PeffGo,
+    'PeffSK' = PeffSK,  'PeffBo' = PeffBo
+    
     
   ))
-  
-  
 }  
 
 create_fixed_params <- function(user.input){
@@ -544,7 +623,7 @@ create_fixed_params <- function(user.input){
     
     # Rest of kidney capillaries after subtracting the peritubular capillaries
     # We assume that these capillaries are in contact with the interstitial space
-
+    
     PAL <- 1136e-4/0.23 #m^2/kg
     AL <- PAL * BW #liver surface area (m^2)
     
@@ -820,74 +899,9 @@ create_fixed_params <- function(user.input){
     # rat_hep_surf_area = 22.95 * 1e2 # 22.95*1e6 cm2 --> m2,  https://doi.org/10.1074/jbc.271.12.6702
     # AcLBilec = 0.01 * 22.95 * 1e2 # m2 , canalicular membrane 1% of the surface area of the hepatocyte,https://www.ncbi.nlm.nih.gov/books/NBK470209/
     
-    # Following the calculations  of Lin et al. (2023) for Caco-2 cells
-    ClINFT_unscaled= 18.1 #uL/min/mg protein, Kimura et al. 2017
-    Awell = 9 #cm^2 (for a 35 mm culture dish)
-    Swell = 1.12 #cm^2
-    well_protein = 0.346 #mg protein
-    protein_per_well = (well_protein * Awell)/Swell #mg protein/well
-    RAF_papp <- 1 
-    Papp_LIN = RAF_papp*(ClINFT_unscaled*60*1e-06*1e3*protein_per_well)/(Awell *2) #cm/h,at  pH = 6.0
-    Papp_RYU = RAF_papp*1.46e-6*3600 # cm/h, at pH = 7.4 from Ryu et al. (2024) [https://doi.org/10.1016/j.chemosphere.2024.142390]
-    #  Lin et al. (2023) used data from kimura et al. (2017) [http://dx.doi.org/10.1016/j.toxlet.2017.05.012]
-    # which is more appropriate for 
-    # For endothelial and cellular permeability we use the Ryu et al. (2024) value
-    #Papp = Papp_RYU
-    P_passive = ( (Papp/100) * AINL)*1000 #L/h
-    
-    #passive diffusion rates, in L/h
-    kLFLT = ((Papp/100) * AcL)*1000 #m^3/h * 1000 --> L/h
-    #kLTLbile = ((Papp/100) * AcLBilec)*1000 #m^3/h * 1000 --> L/h
-    kMFMT = ((Papp/100) * AcM)*1000 #m^3/h * 1000 --> L/h
-    kSTFSTT = ((Papp/100) * AcST)*1000 #m^3/h * 1000 --> L/h 
-    kINFINT = ((Papp/100) * AcIN)*1000 #m^3/h * 1000 --> L/h 
-    kAFAT = ((Papp/100) * AcA)*1000 #m^3/h * 1000 --> L/h 
-    kLuTLuF = ((Papp/100) * AcLu)*1000 #m^3/h * 1000 --> L/h
-    kLuTLuAF = ((Papp/100) * AcALF)*1000 #m^3/h * 1000 --> L/h
-    kSPFSPT = ((Papp/100) * AcSP)*1000 #m^3/h * 1000 --> L/h 
-    kHFHT = ((Papp/100) * AcH)*1000 #m^3/h * 1000 --> L/h 
-    kBrFBrT = ((Papp/100) * AcBr)*1000 #m^3/h * 1000 --> L/h 
-    kGoFGoT = ((Papp/100) * AcGo)*1000 #m^3/h * 1000 --> L/h 
-    kSKFSKT = ((Papp/100) * AcSK)*1000 #m^3/h * 1000 --> L/h
-    kBoFBoT = ((Papp/100) * AcBo)*1000 #m^3/h * 1000 --> L/h
-    kRFRT = ((Papp/100) * AcR)*1000 #m^3/h*1000 --> L/h 
-    
-    #Diffusion rates in L/h between renal tubule filtrate and tubule cells
-    kPtcTu <- ((Papp/100) * APT) *1000 #diffusion between proximal tubule cells and tubule filtrate
-    kDalcTu <- ((Papp/100) * ADAL) *1000 #diffusion between descending/ascending cells and tubule filtrate
-    kDtcTu <- ((Papp/100) * ADT) *1000 #diffusion between distal tubule cells and tubule filtrate
-    kCdcTu <- ((Papp/100) * ACD) *1000 #diffusion between collecting duct cells and tubule filtrate
-    
-    #Diffusion rates in L/h between  tubule cells and interstitial space
-    kDalcF <- ((Papp/100) * AcK_DALC) *1000 #diffusion between proximal tubule cells and interstitial space
-    kCdcF <- ((Papp/100) * AcK_CDC) *1000 #diffusion between descending/ascending cells and interstitial space
-    kKTrestF  <- ((Papp/100) * AcKTrest) *1000 #diffusion between rest of kidney cells and interstitial space
-    
-    
     #Stomach
     # For identifiability reasons we assume that absorption takes place only through the intestines
     kabST <- (kabs_st* ASTL)*1000 #L/h
-    
-    #Effective permeability (Peff, in mm/h) for blood (B), liver(L), kidney(K),
-    #stomach(ST),intestine (IN), adipose(A), muscle(M), spleen (SP), heart (H), 
-    #brain (Br), gonads (Go), rest of body(R). Similar to Lin et al. (2023) [https://doi.org/10.1021/acs.est.2c05642.]
-    # we devide the effective permeability by 2 to account for the resistance at both
-    # the apical and basolateral side of the endothelium
-    
-    PeffK <- Papp*10/2 #mm/h
-    PeffL <- Papp*10/2 #mm/h
-    PeffST <- Papp*10/2 #mm/h
-    PeffIN <- Papp*10/2 #mm/h
-    PeffA <- Papp*10/2 #mm/h
-    PeffM <- Papp*10/2 #mm/h
-    PeffR <- Papp*10/2 #mm/h
-    PeffLu <- Papp*10/2 #mm/h
-    PeffSP <- Papp*10/2 #mm/h
-    PeffH <- Papp*10/2 #mm/h
-    PeffBr <- Papp*10/2 #mm/h
-    PeffGo <- Papp*10/2 #mm/h
-    PeffSK <- Papp*10/2 #mm/h
-    PeffBo <- Papp*10/2 #mm/h
     
     MW = 414.07 #g/mol, PFOA molecular weight
     
@@ -916,23 +930,24 @@ create_fixed_params <- function(user.input){
       'VBo'=VBo,'VBoB'=VBoB, 'VBoF'=VBoF, 'VBoT'=VBoT,
       
       
-      'AK_rest'=AK_rest, 'A_peritubular_PTC' = A_peritubular_PTC, 
+      'A_peritubular_PTC' = A_peritubular_PTC, 
       'A_peritubular_DTC' = A_peritubular_DTC,
       'AL'=AL, 'AM'=AM, 'AA'=AA, 'AR'=AR, 'ALu'= ALu, 
       'ASP'=ASP, 'AH'=AH, 'ABr'=ABr, 'AST'= AST,
       'AIN'=AIN, 'AGo'=AGo,
       'ASK'= ASK, 'ABo'=ABo,
       
+      'AINL' = AINL, 'AcL' = AcL, 'AcM' = AcM, 'AcST' = AcST, 
+      'AcIN' = AcIN, 'AcA' = AcA, 'AcLu' = AcLu, 'AcALF' = AcALF, 
+      'AcSP' = AcSP, 'AcH' = AcH, 'AcBr' = AcBr, 'AcGo' = AcGo, 
+      'AcSK' = AcSK, 'AcBo' = AcBo, 'AcR' = AcR, 'APT' = APT, 
+      'ADAL' = ADAL, 'ADT' = ADT, 'ACD' = ACD, 'AcK_DALC' = AcK_DALC,  
+      'AcK_CDC' = AcK_CDC, 'AcKTrest' = AcKTrest,
+      
       "SKi" = SKi,"SLi" = SLi,"SSt" = SSt,"SIn" = SIn,
       "SMu" = SMu,"SAd" = SAd,"SRe" = SRe,"SLu" = SLu,
       "SSp" = SSp,"SHt" = SHt,"SBr" = SBr,"SGo" = SGo,
       "SSk" = SSk,"SBo" = SBo,
-      
-      'PeffK'=PeffK, 'PeffL'=PeffL, 
-      'PeffA'=PeffA, 'PeffM'=PeffM, 'PeffR'=PeffR, 'PeffLu' = PeffLu,
-      'PeffSP'=PeffSP, 'PeffH'=PeffH, 'PeffBr'=PeffBr, 'PeffST' = PeffST,
-      'PeffIN'=PeffIN, 'PeffGo'=PeffGo,
-      'PeffSK' = PeffSK,  'PeffBo' = PeffBo,  
       
       'Qcardiac'=Qcardiac, 'QBK'=QBK, 
       'QBL'=QBL, 'QBLtot'=QBLtot,
@@ -949,22 +964,14 @@ create_fixed_params <- function(user.input){
       "QparaSp" = QparaSp,"QparaHt" = QparaHt,"QparaBr" = QparaBr,"QparaGo" = QparaGo,
       "QparaSk" = QparaSk,"QparaBo" = QparaBo,
       
-      "QPT" = QPT, "QTDL" = QTDL, "QTAL" = QTAL, "QDT" = QDT, "QCD" = QCD, 
-      'Papp' = Papp, 'P_passive' = P_passive,
-      'kKTrestF'=kKTrestF, 'kCdcF' = kCdcF, 'kDalcF' = kDalcF,
-      'kPtcTu'=kPtcTu, 'kDalcTu' = kDalcTu, 'kDtcTu' = kDtcTu, 'kCdcTu' = kCdcTu, 
-      'kLFLT'=kLFLT,  'kAFAT'=kAFAT, 
-      'kRFRT'=kRFRT,
-      'kabST'=kabST, 
-      'kMFMT'=kMFMT, 'kLuTLuF' =kLuTLuF, 'kLuTLuAF'=kLuTLuAF, 'kSPFSPT' =kSPFSPT,
-      'kSTFSTT' =kSTFSTT, 'kINFINT' =kINFINT, 'kHFHT' =kHFHT,
-      'kBrFBrT' =kBrFBrT, 'kGoFGoT' =kGoFGoT,
-      'kSKFSKT' =kSKFSKT, 'kBoFBoT'=kBoFBoT,
+      "QPT" = QPT, "QTDL" = QTDL, "QTAL" = QTAL, "QDT" = QDT, "QCD" = QCD,
       
       'f_tubular' =  f_tubular,  'f_PTC_prot_to_tub_prot' = f_PTC_prot_to_tub_prot, 
       'f_DALC_prot_to_tub_prot' = f_DALC_prot_to_tub_prot, 
       'f_DTC_prot_to_tub_prot' = f_DTC_prot_to_tub_prot , 
       'f_CDC_prot_to_tub_prot' = f_CDC_prot_to_tub_prot,
+      'kabST'=kabST, 
+      
       
       
       "admin.time" = admin.time, "admin.dose" = admin.dose,
@@ -1058,7 +1065,7 @@ ode.func <- function(time, inits, params){
     CSTFf <- MSTFf/VSTF
     CSTFb <- MSTFb/VSTF
     CSTTf <- MSTTf/VSTT # tissue concentration
-
+    
     #Intestine
     
     MINB <- MINBf + MINBb
@@ -1071,7 +1078,7 @@ ode.func <- function(time, inits, params){
     CINFf <- MINFf/VINF
     CINFb <- MINFb/VINF
     CINTf <- MINTf/VINT # tissue concentration
-
+    
     #Stomach and Intestine lumens
     CSTL = MSTL/VSTL # Stomach Lumen concentration
     CINL = MINL/VINL # Intestine Lumen concentration
@@ -1088,7 +1095,7 @@ ode.func <- function(time, inits, params){
     CMFf <- MMFf/VMF
     CMFb <- MMFb/VMF
     CMTf <-  MMTf/VMT # tissue concentration
-
+    
     #Adipose
     
     MAB <- MABf + MABb
@@ -1101,7 +1108,7 @@ ode.func <- function(time, inits, params){
     CAFf <- MAFf/VAF
     CAFb <- MAFb/VAF
     CATf <- MATf/VAT # tissue concentration
-
+    
     #Rest-of-the-body
     
     MRB <- MRBf + MRBb
@@ -1114,7 +1121,7 @@ ode.func <- function(time, inits, params){
     CRFf <- MRFf/VRF
     CRFb <- MRFb/VRF
     CRTf <- MRTf/VRT # tissue concentration
-
+    
     #Lung
     
     MLuB <- MLuBf + MLuBb
@@ -1156,7 +1163,7 @@ ode.func <- function(time, inits, params){
     CHFf <- MHFf/VHF
     CHFb <- MHFb/VHF
     CHTf <- MHTf/VHT # tissue concentration
-
+    
     #Brain
     
     MBrB <- MBrBf + MBrBb
@@ -1169,7 +1176,7 @@ ode.func <- function(time, inits, params){
     CBrFf <- MBrFf/VBrF
     CBrFb <- MBrFb/VBrF
     CBrTf <-  MBrTf/VBrT # tissue concentration
-
+    
     #gonads
     
     MGoB <- MGoBf + MGoBb
@@ -1182,7 +1189,7 @@ ode.func <- function(time, inits, params){
     CGoFf <- MGoFf/VGoF
     CGoFb <- MGoFb/VGoF
     CGoTf <-  MGoTf/VGoT # tissue concentration
-
+    
     #Skin
     
     MSKB <- MSKBf + MSKBb
@@ -1195,7 +1202,7 @@ ode.func <- function(time, inits, params){
     CSKFf <- MSKFf/VSKF
     CSKFb <- MSKFb/VSKF
     CSKTf <- MSKTf/VSKT # tissue concentration
-
+    
     #Bones
     
     MBoB <- MBoBf + MBoBb
@@ -1208,7 +1215,7 @@ ode.func <- function(time, inits, params){
     CBoFf <- MBoFf/VBoF
     CBoFb <- MBoFb/VBoF
     CBoTf <- MBoTf/VBoT # tissue concentration
-
+    
     #Calculation of free and bound PFOA in venous blood
     dCalbVenf <- koff_alb*CVenb/MW/1e6 - kon_alb*CalbVenf*CVenf/MW/1e6
     
@@ -1363,25 +1370,25 @@ ode.func <- function(time, inits, params){
     dMGoFb <- kon_alb*CalbGoFf*CGoFf*VGoF - koff_alb*CGoFb*VGoF 
     dMSKFb <- kon_alb*CalbSKFf*CSKFf*VSKF - koff_alb*CSKFb*VSKF 
     dMBoFb <- kon_alb*CalbBoFf*CBoFf*VBoF - koff_alb*CBoFb*VBoF 
-  
+    
     #Tissue
     dMPTCb <- kon_a2u*Ca2uPTCf*CPTCf*VPTC + kon_fabp*CFabpPTCf*CPTCf*VPTC -
-              koff_fabp*CPTCb*VPTC - koff_a2u*CPTCb*VPTC 
+      koff_fabp*CPTCb*VPTC - koff_a2u*CPTCb*VPTC 
     
     dMDALCb <- kon_a2u*Ca2uDALCf*CDALCf*VDALC + kon_fabp*CFabpDALCf*CDALCf*VDALC -
-               koff_fabp*CDALCb*VDALC - koff_a2u*CDALCb*VDALC 
+      koff_fabp*CDALCb*VDALC - koff_a2u*CDALCb*VDALC 
     
     dMDTCb <- kon_a2u*Ca2uDTCf*CDTCf*VDTC + kon_fabp*CFabpDTCf*CDTCf*VDTC -
-              koff_fabp*CDTCb*VDTC - koff_a2u*CDTCb*VDTC 
-   
+      koff_fabp*CDTCb*VDTC - koff_a2u*CDTCb*VDTC 
+    
     dMCDCb <- kon_a2u*Ca2uCDCf*CCDCf*VCDC + kon_fabp*CFabpCDCf*CCDCf*VCDC -
-              koff_fabp*CCDCb*VCDC - koff_a2u*CCDCb*VCDC
-   
+      koff_fabp*CCDCb*VCDC - koff_a2u*CCDCb*VCDC
+    
     dMKTrestb <- kon_a2u*Ca2uKTrestf*CKTrestf*VKTrest + kon_fabp*CFabpKTrestf*CKTrestf*VKTrest -
-                 koff_fabp*CKTrestb*VKTrest - koff_a2u*CKTrestb*VKTrest 
+      koff_fabp*CKTrestb*VKTrest - koff_a2u*CKTrestb*VKTrest 
     
     dMLTb <- kon_fabp*CFabpLTf*CLTf*VLT - koff_fabp*CLTb*VLT 
-   
+    
     #Alveolar lining fluid
     dMLuAFb <-  kon_alb*CalbLuAFf*CLuAFf*VLuAF -  koff_alb*CLuAFb*VLuAF 
     
@@ -1390,56 +1397,56 @@ ode.func <- function(time, inits, params){
     #Arterial Blood
     dMArtf = QBLu*CLuBf - CArtf*(QBK+QBL+QBM+QBA+QBR+QBSP+QBH+QBBr+
                                    QBST+QBIN+QBGo+QBSK+QBBo) - QGFR*CArtf +
-             koff_alb*CArtb*VArt - kon_alb*CalbArtf*CArtf*VArt 
+      koff_alb*CArtb*VArt - kon_alb*CalbArtf*CArtf*VArt 
     
     #Venous Blood
     dMVenf = - CVenf*QBLu + QBK*CKBf + QBLtot*CLBf + QBM*CMBf + QBA*CABf + QBR*CRBf+
-               QBH*CHBf + QBBr*CBrBf+ QBGo*CGoBf + QBSK*CSKBf + QBBo*CBoBf+
-               koff_alb*CVenb*VVen - kon_alb*CalbVenf*CVenf*VVen 
+      QBH*CHBf + QBBr*CBrBf+ QBGo*CGoBf + QBSK*CSKBf + QBBo*CBoBf+
+      koff_alb*CVenb*VVen - kon_alb*CalbVenf*CVenf*VVen 
     #Kidney
     #blood subcompartment
     dMKBf = QBK*CArtf - QBK*CKBf   - PeffK*A_peritubular_PTC*(CKBf-CPTCf) -
-            PeffK*A_peritubular_DTC*(CKBf-CDTCf) - QparaKi*(1-SKi)*CKBf -
-            (VmK_Oat1*CKBf/(KmK_Oat1+CKBf)) - (VmK_Oat3*CKBf/(KmK_Oat3+CKBf))+ (VmK_baso*CPTCf/(KmK_baso+CPTCf))+
-            koff_alb*CKBb*VKB - kon_alb*CalbKBf*CKBf*VKB
+      PeffK*A_peritubular_DTC*(CKBf-CDTCf) - QparaKi*(1-SKi)*CKBf -
+      (VmK_Oat1*CKBf/(KmK_Oat1+CKBf)) - (VmK_Oat3*CKBf/(KmK_Oat3+CKBf))+ (VmK_baso*CPTCf/(KmK_baso+CPTCf))+
+      koff_alb*CKBb*VKB - kon_alb*CalbKBf*CKBf*VKB
     
     #interstitial fluid subcompartment
     dMKFf = QparaKi*(1-SKi)*CKBf - kDalcF*(CKFf-CDALCf) -
-            kCdcF*(CKFf-CCDCf)   - kKTrestF*(CKFf-CKTrestf) + 
-            koff_alb*CKFb*VKF - kon_alb*CalbKFf*CKFf*VKF
+      kCdcF*(CKFf-CCDCf)   - kKTrestF*(CKFf-CKTrestf) + 
+      koff_alb*CKFb*VKF - kon_alb*CalbKFf*CKFf*VKF
     
     #proximal tubule  cells subcompartment
     dMPTCf =  PeffK*A_peritubular_PTC*(CKBf-CPTCf)  - kPtcTu*(CPTCf - CPT)  +
-             (VmK_Oatp*CPT/(KmK_Oatp+CPT)) + (VmK_Urat*CPT/(KmK_Urat+CPT))+
-             (VmK_Oat1*CKBf/(KmK_Oat1+CKBf)) + (VmK_Oat3*CKBf/(KmK_Oat3+CKBf)) - 
-             (VmK_baso*CPTCf/(KmK_baso+CPTCf)) -(VmK_api*CPTCf/(KmK_api+CPTCf))-
-             (kon_a2u*Ca2uPTCf*CPTCf*VPTC + kon_fabp*CFabpPTCf*CPTCf*VPTC -
-             koff_fabp*CPTCb*VPTC - koff_a2u*CPTCb*VPTC) 
+      (VmK_Oatp*CPT/(KmK_Oatp+CPT)) + (VmK_Urat*CPT/(KmK_Urat+CPT))+
+      (VmK_Oat1*CKBf/(KmK_Oat1+CKBf)) + (VmK_Oat3*CKBf/(KmK_Oat3+CKBf)) - 
+      (VmK_baso*CPTCf/(KmK_baso+CPTCf)) -(VmK_api*CPTCf/(KmK_api+CPTCf))-
+      (kon_a2u*Ca2uPTCf*CPTCf*VPTC + kon_fabp*CFabpPTCf*CPTCf*VPTC -
+         koff_fabp*CPTCb*VPTC - koff_a2u*CPTCb*VPTC) 
     
     #Tubule cells in Loop of Henle 
     dMDALCf =  kDalcF*(CKFf-CDALCf) - kDalcTu*(CDALCf - CDAL)- 
-               (kon_a2u*Ca2uDALCf*CDALCf*VDALC + kon_fabp*CFabpDALCf*CDALCf*VDALC -
-                  koff_fabp*CDALCb*VDALC - koff_a2u*CDALCb*VDALC )
+      (kon_a2u*Ca2uDALCf*CDALCf*VDALC + kon_fabp*CFabpDALCf*CDALCf*VDALC -
+         koff_fabp*CDALCb*VDALC - koff_a2u*CDALCb*VDALC )
     
     #Distal convoluted tubule cells 
     dMDTCf =   PeffK*A_peritubular_DTC*(CKBf-CDTCf)- kDtcTu*(CDTCf - CDT)-
-               (kon_a2u*Ca2uDTCf*CDTCf*VDTC + kon_fabp*CFabpDTCf*CDTCf*VDTC -
-                  koff_fabp*CDTCb*VDTC - koff_a2u*CDTCb*VDTC )
+      (kon_a2u*Ca2uDTCf*CDTCf*VDTC + kon_fabp*CFabpDTCf*CDTCf*VDTC -
+         koff_fabp*CDTCb*VDTC - koff_a2u*CDTCb*VDTC )
     
     #Collecting duct cells 
     dMCDCf =  kCdcF*(CKFf-CCDCf) - kCdcTu*(CCDCf - CCD)- 
-              (kon_a2u*Ca2uCDCf*CCDCf*VCDC + kon_fabp*CFabpCDCf*CCDCf*VCDC -
-                 koff_fabp*CCDCb*VCDC - koff_a2u*CCDCb*VCDC)
+      (kon_a2u*Ca2uCDCf*CCDCf*VCDC + kon_fabp*CFabpCDCf*CCDCf*VCDC -
+         koff_fabp*CCDCb*VCDC - koff_a2u*CCDCb*VCDC)
     
     #Rest of kidney tissue subcompartment
     dMKTrestf =  kKTrestF*(CKFf-CKTrestf)- 
-                (kon_a2u*Ca2uKTrestf*CKTrestf*VKTrest + kon_fabp*CFabpKTrestf*CKTrestf*VKTrest -
-                   koff_fabp*CKTrestb*VKTrest - koff_a2u*CKTrestb*VKTrest)
+      (kon_a2u*Ca2uKTrestf*CKTrestf*VKTrest + kon_fabp*CFabpKTrestf*CKTrestf*VKTrest -
+         koff_fabp*CKTrestb*VKTrest - koff_a2u*CKTrestb*VKTrest)
     
     #Proximal convoluted tubule
     dMPT =  QGFR*CArtf + kPtcTu*(CPTCf - CPT) - (VmK_Oatp*CPT/(KmK_Oatp+CPT)) - 
-            (VmK_Urat*CPT/(KmK_Urat+CPT)) + (VmK_api*CPTCf/(KmK_api+CPTCf))- QTDL*CPT
-      
+      (VmK_Urat*CPT/(KmK_Urat+CPT)) + (VmK_api*CPTCf/(KmK_api+CPTCf))- QTDL*CPT
+    
     #Descending limb, Ascending limb (Loop of Henle )
     dMDAL =  QTDL*CPT + kDalcTu*(CDALCf - CDAL)  -  QDT*CDAL
     
@@ -1625,7 +1632,7 @@ ode.func <- function(time, inits, params){
     
     Mkidney <- MKB + MKF+ MKT + Mfil
     Ckidney <- Mkidney/VK    
-
+    
     Cliver <- (MLB + MLF+ MLT + MLbile )/(VLB+VLF+VLT+VLbile)
     Mliver <- MLB + MLF+ MLT + MLbile
     
@@ -1907,7 +1914,7 @@ create_all_fixed_params <- function(){
                      "admin.type" = admin.type,
                      "sex" = sex)
   params[[1]] <- create_fixed_params(user_input)
- 
+  
   # Set up simulations for the 2nd case, i.e. kudo (2007) low dose, tissues
   BW <- 0.29  # body weight (kg)
   admin.dose_per_g <- 0.041 # administered dose in mg PFOA/kg BW 
@@ -1949,7 +1956,7 @@ create_all_fixed_params <- function(){
                      "admin.type" = admin.type,
                      "sex" = sex)
   params[[4]] <- create_fixed_params(user_input)
-
+  
   # Set up simulations for the 5th case, i.e. kim (2016) IV female tissues
   BW <- 0.25 #kg, from Kim et al. 2018
   admin.dose_per_g <- 1 # administered dose in mg PFOA/kg BW 
@@ -1978,7 +1985,7 @@ create_all_fixed_params <- function(){
                      "sex" = sex)
   params[[6]] <- create_fixed_params(user_input)
   
-   # Set up simulations for the 7th case, i.e. Dzierlenga (2021) ORAL male tissues
+  # Set up simulations for the 7th case, i.e. Dzierlenga (2021) ORAL male tissues
   BW <- 0.3  # body weight (kg) not reported, based on 8 week male rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   admin.dose_per_g <- 12 # administered dose in mg PFOA/kg BW 
   admin.dose <- admin.dose_per_g*BW*1e03 #ug PFOA
@@ -1992,7 +1999,7 @@ create_all_fixed_params <- function(){
                      "sex" = sex)
   
   params[[7]] <- create_fixed_params(user_input)
- 
+  
   # Set up simulations for the 8th case, i.e. Dzierlenga (2021) ORAL female tissues
   BW <- 0.2  # body weight (kg) not reported, # body weight (kg) not reported, based on 8 week female rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   admin.dose_per_g <- 80 # administered dose in mg PFOA/kg BW 
@@ -2038,7 +2045,7 @@ create_all_fixed_params <- function(){
   
   params[[10]] <- create_fixed_params(user_input)
   
-
+  
   # Set up simulations for the 11th case, i.e.Kemper 2003 (Worley) ORAL female  LOW
   sex <- "F"
   BW <- 0.2 #kg
@@ -2047,27 +2054,27 @@ create_all_fixed_params <- function(){
   #Female, oral 1mg/kg dose
   admin.dose <- 1 * BW * 1000 #ug
   params[[11]] <-   create_fixed_params(list('BW'=BW,
-                                     "admin.dose"= admin.dose,
-                                     "admin.time" = admin.time, 
-                                     "admin.type" = admin.type,
-                                     "sex" = sex))
- 
-   # Set up simulations for the 12th case, i.e.Kemper 2003 (Worley) ORAL female MEDIUM
+                                             "admin.dose"= admin.dose,
+                                             "admin.time" = admin.time, 
+                                             "admin.type" = admin.type,
+                                             "sex" = sex))
+  
+  # Set up simulations for the 12th case, i.e.Kemper 2003 (Worley) ORAL female MEDIUM
   admin.dose <- 5 * BW * 1000 #ug
   params[[12]] <-   create_fixed_params(list('BW'=BW,
-                                     "admin.dose"= admin.dose,
-                                     "admin.time" = admin.time, 
-                                     "admin.type" = admin.type,
-                                     "sex" = sex))
+                                             "admin.dose"= admin.dose,
+                                             "admin.time" = admin.time, 
+                                             "admin.type" = admin.type,
+                                             "sex" = sex))
   
   # Set up simulations for the 13th case, i.e.Kemper 2003 (Worley) ORAL female HIGH
   admin.dose <- 25 * BW * 1000 #ug
   params[[13]] <-   create_fixed_params(list('BW'=BW,
-                                     "admin.dose"= admin.dose,
-                                     "admin.time" = admin.time, 
-                                     "admin.type" = admin.type,
-                                     "sex" = sex))
- 
+                                             "admin.dose"= admin.dose,
+                                             "admin.time" = admin.time, 
+                                             "admin.type" = admin.type,
+                                             "sex" = sex))
+  
   # Set up simulations for the 14th case, i.e.Kemper 2003 (Worley) ORAL male LOW
   sex <- "M"
   BW <- 0.3 #kg
@@ -2076,26 +2083,26 @@ create_all_fixed_params <- function(){
   #Male, oral 1mg/kg dose
   admin.dose <- 1 * BW * 1000 #ug
   params[[14]] <-   create_fixed_params(list('BW'=BW,
-                                     "admin.dose"= admin.dose,
-                                     "admin.time" = admin.time, 
-                                     "admin.type" = admin.type,
-                                     "sex" = sex))
+                                             "admin.dose"= admin.dose,
+                                             "admin.time" = admin.time, 
+                                             "admin.type" = admin.type,
+                                             "sex" = sex))
   
   # Set up simulations for the 15th case, i.e.Kemper 2003 (Worley) ORAL male MEDIUM
   admin.dose <- 5 * BW * 1000 #ug
   params[[15]] <-   create_fixed_params(list('BW'=BW,
-                                     "admin.dose"= admin.dose,
-                                     "admin.time" = admin.time, 
-                                     "admin.type" = admin.type,
-                                     "sex" = sex))
- 
+                                             "admin.dose"= admin.dose,
+                                             "admin.time" = admin.time, 
+                                             "admin.type" = admin.type,
+                                             "sex" = sex))
+  
   # Set up simulations for the 16th case, i.e.Kemper 2003 (Worley) ORAL male HIGH
   admin.dose <- 25 * BW * 1000 #ug
   params[[16]] <-   create_fixed_params(list('BW'=BW,
-                                     "admin.dose"= admin.dose,
-                                     "admin.time" = admin.time, 
-                                     "admin.type" = admin.type,
-                                     "sex" = sex))
+                                             "admin.dose"= admin.dose,
+                                             "admin.time" = admin.time, 
+                                             "admin.type" = admin.type,
+                                             "sex" = sex))
   
   # Set up simulations for the 17th case, i.e. Dzierlenga 2021, IV male serum
   BW <- 0.3   # body weight (kg) not reported, # body weight (kg) not reported, based on 8 week male rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
@@ -2208,7 +2215,7 @@ create_all_fixed_params <- function(){
                      "admin.type" = admin.type,
                      "sex" = sex)
   params[[24]] <- create_fixed_params(user_input)
- 
+  
   # Set up simulations for the 25th case, i.e. Kim (2016) ORAL female blood
   BW <- 0.25  #kg, from Kim et al. 2018
   admin.dose_per_g <- 1 # administered dose in mg PFOA/kg BW 
@@ -2291,7 +2298,7 @@ obj.func <- function(x, dataset, fixed_params){
   # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
   BW <- 0.29  # body weight (kg)
   sex <- "M" 
-  variable_params <- create_variable_params(BW,sex,estimated_params)
+  variable_params <- create_variable_params(BW, sex,estimated_params, fixed_params[[1]])
   params <- c(fixed_params[[1]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
@@ -2300,7 +2307,7 @@ obj.func <- function(x, dataset, fixed_params){
                                       y = inits, parms = params,
                                       events = events,
                                       method="lsodes",rtol = 1e-05, atol = 1e-05))
-
+  
   #======================================df1=========================================================
   
   exp_data <- dataset$df1 # retrieve data of Kudo et al. 2007 high dose
@@ -2332,7 +2339,7 @@ obj.func <- function(x, dataset, fixed_params){
   # Set up simulations for the 2nd case, i.e. kudo (2007) low dose, tissues
   BW <- 0.29  # body weight (kg)
   sex <- "M" 
-  variable_params <- create_variable_params(BW,sex,estimated_params)
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[2]])
   params <- c(fixed_params[[2]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
@@ -2378,7 +2385,7 @@ obj.func <- function(x, dataset, fixed_params){
   ##########################
   # Set up simulations for the 3rd case, i.e. kim (2016) IV male tissues
   BW <- 0.25 #kg, from Kim et al. 2018
-  variable_params <- create_variable_params(BW,sex,estimated_params)
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[3]])
   params <- c(fixed_params[[3]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
@@ -2391,7 +2398,7 @@ obj.func <- function(x, dataset, fixed_params){
                                       y = inits, parms = params,
                                       events = events,
                                       method="lsodes",rtol = 1e-04, atol = 1e-04))
-
+  
   #======================================df3=========================================================
   
   exp_data <- dataset$df3 # retrieve data of kim (2016) IV male tissues
@@ -2418,7 +2425,7 @@ obj.func <- function(x, dataset, fixed_params){
   # Set up simulations for the 4th case, i.e. kim (2016) ORAL male tissues
   BW <- 0.25 #kg, from Kim et al. 2018
   sex <- "M" 
-  variable_params <- create_variable_params(BW,sex,estimated_params)
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[4]])
   params <- c(fixed_params[[4]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
@@ -2431,7 +2438,7 @@ obj.func <- function(x, dataset, fixed_params){
                                       y = inits, parms = params,
                                       events = events,
                                       method="lsodes",rtol = 1e-04, atol = 1e-04))
-
+  
   #======================================df4=========================================================
   
   exp_data <- dataset$df4 # retrieve data of kim (2016) ORAL male tissues
@@ -2457,7 +2464,7 @@ obj.func <- function(x, dataset, fixed_params){
   # Set up simulations for the 5th case, i.e. kim (2016) IV female tissues
   BW <- 0.25 #kg, from Kim et al. 2018
   sex <- "F" 
-  variable_params <- create_variable_params(BW,sex,estimated_params)
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[5]])
   params <- c(fixed_params[[5]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
@@ -2497,7 +2504,7 @@ obj.func <- function(x, dataset, fixed_params){
   # Set up simulations for the 6th case, i.e. kim (2016) IV female tissues
   BW <- 0.25 #kg, from Kim et al. 2018
   sex <- "F" 
-  variable_params <- create_variable_params(BW,sex,estimated_params)
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[6]])
   params <- c(fixed_params[[6]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
@@ -2510,7 +2517,7 @@ obj.func <- function(x, dataset, fixed_params){
                                       y = inits, parms = params,
                                       events = events,
                                       method="lsodes",rtol = 1e-04, atol = 1e-04))
-
+  
   #======================================df6=========================================================
   
   exp_data <- dataset$df6 # retrieve data of kim (2016) ORAL female tissues
@@ -2537,7 +2544,7 @@ obj.func <- function(x, dataset, fixed_params){
   # Set up simulations for the 7th case, i.e. Dzierlenga (2021) ORAL male tissues
   BW <- 0.3  # body weight (kg) not reported, based on 8 week male rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   sex <- "M" 
-  variable_params <- create_variable_params(BW,sex,estimated_params)
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[7]])
   params <- c(fixed_params[[7]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
@@ -2550,7 +2557,7 @@ obj.func <- function(x, dataset, fixed_params){
                                       y = inits, parms = params,
                                       events = events,
                                       method="lsodes",rtol = 1e-04, atol = 1e-04))
-
+  
   #======================================df7=========================================================
   exp_data <- dataset$df7 # retrieve data of Dzierlenga (2021) ORAL male tissues
   colnames(exp_data)[c(2,3)] <- c("time", "concentration")
@@ -2580,7 +2587,7 @@ obj.func <- function(x, dataset, fixed_params){
   # Set up simulations for the 8th case, i.e. Dzierlenga (2021) ORAL female tissues
   BW <- 0.2  # body weight (kg) not reported, # body weight (kg) not reported, based on 8 week female rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   sex <- "F" 
-  variable_params <- create_variable_params(BW,sex,estimated_params)
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[8]])
   params <- c(fixed_params[[8]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
@@ -2593,7 +2600,7 @@ obj.func <- function(x, dataset, fixed_params){
                                       y = inits, parms = params,
                                       events = events,
                                       method="lsodes",rtol = 1e-04, atol = 1e-04))
-
+  
   #======================================df8=========================================================
   
   exp_data <- dataset$df8 # retrieve data of Dzierlenga (2021) ORAL female tissues
@@ -2625,7 +2632,7 @@ obj.func <- function(x, dataset, fixed_params){
   # Set up simulations for the 9th case, i.e. Kim (2016) ORAL male blood
   BW <- 0.25  #kg, from Kim et al. 2018
   sex <- "M" 
-  variable_params <- create_variable_params(BW,sex,estimated_params)
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[9]])
   params <- c(fixed_params[[9]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
@@ -2638,7 +2645,7 @@ obj.func <- function(x, dataset, fixed_params){
                                       y = inits, parms = params,
                                       events = events,
                                       method="lsodes",rtol = 1e-04, atol = 1e-04))
-
+  
   #======================================df9=========================================================
   
   exp_data <- dataset$df9 # retrieve data of Kim (2016) ORAL male blood
@@ -2667,7 +2674,7 @@ obj.func <- function(x, dataset, fixed_params){
   # Set up simulations for the 10th case, i.e. Kim (2016) IV male blood
   BW <- 0.25 #kg, from Kim et al. 2018
   sex <- "M" 
-  variable_params <- create_variable_params(BW,sex,estimated_params)
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[10]])
   params <- c(fixed_params[[10]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
@@ -2681,7 +2688,7 @@ obj.func <- function(x, dataset, fixed_params){
                                       y = inits, parms = params,
                                       events = events,
                                       method="lsodes",rtol = 1e-04, atol = 1e-04))
-
+  
   #======================================df10=========================================================
   
   exp_data <- dataset$df10 # retrieve data of Kim (2016) IV male blood
@@ -2712,7 +2719,7 @@ obj.func <- function(x, dataset, fixed_params){
   sex <- "F"
   BW <- 0.2 #kg
   sample_time <- seq(0,192,1)
-  variable_params <- create_variable_params(BW,sex,estimated_params)
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[11]])
   params <- c(fixed_params[[11]], variable_params)
   events <- create.events(params)
   inits <- create.inits (params)
@@ -2769,7 +2776,7 @@ obj.func <- function(x, dataset, fixed_params){
   
   
   # Set up simulations for the 12th case, i.e.Kemper 2003 (Worley) ORAL female  MEDIUM
-  variable_params <- create_variable_params(BW,sex,estimated_params)
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[12]])
   params <- c(fixed_params[[12]], variable_params)
   events <- create.events(params)
   inits <- create.inits (params)
@@ -2827,7 +2834,8 @@ obj.func <- function(x, dataset, fixed_params){
   
   ##########################################################################################
   # Set up simulations for the 13th case, i.e.Kemper 2003 (Worley) ORAL female HIGH
-  variable_params <- create_variable_params(BW,sex,estimated_params)
+  sample_time <- seq(0,672,1)
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[13]])
   params <- c(fixed_params[[13]], variable_params)
   events <- create.events(params)
   inits <- create.inits (params)
@@ -2860,7 +2868,6 @@ obj.func <- function(x, dataset, fixed_params){
   score[15] <- AAFE(predictions = preds_Kemp_OR_Furine_high, observations = obs_Kemp_OR_Furine_high)
   
   #======================================df13b=========================================================
-  
   exp_data <- dataset$df13b # retrieve data of Kemper 2003  (Loccisano) ORAL female feces HIGH
   colnames(exp_data)[c(2,3)] <- c("time", "concentration")
   column_names <- c("Mfeces")
@@ -2889,7 +2896,7 @@ obj.func <- function(x, dataset, fixed_params){
   sex <- "M"
   BW <- 0.3 #kg
   sample_time <- seq(0,673,1)
-  variable_params <- create_variable_params(BW,sex,estimated_params)
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[14]])
   params <- c(fixed_params[[14]], variable_params)
   inits <- create.inits (params)
   events <- create.events(params)
@@ -2945,7 +2952,7 @@ obj.func <- function(x, dataset, fixed_params){
   
   ####################################################################################################
   # Set up simulations for the 15th case, i.e.Kemper 2003 (Worley) ORAL male MEDIUM
-  variable_params <- create_variable_params(BW,sex,estimated_params)
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[15]])
   params <- c(fixed_params[[15]], variable_params)
   inits <- create.inits (params)
   events <- create.events(params)
@@ -3003,7 +3010,7 @@ obj.func <- function(x, dataset, fixed_params){
   
   ######################################################################################################
   # Set up simulations for the 16th case, i.e.Kemper 2003 (Worley) ORAL male  HIGH
-  variable_params <- create_variable_params(BW,sex,estimated_params)
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[16]])
   params <- c(fixed_params[[16]], variable_params)
   inits <- create.inits (params)
   events <- create.events(params)
@@ -3067,7 +3074,7 @@ obj.func <- function(x, dataset, fixed_params){
   # Set up simulations for the 17th case, i.e. Dzierlenga 2021, IV male serum
   BW <- 0.3   # body weight (kg) not reported, # body weight (kg) not reported, based on 8 week male rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   sex <- "M"
-  variable_params <- create_variable_params(BW,sex,estimated_params)
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[17]])
   params <- c(fixed_params[[17]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
@@ -3109,7 +3116,7 @@ obj.func <- function(x, dataset, fixed_params){
   # Set up simulations for the 18th case, i.e. Dzierlenga 2021, ORAL male serum low
   BW <- 0.3   # body weight (kg) not reported, # body weight (kg) not reported, based on 8 week male rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   sex <- "M"
-  variable_params <- create_variable_params(BW,sex,estimated_params)
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[18]])
   params <- c(fixed_params[[18]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
@@ -3120,7 +3127,7 @@ obj.func <- function(x, dataset, fixed_params){
                                       y = inits, parms = params,
                                       events = events,
                                       method="lsodes",rtol = 1e-04, atol = 1e-04))
-
+  
   #======================================df18=========================================================
   
   exp_data <- dataset$df18 # retrieve data of Dzierlenga 2021, ORAL male serum low
@@ -3150,7 +3157,7 @@ obj.func <- function(x, dataset, fixed_params){
   # Set up simulations for the 19th case, i.e. Dzierlenga 2021, ORAL male serum medium
   BW <- 0.3   # body weight (kg) not reported, # body weight (kg) not reported, based on 8 week male rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   sex <- "M"
-  variable_params <- create_variable_params(BW,sex,estimated_params)
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[19]])
   params <- c(fixed_params[[19]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
@@ -3161,7 +3168,7 @@ obj.func <- function(x, dataset, fixed_params){
                                       y = inits, parms = params,
                                       events = events,
                                       method="lsodes",rtol = 1e-04, atol = 1e-04))
-
+  
   #======================================df19=========================================================
   exp_data <- dataset$df19 # retrieve data of Dzierlenga 2021, ORAL male serum medium
   colnames(exp_data)[c(2,3)] <- c("time", "concentration")
@@ -3189,7 +3196,7 @@ obj.func <- function(x, dataset, fixed_params){
   # Set up simulations for the 20th case, i.e. Dzierlenga 2021, ORAL male serum high
   BW <- 0.3   # body weight (kg) not reported, # body weight (kg) not reported, based on 8 week male rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   sex <- "M"
-  variable_params <- create_variable_params(BW,sex,estimated_params)
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[20]])
   params <- c(fixed_params[[20]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
@@ -3200,7 +3207,7 @@ obj.func <- function(x, dataset, fixed_params){
                                       y = inits, parms = params,
                                       events = events,
                                       method="lsodes",rtol = 1e-04, atol = 1e-04))
-
+  
   #======================================df20=========================================================
   exp_data <- dataset$df20 # retrieve data of Dzierlenga 2021, ORAL male serum high
   colnames(exp_data)[c(2,3)] <- c("time", "concentration")
@@ -3228,7 +3235,7 @@ obj.func <- function(x, dataset, fixed_params){
   # Set up simulations for the 21th case, i.e. Dzierlenga 2021, IV female serum
   BW <- 0.2    # body weight (kg) not reported, based on 8 week female rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   sex <- "F"
-  variable_params <- create_variable_params(BW,sex,estimated_params)
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[21]])
   params <- c(fixed_params[[21]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
@@ -3267,7 +3274,7 @@ obj.func <- function(x, dataset, fixed_params){
   # Set up simulations for the 22th case, i.e. Dzierlenga 2021, ORAL female serum low
   BW <- 0.2    # body weight (kg) not reported, based on 8 week female rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   sex <- "F"
-  variable_params <- create_variable_params(BW,sex,estimated_params)
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[22]])
   params <- c(fixed_params[[22]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
@@ -3278,7 +3285,7 @@ obj.func <- function(x, dataset, fixed_params){
                                       y = inits, parms = params,
                                       events = events,
                                       method="lsodes",rtol = 1e-04, atol = 1e-04))
-
+  
   #======================================df22=========================================================
   exp_data <- dataset$df22 # retrieve data of Dzierlenga 2021, ORAL female serum low
   colnames(exp_data)[c(2,3)] <- c("time", "concentration")
@@ -3306,18 +3313,18 @@ obj.func <- function(x, dataset, fixed_params){
   # Set up simulations for the 23th case, i.e. Dzierlenga 2021, ORAL female serum medium
   BW <- 0.2    # body weight (kg) not reported, based on 8 week female rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   sex <- "F"
-  variable_params <- create_variable_params(BW,sex,estimated_params)
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[23]])
   params <- c(fixed_params[[23]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
-    sample_time <- c(0, 0.25, seq(1, 192, 0.5))
+  sample_time <- c(0, 0.25, seq(1, 192, 0.5))
   
   # ode(): The solver of the ODEs
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
                                       method="lsodes",rtol = 1e-04, atol = 1e-04))
-
+  
   #======================================df23=========================================================
   exp_data <- dataset$df23 # retrieve data of Dzierlenga 2021, ORAL female serum medium
   colnames(exp_data)[c(2,3)] <- c("time", "concentration")
@@ -3345,7 +3352,7 @@ obj.func <- function(x, dataset, fixed_params){
   # Set up simulations for the 24th case, i.e. Dzierlenga 2021, ORAL female serum high
   BW <- 0.2    # body weight (kg) not reported, based on 8 week female rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   sex <- "F"
-  variable_params <- create_variable_params(BW,sex,estimated_params)
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[24]])
   params <- c(fixed_params[[24]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
@@ -3358,7 +3365,7 @@ obj.func <- function(x, dataset, fixed_params){
                                       y = inits, parms = params,
                                       events = events,
                                       method="lsodes",rtol = 1e-04, atol = 1e-04))
-
+  
   #======================================df24=========================================================
   exp_data <- dataset$df24 # retrieve data of Dzierlenga 2021, ORAL female serum high
   colnames(exp_data)[c(2,3)] <- c("time", "concentration")
@@ -3385,7 +3392,7 @@ obj.func <- function(x, dataset, fixed_params){
   # Set up simulations for the 25th case, i.e. Kim (2016) ORAL female blood
   BW <- 0.25  #kg, from Kim et al. 2018
   sex <- "F" 
-  variable_params <- create_variable_params(BW,sex,estimated_params)
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[25]])
   params <- c(fixed_params[[25]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
@@ -3423,7 +3430,7 @@ obj.func <- function(x, dataset, fixed_params){
   # Set up simulations for the 26th case, i.e. Kim (2016) IV male blood
   BW <- 0.25 #kg, from Kim et al. 2018
   sex <- "F" 
-  variable_params <- create_variable_params(BW,sex,estimated_params)
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[26]])
   params <- c(fixed_params[[26]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
@@ -3434,7 +3441,7 @@ obj.func <- function(x, dataset, fixed_params){
                                       y = inits, parms = params,
                                       events = events,
                                       method="lsodes",rtol = 1e-04, atol = 1e-04))
-
+  
   #======================================df26=========================================================
   exp_data <- dataset$df26 # retrieve data of Kim (2016) IV male blood
   colnames(exp_data)[c(2,3)] <- c("time", "concentration")
@@ -3461,7 +3468,7 @@ obj.func <- function(x, dataset, fixed_params){
   # Set up simulations for the 27th case, i.e. Gustafsson (2022) oral male blood
   BW <- 0.5125  #kg, from Gustafsson et al., 2022
   sex <- "M" 
-  variable_params <- create_variable_params(BW,sex,estimated_params)
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[27]])
   params <- c(fixed_params[[27]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
@@ -3472,7 +3479,7 @@ obj.func <- function(x, dataset, fixed_params){
                                       y = inits, parms = params,
                                       events = events,
                                       method="lsodes",rtol = 1e-04, atol = 1e-04))
-
+  
   #======================================df27=========================================================
   exp_data <- dataset$df27 # retrieve data of Gustafsson (2022) Oral male blood
   colnames(exp_data)[c(2,3)] <- c("time", "concentration")
@@ -3499,7 +3506,7 @@ obj.func <- function(x, dataset, fixed_params){
   # Set up simulations for the 28st case, i.e. Gustafsson (2022) Inhalation male tissues
   BW <- 0.5125  #kg, from Gustafsson et al., 2022
   sex <- "M"
-  variable_params <- create_variable_params(BW,sex,estimated_params)
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[28]])
   params <- c(fixed_params[[28]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
@@ -3656,7 +3663,7 @@ fit <-  c(rep(log(1),6), log(mean(c(Papp_Kimura,Papp_RYU))), log(1),log(1e-3), r
 lb = c(rep(log(1e-20),6), log(Papp_RYU),log(1e-2), log(1e-4), rep(log(1e-20),2))
 ub = c(rep(log(1e10),  6), log(Papp_Kimura) ,log(10),  log(1e1), rep(log(1e10),2))
 
-parameters <- create_all_fixed_params()
+fixed_params <- create_all_fixed_params()
 # Run the optimization algorithm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,
@@ -3664,7 +3671,7 @@ optimizer <- nloptr::nloptr( x0= fit,
                              ub = ub,
                              opts = opts,
                              dataset = dataset,
-                             fixed_params = parameters)
+                             fixed_params = fixed_params)
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
@@ -3674,7 +3681,7 @@ save.image("scenario6.RData")
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
 BW <- 0.29  # body weight (kg)
 sex <- "M" 
-variable_params <- create_variable_params(BW,sex,estimated_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[1]])
 params <- c(fixed_params[[1]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -3691,7 +3698,7 @@ preds_kudo_high <-  solution[, c("time","Cblood","Cliver","Ckidney", "Ccarcass",
 # Set up simulations for the 2nd case, i.e. kudo (2007) low dose, tissues
 BW <- 0.29  # body weight (kg)
 sex <- "M" 
-variable_params <- create_variable_params(BW,sex,estimated_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[2]])
 params <- c(fixed_params[[2]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -3711,7 +3718,7 @@ preds_kudo_low <- solution[, c("time","Cblood","Cliver","Ckidney", "Ccarcass","C
 ############################################################################
 # Set up simulations for the 3rd case, i.e. kim (2016) IV male tissues
 BW <- 0.25 #kg, from Kim et al. 2018
-variable_params <- create_variable_params(BW,sex,estimated_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[3]])
 params <- c(fixed_params[[3]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -3732,7 +3739,7 @@ preds_kim_IV_Mtissues <-  solution[, c("time", "Cliver","Ckidney", "Clungs",
 # Set up simulations for the 4th case, i.e. kim (2016) ORAL male tissues
 BW <- 0.25 #kg, from Kim et al. 2018
 sex <- "M" 
-variable_params <- create_variable_params(BW,sex,estimated_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[4]])
 params <- c(fixed_params[[4]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -3753,7 +3760,7 @@ preds_kim_OR_Mtissues <-  solution[, c("time", "Cliver","Ckidney", "Clungs",
 # Set up simulations for the 5th case, i.e. kim (2016) IV female tissues
 BW <- 0.25 #kg, from Kim et al. 2018
 sex <- "F" 
-variable_params <- create_variable_params(BW,sex,estimated_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[5]])
 params <- c(fixed_params[[5]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -3774,7 +3781,7 @@ preds_kim_IV_Ftissues <-  solution[, c("time", "Cliver","Ckidney", "Clungs",
 # Set up simulations for the 6th case, i.e. kim (2016) IV female tissues
 BW <- 0.25 #kg, from Kim et al. 2018
 sex <- "F" 
-variable_params <- create_variable_params(BW,sex,estimated_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[6]])
 params <- c(fixed_params[[6]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -3795,7 +3802,7 @@ preds_kim_OR_Ftissues <-  solution[, c("time", "Cliver","Ckidney", "Clungs",
 # Set up simulations for the 7th case, i.e. Dzierlenga (2021) ORAL male tissues
 BW <- 0.3  # body weight (kg) not reported, based on 8 week male rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
 sex <- "M" 
-variable_params <- create_variable_params(BW,sex,estimated_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[7]])
 params <- c(fixed_params[[7]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -3815,7 +3822,7 @@ preds_dzi_OR_Mtissues <-  solution[, c("time", "Cliver","Ckidney", "Cbrain")]
 # Set up simulations for the 8th case, i.e. Dzierlenga (2021) ORAL female tissues
 BW <- 0.2  # body weight (kg) not reported, # body weight (kg) not reported, based on 8 week female rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
 sex <- "F" 
-variable_params <- create_variable_params(BW,sex,estimated_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[8]])
 params <- c(fixed_params[[8]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -3835,7 +3842,7 @@ preds_dzi_OR_Ftissues <-  solution[, c("time", "Cliver","Ckidney", "Cbrain")]
 # Set up simulations for the 9th case, i.e. Kim (2016) ORAL male blood
 BW <- 0.25  #kg, from Kim et al. 2018
 sex <- "M" 
-variable_params <- create_variable_params(BW,sex,estimated_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[9]])
 params <- c(fixed_params[[9]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -3855,7 +3862,7 @@ preds_kim_OR_Mblood <-  solution[, c("time", "Cplasma")]
 # Set up simulations for the 10th case, i.e. Kim (2016) IV male blood
 BW <- 0.25 #kg, from Kim et al. 2018
 sex <- "M" 
-variable_params <- create_variable_params(BW,sex,estimated_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[10]])
 params <- c(fixed_params[[10]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -3882,7 +3889,7 @@ preds_kim_IV_Mblood <-  solution[, c("time", "Cplasma")]
 sex <- "F"
 BW <- 0.2 #kg
 sample_time <- seq(0,192,1)
-variable_params <- create_variable_params(BW,sex,estimated_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[11]])
 params <- c(fixed_params[[11]], variable_params)
 events <- create.events(params)
 inits <- create.inits (params)
@@ -3895,7 +3902,7 @@ preds_Kemp_OR_Ffeces_low <-  solution[, c("time", "Mfeces")]
 
 ##########################################################################################
 # Set up simulations for the 12th case, i.e.Kemper 2003 (Worley) ORAL female  MEDIUM
-variable_params <- create_variable_params(BW,sex,estimated_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[12]])
 params <- c(fixed_params[[12]], variable_params)
 events <- create.events(params)
 inits <- create.inits (params)
@@ -3908,7 +3915,8 @@ preds_Kemp_OR_Ffeces_med <-  solution[, c("time", "Mfeces")]
 
 ##########################################################################################
 # Set up simulations for the 13th case, i.e.Kemper 2003 (Worley) ORAL female HIGH
-variable_params <- create_variable_params(BW,sex,estimated_params)
+sample_time <- seq(0,672,1)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[13]])
 params <- c(fixed_params[[13]], variable_params)
 events <- create.events(params)
 inits <- create.inits (params)
@@ -3916,7 +3924,7 @@ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params, events = events,
                                     method="lsodes",rtol = 1e-04, atol = 1e-04))
 
-preds_Kemp_OR_Furine_high <-  solution[, c("time", "Murine")]
+preds_Kemp_OR_Furine_high <-  solution[1:169, c("time", "Murine")]
 preds_Kemp_OR_Ffeces_high <-  solution[, c("time", "Mfeces")]
 
 ###################################################################################################
@@ -3925,7 +3933,7 @@ preds_Kemp_OR_Ffeces_high <-  solution[, c("time", "Mfeces")]
 sex <- "M"
 BW <- 0.3 #kg
 sample_time <- seq(0,673,1)
-variable_params <- create_variable_params(BW,sex,estimated_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[14]])
 params <- c(fixed_params[[14]], variable_params)
 inits <- create.inits (params)
 events <- create.events(params)
@@ -3938,7 +3946,7 @@ preds_Kemp_OR_Mfeces_low <-  solution[, c("time", "Mfeces")]
 
 ####################################################################################################
 # Set up simulations for the 15th case, i.e.Kemper 2003 (Worley) ORAL male MEDIUM
-variable_params <- create_variable_params(BW,sex,estimated_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[15]])
 params <- c(fixed_params[[15]], variable_params)
 inits <- create.inits (params)
 events <- create.events(params)
@@ -3951,7 +3959,7 @@ preds_Kemp_OR_Mfeces_med <-  solution[, c("time", "Mfeces")]
 
 ######################################################################################################
 # Set up simulations for the 16th case, i.e.Kemper 2003 (Worley) ORAL male  HIGH
-variable_params <- create_variable_params(BW,sex,estimated_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[16]])
 params <- c(fixed_params[[16]], variable_params)
 inits <- create.inits (params)
 events <- create.events(params)
@@ -3966,7 +3974,7 @@ preds_Kemp_OR_Mfeces_high <-  solution[, c("time", "Mfeces")]
 # Set up simulations for the 17th case, i.e. Dzierlenga 2021, IV male serum
 BW <- 0.3   # body weight (kg) not reported, # body weight (kg) not reported, based on 8 week male rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
 sex <- "M"
-variable_params <- create_variable_params(BW,sex,estimated_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[17]])
 params <- c(fixed_params[[17]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -3984,7 +3992,7 @@ preds_dzi_IV_Mserum <-  solution[, c("time", "Cplasma")]
 # Set up simulations for the 18th case, i.e. Dzierlenga 2021, ORAL male serum low
 BW <- 0.3   # body weight (kg) not reported, # body weight (kg) not reported, based on 8 week male rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
 sex <- "M"
-variable_params <- create_variable_params(BW,sex,estimated_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[18]])
 params <- c(fixed_params[[18]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -4002,7 +4010,7 @@ preds_dzi_OR_Mserum_low <-  solution[, c("time", "Cplasma")]
 # Set up simulations for the 19th case, i.e. Dzierlenga 2021, ORAL male serum medium
 BW <- 0.3   # body weight (kg) not reported, # body weight (kg) not reported, based on 8 week male rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
 sex <- "M"
-variable_params <- create_variable_params(BW,sex,estimated_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[19]])
 params <- c(fixed_params[[19]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -4020,7 +4028,7 @@ preds_dzi_OR_Mserum_medium <-  solution[, c("time", "Cplasma")]
 # Set up simulations for the 20th case, i.e. Dzierlenga 2021, ORAL male serum high
 BW <- 0.3   # body weight (kg) not reported, # body weight (kg) not reported, based on 8 week male rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
 sex <- "M"
-variable_params <- create_variable_params(BW,sex,estimated_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[20]])
 params <- c(fixed_params[[20]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -4038,7 +4046,7 @@ preds_dzi_OR_Mserum_high <-  solution[, c("time", "Cplasma")]
 # Set up simulations for the 21th case, i.e. Dzierlenga 2021, IV female serum
 BW <- 0.2    # body weight (kg) not reported, based on 8 week female rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
 sex <- "F"
-variable_params <- create_variable_params(BW,sex,estimated_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[21]])
 params <- c(fixed_params[[21]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -4056,7 +4064,7 @@ preds_dzi_IV_Fserum <-  solution[, c("time", "Cplasma")]
 # Set up simulations for the 22th case, i.e. Dzierlenga 2021, ORAL female serum low
 BW <- 0.2    # body weight (kg) not reported, based on 8 week female rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
 sex <- "F"
-variable_params <- create_variable_params(BW,sex,estimated_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[22]])
 params <- c(fixed_params[[22]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -4074,7 +4082,7 @@ preds_dzi_OR_Fserum_low <-  solution[, c("time", "Cplasma")]
 # Set up simulations for the 23th case, i.e. Dzierlenga 2021, ORAL female serum medium
 BW <- 0.2    # body weight (kg) not reported, based on 8 week female rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
 sex <- "F"
-variable_params <- create_variable_params(BW,sex,estimated_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[23]])
 params <- c(fixed_params[[23]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -4092,7 +4100,7 @@ preds_dzi_OR_Fserum_medium <-  solution[, c("time", "Cplasma")]
 # Set up simulations for the 24th case, i.e. Dzierlenga 2021, ORAL female serum high
 BW <- 0.2    # body weight (kg) not reported, based on 8 week female rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
 sex <- "F"
-variable_params <- create_variable_params(BW,sex,estimated_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[24]])
 params <- c(fixed_params[[24]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -4112,7 +4120,7 @@ preds_dzi_OR_Fserum_high <-  solution[, c("time", "Cplasma")]
 # Set up simulations for the 25th case, i.e. Kim (2016) ORAL female blood
 BW <- 0.25  #kg, from Kim et al. 2018
 sex <- "F" 
-variable_params <- create_variable_params(BW,sex,estimated_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[25]])
 params <- c(fixed_params[[25]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -4130,7 +4138,7 @@ preds_kim_OR_Fblood <-  solution[, c("time", "Cplasma")]
 # Set up simulations for the 26th case, i.e. Kim (2016) IV female blood
 BW <- 0.25 #kg, from Kim et al. 2018
 sex <- "F" 
-variable_params <- create_variable_params(BW,sex,estimated_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[26]])
 params <- c(fixed_params[[26]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -4148,7 +4156,7 @@ preds_kim_IV_Fblood <-  solution[, c("time", "Cplasma")]
 # Set up simulations for the 27th case, i.e. Gustafsson (2022) oral male blood
 BW <- 0.5125  #kg, from Gustafsson et al., 2022
 sex <- "M" 
-variable_params <- create_variable_params(BW,sex,estimated_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[27]])
 params <- c(fixed_params[[27]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -4166,7 +4174,7 @@ preds_gus_OR_Mblood <-  solution[, c("time", "Cplasma")]
 # Set up simulations for the 28st case, i.e. Gustafsson (2022) Inhalation male tissues
 BW <- 0.5125  #kg, from Gustafsson et al., 2022
 sex <- "M"
-variable_params <- create_variable_params(BW,sex,estimated_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[28]])
 params <- c(fixed_params[[28]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -4193,7 +4201,6 @@ preds_dzi_OR_Mtissues[,2:dim(preds_dzi_OR_Mtissues)[2]] <- preds_dzi_OR_Mtissues
 preds_dzi_OR_Ftissues[,2:dim(preds_dzi_OR_Ftissues)[2]] <- preds_dzi_OR_Ftissues[,2:dim(preds_dzi_OR_Ftissues)[2]] /1000
 preds_kim_OR_Mblood[,2:dim(preds_kim_OR_Mblood)[2]] <- preds_kim_OR_Mblood[,2:dim(preds_kim_OR_Mblood)[2]] /1000
 preds_kim_IV_Mblood[,2:dim(preds_kim_IV_Mblood)[2]] <- preds_kim_IV_Mblood[,2:dim(preds_kim_IV_Mblood)[2]] /1000
-preds_Lup_OR_Ftissues[,2:dim(preds_Lup_OR_Ftissues)[2]] <- preds_Lup_OR_Ftissues[,2:dim(preds_Lup_OR_Ftissues)[2]] /1000
 preds_Kemp_OR_Ffeces_high[,2:dim(preds_Kemp_OR_Ffeces_high)[2]] <- preds_Kemp_OR_Ffeces_high[,2:dim(preds_Kemp_OR_Ffeces_high)[2]] /1000
 preds_Kemp_OR_Mfeces_high[,2:dim(preds_Kemp_OR_Mfeces_high)[2]] <- preds_Kemp_OR_Mfeces_high[,2:dim(preds_Kemp_OR_Mfeces_high)[2]] /1000
 preds_Kemp_OR_Furine_low[,2:dim(preds_Kemp_OR_Furine_low)[2]] <- preds_Kemp_OR_Furine_low[,2:dim(preds_Kemp_OR_Furine_low)[2]] /1000
@@ -4319,8 +4326,8 @@ colnames(experiment10) <- c("Time",unique(kim_IV_Mblood$Tissue))
 
 # Convert Kemper ORAL female urine low from long to wide format using reshape
 experiment11a <- reshape(Kemp_OR_Furine_low [c("Tissue" ,"Time_h", 
-                                              "Cum_dose_%")], 
-                        idvar = "Time_h", timevar = "Tissue", direction = "wide")
+                                               "Cum_dose_%")], 
+                         idvar = "Time_h", timevar = "Tissue", direction = "wide")
 colnames(experiment11a) <- c("Time",unique(Kemp_OR_Furine_low$Tissue))
 experiment11a$Urine = (experiment11a$Urine/100)*0.2*1
 
@@ -4334,8 +4341,8 @@ experiment11b$Feces = (experiment11b$Feces/100)*0.2*1
 
 # Convert Kemper ORAL female urine med from long to wide format using reshape
 experiment12a <- reshape(Kemp_OR_Furine_med[c("Tissue" ,"Time_h", 
-                                             "Cum_dose_%")], 
-                        idvar = "Time_h", timevar = "Tissue", direction = "wide")
+                                              "Cum_dose_%")], 
+                         idvar = "Time_h", timevar = "Tissue", direction = "wide")
 colnames(experiment12a) <- c("Time",unique(Kemp_OR_Furine_med$Tissue))
 experiment12a$Urine = (experiment12a$Urine/100)*0.2*5
 
@@ -4349,8 +4356,8 @@ experiment12b$Feces = (experiment12b$Feces/100)*0.2*5
 
 # Convert Kemper ORAL female urine high from long to wide format using reshape
 experiment13a <- reshape(Kemp_OR_Furine_high[c("Tissue" ,"Time_h", 
-                                              "Cum_dose_%")], 
-                        idvar = "Time_h", timevar = "Tissue", direction = "wide")
+                                               "Cum_dose_%")], 
+                         idvar = "Time_h", timevar = "Tissue", direction = "wide")
 colnames(experiment13a) <- c("Time",unique(Kemp_OR_Furine_high$Tissue))
 experiment13a$Urine = (experiment13a$Urine/100)*0.2*25
 
@@ -4364,8 +4371,8 @@ experiment13b$Feces = (experiment13b$Feces/100)*0.2*25
 
 # Convert Kemper ORAL male urine low from long to wide format using reshape
 experiment14a <- reshape(Kemp_OR_Murine_low [c("Tissue" ,"Time_h", 
-                                              "Cum_dose_%")], 
-                        idvar = "Time_h", timevar = "Tissue", direction = "wide")
+                                               "Cum_dose_%")], 
+                         idvar = "Time_h", timevar = "Tissue", direction = "wide")
 colnames(experiment14a) <- c("Time",unique(Kemp_OR_Murine_low$Tissue))
 experiment14a$Urine = (experiment14a$Urine/100)*0.3*1
 
@@ -4379,8 +4386,8 @@ experiment14b$Feces = (experiment14b$Feces/100)*0.3*1
 
 # Convert Kemper ORAL male urine med from long to wide format using reshape
 experiment15a <- reshape(Kemp_OR_Murine_med[c("Tissue" ,"Time_h", 
-                                             "Cum_dose_%")], 
-                        idvar = "Time_h", timevar = "Tissue", direction = "wide")
+                                              "Cum_dose_%")], 
+                         idvar = "Time_h", timevar = "Tissue", direction = "wide")
 colnames(experiment15a) <- c("Time",unique(Kemp_OR_Murine_med$Tissue))
 experiment15a$Urine = (experiment15a$Urine/100)*0.3*5
 
@@ -4395,8 +4402,8 @@ experiment15b$Feces = (experiment15b$Feces/100)*0.3*5
 
 # Convert Kemper ORAL male urine high from long to wide format using reshape
 experiment16a <- reshape(Kemp_OR_Murine_high[c("Tissue" ,"Time_h", 
-                                              "Cum_dose_%")], 
-                        idvar = "Time_h", timevar = "Tissue", direction = "wide")
+                                               "Cum_dose_%")], 
+                         idvar = "Time_h", timevar = "Tissue", direction = "wide")
 colnames(experiment16a) <- c("Time",unique(Kemp_OR_Furine_high$Tissue))
 experiment16a$Urine = (experiment16a$Urine/100)*0.3*25
 
@@ -4520,7 +4527,6 @@ colnames(preds_dzi_OR_Ftissues) <- colnames(preds_dzi_OR_Mtissues)
 colnames(preds_kim_OR_Mblood) <- c ("Time", "Plasma")
 colnames(preds_kim_IV_Mblood) <- c ("Time", "Plasma")
 
-colnames(preds_Lup_OR_Ftissues) <- c ("Time", "Liver","Kidney","Blood","Skin")
 colnames(preds_Kemp_OR_Ffeces_high) <- c ("Time", "Feces")
 colnames(preds_Kemp_OR_Mfeces_high) <- c ("Time", "Feces")
 
