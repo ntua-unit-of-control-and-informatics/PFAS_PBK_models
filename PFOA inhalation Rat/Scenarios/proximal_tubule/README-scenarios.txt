@@ -11,4 +11,7 @@ Scenario9: only kidney oatp  sexually different and f_protein, ka =  5.8e5
 Scenario10: only kidney oatp  sexually different andf_protein, ka = 7e4
 Scenario11: only kidney oatp  sexually different and ka, koff fitted 
 Scenario12: only kidney oatp  sexually different and ka fitted, koff = 0.1
-Scenario13: only kidney oatp  sexually different and ka, koff fitted. Also includes active secretion 
+Scenario13: only kidney oatp  sexually different and includes active secretion, ka =  5.8e5 
+
+Scenario14: only kidney oatp  sexually different and includes active secretion, ka =  7e4
+Scenario15: only kidney oatp  sexually different  and ka fitted and includes active secretion
