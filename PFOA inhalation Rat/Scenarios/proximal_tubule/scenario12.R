@@ -31,7 +31,7 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   f_fabp_avail <- 1
   f_alb_avail <- 1
   
-  koff_alb <-  estimated_params[9]
+  koff_alb <-  0.1
   koff_fabp <-  koff_alb
   koff_a2u <- koff_alb
   
@@ -40,8 +40,8 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   KmK_baso <- 1e20
   KmK_api <-   1e20
   KLfabp <- (1.2e5+4e4+1.9e4)  #[L/mol]*1e-3 , value from Cheng et al. (2017)
-  Ka <- 5.8e05 # 5.8e05 from Rue et al. (2024)#mol/L
-  CLfeces_unscaled <- estimated_params[10] #in L/h/BW^(-0.25), scaling similar to Loccisano et al. (2012)
+  Ka <- estimated_params[10] # 5.8e05 from Rue et al. (2024)#mol/L
+  CLfeces_unscaled <- estimated_params[9] #in L/h/BW^(-0.25), scaling similar to Loccisano et al. (2012)
   CLfeces <- CLfeces_unscaled*BW^(-0.25)  #in L/h
   
   #In order to scale transporter Vmax, we need to have the tissue weight to estimate
@@ -3638,7 +3638,7 @@ Kemp_OR_Ffeces_low <- openxlsx::read.xlsx("Data/PFOA_Feces_female_oral_1_mg_per_
 Kemp_OR_Mfeces_low <- openxlsx::read.xlsx("Data/PFOA_Feces_male_oral_1_mg_per_kg-Loc.xlsx")
 
 
-setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/proximal_tubule/scenario1")
+setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/proximal_tubule/scenario12")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -3679,10 +3679,10 @@ Papp_RYU = 1.46e-6*3600 # cm/h, at pH = 7.4 from Ryu et al. (2024) [https://doi.
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
 
 N_pars <- 10 # Number of parameters to be fitted
-fit <-  c(rep(log(1),7), log(mean(c(Papp_Kimura,Papp_RYU))), log(1),log(1e-3))
+fit <-  c(rep(log(1),7), log(mean(c(Papp_Kimura,Papp_RYU))), log(1e-3),log(1e5))
 
-lb = c(rep(log(1e-20),7), log(Papp_RYU),log(1e-3), log(1e-4))
-ub = c(rep(log(1e10),  7), log(Papp_Kimura) ,log(10),  log(1e1) )
+lb = c(rep(log(1e-20),7), log(Papp_RYU), log(1e-4),log(5e3))
+ub = c(rep(log(1e10),  7), log(Papp_Kimura) ,  log(1e1),log(1e6) )
 
 fixed_params <- create_all_fixed_params()
 # Run the optimization algorithm to estimate the parameter values
@@ -3696,7 +3696,7 @@ optimizer <- nloptr::nloptr( x0= fit,
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
-save.image("scenario1.RData")
+save.image("scenario12.RData")
 
 
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
