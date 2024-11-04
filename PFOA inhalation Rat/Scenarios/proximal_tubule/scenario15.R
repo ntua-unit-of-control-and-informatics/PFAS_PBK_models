@@ -3689,7 +3689,7 @@ Papp_RYU = 1.46e-6*3600 # cm/h, at pH = 7.4 from Ryu et al. (2024) [https://doi.
 N_pars <- 12 # Number of parameters to be fitted
 fit <-  c(rep(log(1),7), log(mean(c(Papp_Kimura,Papp_RYU))), log(1),log(1e-3), log(1), log(1e5))
 
-lb = c(rep(log(1e-20),7), log(Papp_RYU),log(1e-2), log(1e-4), log(1e-20), log(3e5))
+lb = c(rep(log(1e-20),7), log(Papp_RYU),log(1e-2), log(1e-4), log(1e-20), log(5e3))
 ub = c(rep(log(1e10),  7), log(Papp_Kimura) ,log(10),  log(1e1), log(1e10), log(1e6) )
 
 fixed_params <- create_all_fixed_params()
