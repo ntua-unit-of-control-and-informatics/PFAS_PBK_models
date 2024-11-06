@@ -1,6 +1,6 @@
 library(deSolve)
 #setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation")
-setwd("C:/Users/Ioannis/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/few_params_PT_excreta_not_restricted")
+setwd("C:/Users/Ioannis/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_Scenario15")
 
 #  absolute average fold error
 AAFE <- function(predictions, observations, times=NULL){
@@ -20,7 +20,7 @@ AAFE <- function(predictions, observations, times=NULL){
 #===============
 
 
-load("few_params_PT_excreta_not_restricted.RData")
+load("scenario15_simplified.RData")
 # Body weight 
 
 
@@ -52,7 +52,7 @@ user_input <- list('BW'=BW_init,
                    "sex" = sex)
 
 
-params <- create.params(user_input)
+params <- create_params(user_input)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -91,7 +91,7 @@ user_input <- list('BW'=BW_init,
                    "sex" = sex)
 
 
-params <- create.params(user_input)
+params <- create_params(user_input)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -131,7 +131,7 @@ user_input <- list('BW'=BW_init,
                    "sex" = sex)
 
 
-params <- create.params(user_input)
+params <- create_params(user_input)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -171,7 +171,7 @@ user_input <- list('BW'=BW_init,
                    "sex" = sex)
 
 
-params <- create.params(user_input)
+params <- create_params(user_input)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -251,5 +251,5 @@ print(paste0("The AAFE on the excreta data of Cui et al. (2010) is ", AAFE_Cui))
 
 write.csv(results_df,
           #"C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_results/Kemper_2003_excreta_Loccisano_results.csv",
-          "C:/Users/Ioannis/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/few_params_PT_excreta_not_restricted/Cui_2010_Excreta_results.csv",
+          "C:/Users/Ioannis/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_Scenario15/Cui_2010_Excreta_results.csv",
           row.names =F)
