@@ -1,7 +1,8 @@
 #Graphene oxide model
 
 library(deSolve)
-setwd("C:/Users/Ioannis/Documents/GitHub/PBK_Grouping/Graphene Oxide")
+setwd("C:/Users/Ioannis/Documents/GitHub/PFAS_PBK_models/Graphene Oxide")
+
 
 create.params <- function(user.input){
   with(as.list(user.input),{
@@ -31,7 +32,7 @@ create.params <- function(user.input){
     VLi <- PVLi * BW #liver volume kg=L
     PVLiB <- 0.31  #Brown et al. 1997. Table 30
     VLiB <- PVLiB * PVLi * BW #liver blood volume kg=L
-    
+    V_macro = 12.5/100*VLi
     #Stomach
     PVSt <- 6e-3 #Brown et al. 1997, Table 4
     VSt <- PVSt * BW #Stomach volume kg=L
@@ -257,10 +258,10 @@ create.params <- function(user.input){
     AcRe= (AcKi+AcLi+AcSt+AcSIn+AcLIn+AcLn+AcSpl+AcH+AcBr)/9
 
     
-    #Liver cells
-    liver_cells = 35*1e6 #cells/per g of liver, https://doi.org/10.1016/j.tiv.2006.06.003
-    macrophages = 12.5/100*liver_cells #10-15% of total liver cells, https://doi.org/10.1136/bmjgast-2016-000079
-    V_macro = 12.5/100*VLi
+    # #Liver cells
+    # liver_cells = 35*1e6 #cells/per g of liver, https://doi.org/10.1016/j.tiv.2006.06.003
+    # macrophages = 12.5/100*liver_cells #10-15% of total liver cells, https://doi.org/10.1136/bmjgast-2016-000079
+  
     
     return(list('VB'=VB,'Vplasma'=Vplasma,'VBven'=VBven,'VBart'=VBart,
                 'VKi'=VKi,'VKiB'=VKiB,
@@ -321,8 +322,8 @@ ode.func <- function(time, inits, params){
     CLE_urine <- estimated_params[13]
     
     Pup <- estimated_params[14]
-    Km <- estimated_params[15]
-    CLup <- estimated_params[16]
+    Km <- 5*1e6
+    CLup <- estimated_params[15]
     
     # Blood concentration
     CBven <- MBven/VBven
@@ -393,12 +394,12 @@ ode.func <- function(time, inits, params){
     dMBLi = QBLi*CBart - (QBLi+QBSpl+QBSIn+QBLIn+QBSt)*CLiB + QBSpl*CSplB  + QBSIn*CSInB  + 
       QBLIn*CLInB + QBSt*CStB  - QparaLi*(1-SLi)*CLiB - 
       coef_liver*(QBLi+QBSpl+QBSIn+QBLIn+QBSt)*(CLiB - CLi) -
-      Pup*V_macro*MBLi*(1-(Cmacro_Li/(Km + Cmacro_Li))) + CLup*Cmacro_Li*V_macro
+      Pup*V_macro*CLiB*(1-(Cmacro_Li/(Km + Cmacro_Li))) + CLup*Cmacro_Li*V_macro
     #tissue subcompartment
     dMLi =  QparaLi*(1-SLi)*CLiB - CLEh*MLi + 
       coef_liver*(QBLi+QBSpl+QBSIn+QBLIn+QBSt)*(CLiB - CLi)  
     #macrophages
-    dMmacro_Li = Pup*V_macro*MBLi*(1-(Cmacro_Li/(Km + Cmacro_Li))) - CLup*Cmacro_Li*V_macro
+    dMmacro_Li = Pup*V_macro*CLiB*(1-(Cmacro_Li/(Km + Cmacro_Li))) - CLup*Cmacro_Li*V_macro
     
     
     #Stomach
@@ -1022,7 +1023,7 @@ obj.func <- function(x, dataset){
 ################################################################################
 
 
-setwd("C:/Users/Ioannis/Documents/GitHub/PBK_Grouping/Graphene Oxide")
+setwd("C:/Users/Ioannis/Documents/GitHub/PFAS_PBK_models/Graphene Oxide")
 
 MW <- 124.91 #g/mol
 source("Goodness-of-fit-metrics.R")
@@ -1036,7 +1037,7 @@ Liu_1_small_diftp_blood <- openxlsx::read.xlsx("Data/Liu_2012_GO_male_small_1_bl
 Liu_1_large_diftp_blood <- openxlsx::read.xlsx("Data/Liu_2012_GO_male_large_1_blood_dif_times.xlsx")
 
 
-setwd("C:/Users/Ioannis/Documents/GitHub/PBK_Grouping/Graphene Oxide/Training/AAFE/GO_model")
+setwd("C:/Users/Ioannis/Documents/GitHub/PFAS_PBK_models/Graphene Oxide/Training/AAFE/GO_model")
 
 dataset <- list("df1" = Liu_1_small_tissues,"df2" = Liu_1_small_diftp_tissues,
                 "df3" = Liu_1_large_diftp_tissues,"df4" = Liu_2_small_tissues,
@@ -1050,18 +1051,24 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0, 
-              "maxeval" = 1000, 
+              "maxeval" = 200, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
 #Parameter names:
 
+N_pars <- 15 # Number of parameters to be fitted
+fit <-  c(rep(log(1),13),log (1), log (1e-3))
 
-N_pars <- 16 # Number of parameters to be fitted
-fit <-  c(rep(log(1),14), log (1e3), log (1e-2))
+lb = c(rep(log(1e-20),13), log(1e-3), log (1e-5))
+ub = c(rep(log(1e20),13), log(10), log (1e-2))
 
-lb = c(rep(log(1e-10),16))
-ub = c(rep(log(1e10),16))
+
+# N_pars <- 16 # Number of parameters to be fitted
+# fit <-  c(rep(log(1),13),log (1), log (1e6), log (1e-3))
+# 
+# lb = c(rep(log(1e-20),13), log(1e-3), log(1e4),log (1e-5))
+# ub = c(rep(log(1e20),13), log(10), log(1e10), log (1e-2))
 
 # Run the optimization algorithm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
