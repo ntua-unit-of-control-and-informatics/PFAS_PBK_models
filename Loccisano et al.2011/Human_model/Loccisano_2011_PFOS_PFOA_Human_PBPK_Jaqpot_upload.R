@@ -214,7 +214,7 @@ ode.func <- function(time, inits, params, custom.func){
 BW = 70 # human body weight in kg
 substance <- 'PFOA' # select substance: PFOA/PFOS
 admin.type <- 'oral' # administration type values: oral/iv
-admin.dose <- c(3.55,0) # administered dose in ug/L or ug
+admin.dose <- c(3.55,0) # administered dose in mg
 admin.time <- c(0, 30*24*360) # time when doses are administered, in hours
 Drinking_rate <- BW*11/1000/24 # L/h
 
