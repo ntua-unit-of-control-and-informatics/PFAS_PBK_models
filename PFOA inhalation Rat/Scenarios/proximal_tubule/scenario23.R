@@ -279,7 +279,9 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   # which is more appropriate for 
   # For endothelial and cellular permeability we use the Ryu et al. (2024) value
   #Papp = Papp_RYU
-  P_passive = ( (Papp_gut/100) * fixed_params$AINL)*1000 #L/h
+  k_gut_in = ( (Papp_gut/100) * fixed_params$AINL)*1000 #L/h
+  k_gut_out = ( (Papp/100) * fixed_params$AINL)*1000 #L/h
+  
   
   #passive diffusion rates, in L/h
   kLFLT = ((Papp/100) * fixed_params$AcL)*1000 #m^3/h * 1000 --> L/h
@@ -305,9 +307,9 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   kCdcTu <- ((Papp/100) * fixed_params$ACD) *1000 #diffusion between collecting duct cells and tubule filtrate
   
   #Diffusion rates in L/h between  tubule cells and interstitial space
-  kDalcF <- ((Papp/100) * fixed_params$AcK_DALC) *1000 #diffusion between proximal tubule cells and interstitial space
-  kCdcF <- ((Papp/100) * fixed_params$AcK_CDC) *1000 #diffusion between descending/ascending cells and interstitial space
-  kKTrestF  <- ((Papp/100) * fixed_params$AcKTrest) *1000 #diffusion between rest of kidney cells and interstitial space
+  kDalcF <- 0#((Papp/100) * fixed_params$AcK_DALC) *1000 #diffusion between proximal tubule cells and interstitial space
+  kCdcF <- 0#((Papp/100) * fixed_params$AcK_CDC) *1000 #diffusion between descending/ascending cells and interstitial space
+  kKTrestF  <- 0#((Papp/100) * fixed_params$AcKTrest) *1000 #diffusion between rest of kidney cells and interstitial space
   
   #Effective permeability (Peff, in mm/h) for blood (B), liver(L), kidney(K),
   #stomach(ST),intestine (IN), adipose(A), muscle(M), spleen (SP), heart (H), 
@@ -370,7 +372,7 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
     'KmK_baso' = KmK_baso, 'KmK_api' = KmK_api,
     'VmK_baso' = VmK_baso,'VmK_api' = VmK_api,
     
-    'Papp' = Papp, 'P_passive' = P_passive,
+    'Papp' = Papp, 'k_gut_in' = k_gut_in, 'k_gut_out' = k_gut_out,
     'kKTrestF'=kKTrestF, 'kCdcF' = kCdcF, 'kDalcF' = kDalcF,
     'kPtcTu'=kPtcTu, 'kDalcTu' = kDalcTu, 'kDtcTu' = kDtcTu, 'kCdcTu' = kCdcTu, 
     'kLFLT'=kLFLT,  'kAFAT'=kAFAT, 
@@ -857,7 +859,7 @@ create_fixed_params <- function(user.input){
       QGFR <- PQGFR * VK #L/h
       Qurine <- (85/1000)*BW/24 #([ml/d/kg]/1000)*BW/24 --> L/h, from Schmidt et al., 2001, https://doi.org/10.1002/nau.1006  
     }
-    QGE<- 0.54/BW^0.25 #gastric emptying time (1/(h*BW^0.25)); from Yang, 2013
+    QGE<- 1.41/BW^0.25 #gastric emptying time (1/(h*BW^0.25)); from Yang, 2013 [https://doi.org/10.1016/j.taap.2013.03.022]
     
     #flows of filtrate compartments from Gilmer et al. (2018) 
     # [https://doi.org/10.1152/ajprenal.00219.2018], nL/min ---> L/h 
@@ -911,7 +913,7 @@ create_fixed_params <- function(user.input){
     AThickAL <- 2*pi*(RThickAL_cort*LThickAL_cort + RThickAL_med*LThickAL_med)*n #Thick ascending limb (Cortical and Medullary)
     ADAL <- ATDL + AThinAL + AThickAL
     ADT <- 2*pi*(RDT_sup*LDT_sup + RDT_deep*LDT_deep)*n #Distal tubule (superficial+deep)
-    ACD <- 2*pi*(Rduct_cort*Lduct_cort + Lduct_med*Lduct_med)*n #collecting duct (Cortical+Outer)
+    ACD <- 2*pi*(Rduct_cort*Lduct_cort + Rduct_med*Lduct_med)*n #collecting duct (Cortical+Outer)
     AFil <- APT + ADAL + ADT + ACD
     
     #Alveolar cells surface area (Type I and II), m^2
@@ -1521,9 +1523,9 @@ ode.func <- function(time, inits, params){
     dMINFf = QparaIn*(1-SIn)*CINBf + PeffIN*AIN*(CINBf-CINFf) - kINFINT*(CINFf-CINTf) +
       koff_alb*CINFb*VINF - kon_alb*CalbINFf*CINFf*VINF
     #Intestine tissue subcompartment
-    dMINTf = kINFINT*(CINFf-CINTf) + P_passive*CINL + (VmIn_Oatp2*CINL/(KmIn_Oatp2+CINL)) 
+    dMINTf = kINFINT*(CINFf-CINTf) + k_gut_in*CINL - k_gut_out*CINTf + (VmIn_Oatp2*CINL/(KmIn_Oatp2+CINL)) 
     #Intestine lumen
-    dMINL = QGE*CSTL - (CLfeces*CINL) - P_passive*CINL + CLbile*Qbile - 
+    dMINL = QGE*CSTL - (CLfeces*CINL) - k_gut_in*CINL + k_gut_out*CINTf + CLbile*Qbile - 
       (VmIn_Oatp2*CINL/(KmIn_Oatp2+CINL))
     
     

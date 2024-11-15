@@ -9,11 +9,11 @@ create.params <- function(user.input){
     # https://doi.org/10.3390/toxics12040253, Table 1
     
     n=1
-    Ka <- 7e4
+    Ka <- 5.8e5
     CalbB_init <- 486*1e-06 #mol/L
     Calb_exp_init <- 600*1e-06 #mol/L
-    Cpfoa_init <-  1.92/414.07#5*1e-06 #mol/L
-    koff_alb <- 0.0005 #1/s
+    Cpfoa_init <-  5*1e-06 #5*1e-06 #mol/L
+    koff_alb <- 0.001#1/s
     kon_alb <- Ka * koff_alb #1/M/s
 
     return(list("CalbB_init" = CalbB_init, "Cpfoa_init" = Cpfoa_init, "kon_alb" = kon_alb, 
@@ -77,21 +77,21 @@ inits <- create.inits(params)
 events <- create.events(params)
 
 
-sample_time=seq(0,48,1)
+sample_time=seq(0,18,1)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
                                     method="lsodes",rtol = 1e-07, atol = 1e-07))
-plot(solution$CPFOA_free, solution$CPFOA_bound, type = "l")
+plot(solution$time, solution$ff, type = "l")
 
-Bmax = 486*1e-06
-Ka <- 5.8e5
-kd <- 1/Ka
-CalbB_init <- 486*1e-06 #mol/L
-Calb_exp_init <- 600*1e-06 #mol/L
-Cpfoa_init <-  1.92/414.07#5*1e-06 #mol/L
-koff_alb <- 0.01 #1/s
-kon_alb <- Ka * koff_alb #1/M/s
-
-Cfree = seq(1e-6,1e-4, 1e-6)
-Cbound = n*Bmax*Cfree/(Cfree+kd)
-plot(Cfree, Cbound)
+# Bmax = 486*1e-06
+# Ka <- 5.8e5
+# kd <- 1/Ka
+# CalbB_init <- 486*1e-06 #mol/L
+# Calb_exp_init <- 600*1e-06 #mol/L
+# Cpfoa_init <-  1.92/414.07#5*1e-06 #mol/L
+# koff_alb <- 0.01 #1/s
+# kon_alb <- Ka * koff_alb #1/M/s
+# 
+# Cfree = seq(1e-6,1e-4, 1e-6)
+# Cbound = n*Bmax*Cfree/(Cfree+kd)
+# plot(Cfree, Cbound)
