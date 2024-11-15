@@ -399,6 +399,623 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
 }  
 
 
+create_fixed_params <- function(user.input){
+  with(as.list(user.input),{
+    
+    #permeabilities correction factor
+    kabs_st <- 0 #m/h
+    #units conversion from Cheng 2017R, time-> h, PFOA mass->ng, tissues mass-> g
+    Hct <- 0.41 #hematocrit for rats, https://doi.org/10.1080/13685538.2017.1350156 mean value for both males and females
+    #======Table S1=======#    
+    
+    #Blood
+    PVB <- 54e-3 #13.5 mL/244 g=0.055 mL/g~55e-3 mL/g (kg=L), Davies et al. 1993, for BW = 0.25 kg
+    VB <- PVB * BW #blood volume kg=L
+    PVplasma <- 31.2e-3 
+    Vplasma <- PVplasma * BW #plasma volume kg=L
+    VVen <- BW*11.3/250 	#volume of venous plasma (L); from doi:10.1007/bf02353860
+    VArt <- BW*5.6/250	#volume of arterial plasma (L); from doi:10.1007/bf02353860
+    
+    #Kidney
+    PVK <- 7.3e-3 #Brown et al. 1997
+    VK <- PVK * BW #kidney volume kg=L 
+    PVKB <- 0.16 #Brown et al. 1997
+    VKB <- PVKB * PVK * BW #kidney blood volume kg=L
+    PVKF <- 0.13 # Wolgast et al. (1981) [https//doi.org/10.1152/ajprenal.1981.241.2.F105]
+    VKF <- PVKF * PVK * BW #kidney interstitial fluid volume kg=L
+    
+    # Here we assume that the length of each segment of the renal tubule is 
+    # analogous to the body weight of the kidney in order to obtain
+    # volumes and surface areas as a function of BW
+    Vki_ref <- 2.9/1000 # Gilmer et al. (2018) handled data from Sperber, 1944 (Thesis: “Studies on the Mammalian Kidney")
+    #Total Length of renal tubules, from Gilmer et al. (2018) [https://doi.org/10.1152/ajprenal.00219.2018.]
+    LPT_slp <- (VK/Vki_ref)*(9886*1e-6)*26980*2 #m, Proximal tubule (short-looped nephrons)
+    LPT_llp <- (VK/Vki_ref)*(11077*1e-6 )*11020*2#m, Proximal tubule (long-looped nephrons)
+    LPT <- LPT_slp+LPT_llp
+    LTDL_slp <- (VK/Vki_ref)*(1500*1e-6)*26980*2 #m, Thin descending limb (short-looped nephrons)
+    LTDL_llp <- (VK/Vki_ref)*(6200*1e-6)*11020*2 #m, Thin descending limb (long-looped nephrons)
+    LThinAL <-(VK/Vki_ref)* (4700*1e-6)*11020*2 #m, Thin ascending limb (long-looped nephrons)
+    LThickAL_cort <- (VK/Vki_ref)*(1450*1e-6)*38000*2 #m, Cortical thick ascending limb
+    LThickAL_med <- (VK/Vki_ref)*(2100*1e-6)*38000*2 #m, Medullary thick ascending limb 
+    LDT_sup <- (VK/Vki_ref)*(1452*1e-6)*26980*2 #m, Distal tubule* (superficial)
+    LDT_deep <- (VK/Vki_ref)*(1650*1e-6)*11020*2 #m, Distal tubule* (deep) 
+    LDT <- LDT_sup + LDT_deep
+    Lduct_cort <- (VK/Vki_ref)*(2900*1e-6)*6000*2#m, Cortical collecting duct 
+    Lduct_med <-  (VK/Vki_ref)*(2100*1e-6)*6000*2 #m, Outer medullary collecting duct 
+    
+    # Renal tubule radius per compartment
+    RPT_slp <- (22.9/2)*1e-6 #m, Proximal tubule (short-looped nephrons)
+    RPT_llp <-(23.1/2)*1e-6#m, Proximal tubule (long-looped nephrons)
+    RTDL_slp <- (15/2)*1e-6 #m, Thin descending limb (short-looped nephrons)
+    RTDL_llp <- (15/2)*1e-6 #m, Thin descending limb (long-looped nephrons)
+    RThinAL <- (15/2)*1e-6 #m, #Thin ascending limb (long-looped nephrons)
+    RThickAL_cort <- (25.4/2)*1e-6 #m, Cortical thick ascending limb
+    RThickAL_med <- (29/2)*1e-6 #m, Medullary thick ascending limb 
+    RDT_sup <- (39/2)*1e-6 #m, Distal tubule* (superficial)
+    RDT_deep <- (43/2)*1e-6 #m, Distal tubule* (deep) 
+    Rduct_cort <- (24/2)*1e-6 #m, Cortical collecting duct 
+    Rduct_med <-  (24/2)*1e-6 #m, Outer medullary collecting duct 
+    
+    #volumes of filtrate compartments,[m^3]*1e3 --> L
+    VPT <- 2*pi*((RPT_slp^2)*LPT_slp + (RPT_llp^2)*LPT_llp)*1e3 # Proximal tubule (short- and long-looped)
+    VTDL <- 2*pi*( (RTDL_slp^2)*LTDL_slp+(RTDL_llp^2)*LTDL_llp)*1e3 #Thin descending limb (short- and long-looped)
+    VThinAL <-  2*pi*((RThinAL^2)*LThinAL)*1e3 #Thin ascending limb (long-looped)
+    VThickAL <- 2*pi*((RThickAL_cort^2)*LThickAL_cort+(RThickAL_med^2)*LThickAL_med)*1e3 #Thick ascending limb (Cortical and Medullary)
+    VDAL <- VTDL + VThinAL+ VThickAL # Loop of Henle
+    VDT <- 2*pi*((RDT_sup^2)*LDT_sup+(RDT_deep^2)*LDT_deep)*1e3#Distal tubule (superficial+deep)
+    VCD <- 2*pi*((Rduct_cort^2)*Lduct_cort+(Rduct_med^2)*Lduct_med)*1e3 #collecting duct (Cortical+Outer)
+    VFil <-  VPT+VDAL+VDT+VCD #L
+    # We hypothesize that when kidney is weighted the renal tubule content remains inside 
+    VKT <- VK - VKF - VFil#kidney tissue volume kg=L
+    
+    #Wang et al. (2024) [https://doi.org/10.1038/s41598-024-53270-2] state that "More than 80% of 
+    # renal cortical cells are tubular epithelial cells". By assuming that this percentage holds for
+    # the medulla region, we have that the total fraction of tubular cells is 0.8
+    f_tubular <- 0.8
+    # Clark et al. (2019) [https://doi.org/10.1016/j.kint.2018.11.028] 
+    # state that "Proximal tubule cells account for roughly 52% of the estimated
+    # 206 million tubule epithelial cells per kidney. However, they account for approximately 69% of 
+    # total tubule protein mass by virtue of their large size compared with other renal tubule cells".
+    # Thus, here we assume that the volume is analogous to the protein mass:
+    f_PTC_prot_to_tub_prot <- 0.6939
+    f_DALC_prot_to_tub_prot <- (0.0339 + 0.1156)
+    f_DTC_prot_to_tub_prot <- 0.08
+    f_CDC_prot_to_tub_prot <- 0.0766
+    
+    VPTC <- f_tubular*f_PTC_prot_to_tub_prot*VKT #for comparison, for 300g male rat we have 0.38mL and Worley and Fisher have 0.34 mL
+    VDALC <- f_tubular*f_DALC_prot_to_tub_prot*VKT #for comparison, for 300g male rat we have 0.38mL and Worley and Fisher have 0.34 mL
+    VDTC <- f_tubular*f_DTC_prot_to_tub_prot*VKT #for comparison, for 300g male rat we have 0.38mL and Worley and Fisher have 0.34 mL
+    VCDC <- f_tubular*f_CDC_prot_to_tub_prot*VKT #for comparison, for 300g male rat we have 0.38mL and Worley and Fisher have 0.34 mL
+    VKTrest <- (1-f_tubular)*VKT
+    
+    VBladder <- 0.001 #https://doi.org/10.1152/physrev.00038.2003 (CHECK)
+    
+    #Liver
+    PVL <- 3.66e-2 #Brown et al. 1997
+    VL <- PVL * BW #liver volume kg=L
+    PVLB <- 0.21  #Brown et al. 1997
+    VLB <- PVLB * PVL * BW #liver blood volume kg=L
+    PVLF <- 0.16  #pkSim
+    VLF <- PVLF * PVL* BW #liver interstitial fluid volume kg=L
+    VLT <- VL - VLF #liver tissue volume kg=L
+    PVLbile <- 47e-3/200 #mL/g BW,  https://doi.org/10.1016/S0002-9440(10)64679-2
+    VLbile <- PVLbile * BW #L
+    
+    #Intestine (small and large)
+    PVIN <- 2.24e-2 #Brown et al. 1997, p 416, Table 5: 1.4+0.84
+    VIN <- PVIN * BW #intestine volume kg=L
+    # In the following we add the plasma and blood cell volumes of the small and large intestine from Shah and betts, (2012)
+    PVINB <- ((0.0795+0.0651)+(0.0458+0.0375))/280 #mL/g BW weight
+    VINB <- PVINB * BW #intestine  blood volume kg=L
+    PVINF <- (0.867+0.5)/280 #mL/g BW 
+    VINF <- PVINF * BW #intestine interstitial fluid volume kg=L
+    VINT <- VIN - VINF #intestine tissue volume kg=L
+    
+    #Stomach
+    PVST <- 0.46e-2 #Brown et al. 1997, p 416, Table 5
+    VST <- PVST * BW #stomach volume kg=L
+    PVSTB <- 0.032 #from pkSim
+    VSTB <- PVSTB * PVST * BW 
+    PVSTF <-  0.10 # from pkSim
+    VSTF <- PVSTF * PVST * BW 
+    VSTT <- VST - VSTF #stomach tissue volume kg=L
+    
+    #Stomach and intestine lumen
+    PVSTL <- 3.4/175 #mL/g BW, Connell et al., 2008, https://doi.org/10.1211/jpp.60.1.0008
+    VSTL <- PVSTL * BW #stomach lumen volume kg=L
+    PVINL <- (0.894+0.792+0.678+0.598+0.442)/230 # mL/g BW, Funai et al., 2023 https://doi.org/10.1038/s41598-023-44742-y --> Figure 3C
+    VINL <- PVINL * BW #intestine lumen volume kg=L
+    
+    #Muscle
+    PVM <- 40.43e-2 #Brown et al. 1997
+    VM <- PVM * BW #muscle volume kg=L
+    PVMB <- 0.04 #Brown et al. 1997
+    VMB <- PVMB * PVM * BW #muscle blood volume kg=L
+    PVMF <- 0.12 #pkSim
+    VMF <- PVMF * PVM * BW #muscle interstitial fluid volume kg=L
+    VMT <- VM - VMF #muscle tissue volume kg=L
+    
+    #Adipose
+    PVA <- 7e-2 #Brown et al. 1997
+    VA <- PVA * BW #adipose volume kg=L
+    PVAB <- 0.02 #Brown et al. 1997
+    VAB <- PVAB * PVA * BW #% adipose blood volume kg=L
+    PVAF <- 0.174 #Ng, 2013
+    VAF <- PVAF * PVA * BW #adipose interstitial fluid volume kg=L
+    VAT <- VA - VAF #adipose tissue volume kg=L
+    
+    #Lung
+    PVLu <- 0.48e-2 #Brown et al. 1997, p 418-19 mean of values for male rat
+    VLu <- PVLu * BW
+    PVLuB <- 9/100*PVLu
+    VLuB <- PVLuB*BW #Brown et al. 1997, p 459 --> capillary blood occupied 9% of the lung volume
+    PVLuF <- 0.263/280 #0.263 ml, Shah & Betts, 2012. https://doi.org/10.1007/s10928-011-9232-2
+    VLuF <- PVLuF * BW #lung interstitial fluid volume
+    PVLuAF <- 0.4/275 #0.4 mL Leslie et al, 1989 https://doi.org/10.1164/ajrccm/139.2.360 --> Watkins & Rannels 1979 https://doi.org/10.1152/jappl.1979.47.2.325  
+    VLuAF <- PVLuAF * BW #lung alveolar lining fluid volume kg=LL
+    VLuT <- VLu - VLuF - VLuAF #lung tissue volume kg=L
+    
+    #Spleen
+    PVSP <- 0.2e-2  #Brown et al. 1997, p 416, Table 5
+    VSP <- PVSP * BW
+    PVSPB <- 0.22 #Brown et al. 1997, p 458, Table 30
+    VSPB <- PVSPB * PVSP * BW #volume of the blood of spleen kg=L
+    PVSPF <- 0.554/280 #ml/g BW-> Shah & Betts, 2012. https://doi.org/10.1007/s10928-011-9232-2
+    VSPF <- PVSPF * BW #spleen interstitial fluid volume kg=L
+    VSPT <- VSP - VSPF #spleen tissue volume kg=L
+    
+    #Heart
+    PVH <- 0.33e-2  #Brown et al. 1997, p 416, Table 5
+    VH <- PVH * BW
+    PVHB <- 0.26 #Brown et al. 1997, p 458, Table 30
+    VHB <- PVHB * PVH * BW #volume of the blood of heart kg=L
+    PVHF <- 0.1 #pkSim
+    VHF <- PVHF * PVH * BW #heart interstitial fluid volume kg=L
+    VHT <- VH - VHF #heart tissue volume kg=L
+    
+    #Brain
+    PVBr <- 0.57e-2  #Brown et al. 1997, p 416, Table 5
+    VBr <- PVBr * BW
+    PVBrB <- 0.03 #Brown et al. 1997, p 458, Table 30
+    VBrB <- PVBrB * PVBr * BW #volume of the blood of brain kg=L
+    PVBrF <- 17.5/100 * PVBr
+    VBrF <- PVBrF * BW #https://doi.org/10.1016/j.pneurobio.2015.12.007 --> The IS occupies 15% to 20% of the total brain volume, brain IF volume kg=L 
+    VBrT <- VBr - VBrF #brain tissue volume kg=L
+    
+    #gonads
+    PVGo <- 0.25e-2/0.230 #pKsim, L/kg
+    VGo <- PVGo * BW
+    PVGoB <- 0.14 #pKsim
+    VGoB <-PVGoB * PVGo * BW #volume of the blood of gonads kg=L
+    PVGoF <- 0.07 #pKsim
+    VGoF <- PVGoF * PVGo * BW #gonads interstitial fluid volume kg=L
+    VGoT <- VGo - VGoF #gonads tissue volume kg=L
+    
+    #Skin
+    PVSK <- 19.03e-2 #Brown et al. 1997, p 416, Table 5
+    VSK <- PVSK * BW
+    PVSKB <- 0.02 #Brown et al. 1997, p 458, Table 3
+    VSKB <-PVSKB * PVSK * BW #volume of the blood of skin kg=L
+    PVSKF <- 0.4  #https://doi.org/10.1111/j.1748-1716.1981.tb06901.x 40 mL/100 g tissue, BW = 200-250 g
+    VSKF <- PVSKF * PVSK * BW #skin interstitial fluid volume kg=L
+    VSKT <- VSK - VSKF #skin tissue volume kg=L
+    
+    #Bones
+    PVBo <-1.59e-2/0.230 #pkSim
+    VBo <- PVBo * BW
+    PVBoB <- 0.04 #pkSim
+    VBoB <-PVBoB * PVBo * BW #volume of the blood of bones kg=L
+    PVBoF <- 0.1 #pkSim
+    VBoF <- PVBoF * PVBo * BW #bones interstitial fluid volume kg=L
+    VBoT <- VBo - VBoF #bones tissue volume kg=L
+    
+    #RoB
+    PVR <- 1 - PVB - PVK - PVL - PVM - PVA - PVSP - PVH - PVBr - PVGo - PVST - PVIN - PVSK - PVBo
+    VR <- PVR * BW #volume of the rest of the body kg=LL
+    PVRB <-(PVKB+PVLB+PVLuB+PVMB+PVAB+PVSPB+PVHB+PVBrB+PVGoB+PVSTB+PVINB+PVSKB+PVBoB)/13 #average VF of all the included organs (kg=L)
+    VRB <- PVRB * PVR * BW #volume of the blood of RoB kg=L
+    PVRF <-(PVKF+PVLF+PVLuF+PVMF+PVAF+PVSPF+PVHF+PVBrF+PVGoF+PVSTF+PVINF+PVSKF+PVBoF)/13 #average VF of all the included organs (kg=L)
+    VRF <- PVRF * PVR * BW #RoB of the blood of rest of body kg=L
+    VRT <- VR - VRF #tissue volume of the rest of body kg=L
+    
+    ##Capillary surface area for each tissue (Ai) as percentage of body weight (m^2/kg),
+    #values from pkSim "Endothelial Surface area", Niederalt et al., 2018, https://doi.org/10.1007/s10928-017-9559-4
+    
+    #Peritubular capillary density in From Gazzard et al. (2024) [https://doi.org/10.1002/ar.25576] 
+    d_peritubular <- 0.024 #um^2/um^3,
+    VK_gazzard <- 0.00363#L
+    Vcortex <- 2*1295* VK/VK_gazzard #mm^3, NEED TO RECHECK IF IT REFERS TO ONE OF BOTH KIDNEYS
+    A_peritubular <- (d_peritubular*Vcortex*1e3/1e6) #m^2
+    A_peritubular_PTC <- A_peritubular * VPTC/ (VPTC + VDALC)
+    A_peritubular_DTC <- A_peritubular * VDALC/ (VPTC + VDALC)
+    
+    # We assume that surface areas scale to the power of 2/3, based on the way that total body SA scales [https://doi.org/10.1111/j.1476-5381.2009.00267.x]
+    BW_PKSim <- 0.23 #kg
+    SA_scaling_factor <- (BW/BW_PKSim)^(2/3)  
+    
+    PAL <- 1136e-4 #m^2
+    AL <- PAL *  SA_scaling_factor #liver surface area (m^2)
+    
+    PAST <- 33.77e-4 #m^2
+    AST <- PAST * SA_scaling_factor #stomach surface area (m^2)
+    PASTL<- 33.77e-4 #m^2
+    ASTL<- PASTL * SA_scaling_factor #stomach lumen surface area (m^2)
+    
+    PAIN <- (74.82e-4+20.4e-4) #m^2 #large and small intestine
+    AIN <- PAIN * SA_scaling_factor #intestine surface area (m^2)
+    
+    # Gut surface areas from PkSim
+    Duodenum <- 5.50 #cm^2
+    Upper_jejunum <- 27.33 #cm^2
+    Lower_jejunum <- 27.33 #cm^2
+    Upper_ileum <- 0.82 #cm^2
+    Lower_ileum <- 0.59 #cm^2
+    Cecum <- 1.63 #cm^2
+    colon_ascendens <- 6.36 #cm^2
+    colon_transversum <- 3.22 #cm^2
+    colon_descendens <-2.27 #cm^2
+    colon_sigmoid <-2.14 #cm^2
+    
+    SA_pksim <- Duodenum+Upper_jejunum+Lower_jejunum+Upper_ileum+Lower_ileum+Cecum+     
+      colon_ascendens+colon_transversum+colon_descendens+colon_sigmoid
+    
+    #Enhancement factors due to villi and microvilli
+    EF_Duodenum <- 13.86
+    EF_Upper_jejunum <-10.68
+    EF_Lower_jejunum <- 8.31
+    EF_Upper_ileum <- 8.11
+    EF_Lower_ileum <- 11.22
+    EF_Cecum <- 1.47
+    EF_colon_ascendens <- 1.7 
+    EF_colon_transversum <- 1.92
+    EF_colon_descendens <- 1.95
+    EF_colon_sigmoid <- 1.95
+    
+    
+    SA_pksim_effective <- (Duodenum*EF_Duodenum+Upper_jejunum*EF_Upper_jejunum+Lower_jejunum*EF_Lower_jejunum+
+                             Upper_ileum*EF_Upper_ileum+Lower_ileum*EF_Lower_ileum+Cecum*EF_Cecum+
+                             colon_ascendens*EF_colon_ascendens+colon_transversum*EF_colon_transversum+
+                             colon_descendens*EF_colon_descendens+colon_sigmoid*EF_colon_sigmoid)
+    
+    
+    PAINL <- SA_pksim_effective * 1e-4 #m^2, from reference body weight
+    AINL <- PAINL*SA_scaling_factor #m^2
+    
+    PAM <- 3042e-4 #m2
+    AM <- PAM * SA_scaling_factor #muscle surface area (m^2)
+    PAA <- 95.93e-4/0.23 #m2
+    AA <- PAA * SA_scaling_factor #adipose surface area (m^2)
+    
+    PAR <- 100e-4#m^2, assumption
+    AR <- PAR * SA_scaling_factor#surface area of rest of body (m^2)
+    
+    PLu <- 600.5e-4 #m^2 
+    ALu <- PLu * SA_scaling_factor #lung surface area (m^2)
+    PSP <- 162.3e-4 #m^2
+    ASP <- PSP * SA_scaling_factor #spleen surface area (m^2)
+    PH <-  201.1e-4 #m^2 
+    AH <- PH * SA_scaling_factor #heart surface area (m^2)
+    PBr <- 60.34e-4 #m^2
+    ABr <- PBr * SA_scaling_factor #brain surface area (m^2)
+    PGo <- 335.8e-4#m^2
+    AGo <- PGo * SA_scaling_factor #gonads surface area (m^2)
+    PSK <- 729.1e-4#m^2
+    ASK <- PSK * SA_scaling_factor #skin surface area (m^2)
+    PBo <- 621.4e-4#m^2
+    ABo <- PBo * SA_scaling_factor #skin surface area (m^2)
+    
+    ###############################
+    #-----------------------------#
+    #   Reflection Coefficients   #
+    #-----------------------------#
+    ###############################
+    # Pore diameters from Price & Gesquiere (2020), doi:https://doi.org/10.1126/sciadv.aax2642
+    DpKi <- 200 #nm
+    DpLi <- 280 #nm
+    DpSt <- 80 #nm, assumption
+    DpIn <- 80 #nm
+    DpMu <- 80 #nm
+    DpAd <- 80 #nm, assumption
+    DpRe <- 80 #nm, assumption
+    DpLu <- 27 #nm
+    DpSp <- 5000 #nm
+    DpHt <- 50 #nm
+    DpBr <- 0.99 #nm
+    DpGo <- 80 #nm, assumption
+    DpSk <- 60 #nm
+    DpBo <- 40000 #nm
+    
+    Dps <- c(DpKi, DpLi, DpSt, DpIn, DpMu, DpAd, DpRe, DpLu, DpSp, DpHt, DpBr, DpGo, DpSk, DpBo)
+    s_r <- rep(NA, length(Dps))
+    # (C-C) bond length is 0.154 nm ==> 7*0.154 = 1.078nm
+    # For carboxyl group we assume 0.13nm, So the total size is around 1.2 nm
+    np_size <- 1.2/2 #nm, PFOA equivalent radius
+    
+    for (i in 1:length(s_r)){
+      a_r <- np_size/(Dps[i]/2)
+      Phi = (1-a_r)^2
+      F_r <- (((1-a_r^2)^(3/2))*Phi)/(1+0.2*(a_r^2)*(1-a_r^2)^16)
+      G_r <- ((1- (2*a_r^2)/3 - 0.20217*a_r^5 )/ (1-0.75851*a_r^5)) - (0.0431*(1-(1-a_r^10)))
+      s_r[i] <- 1-(1-(1-Phi)^2)*G_r+2*a_r^2*Phi*F_r
+    }
+    SKi <- s_r[1] 
+    SLi <- s_r[2]
+    SSt <- s_r[3]
+    SIn <- s_r[4]
+    SMu <- s_r[5]
+    SAd <- s_r[6]
+    SRe <- s_r[7]
+    SLu <- s_r[8]
+    SSp <- s_r[9]
+    SHt <- s_r[10]
+    SBr <- 1
+    SGo <- s_r[12]
+    SSk <- s_r[13]
+    SBo <- s_r[14]
+    
+    ####################################
+    #----------------------------------#
+    #             Flow Rates           #
+    #----------------------------------#
+    ####################################
+    
+    
+    ####################################
+    #            Blood flow rates      #
+    ####################################
+    
+    #(QBi, in L/h) to different tissues (i=L, K, G, A, M, R)
+    #as a percentage of cardiac output (Qcardiac L/h), which itself is a function
+    #of body weight (BW)
+    
+    Qcardiac <- 0.235 * (BW^0.75) *60 #L/min->*60-> L/h
+    PQBK <- 14.1/100 #Brown et al. 1997, p 438, Table 23
+    QBK <- PQBK * Qcardiac #L/h
+    PQBL <- 2.1/100 
+    QBL <- PQBL * Qcardiac #L/h Brown et al. 1997, p 438, Table 23
+    PQBST <- 0.16/100 #https://doi.org/10.3390/pharmaceutics6010097 Qcard=0.235*(0.250^0.75)*60 (L/h) and PQBST = (8/1000)/Qcard *100
+    QBST <- PQBST * Qcardiac #L/h
+    PQBIN <- 9/100 #https://doi.org/10.3390/pharmaceutics6010097 Qcard=0.235*(0.250^0.75)*60 (L/h) and PQBIN = (451/1000)/Qcard *100
+    QBIN <- PQBIN * Qcardiac #L/h
+    PQBM <- 27.8/100 #Brown et al. 1997, p 438, Table 23
+    QBM <- PQBM * Qcardiac #L/h
+    PQBA <- 7/100 #Brown et al. 1997, p 438, Table 23
+    QBA <- PQBA * Qcardiac #L/h
+    PQBLu <- 1 
+    QBLu <- PQBLu * Qcardiac #L/h
+    PQBSP <- 0.75/100 #https://doi.org/10.3390/pharmaceutics6010097 Qcard=0.235*(0.250^0.75)*60 (L/h) and PQBSP = (37.5/1000)/Qcard *100
+    QBSP <- PQBSP * Qcardiac #L/h
+    PQBH <- 5.1/100 #Brown et al. 1997, p 438, Table 23
+    QBH <- PQBH * Qcardiac #L/h
+    PQBBr <- 2.0/100 #Brown et al. 1997, p 438, Table 23
+    QBBr <- PQBBr * Qcardiac #L/h 
+    PQBGo <- 0.28/100 #https://doi.org/10.1152/ajpregu.1987.253.2.R228 Qcard=0.235*(0.335^0.75)*60 (L/h) and PQBT = (0.295*60/1000)/Qcard *100
+    QBGo <- PQBGo * Qcardiac #L/h
+    PQBSK <- 1.35/100 #https://doi.org/10.1111/1523-1747.ep12277181 Qcard=0.235*(0.2^0.75)*60 (L/h) and PQBSK = (0.95*60/1000)/Qcard *100
+    QBSK <- PQBSK * Qcardiac #L/h
+    PBBo <- 12.2/100 #Brown et al. 1997, p 438, Table 23
+    QBBo <- PBBo * Qcardiac #L/h
+    
+    # Total blood outflow from liver
+    QBLtot <- QBL+QBSP+QBIN+QBST
+    
+    PQBR = 1 - PQBK - PQBL - PQBST - PQBIN - PQBM - PQBA - PQBH - PQBSK - PQBSP - PQBGo - PQBBr - PBBo
+    QBR <- PQBR * Qcardiac #L/h
+    
+    #############################################
+    #               Lymph flow rates            #
+    #############################################
+    #Paracellular flow as a fraction of organ blood flow, 
+    #from Niederalt et al.(2017). https://doi.org/10.1007/s10928-017-9559-4
+    fQparaKi <- 7.09E-4
+    fQparaLi <- 1.99E-2
+    fQparaSt <- 2.04E-3
+    fQparaIn <- (1.95E-3+1.44E-2)/2
+    fQparaMu <- 2.01E-3
+    fQparaAd <- 7.54E-3 
+    fQparaRe <- 2.0E-3 # Assumption based on 1/500 of flow (Dosgra et al. 2020, https://doi.org/10.1016/j.csbj.2020.02.014)
+    fQparaLu <- 3.56E-5
+    fQparaSp <- 1.99E-2
+    fQparaHt <- 1.47E-3
+    fQparaBr <- 7.27E-5
+    fQparaGo <- 1.11E-2
+    fQparaSk <- 3.52E-3
+    fQparaBo <- 6.62E-4 
+    
+    #Estimation of paracellular flow rates:
+    QparaKi <- fQparaKi*QBK
+    QparaLi <- fQparaLi*QBL
+    QparaSt <- fQparaSt*QBST
+    QparaIn <- fQparaIn*QBIN
+    QparaMu <- fQparaMu*QBM
+    QparaAd <- fQparaAd*QBA
+    QparaRe <- fQparaRe*QBR
+    QparaLu <- fQparaLu*QBLu
+    QparaSp <- fQparaSp*QBSP
+    QparaHt <- fQparaHt*QBH
+    QparaBr <- fQparaBr*QBBr
+    QparaGo <- fQparaGo*QBGo
+    QparaSk <- fQparaSk*QBSK
+    QparaBo <- fQparaBo*QBBo
+    
+    ##################################
+    #     Other fluids flow rates    #
+    ##################################
+    
+    #Flow rate of fluids including feces, bile, urine and glomerular filtration rate (GFR), in L/h
+    
+    #PQbile <- 90/1000/24 # [mL/d/kg BW]/1000/24 --> L/h/kg BW
+    #Qbile <- PQbile * BW #L/h
+    if (sex == "M"){
+      PQbile = 0.206/2 #L/kg liver/h #source: https://doi.org/10.1038/s41598-019-46150-7
+      Qbile = PQbile* VL  #L/h
+    }else if (sex == "F"){
+      # Females have 44% more bile flow, source: doi:10.1042/cs0550253
+      PQbile = 0.206/2 #L/kg liver/h #
+      Qbile = 1.44* PQbile* VL  #L/h
+    }
+    Qfeces <- (8.18/0.21)*BW/24/1000 #g/kg BW, based on Cui et al.(2010)
+    feces_density <- 1.29 #g/cm^3 --> g/mL from Lupton 1986, Fig 1. Fiber free control diet, https://doi.org/10.1093/jn/116.1.164
+    
+    if (sex == "M"){
+      PQGFR <- 62.1  #L/h/kg   Corley et al., 2005 https://doi.org/10.1093/toxsci/kfi119, GFRC --> scaled fraction of kidney weight
+      QGFR <- PQGFR * VK #L/h
+      Qurine <- (60/1000)*BW/24 #([ml/d/kg]/1000)*BW/24 --> L/h, from Schmidt et al., 2001, https://doi.org/10.1002/nau.1006
+    }else if(sex == "F"){
+      PQGFR <- 41.04  #L/h/kg  Corley et al., 2005 https://doi.org/10.1093/toxsci/kfi119, GFRC --> scaled fraction of kidney weight
+      QGFR <- PQGFR * VK #L/h
+      Qurine <- (85/1000)*BW/24 #([ml/d/kg]/1000)*BW/24 --> L/h, from Schmidt et al., 2001, https://doi.org/10.1002/nau.1006  
+    }
+    QGE<- 1.41/BW^0.25 #gastric emptying time (1/(h*BW^0.25)); from Yang, 2013
+    
+    #flows of filtrate compartments from Gilmer et al. (2018) 
+    # [https://doi.org/10.1152/ajprenal.00219.2018], nL/min ---> L/h 
+    QPT_ref <- (40.9*26980+39.7*11020)*2*1e-9*60 #L/h, proximal tubule flow (short +long)
+    QTDL_ref <- (26.4*26980+26.3*11020)*2*1e-9*60 #L/h, Thin descending limb (short +long)
+    QTAL_ref <- 8 * 38000*2*1e-9*60 #L/h, Thin+thick (short +long) ascending 
+    QDT_ref <- (6*26980 + 6*11020)*2*1e-9*60  #  Distal tubule (short + long)
+    QCD_ref <- 14.4* 6000*2*1e-9*60  #  collecting duct (Cortical + medullary)
+    
+    # The values from Gilmer et al. (2018) are BW invariant. So since the GFR
+    # we use is scaled to BW and GFR = QPT, we scale these values based on the
+    # current GFR.
+    Q_scaling_factor = QGFR/QPT_ref
+    
+    QPT <- Q_scaling_factor * QPT_ref #L/h, proximal tubule flow (short +long)
+    QTDL <- Q_scaling_factor * QTDL_ref #L/h, Thin descending limb (short +long)
+    QTAL <- Q_scaling_factor * QTAL_ref #L/h, Thin+thick (short +long) ascending 
+    QDT <- Q_scaling_factor * QDT_ref  #L/h, Distal tubule (short + long)
+    QCD <- Q_scaling_factor * QCD_ref  #L/h, collecting duct (Cortical + medullary)
+    
+    #Overall mass transfer coefficients between subcompartments and passive
+    #diffusion rate constants. See SI section S3-1 for details
+    
+    #Surface areas Interstitial - Intracellular (m^2), from PKSim 
+    BW_ref <- 0.23
+    AcK_total= A_peritubular*15#437.16*BW/BW_ref
+    AcK_PTC <- AcK_total*VPTC/VFil # surface area of decending/ascending limb cells (loop of Henle)
+    AcK_DALC <- AcK_total*VDALC/VFil # surface area of decending/ascending limb cells (loop of Henle)
+    AcK_DTC <- AcK_total*VDTC/VFil # surface area of decending/ascending limb cells (loop of Henle)
+    AcK_CDC <- AcK_total*VCDC/VFil # surface area of collecting duct cells 
+    AcKTrest <- AcK_total* VKTrest/VFil
+    AcL=  AL*15*8#84.45*BW/BW_ref
+    AcST= AST*15#1007.31*BW/BW_ref
+    AcIN= AIN*15 #400.94+152.39) *BW/BW_ref  small+large intestine
+    AcM = AM*15 #8.2*BW/BW_ref
+    AcA= AA*15 #3.87*BW/BW_ref
+    AcLu= ALu*15#0.05*BW/BW_ref
+    AcSP= ASP*15#564.05*BW/BW_ref
+    AcH= AH*15#5.60*BW/BW_ref
+    AcBr= ABr*15#6.12e-4*BW/BW_ref
+    AcGo= AGo*15#2.01*BW/BW_ref
+    AcSK= ASK*15#0.11*BW/BW_ref
+    AcBo= ABo*15#6.52*BW/BW_ref
+    # We don't have data for the surface area of IS-IC for the rest of the body, thus 
+    # we naively assume an average:
+    AcR= mean(c(AcK_total,AcL,AcST,AcIN,AcM,AcA,AcLu,AcSP,AcH,AcBr,AcGo,AcSK,AcBo))
+    
+    n <- 5 #enlargement factor of the apical membrane of tubule cells
+    # Surface areas of the different subcompartments of kidney filtrate, m^2
+    APT <-  2*pi*(RPT_slp*LPT_slp + RPT_llp*LPT_llp)*n # Proximal tubule (short- and long-looped)
+    ATDL <- 2*pi*(RTDL_slp*LTDL_slp + RTDL_llp*LTDL_llp)*n #Thin descending limb (short- and long-looped)
+    AThinAL <-  2*pi*RThinAL*LThinAL*n #Thin ascending limb (long-looped)
+    AThickAL <- 2*pi*(RThickAL_cort*LThickAL_cort + RThickAL_med*LThickAL_med)*n #Thick ascending limb (Cortical and Medullary)
+    ADAL <- ATDL + AThinAL + AThickAL
+    ADT <- 2*pi*(RDT_sup*LDT_sup + RDT_deep*LDT_deep)*n #Distal tubule (superficial+deep)
+    ACD <- 2*pi*(Rduct_cort*Lduct_cort + Rduct_med*Lduct_med)*n #collecting duct (Cortical+Outer)
+    AFil <- APT + ADAL + ADT + ACD
+    
+    #Alveolar cells surface area (Type I and II), m^2
+    AcALF = ((78.8*2*5320*1e-6) + (125*2*123*1e-6))*BW/0.29  #Stone et al., 1992, BW_ref = 0.29, values for each lung , https://doi.org/10.1165/ajrcmb/6.2.235
+    
+    # #canalicular surface area, m^2
+    # rat_hep_surf_area = 22.95 * 1e2 # 22.95*1e6 cm2 --> m2,  https://doi.org/10.1074/jbc.271.12.6702
+    # AcLBilec = 0.01 * 22.95 * 1e2 # m2 , canalicular membrane 1% of the surface area of the hepatocyte,https://www.ncbi.nlm.nih.gov/books/NBK470209/
+    
+    #Stomach
+    # For identifiability reasons we assume that absorption takes place only through the intestines
+    kabST <- (kabs_st* ASTL)*1000 #L/h
+    
+    MW = 414.07 #g/mol, PFOA molecular weight
+    
+    return(list(
+      
+      'VB'=VB, 'Vplasma'=Vplasma, 'VK'=VK, 'VKB'=VKB, 
+      'VKF'=VKF, 'VKT'=VKT, 'VFil'=VFil,'VBladder' = VBladder, 
+      'VPT' = VPT, 'VDAL' = VDAL, 'VDT' = VDT, 'VCD' = VCD,
+      'VPTC' = VPTC, 'VDALC' = VDALC, 'VDTC' = VDTC, 'VCDC' = VCDC,
+      'VKTrest' = VKTrest,
+      
+      'VL'=VL, 'VLB'=VLB, 'VLF'=VLF, 'VLT'=VLT, 'VLbile'=VLbile,
+      'VM'=VM, 'VMB'=VMB, 'VMF'=VMF, 'VMT'=VMT, 'VA'=VA, 'VAB'=VAB, 
+      'VAF'=VAF, 'VAT'=VAT, 'VR'=VR, 'VRB'=VRB, 
+      'VRF'=VRF, 'VRT'=VRT, 'VVen' = VVen,
+      'VArt' = VArt, 'VLu'=VLu, 'VLuB'=VLuB, 'VLuF'=VLuF,
+      'VLuAF'=VLuAF, 'VLuT'=VLuT,
+      'VSP'=VSP, 'VSPB'=VSPB, 'VSPF'=VSPF, 'VSPT'=VSPT,
+      'VH'=VH, 'VHB'=VHB, 'VHF'=VHF, 'VHT'=VHT,
+      'VBr'=VBr, 'VBrB'=VBrB, 'VBrF'=VBrF, 'VBrT'=VBrT,
+      'VGo'=VGo, 'VGoB'=VGoB, 'VGoF'=VGoF, 'VGoT'=VGoT,
+      'VIN'=VIN, 'VINB'=VINB, 'VINF'=VINF, 'VINT'=VINT,
+      'VST'=VST, 'VSTB'=VSTB, 'VSTF'=VSTF, 'VSTT'=VSTT,
+      'VSTL'=VSTL, 'VINL'=VINL,
+      'VSK'=VSK,'VSKB'=VSKB, 'VSKF'=VSKF, 'VSKT'=VSKT,
+      'VBo'=VBo,'VBoB'=VBoB, 'VBoF'=VBoF, 'VBoT'=VBoT,
+      
+      
+      'A_peritubular_PTC' = A_peritubular_PTC, 
+      'A_peritubular_DTC' = A_peritubular_DTC,
+      'AL'=AL, 'AM'=AM, 'AA'=AA, 'AR'=AR, 'ALu'= ALu, 
+      'ASP'=ASP, 'AH'=AH, 'ABr'=ABr, 'AST'= AST,
+      'AIN'=AIN, 'AGo'=AGo,
+      'ASK'= ASK, 'ABo'=ABo,
+      
+      'AINL' = AINL, 'AcL' = AcL, 'AcM' = AcM, 'AcST' = AcST, 
+      'AcIN' = AcIN, 'AcA' = AcA, 'AcLu' = AcLu, 'AcALF' = AcALF, 
+      'AcSP' = AcSP, 'AcH' = AcH, 'AcBr' = AcBr, 'AcGo' = AcGo, 
+      'AcSK' = AcSK, 'AcBo' = AcBo, 'AcR' = AcR, 'APT' = APT, 
+      'ADAL' = ADAL, 'ADT' = ADT, 'ACD' = ACD, 'AcK_DALC' = AcK_DALC,  
+      'AcK_CDC' = AcK_CDC, 'AcKTrest' = AcKTrest,
+      'AcK_PTC' = AcK_PTC,   "AcK_DTC" = AcK_DTC, 
+      
+      "SKi" = SKi,"SLi" = SLi,"SSt" = SSt,"SIn" = SIn,
+      "SMu" = SMu,"SAd" = SAd,"SRe" = SRe,"SLu" = SLu,
+      "SSp" = SSp,"SHt" = SHt,"SBr" = SBr,"SGo" = SGo,
+      "SSk" = SSk,"SBo" = SBo,
+      
+      'Qcardiac'=Qcardiac, 'QBK'=QBK, 
+      'QBL'=QBL, 'QBLtot'=QBLtot,
+      'QBM'=QBM, 'QBA'=QBA,
+      'QBR'=QBR, 'QBLu'=QBLu, 'Qfeces'=Qfeces,  'feces_density'=feces_density,
+      'Qbile'=Qbile, 'QGFR'=QGFR,'Qurine'=Qurine, 
+      'QBSP'=QBSP, 'QBH'=QBH, 'QBBr'=QBBr, 'QBST'=QBST,
+      'QBIN'=QBIN, 'QGE'=QGE,
+      'QBGo'=QBGo,
+      'QBSK'=QBSK, 'QBBo'=QBBo, 'Hct' = Hct,
+      
+      "QparaKi" = QparaKi,"QparaLi" = QparaLi,"QparaSt" = QparaSt,"QparaIn" = QparaIn,
+      "QparaMu" = QparaMu,"QparaAd" = QparaAd,"QparaRe" = QparaRe,"QparaLu" = QparaLu,
+      "QparaSp" = QparaSp,"QparaHt" = QparaHt,"QparaBr" = QparaBr,"QparaGo" = QparaGo,
+      "QparaSk" = QparaSk,"QparaBo" = QparaBo,
+      
+      "QPT" = QPT, "QTDL" = QTDL, "QTAL" = QTAL, "QDT" = QDT, "QCD" = QCD,
+      
+      'f_tubular' =  f_tubular,  'f_PTC_prot_to_tub_prot' = f_PTC_prot_to_tub_prot, 
+      'f_DALC_prot_to_tub_prot' = f_DALC_prot_to_tub_prot, 
+      'f_DTC_prot_to_tub_prot' = f_DTC_prot_to_tub_prot , 
+      'f_CDC_prot_to_tub_prot' = f_CDC_prot_to_tub_prot,
+      'kabST'=kabST, 
+      
+      
+      
+      "admin.time" = admin.time, "admin.dose" = admin.dose,
+      "admin.type" = admin.type, "MW"=MW
+      
+    ))
+    
+  })
+}   
+
 ################################################################################
 
 
