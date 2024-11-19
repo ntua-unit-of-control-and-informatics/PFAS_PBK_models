@@ -3714,7 +3714,7 @@ variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[
 params <- c(fixed_params[[1]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
-sample_time=seq(0,2,0.1)
+sample_time=sort(c(0.0001, seq(0,2,0.1)))
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,
                                     events = events,
@@ -3733,7 +3733,7 @@ inits <- create.inits(params)
 events <- create.events(params)
 
 # sample_time: a vector of time points to solve the ODEs
-sample_time=seq(0,2,0.1)
+sample_time=sort(c(0.0001, seq(0,2,0.1)))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -3753,7 +3753,7 @@ inits <- create.inits(params)
 events <- create.events(params)
 
 # sample_time: a vector of time points to solve the ODEs
-sample_time=seq(0,288,1)
+sample_time=sort(c(0.0001, seq(0,288,1)))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -3774,7 +3774,7 @@ inits <- create.inits(params)
 events <- create.events(params)
 
 # sample_time: a vector of time points to solve the ODEs
-sample_time=seq(0,288,1)
+sample_time=sort(c(0.0001, seq(0,288,1)))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -3795,7 +3795,7 @@ inits <- create.inits(params)
 events <- create.events(params)
 
 # sample_time: a vector of time points to solve the ODEs
-sample_time=seq(0,24,1)
+sample_time=sort(c(0.0001, seq(0,24,1)))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -3816,7 +3816,7 @@ inits <- create.inits(params)
 events <- create.events(params)
 
 # sample_time: a vector of time points to solve the ODEs
-sample_time=seq(0,24,1)
+sample_time=sort(c(0.0001, seq(0,24,1)))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -3837,7 +3837,7 @@ inits <- create.inits(params)
 events <- create.events(params)
 
 # sample_time: a vector of time points to solve the ODEs
-sample_time=seq(0,864,1)
+sample_time=sort(c(0.0001, seq(0,864,1)))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -3857,7 +3857,7 @@ inits <- create.inits(params)
 events <- create.events(params)
 
 # sample_time: a vector of time points to solve the ODEs
-sample_time=seq(0,24,0.1)
+sample_time=sort(c(0.0001, seq(0,24,1)))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -3877,7 +3877,7 @@ inits <- create.inits(params)
 events <- create.events(params)
 
 # sample_time: a vector of time points to solve the ODEs
-sample_time=seq(0,288,1)
+sample_time=sort(c(0.0001, seq(0,288,1)))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -3898,7 +3898,7 @@ events <- create.events(params)
 
 # sample_time: a vector of time points to solve the ODEs
 
-sample_time=c(0, 5/60, seq(1,288,1))
+sample_time=c(0, 0.0001, 5/60, seq(1,288,1))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -3917,7 +3917,7 @@ preds_kim_IV_Mblood <-  solution[, c("time", "Cplasma")]
 
 sex <- "F"
 BW <- 0.2 #kg
-sample_time <- seq(0,192,1)
+sample_time <-sort(c(0.0001, seq(0,192,1)))
 variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[11]])
 params <- c(fixed_params[[11]], variable_params)
 events <- create.events(params)
@@ -3944,7 +3944,7 @@ preds_Kemp_OR_Ffeces_med <-  solution[, c("time", "Mfeces")]
 
 ##########################################################################################
 # Set up simulations for the 13th case, i.e.Kemper 2003 (Worley) ORAL female HIGH
-sample_time <- seq(0,672,1)
+sample_time <- sort(c(0.0001, seq(0,672,1)))
 variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[13]])
 params <- c(fixed_params[[13]], variable_params)
 events <- create.events(params)
@@ -3961,7 +3961,7 @@ preds_Kemp_OR_Ffeces_high <-  solution[, c("time", "Mfeces")]
 
 sex <- "M"
 BW <- 0.3 #kg
-sample_time <- seq(0,673,1)
+sample_time <- sort(c(0.0001, seq(0,673,1)))
 variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[14]])
 params <- c(fixed_params[[14]], variable_params)
 inits <- create.inits (params)
@@ -4007,7 +4007,7 @@ variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[
 params <- c(fixed_params[[17]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
-sample_time <- c(0, 0.083, 0.25, 0.5, 1, 3, 6, seq(12, 1200, 4))
+sample_time <- c(0, 0.00010, 0.083, 0.25, 0.5, 1, 3, 6, seq(12, 1200, 4))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -4025,7 +4025,7 @@ variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[
 params <- c(fixed_params[[18]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
-sample_time <- c(0, 0.25, 1, 3, 6, seq(12, 1200, 4))
+sample_time <- c(0, 0.0001, 0.25, 1, 3, 6, seq(12, 1200, 4))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -4043,7 +4043,7 @@ variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[
 params <- c(fixed_params[[19]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
-sample_time <- c(0, 0.25, 1, 3, 6, seq(12, 1200, 4))
+sample_time <- c(0, 0.0001,  0.25, 1, 3, 6, seq(12, 1200, 4))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -4061,7 +4061,7 @@ variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[
 params <- c(fixed_params[[20]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
-sample_time <- c(0, 0.25, 1, 3, 6, seq(12, 1200, 4))
+sample_time <- c(0, 0.0001, 0.25, 1, 3, 6, seq(12, 1200, 4))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -4079,7 +4079,7 @@ variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[
 params <- c(fixed_params[[21]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
-sample_time <- c(0, 0.083, 0.25, seq(0.5, 192, 0.5))
+sample_time <- c(0,0.0001, 0.083, 0.25, seq(0.5, 192, 0.5))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -4097,7 +4097,7 @@ variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[
 params <- c(fixed_params[[22]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
-sample_time <- seq(0, 96, 0.25)
+sample_time <- sort(c(0.0001, seq(0,96,1)))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -4115,7 +4115,7 @@ variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[
 params <- c(fixed_params[[23]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
-sample_time <- c(0, 0.25, seq(1, 192, 0.5))
+sample_time <- c(0,0.0001, 0.25, seq(1, 192, 0.5))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -4135,7 +4135,7 @@ inits <- create.inits(params)
 events <- create.events(params)
 
 # sample_time: a vector of time points to solve the ODEs
-sample_time <- seq(0, 96, 0.25)
+sample_time <- seq(0,0.00001, 96, 0.25)
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -4153,7 +4153,7 @@ variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[
 params <- c(fixed_params[[25]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
-sample_time= c(seq(0, 1.2, 0.2), seq(1.5,24,0.5))
+sample_time= c(seq(0, 0.0001, 1.2, 0.2), seq(1.5,24,0.5))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -4171,7 +4171,7 @@ variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[
 params <- c(fixed_params[[26]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
-sample_time= seq(0, 25, 0.5)
+sample_time= seq(0, 0.00001, 25, 0.5)
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -4189,7 +4189,7 @@ variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[
 params <- c(fixed_params[[27]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
-sample_time= seq(0,48,0.2)
+sample_time= seq(0,0.0001, 48,0.2)
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -4207,7 +4207,7 @@ variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[
 params <- c(fixed_params[[28]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
-sample_time= seq(0,48,0.2)
+sample_time= seq(0,0.0001,48,0.2)
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -4635,7 +4635,7 @@ for(i in 1:length(experiments)){
   
   
   # Save the plot with dynamically adjusted dimensions
-  ggsave(paste0("experiment", i,".png"), plot = final_plot,
+  ggsave(paste0(names(experiments)[i],".png"), plot = final_plot,
          device = 'png', dpi = 300,
          width = 13,
          height = 10,
