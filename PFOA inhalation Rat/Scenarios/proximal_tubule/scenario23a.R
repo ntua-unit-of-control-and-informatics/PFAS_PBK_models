@@ -63,7 +63,7 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   VK <- PVK * BW #kidney volume kg=L 
   
   # These are explained thoroughly in a later section
-  f_tubular <- 0.8
+  f_tubular <- 1.0
   f_PTC_prot_to_tub_prot <- 0.6939
   
   MW = 414.07 #g/mol, PFOA molecular weight
@@ -463,8 +463,9 @@ create_fixed_params <- function(user.input){
     
     #Wang et al. (2024) [https://doi.org/10.1038/s41598-024-53270-2] state that "More than 80% of 
     # renal cortical cells are tubular epithelial cells". By assuming that this percentage holds for
-    # the medulla region, we have that the total fraction of tubular cells is 0.8
-    f_tubular <- 0.8
+    # the medulla region, we have that the total fraction of tubular cells is 0.8. However in this
+    #scenario we assume zero interstitial and all tissue is tubule cells
+    f_tubular <- 1.0 
     # Clark et al. (2019) [https://doi.org/10.1016/j.kint.2018.11.028] 
     # state that "Proximal tubule cells account for roughly 52% of the estimated
     # 206 million tubule epithelial cells per kidney. However, they account for approximately 69% of 
@@ -1037,8 +1038,8 @@ ode.func <- function(time, inits, params){
     CKFf <- MKFf/VKF
     CKFb <- MKFb/VKF
     
-    CKTrestf <- MKTrestf/VKTrest
-    CKTrestb <- MKTrestb/VKTrest
+    CKTrestf <- 0
+    CKTrestb <- 0
     CPTCf <- MPTCf/VPTC
     CPTCb <- MPTCb/VPTC
     CDALCf <- MDALCf/VDALC
@@ -1435,12 +1436,12 @@ ode.func <- function(time, inits, params){
       koff_alb*CKBb*VKB - kon_alb*CalbKBf*CKBf*VKB
     
     #interstitial fluid subcompartment
-    dMKFf = QparaKi*(1-SKi)*CKBf - kDalcF*(CKFf-CDALCf) -
+    dMKFf = -kDalcF*(CKFf-CDALCf) -
       kCdcF*(CKFf-CCDCf)   - kKTrestF*(CKFf-CKTrestf) + 
       koff_alb*CKFb*VKF - kon_alb*CalbKFf*CKFf*VKF
     
     #proximal tubule  cells subcompartment
-    dMPTCf =  PeffK*A_peritubular_PTC*(CKBf-CPTCf)  - kPtcTu*(CPTCf - CPT)  +
+    dMPTCf =   QparaKi*(1-SKi)*CKBf + PeffK*A_peritubular_PTC*(CKBf-CPTCf)  - kPtcTu*(CPTCf - CPT)  +
       (VmK_Oatp*CPT/(KmK_Oatp+CPT)) + (VmK_Urat*CPT/(KmK_Urat+CPT))+
       (VmK_Oat1*CKBf/(KmK_Oat1+CKBf)) + (VmK_Oat3*CKBf/(KmK_Oat3+CKBf)) - 
       (VmK_baso*CPTCf/(KmK_baso+CPTCf)) -(VmK_api*CPTCf/(KmK_api+CPTCf))-
@@ -2375,7 +2376,7 @@ obj.func <- function(x, dataset, fixed_params){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
   
   #======================================df2=========================================================
   
@@ -2421,7 +2422,7 @@ obj.func <- function(x, dataset, fixed_params){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
   
   #======================================df3=========================================================
   
@@ -2461,7 +2462,7 @@ obj.func <- function(x, dataset, fixed_params){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
   
   #======================================df4=========================================================
   
@@ -2500,7 +2501,7 @@ obj.func <- function(x, dataset, fixed_params){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
   
   #======================================df5=========================================================
   
@@ -2540,7 +2541,7 @@ obj.func <- function(x, dataset, fixed_params){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
   
   #======================================df6=========================================================
   
@@ -2580,7 +2581,7 @@ obj.func <- function(x, dataset, fixed_params){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
   
   #======================================df7=========================================================
   exp_data <- dataset$df7 # retrieve data of Dzierlenga (2021) ORAL male tissues
@@ -2623,7 +2624,7 @@ obj.func <- function(x, dataset, fixed_params){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
   
   #======================================df8=========================================================
   
@@ -2668,7 +2669,7 @@ obj.func <- function(x, dataset, fixed_params){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
   
   #======================================df9=========================================================
   
@@ -2711,7 +2712,7 @@ obj.func <- function(x, dataset, fixed_params){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
   
   #======================================df10=========================================================
   
@@ -2749,7 +2750,7 @@ obj.func <- function(x, dataset, fixed_params){
   inits <- create.inits (params)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params, events = events,
-                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
   
   #======================================df11a=========================================================
   exp_data <- dataset$df11a # retrieve data of Kemper 2003  (from Worley) ORAL female urine LOW
@@ -2806,7 +2807,7 @@ obj.func <- function(x, dataset, fixed_params){
   inits <- create.inits (params)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params, events = events,
-                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
   
   
   #======================================df12a=========================================================
@@ -2866,7 +2867,7 @@ obj.func <- function(x, dataset, fixed_params){
   sample_time <- seq(0,192,1)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params, events = events,
-                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
   
   #======================================df13a=========================================================
   
@@ -2927,7 +2928,7 @@ obj.func <- function(x, dataset, fixed_params){
   events <- create.events(params)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params, events = events,
-                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
   
   #======================================df14a=========================================================
   exp_data <- dataset$df14a # retrieve data of Kemper 2003  (Worley) ORAL male urine LOW
@@ -2983,7 +2984,7 @@ obj.func <- function(x, dataset, fixed_params){
   events <- create.events(params)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params, events = events,
-                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
   
   #======================================df15a========================================================= 
   
@@ -3041,7 +3042,7 @@ obj.func <- function(x, dataset, fixed_params){
   events <- create.events(params)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params, events = events,
-                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
   
   #======================================df16a=========================================================
   exp_data <- dataset$df16a # retrieve data of Kemper 2003  (Worley) ORAL male urine HIGH
@@ -3109,7 +3110,7 @@ obj.func <- function(x, dataset, fixed_params){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
   
   #======================================df17=========================================================
   
@@ -3151,7 +3152,7 @@ obj.func <- function(x, dataset, fixed_params){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
   
   #======================================df18=========================================================
   
@@ -3192,7 +3193,7 @@ obj.func <- function(x, dataset, fixed_params){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
   
   #======================================df19=========================================================
   exp_data <- dataset$df19 # retrieve data of Dzierlenga 2021, ORAL male serum medium
@@ -3231,7 +3232,7 @@ obj.func <- function(x, dataset, fixed_params){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
   
   #======================================df20=========================================================
   exp_data <- dataset$df20 # retrieve data of Dzierlenga 2021, ORAL male serum high
@@ -3270,7 +3271,7 @@ obj.func <- function(x, dataset, fixed_params){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
   
   #======================================df21=========================================================
   exp_data <- dataset$df21 # retrieve data of Dzierlenga 2021, IV female serum
@@ -3309,7 +3310,7 @@ obj.func <- function(x, dataset, fixed_params){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
   
   #======================================df22=========================================================
   exp_data <- dataset$df22 # retrieve data of Dzierlenga 2021, ORAL female serum low
@@ -3348,7 +3349,7 @@ obj.func <- function(x, dataset, fixed_params){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
   
   #======================================df23=========================================================
   exp_data <- dataset$df23 # retrieve data of Dzierlenga 2021, ORAL female serum medium
@@ -3389,7 +3390,7 @@ obj.func <- function(x, dataset, fixed_params){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
   
   #======================================df24=========================================================
   exp_data <- dataset$df24 # retrieve data of Dzierlenga 2021, ORAL female serum high
@@ -3427,7 +3428,7 @@ obj.func <- function(x, dataset, fixed_params){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
   
   #======================================df25=========================================================
   exp_data <- dataset$df25 # retrieve data of Kim (2016) ORAL male blood
@@ -3465,7 +3466,7 @@ obj.func <- function(x, dataset, fixed_params){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
   
   #======================================df26=========================================================
   exp_data <- dataset$df26 # retrieve data of Kim (2016) IV male blood
@@ -3503,7 +3504,7 @@ obj.func <- function(x, dataset, fixed_params){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
   
   #======================================df27=========================================================
   exp_data <- dataset$df27 # retrieve data of Gustafsson (2022) Oral male blood
@@ -3541,7 +3542,7 @@ obj.func <- function(x, dataset, fixed_params){
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params,
                                       events = events,
-                                      method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
   
   #======================================df28=========================================================
   exp_data <- dataset$df28 # retrieve data of Gustafsson (2022) oral male tissues
@@ -3642,7 +3643,7 @@ Kemp_OR_Ffeces_low <- openxlsx::read.xlsx("Data/PFOA_Feces_female_oral_1_mg_per_
 Kemp_OR_Mfeces_low <- openxlsx::read.xlsx("Data/PFOA_Feces_male_oral_1_mg_per_kg-Loc.xlsx")
 
 
-setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/proximal_tubule/scenario22")
+setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/proximal_tubule/scenario23a")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -3685,8 +3686,8 @@ Papp_RYU = 2*1.46e-6*3600 # cm/h, at pH = 7.4 from Ryu et al. (2024) [https://do
 N_pars <- 11 # Number of parameters to be fitted
 fit <-  c(rep(log(1),6), rep(log(mean(c(Papp_Kimura,Papp_RYU))),2), log(1),log(1e-3), log(1e5))
 
-lb = c(rep(log(1e-20),6), rep(log(Papp_RYU),2),log(1e-3), log(1e-4), log(5e3))
-ub = c(rep(log(1e10),  6), rep(log(Papp_Kimura),2) ,log(10),  log(1e1), log(1e6) )
+lb = c(rep(log(1e-20),6), rep(log(Papp_RYU),2),log(1e-7), log(1e-7), log(5e3))
+ub = c(rep(log(1e10),  6), rep(log(Papp_Kimura),2) ,log(1e1),  log(1e1), log(1e6) )
 
 fixed_params <- create_all_fixed_params()
 # Run the optimization algorithm to estimate the parameter values
@@ -3700,7 +3701,7 @@ optimizer <- nloptr::nloptr( x0= fit,
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
-save.image("scenario22.RData")
+save.image("scenario23a.RData")
 
 
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
@@ -3735,7 +3736,7 @@ sample_time=seq(0,2,0.1)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,
                                     events = events,
-                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
 
 preds_kudo_low <- solution[, c("time","Cblood","Cliver","Ckidney", "Ccarcass","Clungs", 
                                "Cspleen", "Cheart","Cbrain", "Cgonads", "Cstomach", 
@@ -3755,7 +3756,7 @@ sample_time=seq(0,288,1)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,
                                     events = events,
-                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
 
 preds_kim_IV_Mtissues <-  solution[, c("time", "Cliver","Ckidney", "Clungs", 
                                        "Cspleen", "Cheart")]
@@ -3776,7 +3777,7 @@ sample_time=seq(0,288,1)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,
                                     events = events,
-                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
 
 preds_kim_OR_Mtissues <-  solution[, c("time", "Cliver","Ckidney", "Clungs", 
                                        "Cspleen", "Cheart")]
@@ -3797,7 +3798,7 @@ sample_time=seq(0,24,1)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,
                                     events = events,
-                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
 
 preds_kim_IV_Ftissues <-  solution[, c("time", "Cliver","Ckidney", "Clungs", 
                                        "Cspleen", "Cheart")]
@@ -3818,7 +3819,7 @@ sample_time=seq(0,24,1)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,
                                     events = events,
-                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
 
 preds_kim_OR_Ftissues <-  solution[, c("time", "Cliver","Ckidney", "Clungs", 
                                        "Cspleen", "Cheart")]
@@ -3839,7 +3840,7 @@ sample_time=seq(0,864,1)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,
                                     events = events,
-                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
 
 preds_dzi_OR_Mtissues <-  solution[, c("time", "Cliver","Ckidney", "Cbrain")]
 
@@ -3859,7 +3860,7 @@ sample_time=seq(0,24,0.1)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,
                                     events = events,
-                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
 
 preds_dzi_OR_Ftissues <-  solution[, c("time", "Cliver","Ckidney", "Cbrain")]
 
@@ -3879,7 +3880,7 @@ sample_time=seq(0,288,1)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,
                                     events = events,
-                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
 
 preds_kim_OR_Mblood <-  solution[, c("time", "Cplasma")]
 
@@ -3900,7 +3901,7 @@ sample_time=c(0, 5/60, seq(1,288,1))
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,
                                     events = events,
-                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
 
 preds_kim_IV_Mblood <-  solution[, c("time", "Cplasma")]
 
@@ -3920,7 +3921,7 @@ events <- create.events(params)
 inits <- create.inits (params)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params, events = events,
-                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
 
 preds_Kemp_OR_Furine_low <-  solution[, c("time", "Murine")]
 preds_Kemp_OR_Ffeces_low <-  solution[, c("time", "Mfeces")]
@@ -3933,7 +3934,7 @@ events <- create.events(params)
 inits <- create.inits (params)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params, events = events,
-                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
 
 preds_Kemp_OR_Furine_med <-  solution[, c("time", "Murine")]
 preds_Kemp_OR_Ffeces_med <-  solution[, c("time", "Mfeces")]
@@ -3947,7 +3948,7 @@ events <- create.events(params)
 inits <- create.inits (params)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params, events = events,
-                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
 
 preds_Kemp_OR_Furine_high <-  solution[1:169, c("time", "Murine")]
 preds_Kemp_OR_Ffeces_high <-  solution[, c("time", "Mfeces")]
@@ -3964,7 +3965,7 @@ inits <- create.inits (params)
 events <- create.events(params)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params, events = events,
-                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
 
 preds_Kemp_OR_Murine_low <-  solution[, c("time", "Murine")]
 preds_Kemp_OR_Mfeces_low <-  solution[, c("time", "Mfeces")]
@@ -3977,7 +3978,7 @@ inits <- create.inits (params)
 events <- create.events(params)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params, events = events,
-                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
 
 preds_Kemp_OR_Murine_med <-  solution[, c("time", "Murine")]
 preds_Kemp_OR_Mfeces_med <-  solution[, c("time", "Mfeces")]
@@ -3990,7 +3991,7 @@ inits <- create.inits (params)
 events <- create.events(params)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params, events = events,
-                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
 
 preds_Kemp_OR_Murine_high <-  solution[, c("time", "Murine")]
 preds_Kemp_OR_Mfeces_high <-  solution[, c("time", "Mfeces")]
@@ -4009,7 +4010,7 @@ sample_time <- c(0, 0.083, 0.25, 0.5, 1, 3, 6, seq(12, 1200, 4))
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,
                                     events = events,
-                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
 
 preds_dzi_IV_Mserum <-  solution[, c("time", "Cplasma")]
 
@@ -4027,7 +4028,7 @@ sample_time <- c(0, 0.25, 1, 3, 6, seq(12, 1200, 4))
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,
                                     events = events,
-                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
 
 preds_dzi_OR_Mserum_low <-  solution[, c("time", "Cplasma")]
 
@@ -4045,7 +4046,7 @@ sample_time <- c(0, 0.25, 1, 3, 6, seq(12, 1200, 4))
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,
                                     events = events,
-                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
 
 preds_dzi_OR_Mserum_medium <-  solution[, c("time", "Cplasma")]
 
@@ -4063,7 +4064,7 @@ sample_time <- c(0, 0.25, 1, 3, 6, seq(12, 1200, 4))
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,
                                     events = events,
-                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
 
 preds_dzi_OR_Mserum_high <-  solution[, c("time", "Cplasma")]
 
@@ -4081,7 +4082,7 @@ sample_time <- c(0, 0.083, 0.25, seq(0.5, 192, 0.5))
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,
                                     events = events,
-                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
 
 preds_dzi_IV_Fserum <-  solution[, c("time", "Cplasma")]
 
@@ -4099,7 +4100,7 @@ sample_time <- seq(0, 96, 0.25)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,
                                     events = events,
-                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
 
 preds_dzi_OR_Fserum_low <-  solution[, c("time", "Cplasma")]
 
@@ -4117,7 +4118,7 @@ sample_time <- c(0, 0.25, seq(1, 192, 0.5))
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,
                                     events = events,
-                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
 
 preds_dzi_OR_Fserum_medium <-  solution[, c("time", "Cplasma")]
 
@@ -4137,7 +4138,7 @@ sample_time <- seq(0, 96, 0.25)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,
                                     events = events,
-                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
 
 preds_dzi_OR_Fserum_high <-  solution[, c("time", "Cplasma")]
 
@@ -4155,7 +4156,7 @@ sample_time= c(seq(0, 1.2, 0.2), seq(1.5,24,0.5))
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,
                                     events = events,
-                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
 
 preds_kim_OR_Fblood <-  solution[, c("time", "Cplasma")]
 
@@ -4173,7 +4174,7 @@ sample_time= seq(0, 25, 0.5)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,
                                     events = events,
-                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
 
 preds_kim_IV_Fblood <-  solution[, c("time", "Cplasma")]
 
@@ -4191,7 +4192,7 @@ sample_time= seq(0,48,0.2)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,
                                     events = events,
-                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
 
 preds_gus_OR_Mblood <-  solution[, c("time", "Cplasma")]
 
@@ -4209,7 +4210,7 @@ sample_time= seq(0,48,0.2)
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,
                                     events = events,
-                                    method="lsodes",rtol = 1e-04, atol = 1e-04))
+                                    method="lsodes",rtol = 1e-05, atol = 1e-05))
 
 preds_gus_OR_Mtissues <-  solution[, c("time", "CalveolarLF","Cliver", "Clungtissue", "Ckidney")]
 ##########################################################################################################

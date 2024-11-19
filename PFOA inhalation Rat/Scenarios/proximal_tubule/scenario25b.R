@@ -307,6 +307,8 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   kCdcTu <- ((Papp/100) * fixed_params$ACD) *1000 #diffusion between collecting duct cells and tubule filtrate
   
   #Diffusion rates in L/h between  tubule cells and interstitial space
+  kDtcF <- ((Papp/100) * fixed_params$AcK_DTC) *1000
+  kPtcF <- ((Papp/100) * fixed_params$AcK_PTC) *1000
   kDalcF <- ((Papp/100) * fixed_params$AcK_DALC) *1000 #diffusion between proximal tubule cells and interstitial space
   kCdcF <- ((Papp/100) * fixed_params$AcK_CDC) *1000 #diffusion between descending/ascending cells and interstitial space
   kKTrestF  <- ((Papp/100) * fixed_params$AcKTrest) *1000 #diffusion between rest of kidney cells and interstitial space
@@ -373,7 +375,7 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
     'VmK_baso' = VmK_baso,'VmK_api' = VmK_api,
     
     'Papp' = Papp, 'k_gut_in' = k_gut_in, 'k_gut_out' = k_gut_out,
-    'kKTrestF'=kKTrestF, 'kCdcF' = kCdcF, 'kDalcF' = kDalcF,
+    'kKTrestF'=kKTrestF, 'kCdcF' = kCdcF, 'kDalcF' = kDalcF, 'kPtcF' = kPtcF, 'kDtcF' = kDtcF,
     'kPtcTu'=kPtcTu, 'kDalcTu' = kDalcTu, 'kDtcTu' = kDtcTu, 'kCdcTu' = kCdcTu, 
     'kLFLT'=kLFLT,  'kAFAT'=kAFAT, 
     'kRFRT'=kRFRT,
@@ -885,22 +887,24 @@ create_fixed_params <- function(user.input){
     
     #Surface areas Interstitial - Intracellular (m^2), from PKSim 
     BW_ref <- 0.23
-    AcK_total= 437.16*BW/BW_ref
-    AcK_DALC <- AcK_total*VDALC/(VDALC+VCDC+VKTrest) # surface area of decending/ascending limb cells (loop of Henle)
-    AcK_CDC <- AcK_total*VDALC/(VDALC+VCDC+VKTrest) # surface area of collecting duct cells 
-    AcKTrest <- AcK_total* VKTrest/(VDALC+VCDC+VKTrest)
-    AcL= 84.45*BW/BW_ref
-    AcST= 1007.31*BW/BW_ref
-    AcIN= (400.94+152.39) *BW/BW_ref # small+large intestine
-    AcM= 8.2*BW/BW_ref
-    AcA= 3.87*BW/BW_ref
-    AcLu= 0.05*BW/BW_ref
-    AcSP= 564.05*BW/BW_ref
-    AcH= 5.60*BW/BW_ref
-    AcBr= 6.12e-4*BW/BW_ref
-    AcGo= 2.01*BW/BW_ref
-    AcSK= 0.11*BW/BW_ref
-    AcBo= 6.52*BW/BW_ref
+    AcK_total= A_peritubular*15#437.16*BW/BW_ref
+    AcK_PTC <- AcK_total*VPTC/VFil # surface area of decending/ascending limb cells (loop of Henle)
+    AcK_DALC <- AcK_total*VDALC/VFil # surface area of decending/ascending limb cells (loop of Henle)
+    AcK_DTC <- AcK_total*VDTC/VFil # surface area of decending/ascending limb cells (loop of Henle)
+    AcK_CDC <- AcK_total*VCDC/VFil # surface area of collecting duct cells 
+    AcKTrest <- AcK_total* VKTrest/VFil
+    AcL=  AL*15*8#84.45*BW/BW_ref
+    AcST= AST*15#1007.31*BW/BW_ref
+    AcIN= AIN*15 #400.94+152.39) *BW/BW_ref  small+large intestine
+    AcM = AM*15 #8.2*BW/BW_ref
+    AcA= AA*15 #3.87*BW/BW_ref
+    AcLu= ALu*15#0.05*BW/BW_ref
+    AcSP= ASP*15#564.05*BW/BW_ref
+    AcH= AH*15#5.60*BW/BW_ref
+    AcBr= ABr*15#6.12e-4*BW/BW_ref
+    AcGo= AGo*15#2.01*BW/BW_ref
+    AcSK= ASK*15#0.11*BW/BW_ref
+    AcBo= ABo*15#6.52*BW/BW_ref
     # We don't have data for the surface area of IS-IC for the rest of the body, thus 
     # we naively assume an average:
     AcR= mean(c(AcK_total,AcL,AcST,AcIN,AcM,AcA,AcLu,AcSP,AcH,AcBr,AcGo,AcSK,AcBo))
@@ -966,7 +970,8 @@ create_fixed_params <- function(user.input){
       'AcSP' = AcSP, 'AcH' = AcH, 'AcBr' = AcBr, 'AcGo' = AcGo, 
       'AcSK' = AcSK, 'AcBo' = AcBo, 'AcR' = AcR, 'APT' = APT, 
       'ADAL' = ADAL, 'ADT' = ADT, 'ACD' = ACD, 'AcK_DALC' = AcK_DALC,  
-      'AcK_CDC' = AcK_CDC, 'AcKTrest' = AcKTrest,
+      'AcK_CDC' = AcK_CDC, 'AcKTrest' = AcKTrest, 'AcK_PTC' = AcK_PTC,
+      'AcK_DTC' = AcK_DTC,
       
       "SKi" = SKi,"SLi" = SLi,"SSt" = SSt,"SIn" = SIn,
       "SMu" = SMu,"SAd" = SAd,"SRe" = SRe,"SLu" = SLu,
@@ -3643,7 +3648,7 @@ Kemp_OR_Ffeces_low <- openxlsx::read.xlsx("Data/PFOA_Feces_female_oral_1_mg_per_
 Kemp_OR_Mfeces_low <- openxlsx::read.xlsx("Data/PFOA_Feces_male_oral_1_mg_per_kg-Loc.xlsx")
 
 
-setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/proximal_tubule/scenario22")
+setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/proximal_tubule/scenario25b")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -3701,7 +3706,7 @@ optimizer <- nloptr::nloptr( x0= fit,
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
-save.image("scenario22.RData")
+save.image("scenario25b.RData")
 
 
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
