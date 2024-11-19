@@ -4587,26 +4587,26 @@ colnames(preds_Kemp_OR_Ffeces_low) <- c ("Time", "Feces")
 colnames(preds_Kemp_OR_Mfeces_low) <- c ("Time", "Feces")
 
 # Create a list containing the corresponding predictions
-simulations <- list(predictions1 = preds_kudo_high,  predictions2 = preds_kudo_low, 
-                    predictions3 = preds_kim_IV_Mtissues, 
-                    predictions4 = preds_kim_OR_Mtissues, predictions5 = preds_kim_IV_Ftissues,
-                    predictions6 = preds_kim_OR_Ftissues,
-                    predictions7 = preds_dzi_OR_Mtissues, predictions8 = preds_dzi_OR_Ftissues, 
-                    predictions9 = preds_kim_OR_Mblood,
-                    predictions10 = preds_kim_IV_Mblood, 
-                    predictions11a = preds_Kemp_OR_Furine_low, predictions11b = preds_Kemp_OR_Ffeces_low,
-                    predictions12a = preds_Kemp_OR_Furine_med, predictions12b = preds_Kemp_OR_Ffeces_med,
-                    predictions13a =preds_Kemp_OR_Furine_high, predictions13b = preds_Kemp_OR_Ffeces_high,
-                    predictions14a = preds_Kemp_OR_Murine_low, predictions14b = preds_Kemp_OR_Mfeces_low, 
-                    predictions15a = preds_Kemp_OR_Murine_med, predictions15b = preds_Kemp_OR_Mfeces_med,
-                    predictions16a =preds_Kemp_OR_Murine_high, predictions16b = preds_Kemp_OR_Mfeces_high,
-                    prediction17 =preds_dzi_IV_Mserum, predictions18 =preds_dzi_OR_Mserum_low,
-                    predictions19 =preds_dzi_OR_Mserum_medium, predictions20 =preds_dzi_OR_Mserum_high, 
-                    predictions21 =preds_dzi_IV_Fserum, predictions22 =preds_dzi_OR_Fserum_low,
-                    predictions23 =preds_dzi_OR_Fserum_medium,
-                    predictions24 =preds_dzi_OR_Fserum_high, predictions25 = preds_kim_OR_Fblood, 
-                    predictions26 = preds_kim_IV_Fblood, predictions27 = preds_gus_OR_Mblood, 
-                    predictions28 = preds_gus_OR_Mtissues)
+simulations <- list(predictions1 = preds_kudo_high[2:dim(preds_kudo_high)[1],],  predictions2 = preds_kudo_low[2:dim(preds_kudo_low)[1],], 
+                    predictions3 = preds_kim_IV_Mtissues[2:dim(preds_kim_IV_Mtissues)[1],], 
+                    predictions4 = preds_kim_OR_Mtissues[2:dim(preds_kim_OR_Mtissues)[1],], predictions5 = preds_kim_IV_Ftissues[2:dim(preds_kim_IV_Ftissues)[1],],
+                    predictions6 = preds_kim_OR_Ftissues[2:dim(preds_kim_OR_Ftissues)[1],],
+                    predictions7 = preds_dzi_OR_Mtissues[2:dim(preds_dzi_OR_Mtissues)[1],], predictions8 = preds_dzi_OR_Ftissues[2:dim(preds_dzi_OR_Ftissues)[1],], 
+                    predictions9 = preds_kim_OR_Mblood[2:dim(preds_kim_OR_Mblood)[1],],
+                    predictions10 = preds_kim_IV_Mblood[2:dim(preds_kim_IV_Mblood)[1],], 
+                    predictions11a = preds_Kemp_OR_Furine_low[2:dim(preds_Kemp_OR_Furine_low)[1],], predictions11b = preds_Kemp_OR_Ffeces_low[2:dim(preds_Kemp_OR_Ffeces_low)[1],],
+                    predictions12a = preds_Kemp_OR_Furine_med[2:dim(preds_Kemp_OR_Furine_med)[1],], predictions12b = preds_Kemp_OR_Ffeces_med[2:dim(preds_Kemp_OR_Ffeces_med)[1],],
+                    predictions13a =preds_Kemp_OR_Furine_high[2:dim(preds_Kemp_OR_Furine_high)[1],], predictions13b = preds_Kemp_OR_Ffeces_high[2:dim(preds_Kemp_OR_Ffeces_high)[1],],
+                    predictions14a = preds_Kemp_OR_Murine_low[2:dim(preds_Kemp_OR_Murine_low)[1],], predictions14b = preds_Kemp_OR_Mfeces_low[2:dim(preds_Kemp_OR_Mfeces_low)[1],], 
+                    predictions15a = preds_Kemp_OR_Murine_med[2:dim(preds_Kemp_OR_Murine_med)[1],], predictions15b = preds_Kemp_OR_Mfeces_med[2:dim(preds_Kemp_OR_Mfeces_med)[1],],
+                    predictions16a =preds_Kemp_OR_Murine_high[2:dim(preds_Kemp_OR_Murine_high)[1],], predictions16b = preds_Kemp_OR_Mfeces_high[2:dim(preds_Kemp_OR_Mfeces_high)[1],],
+                    prediction17 =preds_dzi_IV_Mserum[2:dim(preds_dzi_IV_Mserum)[1],], predictions18 =preds_dzi_OR_Mserum_low[2:dim(preds_dzi_OR_Mserum_low)[1],],
+                    predictions19 =preds_dzi_OR_Mserum_medium[2:dim(preds_dzi_OR_Mserum_medium)[1],], predictions20 =preds_dzi_OR_Mserum_high[2:dim(preds_dzi_OR_Mserum_high)[1],], 
+                    predictions21 =preds_dzi_IV_Fserum[2:dim(preds_dzi_IV_Fserum)[1],], predictions22 =preds_dzi_OR_Fserum_low[2:dim(preds_dzi_OR_Fserum_low)[1],],
+                    predictions23 =preds_dzi_OR_Fserum_medium[2:dim(preds_dzi_OR_Fserum_medium)[1],],
+                    predictions24 =preds_dzi_OR_Fserum_high[2:dim(preds_dzi_OR_Fserum_high)[1],], predictions25 = preds_kim_OR_Fblood[2:dim(preds_kim_OR_Fblood)[1],], 
+                    predictions26 = preds_kim_IV_Fblood[2:dim(preds_kim_IV_Fblood)[1],], predictions27 = preds_gus_OR_Mblood[2:dim(preds_gus_OR_Mblood)[1],], 
+                    predictions28 = preds_gus_OR_Mtissues[2:dim(preds_gus_OR_Mtissues)[1],])
 
 
 # Iterate over all existing experiments and create the accompanying plots
