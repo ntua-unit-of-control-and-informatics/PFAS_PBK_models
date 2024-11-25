@@ -4282,10 +4282,11 @@ create.plots <- function(predictions, observations, compartment){
     theme_light() + 
     theme(legend.position=c(1,1), 
           legend.justification=c(0, 1), 
-          legend.key.size = unit(1.5, 'cm'),  
-          legend.title = element_text(size=14),
-          axis.title=element_text(size=14),
-          legend.text = element_text(size=14)
+          legend.key.size = unit(2, 'cm'),  
+          legend.title = element_text(size=),
+          axis.title=element_text(size=18),
+          axis.text=element_text(size=18),
+          legend.text = element_text(size=16)
     )
   
 }
