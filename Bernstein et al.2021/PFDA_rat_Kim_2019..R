@@ -31,66 +31,67 @@ create.params  <- function(user_input){
     Bmax <- 0.0;           # Saturable binding in liver, maximum binding capacity (mg/h)
     K_b <- 1.0;            # Saturable binding in liver, affinity constant (mg/L)
     k_off <- 0.0;          # binding in liver, dissociation rate constant (/h)
-    K_f <- 0.0005227586;              # Rate of excretion from GI tissue to fecal storage (/h)
+    K_f <- 0;              # Rate of excretion from GI tissue to fecal storage (/h)
     K_unabs <- 0.0;        # Rate unabsorbed fraction goes to fecal storage (/h)
-    K_t <- 15.851;            # Transporter affinity constant (mg/L)
-    K_fstc <- 0;         # Rate constant from fecal storage to fecal elim. (/h)
-    K_bilec <- 0; # Biliary excretion rate (/h) adjusted by BW
-    K_abs <- 3.73;          # Oral absorption rate (/h)
+    K_t <- 30.051;            # Transporter affinity constant (mg/L)
     
     if(sex == "M"){
-      T_mc <- 0.241264834;           # Transporter maximum (mg/h)
-      K_uc <- 0.176776695;           # Urinary elimination rate (/h)
-      K_ustc <- 7.424621202;         # Rate constant to urinary storage compartment (/h)
-      F_free <- 0.000758;       # Free fraction of chemical in blood
-      K_f <- 0.0005227586;              # Rate of excretion from GI tissue to fecal storage (/h)
+      T_mc <- 83953/0.25^0.75/1e06;           # Transporter maximum (mg/h)
+      K_abs <- 3.84;          # Oral absorption rate (/h)
+      K_uc <- 0.391/(0.25^(-0.25));           # Urinary elimination rate (/h)
+      K_ustc <- 0.148/(0.25^(-0.25));         # Rate constant to urinary storage compartment (/h)
+      K_fstc <- 0.382/(0.25^(-0.25));         # Rate constant from fecal storage to fecal elim. (/h)
+      F_free <- 0.00118;       # Free fraction of chemical in blood
+      K_bilec <- 0.000995/(0.25^(-0.25)); # Biliary excretion rate (/h) adjusted by BW
       
       #Bernstein et al. (2021) did not include male rats in their analysis. Thus,
       # we scaled the female values using the ratio of male to female partition coefficients
       # from digitizing the corresponding plot. Since the plot did not include any 
       # rob compartment, we left the latter value unchanged.
       # Partition coefficients.
-      K_li <-  0.127;           # Liver/plasma partition coefficient
-      K_ki <- 0.065;           # Kidney/blood partition coefficient
-      K_gi <- 0.029;           # GI Tract/blood partition coefficient
-      K_lu <-  0.068;          # Lungs/blood partition coefficient
-      K_ht <- 0.033;          # Heart/blood partition coefficient
-      K_br <- 0.005;          # Brain/blood partition coefficient
+      K_li <- 0.607 * 0.745/0.609;           # Liver/plasma partition coefficient
+      K_ki <- 0.2328 * 0.170/0.234;           # Kidney/blood partition coefficient
+      K_gi <- 0.0102 * 0.007/0.012;           # GI Tract/blood partition coefficient
+      K_lu <-  0.1002 * 0.087/0.101;          # Lungs/blood partition coefficient
+      K_ht <- 0.0436 * 0.0399/0.423;          # Heart/blood partition coefficient
+      K_br <- 1.0;          # Brain/blood partition coefficient
       K_ad <- 1.0;          # Adipose/blood partition coefficient
       K_bm <- 1.0;          # Bone marrow/blood partition coefficient
-      K_rb <-  0.027 ;           # Rest of Body/blood partition coefficient
+      K_rb <-  0.0289 ;           # Rest of Body/blood partition coefficient
       
     }else if(sex == "F"){
-      T_mc <- 0.002573869;           # Transporter maximum (mg/h)
-      K_uc <- 0.417900108;           # Urinary elimination rate (/h)
-      K_ustc <-  81.812254583;         # Rate constant to urinary storage compartment (/h)
-      F_free <- 0.000694;       # Free fraction of chemical in blood
-      K_f <- 2.240281;              # Rate of excretion from GI tissue to fecal storage (/h)
+      T_mc <- 0.11384419;           # Transporter maximum (mg/h)
+      K_abs <- 1.440;          # Oral absorption rate (/h)
+      K_uc <- 0.48153972;           # Urinary elimination rate (/h)
+      K_ustc <-  0.53598694;         # Rate constant to urinary storage compartment (/h)
+      K_fstc <- 0.27647875;         # Rate constant from fecal storage to fecal elim. (/h)
+      F_free <- 0.000122;       # Free fraction of chemical in blood
+      K_bilec <- 0.00119/(0.25^(-0.25)); # Biliary excretion rate (/h) adjusted by BW
       
       # Partition coefficients.
-      K_li <-  0.0704;           # Liver/plasma partition coefficient
-      K_ki <- 0.047;           # Kidney/blood partition coefficient
-      K_gi <- 0.0114;           # GI Tract/blood partition coefficient
-      K_lu <-  0.0358;          # Lungs/blood partition coefficient
-      K_ht <- 0.0176;          # Heart/blood partition coefficient
-      K_br <- 0.0028;          # Brain/blood partition coefficient
+      K_li <- 0.607;           # Liver/plasma partition coefficient
+      K_ki <- 0.2328;           # Kidney/blood partition coefficient
+      K_gi <- 0.0102;           # GI Tract/blood partition coefficient
+      K_lu <-  0.1002;          # Lungs/blood partition coefficient
+      K_ht <- 0.0436;          # Heart/blood partition coefficient
+      K_br <- 1.0;          # Brain/blood partition coefficient
       K_ad <- 1.0;          # Adipose/blood partition coefficient
       K_bm <- 1.0;          # Bone marrow/blood partition coefficient
-      K_rb <-   0.0161;           # Rest of Body/blood partition coefficient
+      K_rb <-  0.0289;           # Rest of Body/blood partition coefficient
     }
     
     # Blood flow rates to compartments as fraction of cardiac output
-    Q_cardiacc <- 7.297341982;
+    Q_cardiacc <- 7.29734198;
     Q_lic <- 0.32093023;
     Q_kic <- 0.20155039 ;
     Q_filc <- 0.10077519;
     Q_gic <- 0.17441860;
     Q_luc <- 1.0;
     Q_htc <- 0.09069767 ;
-    Q_brc <- 0.006976744;
+    Q_brc <- 0.0;
     Q_adc <- 0.0;
     Q_bmc <- 0.0;
-    Q_rbc <- 0.197674419;
+    Q_rbc <- 0.20465116;
     
     # Compartment volumes as fraction of total body volume
     V_blc <- 0.0816;
@@ -100,31 +101,31 @@ create.params  <- function(user_input){
     V_gic <- 0.040;
     V_luc <- 0.004;
     V_htc <- 0.0032;
-    V_brc <- 0.0028;
+    V_brc <- 1.0;
     V_adc <- 1.0;
     V_bmc <- 1.0;
-    V_rbc <-  0.5332 ;
-
+    V_rbc <- 0.536 ;
+    
     return(list("sex" = sex, "admin.type" = admin.type,
                 "admin.dose" = admin.dose, 
                 "admin.time" = admin.time,
                 "BW" =  BW, "BW.times" = BW.times,
-               "gut2liver" = gut2liver,
-               "K_li" = K_li, "K_ki" = K_ki, "K_gi" = K_gi, "K_lu" = K_lu,
-               "K_ht" = K_ht, "K_br" = K_br, "K_ad" = K_ad, "K_bm" = K_bm,
-               "K_rb" = K_rb,
-               "T_mc" = T_mc, "K_t" = K_t, "K_uc" = K_uc, "K_abs" = K_abs,
-               "F_unabs" = F_unabs, "K_unabs" = K_unabs, "K_ustc" = K_ustc,
-               "K_fstc" = K_fstc, "Bmax" = Bmax, "K_b" = K_b, "k_off" = k_off,
-               "F_free" = F_free, "K_f" = K_f, "K_bilec" = K_bilec,
-               "Q_cardiacc" = Q_cardiacc, "Q_lic" = Q_lic, "Q_kic" = Q_kic,
-               "Q_filc" = Q_filc, "Q_gic" = Q_gic, "Q_luc" = Q_luc,
-               "Q_htc" = Q_htc, "Q_brc" = Q_brc,"Q_adc" = Q_adc,
-               "Q_bmc" = Q_bmc, "Q_rbc" = Q_rbc,
-               "V_blc" = V_blc, "V_kic" = V_kic,
-               "V_filc" = V_filc, "V_lic" = V_lic,"V_gic" = V_gic,
-               "V_luc" = V_luc, "V_htc" = V_htc, "V_brc" = V_brc,
-               "V_adc" = V_adc, "V_bmc" = V_bmc, "V_rbc" = V_rbc))
+                "gut2liver" = gut2liver,
+                "K_li" = K_li, "K_ki" = K_ki, "K_gi" = K_gi, "K_lu" = K_lu,
+                "K_ht" = K_ht, "K_br" = K_br, "K_ad" = K_ad, "K_bm" = K_bm,
+                "K_rb" = K_rb,
+                "T_mc" = T_mc, "K_t" = K_t, "K_uc" = K_uc, "K_abs" = K_abs,
+                "F_unabs" = F_unabs, "K_unabs" = K_unabs, "K_ustc" = K_ustc,
+                "K_fstc" = K_fstc, "Bmax" = Bmax, "K_b" = K_b, "k_off" = k_off,
+                "F_free" = F_free, "K_f" = K_f, "K_bilec" = K_bilec,
+                "Q_cardiacc" = Q_cardiacc, "Q_lic" = Q_lic, "Q_kic" = Q_kic,
+                "Q_filc" = Q_filc, "Q_gic" = Q_gic, "Q_luc" = Q_luc,
+                "Q_htc" = Q_htc, "Q_brc" = Q_brc,"Q_adc" = Q_adc,
+                "Q_bmc" = Q_bmc, "Q_rbc" = Q_rbc,
+                "V_blc" = V_blc, "V_kic" = V_kic,
+                "V_filc" = V_filc, "V_lic" = V_lic,"V_gic" = V_gic,
+                "V_luc" = V_luc, "V_htc" = V_htc, "V_brc" = V_brc,
+                "V_adc" = V_adc, "V_bmc" = V_bmc, "V_rbc" = V_rbc))
     
   })
 }
@@ -158,8 +159,8 @@ create.inits <- function(parameters){
     
     
     return(c( "A_bl" = A_bl,"A_glumen" = A_glumen,"A_gi" = A_gi,
-                "A_li" = A_li,"A_lib" = A_lib,"A_ki" = A_ki,"A_fil" = A_fil,
-                "A_lu" = A_lu,"A_ht" = A_ht,"A_br" = A_br,
+              "A_li" = A_li,"A_lib" = A_lib,"A_ki" = A_ki,"A_fil" = A_fil,
+              "A_lu" = A_lu,"A_ht" = A_ht,"A_br" = A_br,
               "A_ad" = A_ad,"A_bm" = A_bm,"A_rb" = A_rb,
               "A_fst" = A_fst, "A_ust" = A_ust, "A_fecal" = A_fecal,
               "A_urine" = A_urine,"iv_dose_cont" = iv_dose_cont,"A_in" = A_in))
@@ -181,11 +182,22 @@ create.events <- function(parameters){
       stop("The times of administration should be equal in number to the doses")
     }else{
       if (admin.type == "iv"){
-        events <- list(data = rbind(data.frame(var = c("A_bl", "A_in"),  time = admin.time, 
-                                               value = rep(admin.dose,2), method = c("add")) ))
+        vector_of_doses <- c()
+        for (dose in admin.dose) {
+          added_doses <- rep(dose, 2)
+          vector_of_doses <- c(vector_of_doses, added_doses)
+        }
+        events <- list(data = rbind(data.frame(var = c("A_bl", "A_in"),  time = rep(admin.time, each = 2), 
+                                               value = vector_of_doses, method = c("add")) ))
       }else if (admin.type == "oral"){
-        events <- list(data = rbind(data.frame(var = c("A_glumen", "A_fst", "A_in"),  time = admin.time, 
-                                               value = c(admin.dose* (1 - F_unabs),admin.dose* F_unabs, admin.dose), method = c("add")) ))
+        vector_of_doses <- c()
+        for (dose in admin.dose) {
+          added_doses <- c(dose*(1 - F_unabs), dose*F_unabs, dose)
+          vector_of_doses <- c(vector_of_doses, added_doses)
+        }
+        
+        events <- list(data = rbind(data.frame(var = c("A_glumen", "A_fst", "A_in"),  time = rep(admin.time, each = 3), 
+                                               value = vector_of_doses, method = c("add")) ))
       }
     }
     return(events)
@@ -278,22 +290,22 @@ ode.func <- function(time, inits, params, custom.func){
     
     # Amount in blood (plasma) (mg)
     dA_bl <- F_free*((Q_li+Q_gi)*C_li/K_li + Q_ki*C_ki/K_ki + 
-                      Q_lu*C_lu/K_lu + Q_ht*C_ht/K_ht + Q_br*C_br/K_br+ 
-                     Q_ad*C_ad/K_ad + Q_bm*C_bm/K_bm + Q_rb*C_rb/K_rb) -
-     F_free*C_bl*(Q_li + Q_ki + Q_gi + Q_fil + Q_lu + Q_ht + Q_br +
-                  Q_ad + Q_bm + Q_rb) + iv_dose_cont / 24 * BW_out; 
+                       Q_lu*C_lu/K_lu + Q_ht*C_ht/K_ht + Q_br*C_br/K_br+ 
+                       Q_ad*C_ad/K_ad + Q_bm*C_bm/K_bm + Q_rb*C_rb/K_rb) -
+      F_free*C_bl*(Q_li + Q_ki + Q_gi + Q_fil + Q_lu + Q_ht + Q_br +
+                     Q_ad + Q_bm + Q_rb) + iv_dose_cont / 24 * BW_out; 
     
     # Amount gut lumen (mg)
     dA_glumen <- -K_abs*A_glumen - K_unabs*A_glumen;
     
     # Amount gut tissue (mg)
     dA_gi <- F_free*(Q_gi*C_bl - Q_gi*C_gi/K_gi) - K_f*A_gi +
-    (1-gut2liver)*K_abs*A_glumen;
+      (1-gut2liver)*K_abs*A_glumen;
     
     # Amount liver (mg)
     dA_li <- F_free*(Q_li*C_bl + Q_gi*C_gi/K_gi - (Q_li+Q_gi)*C_li/K_li) -
-     K_bile*A_li + gut2liver*K_abs*A_glumen -
-     (Bmax*C_li*F_free/K_li)/(K_b + C_li*F_free/K_li) + k_off*A_lib;
+      K_bile*A_li + gut2liver*K_abs*A_glumen -
+      (Bmax*C_li*F_free/K_li)/(K_b + C_li*F_free/K_li) + k_off*A_lib;
     
     # Amount bound in liver (mg)
     dA_lib <- (Bmax*C_li*F_free/K_li)/(K_b + C_li*F_free/K_li) - k_off*A_lib;
@@ -303,7 +315,7 @@ ode.func <- function(time, inits, params, custom.func){
     
     # Amount filtrate (mg)
     dA_fil <- F_free*Q_fil*C_bl - T_m*C_fil/(K_t + C_fil) - K_ust*V_fil*C_fil;
-
+    
     # Amount lungs (mg)
     dA_lu <- F_free*(Q_lu*C_bl - Q_lu*C_lu/K_lu);
     
@@ -367,40 +379,15 @@ ode.func <- function(time, inits, params, custom.func){
 #=============
 #6. User input 
 #=============
-# Parameters for reproducing example of sheet "MKimRecreateBW" in "PFAS_template_parameters_PFHxS.xlsx" of Bernstein et al.2021
-sex <- "M" # rat sex, values: M/F
-BW <- 0.25# rat body weight in kg
-BW.times <-0 # Times corresponding to BW vector. If BW is constant, then type 0
-admin.type <-  "oral" # administration type values: iv/oral
-admin.dose <- 10 * BW  # administered dose in mg
-admin.time <- 0 # time when doses are administered, in hours
-F_unabs <-  0.61 # Fraction of unabsorbed dose
-
-
-user_input <- list( "admin.type" = admin.type,
-                    "admin.dose" = admin.dose, 
-                    "admin.time" = admin.time,
-                    "BW"=BW, "BW.times" = BW.times,
-                    "F_unabs" = F_unabs, "sex" = sex)
-
-
-params <- create.params(user_input)
-inits <- create.inits(params)
-events <- create.events(params)
-sample_time <- seq(0,14*24,0.1)  #hours
-
-solution <-  ode(times = sample_time,  func = ode.func, y = inits, parms = params,
-                 events = events, method="bdf",rtol = 1e-05, atol = 1e-05)
-print(tail(solution))
-
-# Parameters for reproducing example of sheet "FKimRecreateBW" in "PFAS_template_parameters_PFHxS.xlsx" of Bernstein et al.2021
+# Parameters for reproducing example of sheet "FKimRecreateBW" in "PFAS_template_parameters_PFDA.xlsx" of Bernstein et al.2021
 sex <- "F" # rat sex, values: M/F
 BW <- 0.25# rat body weight in kg
 BW.times <-0 # Times corresponding to BW vector. If BW is constant, then type 0
 admin.type <-  "oral" # administration type values: iv/oral
-admin.dose <- 4 * BW  # administered dose in mg
+admin.dose <- 1*BW  # administered dose in mg
 admin.time <- 0 # time when doses are administered, in hours
-F_unabs <-   0.002 # Fraction of unabsorbed dose
+F_unabs <-   0.650 # Fraction of unabsorbed dose
+
 
 user_input <- list( "admin.type" = admin.type,
                     "admin.dose" = admin.dose, 
@@ -412,27 +399,47 @@ user_input <- list( "admin.type" = admin.type,
 params <- create.params(user_input)
 inits <- create.inits(params)
 events <- create.events(params)
-sample_time <- seq(0,14*24,0.1)  #hours
+sample_time <- seq(0,150*24,0.1)  #hours
+
+solution <-  data.frame(ode(times = sample_time,  func = ode.func, y = inits, parms = params,
+                 events = events, method="bdf",rtol = 1e-05, atol = 1e-05))
+print(tail(solution))
+
+# Male, multiple oral doses
+sex <- "M" # rat sex, values: M/F
+BW <- 0.25# rat body weight in kg
+BW.times <-0 # Times corresponding to BW vector. If BW is constant, then type 0
+admin.type <-  "oral" # administration type values: iv/oral
+admin.dose <- c(1 * BW, 1 * BW, 10 * BW)  # administered dose in mg
+admin.time <- c(0,5,10) # time when doses are administered, in hours
+F_unabs <-   0.650 # Fraction of unabsorbed dose
+
+user_input <- list( "admin.type" = admin.type,
+                    "admin.dose" = admin.dose, 
+                    "admin.time" = admin.time,
+                    "BW"=BW, "BW.times" = BW.times,
+                    "F_unabs" = F_unabs, "sex" = sex)
+
+params <- create.params(user_input)
+inits <- create.inits(params)
+events <- create.events(params)
+sample_time <- seq(0,15,0.1)  #hours
 
 solution <-  ode(times = sample_time,  func = ode.func, y = inits, parms = params,
                  events = events, method="bdf",rtol = 1e-05, atol = 1e-05)
-print(tail(solution))
+plot(solution[,1],solution[,3], type = "l")
 
 #====================
 #7. Upload on Jaqpot 
 #===================
 # Subset of features to be displayed on the user interface
-predicted.feats <- c("A_li", "A_gi", "A_ki", "A_fil", "A_rb", "A_bl", "A_lu", "A_ht", "A_br",
-                     "A_fecal", "A_urine",  "A_fst",  "A_ust", "A_glumen", 
-                     "C_li", "C_gi", "C_ki", "C_fil", "C_rb", "C_bl","C_lu", "C_ht", "C_br",
+predicted.feats <- c("A_li", "A_gi", "A_ki", "A_fil", "A_rb", "A_bl", "A_lu", "A_ht",
+                     "A_fecal", "A_urine",  "A_fst",  "A_ust", "A_glumen" = "A_glumen",
+                     "C_li", "C_gi", "C_ki", "C_fil", "C_rb", "C_bl","C_lu", "C_ht",
                      "BW_out")
-
-# Log in Jaqpot server
-jaqpotr::login.cred()
 
 # Deploy the model on the Jaqpot server to create a web service
 jaqpotr::deploy.pbpk(user.input = user_input,out.vars = predicted.feats,
                      create.params = create.params,  create.inits = create.inits,
-                     create.events = create.events, custom.func = custom.func, 
-                     method = "bdf",url = "https://api.jaqpot.org/jaqpot/")
-
+                     create.events = create.events, custom.func = custom.func,
+                     ode.fun = ode.fun, envFile = "")
