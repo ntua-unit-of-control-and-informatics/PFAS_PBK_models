@@ -1431,6 +1431,7 @@ ode.func <- function(time, inits, params){
     dMVenf = - CVenf*QBLu + QBK*CKBf + QBLtot*CLBf + QBM*CMBf + QBA*CABf + QBR*CRBf+
       QBH*CHBf + QBBr*CBrBf+ QBGo*CGoBf + QBSK*CSKBf + QBBo*CBoBf+
       koff_alb*CVenb*VVen - kon_alb*CalbVenf*CVenf*VVen 
+    
     #Kidney
     #blood subcompartment
     dMKBf = QBK*CArtf - QBK*CKBf   - PeffK*A_peritubular_PTC*(CKBf-CPTCf) -
@@ -3593,7 +3594,7 @@ obj.func <- function(x, dataset, fixed_params){
 ################################################################################
 
 
-setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
+setwd("C:/Users/Ioannis/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
 
 MW <- 414.07 #g/mol
 source("Goodness-of-fit-metrics.R")
@@ -3646,7 +3647,7 @@ Kemp_OR_Ffeces_low <- openxlsx::read.xlsx("Data/PFOA_Feces_female_oral_1_mg_per_
 Kemp_OR_Mfeces_low <- openxlsx::read.xlsx("Data/PFOA_Feces_male_oral_1_mg_per_kg-Loc.xlsx")
 
 
-setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/proximal_tubule/scenario15")
+setwd("C:/Users/Ioannis/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/proximal_tubule/scenario15")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -3714,7 +3715,7 @@ variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[
 params <- c(fixed_params[[1]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
-sample_time=seq(0,2,0.1)
+sample_time=sort(c(0.0001, seq(0,2,0.1)))
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,
                                     events = events,
@@ -3733,7 +3734,7 @@ inits <- create.inits(params)
 events <- create.events(params)
 
 # sample_time: a vector of time points to solve the ODEs
-sample_time=seq(0,2,0.1)
+sample_time=sort(c(0.0001, seq(0,2,0.1)))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -3753,7 +3754,7 @@ inits <- create.inits(params)
 events <- create.events(params)
 
 # sample_time: a vector of time points to solve the ODEs
-sample_time=seq(0,288,1)
+sample_time=sort(c(0.0001, seq(0,288,1)))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -3774,7 +3775,7 @@ inits <- create.inits(params)
 events <- create.events(params)
 
 # sample_time: a vector of time points to solve the ODEs
-sample_time=seq(0,288,1)
+sample_time=sort(c(0.0001, seq(0,288,1)))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -3795,7 +3796,7 @@ inits <- create.inits(params)
 events <- create.events(params)
 
 # sample_time: a vector of time points to solve the ODEs
-sample_time=seq(0,24,1)
+sample_time=sort(c(0.0001, seq(0,24,1)))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -3816,7 +3817,7 @@ inits <- create.inits(params)
 events <- create.events(params)
 
 # sample_time: a vector of time points to solve the ODEs
-sample_time=seq(0,24,1)
+sample_time=sort(c(0.0001, seq(0,24,1)))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -3837,7 +3838,7 @@ inits <- create.inits(params)
 events <- create.events(params)
 
 # sample_time: a vector of time points to solve the ODEs
-sample_time=seq(0,864,1)
+sample_time=sort(c(0.0001, seq(0,864,1)))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -3857,7 +3858,7 @@ inits <- create.inits(params)
 events <- create.events(params)
 
 # sample_time: a vector of time points to solve the ODEs
-sample_time=seq(0,24,0.1)
+sample_time=sort(c(0.0001, seq(0,24,1)))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -3877,7 +3878,7 @@ inits <- create.inits(params)
 events <- create.events(params)
 
 # sample_time: a vector of time points to solve the ODEs
-sample_time=seq(0,288,1)
+sample_time=sort(c(0.0001, seq(0,288,1)))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -3898,7 +3899,7 @@ events <- create.events(params)
 
 # sample_time: a vector of time points to solve the ODEs
 
-sample_time=c(0, 5/60, seq(1,288,1))
+sample_time=c(0, 0.0001, 5/60, seq(1,288,1))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -3917,7 +3918,7 @@ preds_kim_IV_Mblood <-  solution[, c("time", "Cplasma")]
 
 sex <- "F"
 BW <- 0.2 #kg
-sample_time <- seq(0,192,1)
+sample_time <-sort(c(0.0001, seq(0,192,1)))
 variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[11]])
 params <- c(fixed_params[[11]], variable_params)
 events <- create.events(params)
@@ -3944,7 +3945,7 @@ preds_Kemp_OR_Ffeces_med <-  solution[, c("time", "Mfeces")]
 
 ##########################################################################################
 # Set up simulations for the 13th case, i.e.Kemper 2003 (Worley) ORAL female HIGH
-sample_time <- seq(0,672,1)
+sample_time <- sort(c(0.0001, seq(0,672,1)))
 variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[13]])
 params <- c(fixed_params[[13]], variable_params)
 events <- create.events(params)
@@ -3961,7 +3962,7 @@ preds_Kemp_OR_Ffeces_high <-  solution[, c("time", "Mfeces")]
 
 sex <- "M"
 BW <- 0.3 #kg
-sample_time <- seq(0,673,1)
+sample_time <- sort(c(0.0001, seq(0,673,1)))
 variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[14]])
 params <- c(fixed_params[[14]], variable_params)
 inits <- create.inits (params)
@@ -4007,7 +4008,7 @@ variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[
 params <- c(fixed_params[[17]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
-sample_time <- c(0, 0.083, 0.25, 0.5, 1, 3, 6, seq(12, 1200, 4))
+sample_time <- c(0, 0.00010, 0.083, 0.25, 0.5, 1, 3, 6, seq(12, 1200, 4))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -4025,7 +4026,7 @@ variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[
 params <- c(fixed_params[[18]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
-sample_time <- c(0, 0.25, 1, 3, 6, seq(12, 1200, 4))
+sample_time <- c(0, 0.0001, 0.25, 1, 3, 6, seq(12, 1200, 4))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -4043,7 +4044,7 @@ variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[
 params <- c(fixed_params[[19]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
-sample_time <- c(0, 0.25, 1, 3, 6, seq(12, 1200, 4))
+sample_time <- c(0, 0.0001,  0.25, 1, 3, 6, seq(12, 1200, 4))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -4061,7 +4062,7 @@ variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[
 params <- c(fixed_params[[20]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
-sample_time <- c(0, 0.25, 1, 3, 6, seq(12, 1200, 4))
+sample_time <- c(0, 0.0001, 0.25, 1, 3, 6, seq(12, 1200, 4))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -4079,7 +4080,7 @@ variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[
 params <- c(fixed_params[[21]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
-sample_time <- c(0, 0.083, 0.25, seq(0.5, 192, 0.5))
+sample_time <- c(0,0.0001, 0.083, 0.25, seq(0.5, 192, 0.5))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -4097,7 +4098,7 @@ variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[
 params <- c(fixed_params[[22]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
-sample_time <- seq(0, 96, 0.25)
+sample_time <- sort(c(0.0001, seq(0,96,1)))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -4115,7 +4116,7 @@ variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[
 params <- c(fixed_params[[23]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
-sample_time <- c(0, 0.25, seq(1, 192, 0.5))
+sample_time <- c(0,0.0001, 0.25, seq(1, 192, 0.25))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -4135,7 +4136,7 @@ inits <- create.inits(params)
 events <- create.events(params)
 
 # sample_time: a vector of time points to solve the ODEs
-sample_time <- seq(0, 96, 0.25)
+sample_time <- c(0,0.0001, 0.25, seq(1, 192, 0.25))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -4153,7 +4154,7 @@ variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[
 params <- c(fixed_params[[25]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
-sample_time= c(seq(0, 1.2, 0.2), seq(1.5,24,0.5))
+sample_time= c(seq(0, 0.0001, 0.2), seq(1.5,24,0.5))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -4171,7 +4172,7 @@ variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[
 params <- c(fixed_params[[26]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
-sample_time= seq(0, 25, 0.5)
+sample_time <- c(0, 0.0001, 0.25, seq(1, 96, 0.25))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -4189,7 +4190,7 @@ variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[
 params <- c(fixed_params[[27]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
-sample_time= seq(0,48,0.2)
+sample_time <- c(0,0.0001, 0.2, seq(1, 48, 0.2))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -4207,7 +4208,7 @@ variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[
 params <- c(fixed_params[[28]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
-sample_time= seq(0,48,0.2)
+sample_time <- c(0,0.0001, 0.2, seq(1, 48, 0.2))
 
 # ode(): The solver of the ODEs
 solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -4587,26 +4588,26 @@ colnames(preds_Kemp_OR_Ffeces_low) <- c ("Time", "Feces")
 colnames(preds_Kemp_OR_Mfeces_low) <- c ("Time", "Feces")
 
 # Create a list containing the corresponding predictions
-simulations <- list(predictions1 = preds_kudo_high,  predictions2 = preds_kudo_low, 
-                    predictions3 = preds_kim_IV_Mtissues, 
-                    predictions4 = preds_kim_OR_Mtissues, predictions5 = preds_kim_IV_Ftissues,
-                    predictions6 = preds_kim_OR_Ftissues,
-                    predictions7 = preds_dzi_OR_Mtissues, predictions8 = preds_dzi_OR_Ftissues, 
-                    predictions9 = preds_kim_OR_Mblood,
-                    predictions10 = preds_kim_IV_Mblood, 
-                    predictions11a = preds_Kemp_OR_Furine_low, predictions11b = preds_Kemp_OR_Ffeces_low,
-                    predictions12a = preds_Kemp_OR_Furine_med, predictions12b = preds_Kemp_OR_Ffeces_med,
-                    predictions13a =preds_Kemp_OR_Furine_high, predictions13b = preds_Kemp_OR_Ffeces_high,
-                    predictions14a = preds_Kemp_OR_Murine_low, predictions14b = preds_Kemp_OR_Mfeces_low, 
-                    predictions15a = preds_Kemp_OR_Murine_med, predictions15b = preds_Kemp_OR_Mfeces_med,
-                    predictions16a =preds_Kemp_OR_Murine_high, predictions16b = preds_Kemp_OR_Mfeces_high,
-                    prediction17 =preds_dzi_IV_Mserum, predictions18 =preds_dzi_OR_Mserum_low,
-                    predictions19 =preds_dzi_OR_Mserum_medium, predictions20 =preds_dzi_OR_Mserum_high, 
-                    predictions21 =preds_dzi_IV_Fserum, predictions22 =preds_dzi_OR_Fserum_low,
-                    predictions23 =preds_dzi_OR_Fserum_medium,
-                    predictions24 =preds_dzi_OR_Fserum_high, predictions25 = preds_kim_OR_Fblood, 
-                    predictions26 = preds_kim_IV_Fblood, predictions27 = preds_gus_OR_Mblood, 
-                    predictions28 = preds_gus_OR_Mtissues)
+simulations <- list(predictions1 = preds_kudo_high[2:dim(preds_kudo_high)[1],],  predictions2 = preds_kudo_low[2:dim(preds_kudo_low)[1],], 
+                    predictions3 = preds_kim_IV_Mtissues[2:dim(preds_kim_IV_Mtissues)[1],], 
+                    predictions4 = preds_kim_OR_Mtissues[2:dim(preds_kim_OR_Mtissues)[1],], predictions5 = preds_kim_IV_Ftissues[2:dim(preds_kim_IV_Ftissues)[1],],
+                    predictions6 = preds_kim_OR_Ftissues[2:dim(preds_kim_OR_Ftissues)[1],],
+                    predictions7 = preds_dzi_OR_Mtissues[2:dim(preds_dzi_OR_Mtissues)[1],], predictions8 = preds_dzi_OR_Ftissues[2:dim(preds_dzi_OR_Ftissues)[1],], 
+                    predictions9 = preds_kim_OR_Mblood[2:dim(preds_kim_OR_Mblood)[1],],
+                    predictions10 = preds_kim_IV_Mblood[2:dim(preds_kim_IV_Mblood)[1],], 
+                    predictions11a = preds_Kemp_OR_Furine_low[2:dim(preds_Kemp_OR_Furine_low)[1],], predictions11b = preds_Kemp_OR_Ffeces_low[2:dim(preds_Kemp_OR_Ffeces_low)[1],],
+                    predictions12a = preds_Kemp_OR_Furine_med[2:dim(preds_Kemp_OR_Furine_med)[1],], predictions12b = preds_Kemp_OR_Ffeces_med[2:dim(preds_Kemp_OR_Ffeces_med)[1],],
+                    predictions13a =preds_Kemp_OR_Furine_high[2:dim(preds_Kemp_OR_Furine_high)[1],], predictions13b = preds_Kemp_OR_Ffeces_high[2:dim(preds_Kemp_OR_Ffeces_high)[1],],
+                    predictions14a = preds_Kemp_OR_Murine_low[2:dim(preds_Kemp_OR_Murine_low)[1],], predictions14b = preds_Kemp_OR_Mfeces_low[2:dim(preds_Kemp_OR_Mfeces_low)[1],], 
+                    predictions15a = preds_Kemp_OR_Murine_med[2:dim(preds_Kemp_OR_Murine_med)[1],], predictions15b = preds_Kemp_OR_Mfeces_med[2:dim(preds_Kemp_OR_Mfeces_med)[1],],
+                    predictions16a =preds_Kemp_OR_Murine_high[2:dim(preds_Kemp_OR_Murine_high)[1],], predictions16b = preds_Kemp_OR_Mfeces_high[2:dim(preds_Kemp_OR_Mfeces_high)[1],],
+                    prediction17 =preds_dzi_IV_Mserum[2:dim(preds_dzi_IV_Mserum)[1],], predictions18 =preds_dzi_OR_Mserum_low[2:dim(preds_dzi_OR_Mserum_low)[1],],
+                    predictions19 =preds_dzi_OR_Mserum_medium[2:dim(preds_dzi_OR_Mserum_medium)[1],], predictions20 =preds_dzi_OR_Mserum_high[2:dim(preds_dzi_OR_Mserum_high)[1],], 
+                    predictions21 =preds_dzi_IV_Fserum[2:dim(preds_dzi_IV_Fserum)[1],], predictions22 =preds_dzi_OR_Fserum_low[2:dim(preds_dzi_OR_Fserum_low)[1],],
+                    predictions23 =preds_dzi_OR_Fserum_medium[2:dim(preds_dzi_OR_Fserum_medium)[1],],
+                    predictions24 =preds_dzi_OR_Fserum_high[2:dim(preds_dzi_OR_Fserum_high)[1],], predictions25 = preds_kim_OR_Fblood[2:dim(preds_kim_OR_Fblood)[1],], 
+                    predictions26 = preds_kim_IV_Fblood[2:dim(preds_kim_IV_Fblood)[1],], predictions27 = preds_gus_OR_Mblood[2:dim(preds_gus_OR_Mblood)[1],], 
+                    predictions28 = preds_gus_OR_Mtissues[2:dim(preds_gus_OR_Mtissues)[1],])
 
 
 # Iterate over all existing experiments and create the accompanying plots
@@ -4635,7 +4636,7 @@ for(i in 1:length(experiments)){
   
   
   # Save the plot with dynamically adjusted dimensions
-  ggsave(paste0("experiment", i,".png"), plot = final_plot,
+  ggsave(paste0(names(experiments)[i],".png"), plot = final_plot,
          device = 'png', dpi = 300,
          width = 13,
          height = 10,

@@ -447,14 +447,14 @@ create_fixed_params <- function(user.input){
     Rduct_cort <- (24/2)*1e-6 #m, Cortical collecting duct 
     Rduct_med <-  (24/2)*1e-6 #m, Outer medullary collecting duct 
     
-    #volumes of filtrate compartments,[μm^3]*1e-15 --> L
+    #volumes of filtrate compartments,[m^3]*1e3 --> L
     VPT <- 2*pi*((RPT_slp^2)*LPT_slp + (RPT_llp^2)*LPT_llp)*1e3 # Proximal tubule (short- and long-looped)
     VTDL <- 2*pi*( (RTDL_slp^2)*LTDL_slp+(RTDL_llp^2)*LTDL_llp)*1e3 #Thin descending limb (short- and long-looped)
     VThinAL <-  2*pi*((RThinAL^2)*LThinAL)*1e3 #Thin ascending limb (long-looped)
     VThickAL <- 2*pi*((RThickAL_cort^2)*LThickAL_cort+(RThickAL_med^2)*LThickAL_med)*1e3 #Thick ascending limb (Cortical and Medullary)
     VDAL <- VTDL + VThinAL+ VThickAL # Loop of Henle
     VDT <- 2*pi*((RDT_sup^2)*LDT_sup+(RDT_deep^2)*LDT_deep)*1e3#Distal tubule (superficial+deep)
-    VCD <- 2*pi*((Rduct_cort^2)*Lduct_cort+(Rduct_med^2)*Rduct_med)*1e3 #collecting duct (Cortical+Outer)
+    VCD <- 2*pi*((Rduct_cort^2)*Lduct_cort+(Rduct_med^2)*Lduct_med)*1e3 #collecting duct (Cortical+Outer)
     VFil <-  VPT+VDAL+VDT+VCD #L
     # We hypothesize that when kidney is weighted the renal tubule content remains inside 
     VKT <- VK - VKF - VFil#kidney tissue volume kg=L
@@ -620,7 +620,7 @@ create_fixed_params <- function(user.input){
     A_peritubular_PTC <- A_peritubular * VPTC/ (VPTC + VDALC)
     A_peritubular_DTC <- A_peritubular * VDALC/ (VPTC + VDALC)
     
-    # We assume that surface areas scale at the power of 2/3, based on the way that total body SA scales [https://doi.org/10.1111/j.1476-5381.2009.00267.x]
+    # We assume that surface areas scale to the power of 2/3, based on the way that total body SA scales [https://doi.org/10.1111/j.1476-5381.2009.00267.x]
     BW_PKSim <- 0.23 #kg
     SA_scaling_factor <- (BW/BW_PKSim)^(2/3)  
     
@@ -813,7 +813,7 @@ create_fixed_params <- function(user.input){
     fQparaSk <- 3.52E-3
     fQparaBo <- 6.62E-4 
     
-    #Estimation of lymph flow rates:
+    #Estimation of paracellular flow rates:
     QparaKi <- fQparaKi*QBK
     QparaLi <- fQparaLi*QBL
     QparaSt <- fQparaSt*QBST
@@ -905,13 +905,13 @@ create_fixed_params <- function(user.input){
     
     n <- 5 #enlargement factor of the apical membrane of tubule cells
     # Surface areas of the different subcompartments of kidney filtrate, m^2
-    APT <-  2*pi*((RPT_slp/2)*LPT_slp*26980+(RPT_llp/2)*LPT_llp*11020)*2*n*1e-12 # Proximal tubule (short- and long-looped)
-    ATDL <- 2*pi*((RTDL_slp/2)*LTDL_slp*26980+(RTDL_llp/2)*LTDL_llp*11020)*2*n*1e-12 #Thin descending limb (short- and long-looped)
-    AThinAL <-  2*pi*((RThinAL/2)*LThinAL*11020)*2*n*1e-12 #Thin ascending limb (long-looped)
-    AThickAL <- 2*pi*((RThickAL_cort/2)*LThickAL_cort*38000+(RThickAL_med/2)*LThickAL_med*38000)*2*n*1e-12 #Thick ascending limb (Cortical and Medullary)
+    APT <-  2*pi*(RPT_slp*LPT_slp + RPT_llp*LPT_llp)*n # Proximal tubule (short- and long-looped)
+    ATDL <- 2*pi*(RTDL_slp*LTDL_slp + RTDL_llp*LTDL_llp)*n #Thin descending limb (short- and long-looped)
+    AThinAL <-  2*pi*RThinAL*LThinAL*n #Thin ascending limb (long-looped)
+    AThickAL <- 2*pi*(RThickAL_cort*LThickAL_cort + RThickAL_med*LThickAL_med)*n #Thick ascending limb (Cortical and Medullary)
     ADAL <- ATDL + AThinAL + AThickAL
-    ADT <- 2*pi*((RDT_sup/2)*LDT_sup*26980+(RDT_deep/2)*LDT_deep*11020)*2*n*1e-12 #Distal tubule (superficial+deep)
-    ACD <- 2*pi*((Rduct_cort/2)*Lduct_cort*6000+(Lduct_med/2)*Lduct_med*6000)*2*n*1e-12 #collecting duct (Cortical+Outer)
+    ADT <- 2*pi*(RDT_sup*LDT_sup + RDT_deep*LDT_deep)*n #Distal tubule (superficial+deep)
+    ACD <- 2*pi*(Rduct_cort*Lduct_cort + Lduct_med*Lduct_med)*n #collecting duct (Cortical+Outer)
     AFil <- APT + ADAL + ADT + ACD
     
     #Alveolar cells surface area (Type I and II), m^2
@@ -3672,7 +3672,7 @@ Swell = 1.12 #cm^2
 well_protein = 0.346 #mg protein
 protein_per_well = (well_protein * Awell)/Swell #mg protein/well
 Papp_Kimura = (ClINFT_unscaled*60*1e-06*1e3*protein_per_well)/Awell  #cm/h,at  pH = 6.0
-Papp_RYU = 1.46e-6*3600 # cm/h, at pH = 7.4 from Ryu et al. (2024) [https://doi.org/10.1016/j.chemosphere.2024.142390]
+Papp_RYU = 2*1.46e-6*3600 # cm/h, at pH = 7.4 from Ryu et al. (2024) [https://doi.org/10.1016/j.chemosphere.2024.142390]
 
 
 # Create initial conditions (zero initialisation)

@@ -3024,7 +3024,7 @@ hind_INH_Fblood_low <- openxlsx::read.xlsx("Inhalation_data/Hinderliter_2006_fem
 hind_INH_Fblood_medium <- openxlsx::read.xlsx("Inhalation_data/Hinderliter_2006_female_plasma_single_Medium_dose.xlsx")
 hind_INH_Fblood_high <- openxlsx::read.xlsx("Inhalation_data/Hinderliter_2006_female_plasma_single_High_dose.xlsx")
 
-setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Inhalation_based_on_scenario15_PT/Training/AAFE/Inhalation_scenario15")
+setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Inhalation_based_on_scenario15_PT/Training/AAFE/Inhalation_scenario15")
 
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
@@ -3194,7 +3194,7 @@ preds_kim_OR_Ftissues <-  solution[, c("time","Clungs")]
 # Set up simulations for the 7th case, i.e. Gustafsson (2022) Inhalation male tissues
 BW <- 0.5125  #kg, from Gustafsson et al., 2022
 sex <- "M"
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[28]])
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[7]])
 params <- c(fixed_params[[7]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -3237,7 +3237,7 @@ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     y = inits, parms = params,events = events,
                                     method="lsodes",rtol = 1e-05, atol = 1e-05))
 
-preds_gus_INH_Mtissues <-  solution[, c("time", "CalveolarLF","Cliver", "Clungtissues", "Ckidney")]
+preds_gus_INH_Mtissues <-  solution[, c("time", "CalveolarLF","Cliver", "Clungtissue", "Ckidney")]
 
 
 #################################################################################
@@ -3357,9 +3357,15 @@ preds_kim_IV_Mtissues[,2:dim(preds_kim_IV_Mtissues)[2]] <- preds_kim_IV_Mtissues
 preds_kim_OR_Mtissues[,2:dim(preds_kim_OR_Mtissues)[2]] <- preds_kim_OR_Mtissues[,2:dim(preds_kim_OR_Mtissues)[2]] /1000
 preds_kim_IV_Ftissues[,2:dim(preds_kim_IV_Ftissues)[2]] <- preds_kim_IV_Ftissues[,2:dim(preds_kim_IV_Ftissues)[2]] /1000
 preds_kim_OR_Ftissues[,2:dim(preds_kim_OR_Ftissues)[2]] <- preds_kim_OR_Ftissues[,2:dim(preds_kim_OR_Ftissues)[2]] /1000
-preds_gus_OR_Mblood[,2:dim(preds_gus_OR_Mblood)[2]] <- preds_gus_OR_Mblood[,2:dim(preds_gus_OR_Mblood)[2]] /1000
 preds_gus_OR_Mtissues[,2:dim(preds_gus_OR_Mtissues)[2]] <- preds_gus_OR_Mtissues[,2:dim(preds_gus_OR_Mtissues)[2]] /1000
-
+preds_gus_INH_Mblood[,2:dim(preds_gus_INH_Mblood)[2]] <- preds_gus_INH_Mblood[,2:dim(preds_gus_INH_Mblood)[2]] /1000
+preds_gus_INH_Mtissues[,2:dim(preds_gus_INH_Mtissues)[2]] <- preds_gus_INH_Mtissues[,2:dim(preds_gus_INH_Mtissues)[2]] /1000
+preds_hind_INH_Mblood_low[,2:dim(preds_hind_INH_Mblood_low)[2]] <- preds_hind_INH_Mblood_low[,2:dim(preds_hind_INH_Mblood_low)[2]] /1000
+preds_hind_INH_Mblood_medium[,2:dim(preds_hind_INH_Mblood_medium)[2]] <- preds_hind_INH_Mblood_medium[,2:dim(preds_hind_INH_Mblood_medium)[2]] /1000
+preds_hind_INH_Mblood_high[,2:dim(preds_hind_INH_Mblood_high)[2]] <- preds_hind_INH_Mblood_high[,2:dim(preds_hind_INH_Mblood_high)[2]] /1000
+preds_hind_INH_Fblood_low[,2:dim(preds_hind_INH_Fblood_low)[2]] <- preds_hind_INH_Fblood_low[,2:dim(preds_hind_INH_Fblood_low)[2]] /1000
+preds_hind_INH_Fblood_medium[,2:dim(preds_hind_INH_Fblood_medium)[2]] <- preds_hind_INH_Fblood_medium[,2:dim(preds_hind_INH_Fblood_medium)[2]] /1000
+preds_hind_INH_Fblood_high[,2:dim(preds_hind_INH_Fblood_high)[2]] <- preds_hind_INH_Fblood_high[,2:dim(preds_hind_INH_Fblood_high)[2]] /1000
 
 
 # ######################################################################################
@@ -3499,10 +3505,10 @@ experiments <- list(experiment_inh_1 = experiment_inh_1, experiment_inh_2 = expe
                     experiment_inh_3 = experiment_inh_3, experiment_inh_4 = experiment_inh_4,
                     experiment_inh_5 = experiment_inh_5, experiment_inh_6 = experiment_inh_6,
                     experiment_inh_7 = experiment_inh_7,
-                    experiment_inh8 = experiment_inh8,experiment_inh9 = experiment_inh9, 
-                    experiment_inh10 = experiment_inh10, experiment_inh11 = experiment_inh11,  
-                    experiment_inh12 = experiment_inh12, experiment_inh13 = experiment_inh13, 
-                    experiment_inh14 = experiment_inh14, experiment_inh15 = experiment_inh15)
+                    experiment_inh_8 = experiment_inh_8,experiment_inh_9 = experiment_inh_9, 
+                    experiment_inh_10 = experiment_inh_10, experiment_inh_11 = experiment_inh_11,  
+                    experiment_inh_12 = experiment_inh_12, experiment_inh_13 = experiment_inh_13, 
+                    experiment_inh_14 = experiment_inh_14, experiment_inh_15 = experiment_inh_15)
 
 
 # Rename predictions so that they share the same name as the names of the experimental data dataframe

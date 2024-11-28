@@ -24,3 +24,16 @@ Scenario20: only kidney oatp and oat3 sexually different, ka and f_protein fitte
 Scenario21: only kidney oatp and oat3 sexually different, ka and f_fabp fitted
 
 Scenario22: only kidney oatp  sexually different and ka, koff fitted, different gut absorption 
+-------- corrected tubular surface areas
+
+Scenario23a: only kidney oatp  sexually different and ka, koff fitted, different gut absorption, no ISF in tubular regions, old ISF values 
+Scenario23b: only kidney oatp  sexually different and ka, koff fitted, different gut absorption, no ISF in tubular regions, new ISF values
+Scenario23c: only kidney oatp  sexually different and ka fixed, f_protein, koff fitted, different gut absorption, no ISF in tubular regions, new ISF values  
+Scenario24a: only kidney oatp  sexually different and ka, koff fitted, different gut absorption, ISF only in 3 tubular regions, old ISF values 
+Scenario24b: only kidney oatp  sexually different and ka, koff fitted, different gut absorption, ISF only in 3 tubular regions, new ISF values
+Scenario24c: only kidney oatp  sexually different ka  fixed, koff fitted, ISF only in 3 tubular regions, old ISF values
+Scenario24d: only kidney oatp and oat3 sexually different ka  fixed, koff fitted,ISF only in 3 tubular regions, old ISF values
+Scenario24e: only kidney oatp  sexually different and ka fixed, f_protein, koff fitted, different gut absorption, ISF only in 3 tubular regions, old ISF values  
+Scenario25a: only kidney oatp  sexually different and ka, koff fitted, different gut absorption, ISF to all tubular regions, old ISF values 
+Scenario25b: only kidney oatp  sexually different and ka, koff fitted, different gut absorption, ISF to all tubular regions, new ISF values 
+ 
