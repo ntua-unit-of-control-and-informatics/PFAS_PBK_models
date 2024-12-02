@@ -46,7 +46,6 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   CLfeces_unscaled <-  5.693579e-04 #in L/h/BW^(-0.25), scaling similar to Loccisano et al. (2012)
   CLfeces <- CLfeces_unscaled*BW^(-0.25)  #in L/h
   
-  kabsUA <- estimated_params[1]
   kCLEal <- estimated_params[2]
   kCLEua <- estimated_params[3]
   
