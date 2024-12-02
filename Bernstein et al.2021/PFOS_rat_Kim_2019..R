@@ -167,17 +167,27 @@ create.events <- function(parameters){
       stop("The times of administration should be equal in number to the doses")
     }else{
       if (admin.type == "iv"){
-        events <- list(data = rbind(data.frame(var = c("A_bl", "A_in"),  time = admin.time, 
-                                               value = rep(admin.dose,2), method = c("add")) ))
+        vector_of_doses <- c()
+        for (dose in admin.dose) {
+          added_doses <- rep(dose, 2)
+          vector_of_doses <- c(vector_of_doses, added_doses)
+        }
+        events <- list(data = rbind(data.frame(var = c("A_bl", "A_in"),  time = rep(admin.time, each = 2), 
+                                               value = vector_of_doses, method = c("add")) ))
       }else if (admin.type == "oral"){
-        events <- list(data = rbind(data.frame(var = c("A_glumen", "A_fst", "A_in"),  time = admin.time, 
-                                               value = c(admin.dose* (1 - F_unabs),admin.dose* F_unabs, admin.dose), method = c("add")) ))
+        vector_of_doses <- c()
+        for (dose in admin.dose) {
+          added_doses <- c(dose*(1 - F_unabs), dose*F_unabs, dose)
+          vector_of_doses <- c(vector_of_doses, added_doses)
+        }
+        
+        events <- list(data = rbind(data.frame(var = c("A_glumen", "A_fst", "A_in"),  time = rep(admin.time, each = 3), 
+                                               value = vector_of_doses, method = c("add")) ))
       }
     }
     return(events)
   })
 }
-
 #==================
 #4. Custom function 
 #==================
@@ -411,15 +421,14 @@ print(tail(solution))
 #7. Upload on Jaqpot 
 #===================
 # Subset of features to be displayed on the user interface
-predicted.feats <- c("A_li", "A_ki", "A_fil", "A_rb", "A_bl", "A_lib",
+predicted.feats <- c("A_li", "A_gi", "A_ki", "A_fil", "A_rb", "A_bl", "A_lu", "A_ht", "A_br",
                      "A_fecal", "A_urine",  "A_fst",  "A_ust", "A_glumen", 
-                     "C_li", "C_ki", "C_fil", "C_rb", "C_bl","BW_out", "F_free")
-
-# Log in Jaqpot server
-jaqpotr::login.cred()
+                     "C_li", "C_gi", "C_ki", "C_fil", "C_rb", "C_bl","C_lu", "C_ht", "C_br",
+                     "F_free",
+                     "BW_out")
 
 # Deploy the model on the Jaqpot server to create a web service
 jaqpotr::deploy.pbpk(user.input = user_input,out.vars = predicted.feats,
                      create.params = create.params,  create.inits = create.inits,
-                     create.events = create.events, custom.func = custom.func, 
-                     method = "bdf",url = "https://api.jaqpot.org/jaqpot/")
+                     create.events = create.events, custom.func = custom.func,
+                     ode.fun = ode.fun, envFile = "")
