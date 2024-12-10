@@ -214,7 +214,8 @@ create.params <- function(user.input){
     
     Qtotal <- QBKi+QBLi+QBRe+QBSpl+QBH+QBBr+QBSIn+QBSt+QBLIn
     Qurine = (5.4+3.7+2.7)/3/60/0.02 #mL/h/kg, unknown BW, https://doi.org/10.1007/BF02035147
-    
+    Qfeces = 6.68/20.6 #mg/g --> g/kg BW, https://doi.org/10.3390/toxins10050204
+      
     #############################################
     #               Lymph flow rates            #
     #############################################
@@ -291,7 +292,8 @@ create.params <- function(user.input){
                 
                 "admin.time" = admin.time, "admin.dose" = admin.dose,
                 "admin.type" = admin.type, "MW"=MW, "np_size"=np_size,
-                "Qtotal"=Qtotal,"Qurine"=Qurine,"sex"=sex, "estimated_params"=estimated_params
+                "Qtotal"=Qtotal,"Qurine"=Qurine,"Qfeces"=Qfeces, 
+                "sex"=sex, "estimated_params"=estimated_params
           
                 
     
@@ -318,13 +320,13 @@ ode.func <- function(time, inits, params){
     coef_brain <- estimated_params[9]
     coef_rob <- estimated_params[10]
    
-    CLE_feces <- estimated_params[11]
-    CLEh <- estimated_params[12]
+    #CLE_feces <- 0
+    CLEh <- estimated_params[11]
     #CLE_urine <- 0
     
-    Pup <- estimated_params[13]
+    Pup <- estimated_params[12]
     Km <- 5*1e6
-    CLup <- estimated_params[14]
+    CLup <- estimated_params[13]
     
     # Blood concentration
     CBven <- MBven/VBven
@@ -350,6 +352,7 @@ ode.func <- function(time, inits, params){
     #Large Intestine
     CLInB = MBLIn/VLInB # blood concentration
     CLIn = MLIn/VLIn # tissue concentration
+    CLInlumen = MLInlumen/VLInlumen
     
     #Lungs
     CLnB = MBLn/VLnB # blood concentration
@@ -424,7 +427,7 @@ ode.func <- function(time, inits, params){
     #tissue subcompartment 
     dMLIn = QparaLIn*(1-SLIn)*CLInB + coef_largeIn*QBLIn*(CLInB-CLIn) 
     #lumen
-    dMLInlumen = CLEh*MLi - CLE_feces*MLInlumen
+    dMLInlumen = CLEh*MLi - Qfeces*CLInlumen
     
     
     #Lung 
@@ -465,10 +468,10 @@ ode.func <- function(time, inits, params){
     # Urine
     dMurine = Qurine*MBKi
     # Feces
-    dMfeces = CLE_feces*MLInlumen
+    dMfeces = Qfeces*CLInlumen
     
     dVurine = Qurine
-    dVfeces = CLE_feces
+    dVfeces = Qfeces
     
    
     
@@ -528,7 +531,7 @@ ode.func <- function(time, inits, params){
          
            'CBven'=CBven, 'CBart'=CBart, 'CKiB'=CKiB, 'CKi'=CKi, 'CLiB'=CLiB,
            'CLi'=CLi, 'Cmacro_Li'=Cmacro_Li,'CStB'=CStB, 'CSt'=CSt, 'CSInB'=CSInB,
-           'CSIn'=CSIn, 'CLInB'=CLInB,
+           'CSIn'=CSIn, 'CLInB'=CLInB, 'CLInlumen'=CLInlumen,
            'CLIn'=CLIn, 'CLnB'=CLnB, 'CLn'=CLn, 'CSplB'=CSplB, 'CSpl'=CSpl,
            'CHB'=CHB, 'CH'=CH, 'CBrB'=CBrB, 'CBr'=CBr, 'CReB'=CReB, 'CRe'=CRe)
         
@@ -1053,17 +1056,17 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0, 
-              "maxeval" = 1000, 
+              "maxeval" = 500, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
 #Parameter names:
 
-N_pars <- 14 # Number of parameters to be fitted
-fit <-  c(rep(log(1),12),log (1), log (1e-3))
+N_pars <- 13 # Number of parameters to be fitted
+fit <-  c(rep(log(1e2),11),log (1), log (1e-3))
 
-lb = c(rep(log(1e-8),12), log(1e-3), log (1e-5))
-ub = c(rep(log(1e8),12), log(10), log (1e-2))
+lb = c(rep(log(1e-3),11), log(1e-3), log (1e-5))
+ub = c(rep(log(1e20),11), log(10), log (1e-2))
 
 
 # N_pars <- 16 # Number of parameters to be fitted
