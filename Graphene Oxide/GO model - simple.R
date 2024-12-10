@@ -1,7 +1,7 @@
 #Graphene oxide model
 
 library(deSolve)
-setwd("C:/Users/Ioannis/Documents/GitHub/PFAS_PBK_models/Graphene Oxide")
+setwd("/Users/eviepapakyriakopoulou/Documents/GitHub/PFAS_PBK_models/Graphene Oxide")
 
 
 create.params <- function(user.input){
@@ -213,6 +213,7 @@ create.params <- function(user.input){
     QBRe <- PQBRe * Qcardiac #L/min
     
     Qtotal <- QBKi+QBLi+QBRe+QBSpl+QBH+QBBr+QBSIn+QBSt+QBLIn
+    Qurine = (5.4+3.7+2.7)/3/60/0.02 #mL/h/kg, unknown BW, https://doi.org/10.1007/BF02035147
     
     #############################################
     #               Lymph flow rates            #
@@ -290,7 +291,7 @@ create.params <- function(user.input){
                 
                 "admin.time" = admin.time, "admin.dose" = admin.dose,
                 "admin.type" = admin.type, "MW"=MW, "np_size"=np_size,
-                "Qtotal"=Qtotal, "sex"=sex, "estimated_params"=estimated_params
+                "Qtotal"=Qtotal,"Qurine"=Qurine,"sex"=sex, "estimated_params"=estimated_params
           
                 
     
@@ -319,11 +320,11 @@ ode.func <- function(time, inits, params){
    
     CLE_feces <- estimated_params[11]
     CLEh <- estimated_params[12]
-    CLE_urine <- estimated_params[13]
+    #CLE_urine <- 0
     
-    Pup <- estimated_params[14]
+    Pup <- estimated_params[13]
     Km <- 5*1e6
-    CLup <- estimated_params[15]
+    CLup <- estimated_params[14]
     
     # Blood concentration
     CBven <- MBven/VBven
@@ -384,7 +385,7 @@ ode.func <- function(time, inits, params){
     #Kidney
     #blood subcompartment
     dMBKi = QBKi*CBart - QBKi*CKiB - QparaKi*(1-SKi)*CKiB - coef_kidney*QBKi*(CKiB-CKi)- 
-      CLE_urine*MBKi
+      Qurine*MBKi
     #tissue subcompartment
     dMKi = QparaKi*(1-SKi)*CKiB + coef_kidney*QBKi*(CKiB-CKi)
     
@@ -462,11 +463,11 @@ ode.func <- function(time, inits, params){
     
     
     # Urine
-    dMurine = CLE_urine*MBKi
+    dMurine = Qurine*MBKi
     # Feces
     dMfeces = CLE_feces*MLInlumen
     
-    dVurine = CLE_urine
+    dVurine = Qurine
     dVfeces = CLE_feces
     
    
@@ -522,7 +523,7 @@ ode.func <- function(time, inits, params){
             
            'Mblood'=Mblood, 'Mkidneys'=Mkidneys, 'Mliver'=Mliver, 'Mstomach'=Mstomach,
            'Msmall_intestine'=Msmall_intestine, 'Mlarge_intestine'=Mlarge_intestine,
-           'Mlungs'=Mlungs, 'Mrest'=Mrest, 'Mfeces'=Mfeces, 'Murine'=Murine, 
+           'Mlungs'=Mlungs, 'Mrest'=Mrest, 
            'Mspleen'=Mspleen, 'Mheart'=Mheart, 'Mbrain'=Mbrain,
          
            'CBven'=CBven, 'CBart'=CBart, 'CKiB'=CKiB, 'CKi'=CKi, 'CLiB'=CLiB,
@@ -1023,7 +1024,7 @@ obj.func <- function(x, dataset){
 ################################################################################
 
 
-setwd("C:/Users/Ioannis/Documents/GitHub/PFAS_PBK_models/Graphene Oxide")
+setwd("/Users/eviepapakyriakopoulou/Documents/GitHub/PFAS_PBK_models/Graphene Oxide")
 
 MW <- 124.91 #g/mol
 source("Goodness-of-fit-metrics.R")
@@ -1037,7 +1038,8 @@ Liu_1_small_diftp_blood <- openxlsx::read.xlsx("Data/Liu_2012_GO_male_small_1_bl
 Liu_1_large_diftp_blood <- openxlsx::read.xlsx("Data/Liu_2012_GO_male_large_1_blood_dif_times.xlsx")
 
 
-setwd("C:/Users/Ioannis/Documents/GitHub/PFAS_PBK_models/Graphene Oxide/Training/AAFE/GO_model")
+setwd("/Users/eviepapakyriakopoulou/Documents/GitHub/PFAS_PBK_models/Graphene Oxide/Training/AAFE/GO_model")
+
 
 dataset <- list("df1" = Liu_1_small_tissues,"df2" = Liu_1_small_diftp_tissues,
                 "df3" = Liu_1_large_diftp_tissues,"df4" = Liu_2_small_tissues,
@@ -1051,17 +1053,17 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0, 
-              "maxeval" = 200, 
+              "maxeval" = 1000, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
 #Parameter names:
 
-N_pars <- 15 # Number of parameters to be fitted
-fit <-  c(rep(log(1),13),log (1), log (1e-3))
+N_pars <- 14 # Number of parameters to be fitted
+fit <-  c(rep(log(1),12),log (1), log (1e-3))
 
-lb = c(rep(log(1e-20),13), log(1e-3), log (1e-5))
-ub = c(rep(log(1e20),13), log(10), log (1e-2))
+lb = c(rep(log(1e-8),12), log(1e-3), log (1e-5))
+ub = c(rep(log(1e8),12), log(10), log (1e-2))
 
 
 # N_pars <- 16 # Number of parameters to be fitted
