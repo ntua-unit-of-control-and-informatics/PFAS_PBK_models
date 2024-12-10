@@ -3690,8 +3690,8 @@ Papp_RYU = 2*1.46e-6*3600 # cm/h, at pH = 7.4 from Ryu et al. (2024) [https://do
 N_pars <- 13 # Number of parameters to be fitted
 fit <-  c(rep(log(1),7), rep(log(mean(c(Papp_Kimura,Papp_RYU))),1), log(1), log(1),log(1e-3), log(1e-2), log(1e0))
 
-lb = c(rep(log(1e-8),3), log(1e-5),rep(log(1e-8),3),  rep(log(Papp_RYU),1), log(1e-3), log(1e-6), log(1e-4), log(1e-6))
-ub = c(rep(log(1e8),  3),log(1e5), rep(log(1e8),  3), rep(log(Papp_Kimura),1),log(1e1),log(10),  log(1e1), log(1e1) )
+lb = c(rep(log(1e-8),3), log(1e-5),rep(log(1e-8),3),  rep(log(Papp_RYU),1), log(1e-3), log(1e-6), log(1e-4), log(1e-6), log(1e-4))
+ub = c(rep(log(1e8),  3),log(1e5), rep(log(1e8),  3), rep(log(Papp_Kimura),1),log(1e1),log(10),  log(1e1), log(1e1), log(1e1) )
 
 fixed_params <- create_all_fixed_params()
 # Run the optimization algorithm to estimate the parameter values
