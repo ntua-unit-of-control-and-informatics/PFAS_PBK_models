@@ -1063,10 +1063,10 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
 #Parameter names:
 
 N_pars <- 13 # Number of parameters to be fitted
-fit <-  c(rep(log(1e2),11),log (1), log (1e-3))
+fit <-  c(rep(log(1e4),11),log (1), log (1e-3))
 
-lb = c(rep(log(1e-3),11), log(1e-3), log (1e-5))
-ub = c(rep(log(1e20),11), log(10), log (1e-2))
+lb = c(rep(log(1),11), log(1e-3), log (1e-5))
+ub = c(rep(log(1e10),11), log(10), log (1))
 
 
 # N_pars <- 16 # Number of parameters to be fitted
