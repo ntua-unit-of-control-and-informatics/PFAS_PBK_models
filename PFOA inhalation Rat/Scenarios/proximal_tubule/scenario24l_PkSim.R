@@ -3647,7 +3647,7 @@ Kemp_OR_Ffeces_low <- openxlsx::read.xlsx("Data/PFOA_Feces_female_oral_1_mg_per_
 Kemp_OR_Mfeces_low <- openxlsx::read.xlsx("Data/PFOA_Feces_male_oral_1_mg_per_kg-Loc.xlsx")
 
 
-setwd("/Users/eviepapakyriakopoulou/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/proximal_tubule/scenario24l")
+setwd("/Users/eviepapakyriakopoulou/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/proximal_tubule/scenario24l_PkSim")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -3667,10 +3667,10 @@ dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mt
 #Initialise optimiser to NULL for better error handling later
 opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
               "xtol_rel" = 1e-07,
-              "ftol_rel" = 0.0,
+              "ftol_rel" = 1e-07,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0, 
-              "maxeval" = 1000, 
+              "maxeval" = 1200, 
               "print_level" = 1)
 
 ClINFT_unscaled= 18.1 #uL/min/mg protein, Kimura et al. 2017
@@ -3691,7 +3691,7 @@ N_pars <- 13 # Number of parameters to be fitted
 fit <-  c(rep(log(1),7), rep(log(mean(c(Papp_Kimura,Papp_RYU))),1), log(1), log(1),log(1e-3), log(1e-2) ,log(1e5))
 
 lb = c(rep(log(1e-8),3), log(1e-5),rep(log(1e-8),3),  rep(log(Papp_RYU),1), log(1e-3), log(1e-6), log(1e-4), log(1e-6),log(1e2))
-ub = c(rep(log(1e8),  3),log(1e5), rep(log(1e8),  3), rep(log(Papp_Kimura),1),log(1e1),log(10),  log(1e1), log(1e1),log(1e6) )
+ub = c(rep(log(1e8),  3),log(1e5), rep(log(1e8),  3), rep(log(Papp_Kimura),1),log(1e1),log(10),  log(1e1), log(1e1),log(1e8) )
 
 fixed_params <- create_all_fixed_params()
 # Run the optimization algorithm to estimate the parameter values
@@ -3705,7 +3705,7 @@ optimizer <- nloptr::nloptr( x0= fit,
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
-save.image("scenario24l.RData")
+save.image("scenario24l_PkSim.RData")
 
 
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
