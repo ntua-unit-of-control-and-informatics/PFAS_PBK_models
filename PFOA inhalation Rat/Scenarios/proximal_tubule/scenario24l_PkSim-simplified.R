@@ -818,39 +818,39 @@ create_params <- function(user.input){
     # which is more appropriate for 
     # For endothelial and cellular permeability we use the Ryu et al. (2024) value
     #Papp = Papp_RYU
-    k_gut_in = ( (Papp_gut/100) * fixed_params$AINL)*1000 #L/h
-    k_gut_out = ( (Papp/100) * fixed_params$AINL)*1000 #L/h
+    k_gut_in = ( (Papp_gut/100) *  AINL)*1000 #L/h
+    k_gut_out = ( (Papp/100) *  AINL)*1000 #L/h
     
     
     #passive diffusion rates, in L/h
-    kLFLT = ((Papp/100) * fixed_params$AcL)*1000 #m^3/h * 1000 --> L/h
+    kLFLT = ((Papp/100) *  AcL)*1000 #m^3/h * 1000 --> L/h
     #kLTLbile = ((Papp/100) * AcLBilec)*1000 #m^3/h * 1000 --> L/h
-    kMFMT = ((Papp/100) * fixed_params$AcM)*1000 #m^3/h * 1000 --> L/h
-    kSTFSTT = ((Papp/100) * fixed_params$AcST)*1000 #m^3/h * 1000 --> L/h 
-    kINFINT = ((Papp/100) * fixed_params$AcIN)*1000 #m^3/h * 1000 --> L/h 
-    kAFAT = ((Papp/100) * fixed_params$AcA)*1000 #m^3/h * 1000 --> L/h 
-    kLuTLuF = ((Papp/100) * fixed_params$AcLu)*1000 #m^3/h * 1000 --> L/h
-    kLuTLuAF = ((Papp/100) * fixed_params$AcALF)*1000 #m^3/h * 1000 --> L/h
-    kSPFSPT = ((Papp/100) * fixed_params$AcSP)*1000 #m^3/h * 1000 --> L/h 
-    kHFHT = ((Papp/100) * fixed_params$AcH)*1000 #m^3/h * 1000 --> L/h 
-    kBrFBrT = ((Papp/100) * fixed_params$AcBr)*1000 #m^3/h * 1000 --> L/h 
-    kGoFGoT = ((Papp/100) * fixed_params$AcGo)*1000 #m^3/h * 1000 --> L/h 
-    kSKFSKT = ((Papp/100) * fixed_params$AcSK)*1000 #m^3/h * 1000 --> L/h
-    kBoFBoT = ((Papp/100) * fixed_params$AcBo)*1000 #m^3/h * 1000 --> L/h
-    kRFRT = ((Papp/100) * fixed_params$AcR)*1000 #m^3/h*1000 --> L/h 
+    kMFMT = ((Papp/100) *  AcM)*1000 #m^3/h * 1000 --> L/h
+    kSTFSTT = ((Papp/100) *  AcST)*1000 #m^3/h * 1000 --> L/h 
+    kINFINT = ((Papp/100) *  AcIN)*1000 #m^3/h * 1000 --> L/h 
+    kAFAT = ((Papp/100) *  AcA)*1000 #m^3/h * 1000 --> L/h 
+    kLuTLuF = ((Papp/100) *  AcLu)*1000 #m^3/h * 1000 --> L/h
+    kLuTLuAF = ((Papp/100) *  AcALF)*1000 #m^3/h * 1000 --> L/h
+    kSPFSPT = ((Papp/100) *  AcSP)*1000 #m^3/h * 1000 --> L/h 
+    kHFHT = ((Papp/100) *  AcH)*1000 #m^3/h * 1000 --> L/h 
+    kBrFBrT = ((Papp/100) *  AcBr)*1000 #m^3/h * 1000 --> L/h 
+    kGoFGoT = ((Papp/100) *  AcGo)*1000 #m^3/h * 1000 --> L/h 
+    kSKFSKT = ((Papp/100) *  AcSK)*1000 #m^3/h * 1000 --> L/h
+    kBoFBoT = ((Papp/100) *  AcBo)*1000 #m^3/h * 1000 --> L/h
+    kRFRT = ((Papp/100) *  AcR)*1000 #m^3/h*1000 --> L/h 
     
     #Diffusion rates in L/h between renal tubule filtrate and tubule cells
-    kPtcTu <- ((Papp/100) * fixed_params$APT) *1000 #diffusion between proximal tubule cells and tubule filtrate
-    kDalcTu <- ((Papp/100) * fixed_params$ADAL) *1000 #diffusion between descending/ascending cells and tubule filtrate
-    kDtcTu <- ((Papp/100) * fixed_params$ADT) *1000 #diffusion between distal tubule cells and tubule filtrate
-    kCdcTu <- ((Papp/100) * fixed_params$ACD) *1000 #diffusion between collecting duct cells and tubule filtrate
+    kPtcTu <- ((Papp/100) *  APT) *1000 #diffusion between proximal tubule cells and tubule filtrate
+    kDalcTu <- ((Papp/100) *  ADAL) *1000 #diffusion between descending/ascending cells and tubule filtrate
+    kDtcTu <- ((Papp/100) *  ADT) *1000 #diffusion between distal tubule cells and tubule filtrate
+    kCdcTu <- ((Papp/100) *  ACD) *1000 #diffusion between collecting duct cells and tubule filtrate
     
     #Diffusion rates in L/h between  tubule cells and interstitial space
     kDtcF <- 0
     kPtcF <- 0
-    kDalcF <- ((Papp/100) * fixed_params$AcK_DALC) *1000 #diffusion between proximal tubule cells and interstitial space
-    kCdcF <- ((Papp/100) * fixed_params$AcK_CDC) *1000 #diffusion between descending/ascending cells and interstitial space
-    kKTrestF  <- ((Papp/100) * fixed_params$AcKTrest) *1000 #diffusion between rest of kidney cells and interstitial space
+    kDalcF <- ((Papp/100) *  AcK_DALC) *1000 #diffusion between proximal tubule cells and interstitial space
+    kCdcF <- ((Papp/100) *  AcK_CDC) *1000 #diffusion between descending/ascending cells and interstitial space
+    kKTrestF  <- ((Papp/100) *  AcKTrest) *1000 #diffusion between rest of kidney cells and interstitial space
     
     #Effective permeability (Peff, in mm/h) for blood (B), liver(L), kidney(K),
     #stomach(ST),intestine (IN), adipose(A), muscle(M), spleen (SP), heart (H), 
