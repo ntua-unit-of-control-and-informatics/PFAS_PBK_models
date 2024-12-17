@@ -163,40 +163,23 @@ ode.func <- function(time, inits, params){
 #and partition coefficient of nanoparticles between tissue and blood (Pi), coef_i=xi/Pi
 # based on the work of Li et al., 2013, https://doi.org/10.3109/17435390.2013.863406
     
-    if (np_size <- np_size_small){
-      
-      coef_heart <- estimated_params[1]
-      coef_lung <- estimated_params[2]
-      coef_liver <- estimated_params[3]
-      coef_spleen <- estimated_params[4]
-      coef_kidney <- estimated_params[5]
-      coef_stomach <- estimated_params[6]
-      coef_smallIn <- estimated_params[7]
-      coef_largeIn <- estimated_params[8]
-      coef_brain <- estimated_params[9]
-      coef_rob <- estimated_params[10]
-      
-    } else {
-      coef_heart <- estimated_params[11]
-      coef_lung <- estimated_params[12]
-      coef_liver <- estimated_params[13]
-      coef_spleen <- estimated_params[14]
-      coef_kidney <- estimated_params[15]
-      coef_stomach <- estimated_params[16]
-      coef_smallIn <- estimated_params[17]
-      coef_largeIn <- estimated_params[18]
-      coef_brain <- estimated_params[19]
-      coef_rob <- estimated_params[20]
-      
-      
-    }
     
-    Pup <- estimated_params[21]
+    coef_heart <- estimated_params[1]
+    coef_lung <- estimated_params[2]
+    coef_liver <- estimated_params[3]
+    coef_spleen <- estimated_params[4]
+    coef_kidney <- estimated_params[5]
+    coef_stomach <- estimated_params[6]
+    coef_smallIn <- estimated_params[7]
+    coef_largeIn <- estimated_params[8]
+    coef_brain <- estimated_params[9]
+    coef_rob <- estimated_params[10]
+    Pup <- estimated_params[11]
     Km <- 5*1e6
-    CLup <- estimated_params[22]
+    CLup <- estimated_params[12]
     
-    CLurine <- estimated_params[23]
-    CLfeces <- estimated_params[24]
+    CLurine <- estimated_params[13]
+    CLfeces <- estimated_params[14]
 
     # Blood concentration
     CBven <- MBven/VBven
@@ -881,17 +864,17 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0, 
-              "maxeval" = 4000, 
+              "maxeval" = 2000, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
 #Parameter names:
 
-N_pars <- 24 # Number of parameters to be fitted
-fit <-  c(rep(log(1), 24))
+N_pars <- 14 # Number of parameters to be fitted
+fit <-  c(rep(log(1), 14))
 
-lb = c(rep(log(1e-8),24))
-ub = c(rep(log(1e8),24))
+lb = c(rep(log(1e-5),14))
+ub = c(rep(log(1e5),14))
 
 
 # N_pars <- 16 # Number of parameters to be fitted

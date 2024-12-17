@@ -27,6 +27,7 @@ create.params <- function(user.input){
     #Liver
     PVLi <- 5.49e-2 #Brown et al. 1997, Table 4
     VLi <- PVLi * BW #liver volume kg=L
+    V_macro = 12.5/100*VLi
    
     #Stomach
     PVSt <- 6e-3 #Brown et al. 1997, Table 4
@@ -98,32 +99,41 @@ create.params <- function(user.input){
     
     #(QBi, in L/min) to different tissues (i=L, K, G, A, M, R)
     #Hall et al., 2012, https://doi.org/10.1002/jps.22811
+    #PQi, fraction of cardiac output
     
     BW_ref <- 0.03 #kg
-    Qgut <- 1.5/1000 * BW/BW_ref # mL/min --> L/min
+    Cardiac_output <- 11.4/1000 * BW/BW_ref #mL/min --> L/min
+    
     QKi <- 1.3/1000 * BW/BW_ref # mL/min --> L/min
+    PQKi <- QKi/Cardiac_output
     QLi <- 1.8/1000 * BW/BW_ref # mL/min --> L/min
-    QSt <- Qgut
-    QSIn <- Qgut
-    QLIn <- Qgut
+    PQLi <- QLi/Cardiac_output
     QLn <- 1
     QSpl <- 0.09/1000 * BW/BW_ref # mL/min --> L/min
+    PQSpl <- QSpl/Cardiac_output
     QH <- 0.28/1000 * BW/BW_ref # mL/min --> L/min
+    PQH <- QH/Cardiac_output
     QBr <- 0.26/1000 * BW/BW_ref # mL/min --> L/min
+    PQBr <- QBr/Cardiac_output
+    PQSt <-((0.53+1.45)/2)/100 #Table 1 (mean of fore and glandular), https://doi.org/10.1002/jat.2550030607
+    QSt <- PQSt*Cardiac_output 
+    PSIn <- 13.5/100 #Table 1, https://doi.org/10.1002/jat.2550030607
+    QSIn <- PSIn*Cardiac_output 
+    PLIn <- 3.67/100 #Table 1, https://doi.org/10.1002/jat.2550030607
+    QLIn <- PLIn*Cardiac_output 
+    PQRe <- 1 - PQKi - PQLi - PQSpl - PQH - PQBr - PQSt - PSIn - PLIn
+    QRe <- PQRe*Cardiac_output
     
-    Cardiac_output <- 11.4 #mL/min
-    Qorgans <- 70.18/100 * Cardiac_output
-    Qorgans_scaled <- Qorgans/1000*BW/BW_ref # mL/min --> L/min
-    QRe <- Qorgans_scaled - (QKi+QLi+QSpl+QH+QBr+Qgut)
     
     Qtotal <- QKi+QLi+QRe+QSpl+QH+QBr+QSIn+QSt+QLIn
-    Qurine = (5.4+3.7+2.7)/3/1000/60/0.02 #mL/h/kg--> L/min/kg, unknown BW, https://doi.org/10.1007/BF02035147
-    Qfeces = 6.68/20.6 #mg/g --> g/kg BW, https://doi.org/10.3390/toxins10050204
+    QLitot <- QLi+QSpl+QSIn+QSt+QLIn
+    # Qurine = (5.4+3.7+2.7)/3/1000/60/0.02 #mL/h/kg--> L/min/kg, unknown BW, https://doi.org/10.1007/BF02035147
+    # Qfeces = 6.68/20.6 #mg/g --> g/kg BW, https://doi.org/10.3390/toxins10050204
      
     
     return(list('VB'=VB,'Vplasma'=Vplasma,'VBven'=VBven,'VBart'=VBart,
-                'VKi'=VKi,'VLi'=VLi,'VSt'=VSt,'VSIn'=VSIn,'VLIn'=VLIn,
-                'VLn'=VLn,'VSpl'=VSpl,'VH'=VH,'VBr'=VBr,'VRe'=VRe,
+                'VKi'=VKi,'VLi'=VLi, 'V_macro'=V_macro,'VSt'=VSt,'VSIn'=VSIn,
+                'VLIn'=VLIn,'VLn'=VLn,'VSpl'=VSpl,'VH'=VH,'VBr'=VBr,'VRe'=VRe,
                 
                 'AKi'=AKi,'ALi'=ALi,'ASt'=ASt,'ASIn'=ASIn,'ALIn'=ALIn,
                 'ALn'=ALn,'ASpl'=ASpl,'AH'=AH,'ABr'=ABr,'ARe'=ARe,
@@ -135,8 +145,8 @@ create.params <- function(user.input){
                 "admin.time" = admin.time, "admin.dose" = admin.dose,
                 "admin.type" = admin.type, "MW"=MW, "np_size"=np_size,
                 "np_size_small"=np_size_small, "np_size_large"=np_size_large,
-                "Qtotal"=Qtotal,
-                "Qurine"=Qurine,"Qfeces"=Qfeces, 
+                "Qtotal"=Qtotal, "QLitot"=QLitot,
+                #"Qurine"=Qurine,"Qfeces"=Qfeces, 
                 "sex"=sex, "estimated_params"=estimated_params
           
                 
@@ -164,21 +174,24 @@ ode.func <- function(time, inits, params){
     coef_largeIn <- estimated_params[8]
     coef_brain <- estimated_params[9]
     coef_rob <- estimated_params[10]
+    Pup <- estimated_params[11]
+    Km <- 5*1e6
+    CLup <- estimated_params[12]
     
-    
-#CLurine <- estimated_params[11]
-#CLfeces <- estimated_params[12]
+    CLurine <- estimated_params[13]
+    CLfeces <- estimated_params[14]
 
     # Blood concentration
     CBven <- MBven/VBven
     CBart <- MBart/VBart
+    #CB <- MB/VB
     
     # Kidney 
     CKi = MKi/VKi # tissue concentration
     
     #Liver
     CLi = MLi/VLi # tissue concentration
-    #Cmacro_Li = Mmacro_Li/V_macro #macrophages concentration
+    Cmacro_Li = Mmacro_Li/V_macro #macrophages concentration
     
     #Stomach
     CSt = MSt/VSt # tissue concentration
@@ -208,21 +221,29 @@ ode.func <- function(time, inits, params){
     #Arterial Blood
     dMBart =  QLn*(CLn/coef_lung) -QKi*CBart -QLi*CBart -QSt*CBart -QSIn*CBart -QLIn*CBart -
               QSpl*CBart -QH*CBart -QBr*CBart -QRe*CBart
-    
+
     #Venous Blood
-    dMBven = -QLn*CBven +QKi*(CKi/coef_kidney) +QLi*(CLi/coef_liver) +QSt*(CSt/coef_stomach) +
-              QSIn*(CSIn/coef_smallIn) +QLIn*(CLIn/coef_largeIn) +QSpl*(CSpl/coef_spleen) +
+    dMBven = -QLn*CBven +QKi*(CKi/coef_kidney) +QLitot*(CLi/coef_liver) +
               QH*(CH/coef_heart) +QBr*(CBr/coef_brain) +QRe*(CRe/coef_rob)
+    
+    #Blood
+    #dMB = QLn*(CLn/coef_lung) -QKi*CB -QLi*CB -QSt*CB-QSIn*CB -QLIn*CB -
+          # QSpl*CB -QH*CB-QBr*CB -QRe*CB -QLn*CB +QKi*(CKi/coef_kidney) +QLi*(CLi/coef_liver) +QSt*(CSt/coef_stomach) +
+          # QSIn*(CSIn/coef_smallIn) +QLIn*(CLIn/coef_largeIn) +QSpl*(CSpl/coef_spleen) +
+          # QH*(CH/coef_heart) +QBr*(CBr/coef_brain) +QRe*(CRe/coef_rob)
       
     #Kidney
     #tissue subcompartment
-    dMKi = QKi*(CBart - (CKi/coef_kidney)) - Qurine*MKi
+    dMKi = QKi*(CBart - (CKi/coef_kidney)) - CLurine*MKi #Qurine*MKi
     
     #Liver
     #tissue subcompartment
-    dMLi =  QLi*(CBart - (CLi/coef_liver))  
+    dMLi =  QLi*CBart - QLitot*(CLi/coef_liver) + QSt*(CSt/coef_stomach) + QSpl*(CSpl/coef_spleen) + 
+            QSIn*(CSIn/coef_smallIn) + QLIn*(CLIn/coef_largeIn) -
+            Pup*V_macro*CLi*(1-(Cmacro_Li/(Km + Cmacro_Li))) + CLup*Cmacro_Li*V_macro
+    
     #macrophages
-    #dMmacro_Li = Pup*V_macro*CLiB*(1-(Cmacro_Li/(Km + Cmacro_Li))) - CLup*Cmacro_Li*V_macro
+    dMmacro_Li = Pup*V_macro*CLi*(1-(Cmacro_Li/(Km + Cmacro_Li))) - CLup*Cmacro_Li*V_macro
     
     #Stomach
     #tissue subcompartment 
@@ -230,11 +251,11 @@ ode.func <- function(time, inits, params){
     
     #Small Intestine
     #tissue subcompartment 
-    dMSIn = QSIn*(CBart - (CSIn/coef_smallIn))
+    dMSIn = QSIn*(CBart - (CSIn/coef_smallIn)) 
     
     #Large Intestine
     #tissue subcompartment 
-    dMLIn = QLIn*(CBart - (CLIn/coef_largeIn)) - Qfeces*CLIn
+    dMLIn = QLIn*(CBart - (CLIn/coef_largeIn)) - CLfeces*CLIn #Qfeces*CLIn 
     
     #Lung 
     #tissue subcompartment
@@ -257,21 +278,23 @@ ode.func <- function(time, inits, params){
     dMRe = QRe*(CBart - (CRe/coef_rob))
     
     # Urine
-    dMurine = Qurine*MKi
+    dMurine = CLurine*MKi #Qurine*MKi
     # Feces
-    dMfeces = Qfeces*CLIn
+    dMfeces = CLfeces*CLIn #Qfeces*CLIn
     
-    dVurine = Qurine
-    dVfeces = Qfeces
+    dVurine = CLurine #Qurine
+    dVfeces = CLfeces #Qfeces
     
    
     
     #Concentration calculation in each compartment 
     Cven <- CBven
     Cart <- CBart
+    #CB <- CB
     Cblood <- (MBven + MBart)/ (VBven + VBart)
+    #Cblood <- MB/VB
     Ckidneys <- MKi/VKi
-    Cliver <- MLi/VLi
+    Cliver <- (MLi + Mmacro_Li)/VLi
     Cstomach <-  MSt/VSt
     Csmall_intestine <-  MSIn/VSIn
     Clarge_intestine <- MLIn/VLIn
@@ -286,7 +309,7 @@ ode.func <- function(time, inits, params){
     Mart <- MBart
     Mblood <- MBven + MBart
     Mkidneys <- MKi
-    Mliver <- MLi
+    Mliver <- MLi + Mmacro_Li
     Mstomach <- MSt
     Msmall_intestine <- MSIn
     Mlarge_intestine <- MLIn
@@ -299,8 +322,10 @@ ode.func <- function(time, inits, params){
     Mbrain <-  MBr
     
     
-    list(c( "dMBart"=dMBart, "dMBven"=dMBven, "dMKi"=dMKi,
-            "dMLi"=dMLi, "dMSt"=dMSt, "dMSIn"=dMSIn, "dMLIn"=dMLIn, 
+    list(c( 
+            "dMBart"=dMBart, "dMBven"=dMBven,"dMKi"=dMKi,
+            "dMLi"=dMLi, "dMmacro_Li"=dMmacro_Li,
+            "dMSt"=dMSt, "dMSIn"=dMSIn, "dMLIn"=dMLIn, 
             "dMLn"=dMLn, "dMSpl"=dMSpl, "dMH"=dMH, "dMBr"=dMBr,
             "dMRe"=dMRe, "dMurine"=dMurine, 
             "dMfeces"=dMfeces, "dVurine"=dVurine, "dVfeces"=dVfeces), 
@@ -315,8 +340,8 @@ ode.func <- function(time, inits, params){
            'Mlungs'=Mlungs, 'Mrest'=Mrest, 
            'Mspleen'=Mspleen, 'Mheart'=Mheart, 'Mbrain'=Mbrain,
          
-           'CBven'=CBven, 'CBart'=CBart, 'CKi'=CKi, 
-           'CLi'=CLi, 'CSt'=CSt, 'CSIn'=CSIn, 
+           'CBven'=CBven, 'CBart'=CBart,'CKi'=CKi, 
+           'CLi'=CLi, 'Cmacro_Li'=Cmacro_Li, 'CSt'=CSt, 'CSIn'=CSIn, 
            'CLIn'=CLIn, 'CLn'=CLn, 'CSpl'=CSpl,
            'CH'=CH, 'CBr'=CBr,'CRe'=CRe)
         
@@ -329,13 +354,15 @@ ode.func <- function(time, inits, params){
 create.inits <- function(parameters){
   with(as.list(parameters),{
     
-    MBart<-0; MBven<-0; MKi<-0; MLi<-0; MSt<-0;
+    MBart<-0; MBven<-0;MKi<-0; MLi<-0; Mmacro_Li<-0; MSt<-0;
     MSIn<-0; MLIn<-0; MLn<-0; MSpl<-0; MH<-0; MBr<-0;
     MRe<-0; Murine<-0; Mfeces<-0; Vurine <-0; Vfeces <-0
     
     
-    return(c("MBart"=MBart, "MBven"=MBven, "MKi"=MKi,
-             "MLi"=MLi,"MSt"=MSt, "MSIn"=MSIn, "MLIn"=MLIn,"MLn"=MLn,
+    return(c(
+             "MBart"=MBart, "MBven"=MBven,"MKi"=MKi,
+             "MLi"=MLi, "Mmacro_Li"=Mmacro_Li,"MSt"=MSt, "MSIn"=MSIn,
+             "MLIn"=MLIn,"MLn"=MLn,
              "MSpl"=MSpl, "MH"=MH, "MBr"=MBr,"MRe"=MRe,
              "Murine"=Murine, "Mfeces"=Mfeces,
              "Vurine"=Vurine, "Vfeces"=Vfeces
@@ -489,15 +516,15 @@ obj.func <- function(x, dataset){
     preds_Liu_1_small_diftp_tissues[[i]] <- solution[solution$time %in% exp_time, column_names[i]]
   }
   
-  obs_Liu_1_small_diftp_tissues <- list( exp_data[exp_data$Tissue == "Heart", "mass"],
-                               exp_data[exp_data$Tissue == "Liver", "mass"],
-                               exp_data[exp_data$Tissue == "Spleen", "mass"],
-                               exp_data[exp_data$Tissue == "Stomach", "mass"],
-                               exp_data[exp_data$Tissue == "Kidneys", "mass"],
-                               exp_data[exp_data$Tissue == "Lungs", "mass"],
-                               exp_data[exp_data$Tissue == "Brain", "mass"],
-                               exp_data[exp_data$Tissue == "Small_intestine", "mass"],
-                               exp_data[exp_data$Tissue == "Large_intestine", "mass"]) 
+  obs_Liu_1_small_diftp_tissues <- list( exp_data[exp_data$Tissue == "Heart", "mass"]*admin.dose/100,
+                               exp_data[exp_data$Tissue == "Liver", "mass"]*admin.dose/100,
+                               exp_data[exp_data$Tissue == "Spleen", "mass"]*admin.dose/100,
+                               exp_data[exp_data$Tissue == "Stomach", "mass"]*admin.dose/100,
+                               exp_data[exp_data$Tissue == "Kidneys", "mass"]*admin.dose/100,
+                               exp_data[exp_data$Tissue == "Lungs", "mass"]*admin.dose/100,
+                               exp_data[exp_data$Tissue == "Brain", "mass"]*admin.dose/100,
+                               exp_data[exp_data$Tissue == "Small_intestine", "mass"]*admin.dose/100,
+                               exp_data[exp_data$Tissue == "Large_intestine", "mass"]*admin.dose/100) 
   
   
   score[2] <- AAFE(predictions = preds_Liu_1_small_diftp_tissues, observations = obs_Liu_1_small_diftp_tissues)
@@ -558,15 +585,15 @@ obj.func <- function(x, dataset){
     preds_Liu_1_large_diftp_tissues[[i]] <- solution[solution$time %in% exp_time, column_names[i]]
   }
   
-  obs_Liu_1_large_diftp_tissues <- list( exp_data[exp_data$Tissue == "Heart", "mass"],
-                                         exp_data[exp_data$Tissue == "Liver", "mass"],
-                                         exp_data[exp_data$Tissue == "Spleen", "mass"],
-                                         exp_data[exp_data$Tissue == "Stomach", "mass"],
-                                         exp_data[exp_data$Tissue == "Kidneys", "mass"],
-                                         exp_data[exp_data$Tissue == "Lungs", "mass"],
-                                         exp_data[exp_data$Tissue == "Brain", "mass"],
-                                         exp_data[exp_data$Tissue == "Small_intestine", "mass"],
-                                         exp_data[exp_data$Tissue == "Large_intestine", "mass"]) 
+  obs_Liu_1_large_diftp_tissues <- list( exp_data[exp_data$Tissue == "Heart", "mass"]*admin.dose/100,
+                                         exp_data[exp_data$Tissue == "Liver", "mass"]*admin.dose/100,
+                                         exp_data[exp_data$Tissue == "Spleen", "mass"]*admin.dose/100,
+                                         exp_data[exp_data$Tissue == "Stomach", "mass"]*admin.dose/100,
+                                         exp_data[exp_data$Tissue == "Kidneys", "mass"]*admin.dose/100,
+                                         exp_data[exp_data$Tissue == "Lungs", "mass"]*admin.dose/100,
+                                         exp_data[exp_data$Tissue == "Brain", "mass"]*admin.dose/100,
+                                         exp_data[exp_data$Tissue == "Small_intestine", "mass"]*admin.dose/100,
+                                         exp_data[exp_data$Tissue == "Large_intestine", "mass"]*admin.dose/100) 
   
   score[3] <- AAFE(predictions = preds_Liu_1_large_diftp_tissues, observations = obs_Liu_1_large_diftp_tissues)
   
@@ -843,11 +870,11 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
 # Create initial conditions (zero initialisation)
 #Parameter names:
 
-N_pars <- 10 # Number of parameters to be fitted
-fit <-  c(rep(log(1e4), 10))
+N_pars <- 14 # Number of parameters to be fitted
+fit <-  c(rep(log(1), 9),log(1e-4),rep(log(1), 4))
 
-lb = c(rep(log(1e-8),10))
-ub = c(rep(log(1e8),10))
+lb = c(rep(log(1e-5),9), log(1e-8), rep(log(1e-5), 4))
+ub = c(rep(log(1e5),9), log(1e-2), rep(log(1e5), 4))
 
 
 # N_pars <- 16 # Number of parameters to be fitted
