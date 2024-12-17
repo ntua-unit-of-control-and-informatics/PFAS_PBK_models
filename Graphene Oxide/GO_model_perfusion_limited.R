@@ -175,8 +175,8 @@ ode.func <- function(time, inits, params){
     coef_brain <- estimated_params[9]
     coef_rob <- estimated_params[10]
     Pup <- estimated_params[11]
-    Km <- 5*1e6
-    CLup <- estimated_params[12]
+    Km <- estimated_params[12]
+    #CLup <- estimated_params[12]
     
     CLurine <- estimated_params[13]
     CLfeces <- estimated_params[14]
@@ -240,10 +240,10 @@ ode.func <- function(time, inits, params){
     #tissue subcompartment
     dMLi =  QLi*CBart - QLitot*(CLi/coef_liver) + QSt*(CSt/coef_stomach) + QSpl*(CSpl/coef_spleen) + 
             QSIn*(CSIn/coef_smallIn) + QLIn*(CLIn/coef_largeIn) -
-            Pup*V_macro*CLi*(1-(Cmacro_Li/(Km + Cmacro_Li))) + CLup*Cmacro_Li*V_macro
+            Pup*V_macro*CLi*(1-(Cmacro_Li/(Km + Cmacro_Li))) #+ CLup*Cmacro_Li*V_macro
     
     #macrophages
-    dMmacro_Li = Pup*V_macro*CLi*(1-(Cmacro_Li/(Km + Cmacro_Li))) - CLup*Cmacro_Li*V_macro
+    dMmacro_Li = Pup*V_macro*CLi*(1-(Cmacro_Li/(Km + Cmacro_Li))) #- CLup*Cmacro_Li*V_macro
     
     #Stomach
     #tissue subcompartment 
@@ -871,10 +871,10 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
 #Parameter names:
 
 N_pars <- 14 # Number of parameters to be fitted
-fit <-  c(rep(log(1), 9),log(1e-4),rep(log(1), 4))
+fit <-  c(rep(log(1), 14))
 
-lb = c(rep(log(1e-5),9), log(1e-8), rep(log(1e-5), 4))
-ub = c(rep(log(1e5),9), log(1e-2), rep(log(1e5), 4))
+lb = c(rep(log(1e-10),14))
+ub = c(rep(log(1e10),14))
 
 
 # N_pars <- 16 # Number of parameters to be fitted
