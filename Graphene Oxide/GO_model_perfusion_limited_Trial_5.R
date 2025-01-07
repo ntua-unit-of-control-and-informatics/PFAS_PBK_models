@@ -17,8 +17,8 @@ create.params <- function(user.input){
     VB <- PVB * BW #blood volume kg=L
     PVplasma <- 1e-3 /0.02 #Davies et al. 1993, 1.0 for BW = 0.02 kg
     Vplasma <- PVplasma * BW #plasma volume kg=L
-    VBven <- BW*0.5/20 	#volume of venous plasma (L); from doi:10.1007/bf02353860
-    VBart <- BW*0.22/20	#volume of arterial plasma (L); from doi:10.1007/bf02353860
+    VBven <- BW*0.5/20 	#volume of venous plasma (L); from doi:https://doi.org/10.1007/bf02353860
+    VBart <- BW*0.22/20	#volume of arterial plasma (L); from doi:https://doi.org/10.1007/bf02353860
     
     #Kidney
     PVKi <- 1.67e-2 #Brown et al. 1997, Table 4
@@ -27,7 +27,7 @@ create.params <- function(user.input){
     #Liver
     PVLi <- 5.49e-2 #Brown et al. 1997, Table 4
     VLi <- PVLi * BW #liver volume kg=L
-    V_macro = 12.5/100*VLi
+    V_macro_Li = 27.5/100*VLi # https://doi.org/10.3892/etm.2019.7450
    
     #Stomach
     PVSt <- 6e-3 #Brown et al. 1997, Table 4
@@ -48,6 +48,7 @@ create.params <- function(user.input){
     #Spleen
     PVSpl <- 3.5e-3 #Brown et al. 1997, Table 4
     VSpl <- PVSpl * BW #Spleen volume kg=L
+    V_macro_Spl = 6.94/100*VSpl #https://doi.org/10.1038/s41374-018-0137-1
     
     #Heart
     PVH <- 5e-3 #Brown et al. 1997, Table 4
@@ -132,9 +133,9 @@ create.params <- function(user.input){
      
     
     return(list('VB'=VB,'Vplasma'=Vplasma,'VBven'=VBven,'VBart'=VBart,
-                'VKi'=VKi,'VLi'=VLi, 'V_macro'=V_macro,'VSt'=VSt,'VSIn'=VSIn,
+                'VKi'=VKi,'VLi'=VLi, 'V_macro_Li'=V_macro_Li,'VSt'=VSt,'VSIn'=VSIn,
                 'VLIn'=VLIn,'VLn'=VLn,'VSpl'=VSpl,'VH'=VH,'VBr'=VBr,'VRe'=VRe,
-                
+                'V_macro_Spl'=V_macro_Spl,
                 'AKi'=AKi,'ALi'=ALi,'ASt'=ASt,'ASIn'=ASIn,'ALIn'=ALIn,
                 'ALn'=ALn,'ASpl'=ASpl,'AH'=AH,'ABr'=ABr,'ARe'=ARe,
                 
@@ -174,12 +175,15 @@ ode.func <- function(time, inits, params){
     coef_largeIn <- estimated_params[8]
     coef_brain <- estimated_params[9]
     coef_rob <- estimated_params[10]
-    Pup <- estimated_params[11]
-    Cmax <- estimated_params[12]
+    Pup_Li <- estimated_params[11]
+    Km_Li <- estimated_params[12]
     #CLup <- estimated_params[12]
     
     CLurine <- estimated_params[13]
     CLfeces <- estimated_params[14]
+    
+    Pup_Spl <- estimated_params[15]
+    Km_Spl <- estimated_params[16]
 
     # Blood concentration
     CBven <- MBven/VBven
@@ -191,7 +195,7 @@ ode.func <- function(time, inits, params){
     
     #Liver
     CLi = MLi/VLi # tissue concentration
-    Cmacro_Li = Mmacro_Li/V_macro #macrophages concentration
+    Cmacro_Li = Mmacro_Li/V_macro_Li #macrophages concentration
     
     #Stomach
     CSt = MSt/VSt # tissue concentration
@@ -207,6 +211,7 @@ ode.func <- function(time, inits, params){
     
     #Spleen
     CSpl = MSpl/VSpl # tissue concentration
+    Cmacro_Spl = Mmacro_Spl/V_macro_Spl #macrophages concentration
     
     #Heart
     CH = MH/VH # tissue concentration
@@ -240,10 +245,10 @@ ode.func <- function(time, inits, params){
     #tissue subcompartment
     dMLi =  QLi*CBart - QLitot*(CLi/coef_liver) + QSt*(CSt/coef_stomach) + QSpl*(CSpl/coef_spleen) + 
             QSIn*(CSIn/coef_smallIn) + QLIn*(CLIn/coef_largeIn) -
-            Pup*V_macro*CLi*(1-(Cmacro_Li/(Cmax + Cmacro_Li))) #+ CLup*Cmacro_Li*V_macro
+            Pup_Li*V_macro_Li*CLi*(1-(Cmacro_Li/(Km_Li + Cmacro_Li))) #+ CLup*Cmacro_Li*V_macro_Li
     
-    #macrophages
-    dMmacro_Li = Pup*V_macro*CLi*(1-(Cmacro_Li/(Cmax + Cmacro_Li))) #- CLup*Cmacro_Li*V_macro
+    #macrophages Liver
+    dMmacro_Li = Pup_Li*V_macro_Li*CLi*(1-(Cmacro_Li/(Km_Li + Cmacro_Li))) #- CLup*Cmacro_Li*V_macro_Li
     
     #Stomach
     #tissue subcompartment 
@@ -263,7 +268,10 @@ ode.func <- function(time, inits, params){
     
     #Spleen
     #tissue subcompartment 
-    dMSpl = QSpl*(CBart - (CSpl/coef_spleen))
+    dMSpl = QSpl*(CBart - (CSpl/coef_spleen)) - Pup_Spl*V_macro_Spl*CSpl*(1-(Cmacro_Spl/(Km_Spl + Cmacro_Spl)))
+    #macrophages Spleen
+    dMmacro_Spl = Pup_Spl*V_macro_Spl*CSpl*(1-(Cmacro_Spl/(Km_Spl + Cmacro_Spl))) #- CLup*Cmacro_Li*V_macro_Spl
+    
     
     #Heart
     #tissue subcompartment 
@@ -300,7 +308,7 @@ ode.func <- function(time, inits, params){
     Clarge_intestine <- MLIn/VLIn
     Clungs <-  MLn/VLn
     Crest <-  MRe/VRe
-    Cspleen <- MSpl/VSpl
+    Cspleen <- (MSpl + Mmacro_Spl)/VSpl
     Cheart <- MH/VH
     Cbrain <-  MBr/VBr
     
@@ -317,7 +325,7 @@ ode.func <- function(time, inits, params){
     Mrest <- MRe
     Mfeces <- Mfeces
     Murine <- Murine
-    Mspleen <-  MSpl
+    Mspleen <-  MSpl + Mmacro_Spl
     Mheart <-  MH
     Mbrain <-  MBr
     
@@ -326,7 +334,7 @@ ode.func <- function(time, inits, params){
             "dMBart"=dMBart, "dMBven"=dMBven,"dMKi"=dMKi,
             "dMLi"=dMLi, "dMmacro_Li"=dMmacro_Li,
             "dMSt"=dMSt, "dMSIn"=dMSIn, "dMLIn"=dMLIn, 
-            "dMLn"=dMLn, "dMSpl"=dMSpl, "dMH"=dMH, "dMBr"=dMBr,
+            "dMLn"=dMLn, "dMSpl"=dMSpl, "dMmacro_Spl"=dMmacro_Spl, "dMH"=dMH, "dMBr"=dMBr,
             "dMRe"=dMRe, "dMurine"=dMurine, 
             "dMfeces"=dMfeces, "dVurine"=dVurine, "dVfeces"=dVfeces), 
          
@@ -342,7 +350,7 @@ ode.func <- function(time, inits, params){
          
            'CBven'=CBven, 'CBart'=CBart,'CKi'=CKi, 
            'CLi'=CLi, 'Cmacro_Li'=Cmacro_Li, 'CSt'=CSt, 'CSIn'=CSIn, 
-           'CLIn'=CLIn, 'CLn'=CLn, 'CSpl'=CSpl,
+           'CLIn'=CLIn, 'CLn'=CLn, 'CSpl'=CSpl, 'Cmacro_Spl'=Cmacro_Spl,
            'CH'=CH, 'CBr'=CBr,'CRe'=CRe)
         
             
@@ -355,7 +363,7 @@ create.inits <- function(parameters){
   with(as.list(parameters),{
     
     MBart<-0; MBven<-0;MKi<-0; MLi<-0; Mmacro_Li<-0; MSt<-0;
-    MSIn<-0; MLIn<-0; MLn<-0; MSpl<-0; MH<-0; MBr<-0;
+    MSIn<-0; MLIn<-0; MLn<-0; MSpl<-0; Mmacro_Spl <-0; MH<-0; MBr<-0;
     MRe<-0; Murine<-0; Mfeces<-0; Vurine <-0; Vfeces <-0
     
     
@@ -363,7 +371,8 @@ create.inits <- function(parameters){
              "MBart"=MBart, "MBven"=MBven,"MKi"=MKi,
              "MLi"=MLi, "Mmacro_Li"=Mmacro_Li,"MSt"=MSt, "MSIn"=MSIn,
              "MLIn"=MLIn,"MLn"=MLn,
-             "MSpl"=MSpl, "MH"=MH, "MBr"=MBr,"MRe"=MRe,
+             "MSpl"=MSpl, "Mmacro_Spl"=Mmacro_Spl,
+             "MH"=MH, "MBr"=MBr,"MRe"=MRe,
              "Murine"=Murine, "Mfeces"=Mfeces,
              "Vurine"=Vurine, "Vfeces"=Vfeces
            
@@ -864,24 +873,24 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0, 
-              "maxeval" = 3000, 
+              "maxeval" = 5000, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
 #Parameter names:
 
-N_pars <- 14 # Number of parameters to be fitted
-fit <-  c(rep(log(1), 14))
-
-lb = c(rep(log(1e-10),14))
-ub = c(rep(log(1e10),14))
-
-
 # N_pars <- 16 # Number of parameters to be fitted
-# fit <-  c(rep(log(1),13),log (1), log (1e6), log (1e-3))
+# fit <-  c(rep(log(1), 16))
 # 
-# lb = c(rep(log(1e-20),13), log(1e-3), log(1e4),log (1e-5))
-# ub = c(rep(log(1e20),13), log(10), log(1e10), log (1e-2))
+# lb = c(rep(log(1e-8),16))
+# ub = c(rep(log(1e8),16))
+
+
+N_pars <- 16 # Number of parameters to be fitted
+fit <-  c(rep(log(1),12),rep(log (1e-2), 4))
+
+lb = c(rep(log(1e-4),12),rep(log (1e-8), 4))
+ub = c(rep(log(1e4),12),rep(log (1e8), 4))
 
 # Run the optimization algorithm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,

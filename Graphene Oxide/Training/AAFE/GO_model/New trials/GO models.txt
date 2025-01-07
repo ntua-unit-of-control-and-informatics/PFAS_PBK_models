@@ -1,0 +1,16 @@
+GO models
+
+Trial 1
+Macrophages liver (old values of percentages), restricted 1
+
+Trial 2
+Macrophages liver (old values of percentages), restricted 2
+
+Trial 3
+Macrophages liver + spleen (old values of percentages)
+
+Trial 4
+Macrophages liver + spleen (new values of percentages)
+
+Trial 5
+Macrophages liver + spleen (new values of percentages, different estimated params for liver and spleen)
