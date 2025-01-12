@@ -885,7 +885,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0, 
-              "maxeval" = 5000, 
+              "maxeval" = 10000, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
@@ -894,8 +894,8 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
 N_pars <- 23 # Number of parameters to be fitted
 fit <-  c(rep(log(1), 23))
 
-lb = c(rep(log(1e-20),23))
-ub = c(rep(log(1e20),23))
+lb = c(rep(log(1e-10),23))
+ub = c(rep(log(1e10),23))
 
 # lb = c(rep(log(1e-3),13), rep(log(1e-6),5))
 # ub = c(rep(log(1e3),13), rep(log(1e6),5))
