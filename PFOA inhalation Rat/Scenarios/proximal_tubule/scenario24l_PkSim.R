@@ -408,15 +408,17 @@ create_fixed_params <- function(user.input){
     VB <- PVB * BW #blood volume kg=L
     PVplasma <- 31.2e-3 
     Vplasma <- PVplasma * BW #plasma volume kg=L
-    VVen <- BW*11.3/250 	#volume of venous plasma (L); from doi:10.1007/bf02353860
-    VArt <- BW*5.6/250	#volume of arterial plasma (L); from doi:10.1007/bf02353860
+    PVVen <- 11.3/250 	#volume of venous plasma (L); from doi:10.1007/bf02353860
+    VVen <- BW*PVVen 
+    PVArt <- 5.6/250 	#volume of venous plasma (L); from doi:10.1007/bf02353860
+    VArt <- BW*PVArt
     
     #Kidney
     PVK <- 7.3e-3 #Brown et al. 1997
     VK <- PVK * BW #kidney volume kg=L 
     PVKB <- 0.16 #Brown et al. 1997
     VKB <- PVKB * PVK * BW #kidney blood volume kg=L
-    PVKF <- 0.13 # Wolgast et al. (1981) [https//doi.org/10.1152/ajprenal.1981.241.2.F105]
+    PVKF <- 0.13 # Wolgast et al. (1981), https://doi.org/10.1152/ajprenal.1981.241.2.F105
     VKF <- PVKF * PVK * BW #kidney interstitial fluid volume kg=L
     
     # Here we assume that the length of each segment of the renal tubule is 
