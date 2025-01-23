@@ -1646,7 +1646,7 @@ ode.func <- function(time, inits, params){
     #interstitial fluid subcompartment
     dMBoFf = QparaBo*(1-SBo)*CBoBf + PeffBo*ABo*(CBoBf-CBoFf) - kBoFBoT*(CBoFf -CBoTf) +
       koff_alb*CBoFb*VBoF -  kon_alb*CalbBoFf*CBoFf*VBoF 
-    #Bones tissue subcompartment
+    #Bones tissue subcompartmentf
     dMBoTf = kBoFBoT*(CBoFf -CBoTf) 
     
     #Excreta#

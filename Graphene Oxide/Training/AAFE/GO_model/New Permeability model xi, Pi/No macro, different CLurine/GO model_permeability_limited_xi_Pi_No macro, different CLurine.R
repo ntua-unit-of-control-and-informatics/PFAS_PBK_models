@@ -135,8 +135,8 @@ create.params <- function(user.input){
     
     ARe <- (AKi+ALi+ASt+ASIn+ALIn+ALn+ASpl+AH+ABr)/9 #assumption ???
     
-    np_size_small <- 148/2 #nm,  #3/2
-    np_size_large <- 556/2 #nm, #300/2
+    np_size_small <- 148 #nm,  #3/2
+    np_size_large <- 556 #nm, #300/2
     
     ###############################
     #-----------------------------#
@@ -159,7 +159,7 @@ create.params <- function(user.input){
     Dps <- c(DpKi, DpLi, DpSt, DpSIn, DpLIn, DpLn, DpRe, DpSpl, DpH, DpBr)
     s_r <- rep(NA, length(Dps))
     for (i in 1:length(s_r)){
-      a_r <- np_size /(Dps[i]/2)
+      a_r <- "np_size"/(Dps[i]/2)
       Phi = (1-a_r)^2
       
       if (1 - a_r^2 >= 0) {
@@ -310,57 +310,32 @@ ode.func <- function(time, inits, params){
 #and partition coefficient of nanoparticles between tissue and blood (Pi), coef_i=xi/Pi
 # based on the work of Li et al., 2013, https://doi.org/10.3109/17435390.2013.863406
   
-    if(np_size == np_size_small){
+    
       
-       
       xi_liver <- estimated_params[1]
       xi_spleen <- estimated_params[2]
       xi_kidney <- estimated_params[3]
       xi_heart <- estimated_params[4]
+      xi_lung <- estimated_params[5]
+      xi_rob <- estimated_params[6]
+      xi_stomach <- estimated_params[7]
+      xi_smallIn <- estimated_params[8]
+      xi_largeIn <- estimated_params[9]
+      xi_brain <- estimated_params[10]
       
-      Pi_liver <- estimated_params[5]
-      Pi_spleen <- estimated_params[6]
-      Pi_kidney <- estimated_params[7]
-      Pi_heart <- estimated_params[8]
-      
-      CLurine <- estimated_params[9] 
-      
-      
-    }else{
-      
-      xi_liver <- estimated_params[10]
-      xi_spleen <- estimated_params[11]
-      xi_kidney <- estimated_params[12]
-      xi_heart <- estimated_params[13]
-      
-      Pi_liver <- estimated_params[14]
-      Pi_spleen <- estimated_params[15]
-      Pi_kidney <- estimated_params[16]
-      Pi_heart <- estimated_params[17]
-      
-      CLurine <- estimated_params[18]
-      
-    }
+      Pi_liver <- estimated_params[11]
+      Pi_spleen <- estimated_params[12]
+      Pi_kidney <- estimated_params[13]
+      Pi_heart <- estimated_params[14]
+      Pi_lung <- estimated_params[15]
+      Pi_rob <- estimated_params[16]
+      Pi_stomach <- estimated_params[17]
+      Pi_smallIn <- estimated_params[18]
+      Pi_largeIn <- estimated_params[19]
+      Pi_brain <- estimated_params[20]
+      CLurine <- estimated_params[21]
+      CLfeces <- estimated_params[22]
     
-    
-      xi_lung <- estimated_params[19]
-      xi_rob <- estimated_params[20]
-      xi_stomach <- estimated_params[21]
-      xi_smallIn <- estimated_params[22]
-      xi_largeIn <- estimated_params[23]
-      xi_brain <- estimated_params[24]
-    
-      
-      Pi_lung <- estimated_params[25]
-      Pi_rob <- estimated_params[26]
-      Pi_stomach <- estimated_params[27]
-      Pi_smallIn <- estimated_params[28]
-      Pi_largeIn <- estimated_params[29]
-      Pi_brain <- estimated_params[30]
-      CLfeces <- estimated_params[31]
-      
-    
-      
     # Blood concentration
     CBven <- MBven/VBven
     CBart <- MBart/VBart
@@ -372,7 +347,7 @@ ode.func <- function(time, inits, params){
     #Liver
     CLiB = MBLi/VLiB # blood concentration
     CLi = MLi/VLi # tissue concentration
-    
+    Cmacro_Li = Mmacro_Li/V_macro_Li #macrophages concentration
     
     #Stomach
     CStB = MBSt/VStB # blood concentration
@@ -385,6 +360,7 @@ ode.func <- function(time, inits, params){
     #Large Intestine
     CLInB = MBLIn/VLInB # blood concentration
     CLIn = MLIn/VLIn # tissue concentration
+    CLInlumen = MLInlumen/VLInlumen
     
     #Lungs
     CLnB = MBLn/VLnB # blood concentration
@@ -393,6 +369,7 @@ ode.func <- function(time, inits, params){
     #Spleen
     CSplB = MBSpl/VSplB # blood concentration
     CSpl = MSpl/VSpl # tissue concentration
+    Cmacro_Spl = Mmacro_Spl/V_macro_Spl #macrophages concentration
     
     #Heart
     CHB = MBH/VHB # blood concentration
@@ -408,7 +385,7 @@ ode.func <- function(time, inits, params){
     
     
     #Arterial Blood
-    dMBart = QBLn*CLnB - CBart*(QBKi+QBLi+QBRe+QBSpl+QBH+QBBr+QBSIn+QBSt+QBLIn)
+    dMBart = QBLn*CLnB - CBart*(QBKi+QBLi+QBRe+QBSpl+QBH+QBBr+QBSIn+QBSt+QBLIn) - CLurine*CBart
     
     
     #Venous Blood
@@ -419,7 +396,7 @@ ode.func <- function(time, inits, params){
     
     #Kidney
     #blood subcompartment
-    dMBKi = QBKi*CBart - QBKi*CKiB - QparaKi*(1-SKi)*CKiB - xi_kidney*QBKi*CKiB + (xi_kidney/Pi_kidney)*QBKi*CKi  - CLurine*CKiB
+    dMBKi = QBKi*CBart - QBKi*CKiB - QparaKi*(1-SKi)*CKiB - xi_kidney*QBKi*CKiB + (xi_kidney/Pi_kidney)*QBKi*CKi
     #tissue subcompartment
     dMKi = QparaKi*(1-SKi)*CKiB + xi_kidney*QBKi*CKiB - (xi_kidney/Pi_kidney)*QBKi*CKi
     
@@ -429,10 +406,12 @@ ode.func <- function(time, inits, params){
     dMBLi = QBLi*CBart - (QBLi+QBSpl+QBSIn+QBLIn+QBSt)*CLiB + QBSpl*CSplB  + QBSIn*CSInB  + 
       QBLIn*CLInB + QBSt*CStB  - QparaLi*(1-SLi)*CLiB - 
       xi_liver*(QBLi+QBSpl+QBSIn+QBLIn+QBSt)*CLiB + (xi_liver/Pi_liver)*(QBLi+QBSpl+QBSIn+QBLIn+QBSt)*CLi -
-      CLfeces*CLiB
+      Pup*V_macro_Li*CLiB*(1-(Cmacro_Li/(Km + Cmacro_Li))) 
     #tissue subcompartment
-    dMLi =  QparaLi*(1-SLi)*CLiB + xi_liver*(QBLi+QBSpl+QBSIn+QBLIn+QBSt)*CLiB - 
-            (xi_liver/Pi_liver)*(QBLi+QBSpl+QBSIn+QBLIn+QBSt)*CLi
+    dMLi =  QparaLi*(1-SLi)*CLiB + xi_liver*(QBLi+QBSpl+QBSIn+QBLIn+QBSt)*CLiB + 
+            (xi_liver/Pi_liver)*(QBLi+QBSpl+QBSIn+QBLIn+QBSt)*CLi  - CLfeces*CLi
+    #macrophages
+    dMmacro_Li = Pup*V_macro_Li*CLiB*(1-(Cmacro_Li/(Km + Cmacro_Li))) - CLup*Cmacro_Li*V_macro_Li
     
     
     #Stomach
@@ -455,6 +434,8 @@ ode.func <- function(time, inits, params){
     dMBLIn = QBLIn*CBart - QBLIn*CLInB - QparaLIn*(1-SLIn)*CLInB - xi_largeIn*QBLIn*CLInB + (xi_largeIn/Pi_largeIn)*QBLIn*CLIn   
     #tissue subcompartment 
     dMLIn = QparaLIn*(1-SLIn)*CLInB + xi_largeIn*QBLIn*CLInB - (xi_largeIn/Pi_largeIn)*QBLIn*CLIn  
+    #lumen
+    dMLInlumen = - Qfeces*CLInlumen
     
     
     #Lung 
@@ -466,9 +447,12 @@ ode.func <- function(time, inits, params){
     
     #Spleen
     #blood subcompartment
-    dMBSpl = QBSpl*CBart - QBSpl*CSplB - QparaSpl*(1-SSpl)*CSplB - xi_spleen*QBSpl*CSplB + (xi_spleen/Pi_spleen)*QBSpl*CSpl 
+    dMBSpl = QBSpl*CBart - QBSpl*CSplB - QparaSpl*(1-SSpl)*CSplB - xi_spleen*QBSpl*CLnB + (xi_spleen/Pi_spleen)*QBSpl*CSpl 
     #tissue subcompartment 
-    dMSpl = QparaSpl*(1-SSpl)*CSplB + xi_spleen*QBSpl*CSplB - (xi_spleen/Pi_spleen)*QBSpl*CSpl 
+    dMSpl = QparaSpl*(1-SSpl)*CSplB + xi_spleen*QBSpl*CSplB - (xi_spleen/Pi_spleen)*QBSpl*CSpl  -
+      Pup*V_macro_Spl*CSplB*(1-(Cmacro_Spl/(Km + Cmacro_Spl)))
+    #macrophages
+    dMmacro_Spl = Pup*V_macro_Spl*CSplB*(1-(Cmacro_Spl/(Km + Cmacro_Spl))) - CLup*Cmacro_Spl*V_macro_Spl
     
     
     #Heart
@@ -493,13 +477,15 @@ ode.func <- function(time, inits, params){
     
     
     # Urine
-    dMurine = CLurine*CKiB
+    dMurine = CLurine*CBart
     # Feces
-    dMfeces = CLfeces*CLiB
+    dMfeces = CLfeces*CLi
     
+    dMmacro = CLup*Cmacro_Spl*V_macro_Spl + CLup*Cmacro_Li*V_macro_Li 
     
     dVurine = Qurine
     dVfeces = Qfeces
+    
    
     
     #Concentration calculation in each compartment 
@@ -507,15 +493,15 @@ ode.func <- function(time, inits, params){
     Cart <- CBart
     Cblood <- (MBven + MBart)/ (VBven + VBart)
     Ckidneys <- (MBKi + MKi)/(VKiB + VKi)
-    Cliver <- (MBLi + MLi)/(VLiB + VLi)
+    Cliver <- (MBLi + MLi + Mmacro_Li)/(VLiB + VLi)
     Cstomach <-  (MBSt + MSt + MStlumen)/(VStB + VSt)
     Csmall_intestine <-  (MBSIn + MSIn)/(VSInB+VSIn)
-    Clarge_intestine <-  (MBLIn + MLIn)/(VLInB+VLIn)
+    Clarge_intestine <-  (MBLIn + MLIn+MLInlumen)/(VLInB+VLIn+VLInlumen)
     Clungs <-  (MBLn + MLn)/(VLnB+VLn)
     Crest <-  (MBRe + MRe)/(VReB+VRe)
     Cfeces <- Mfeces/(Vfeces*feces_density)
     Curine <- Murine/Vurine
-    Cspleen <-  (MBSpl + MSpl)/(VSplB+VSpl)
+    Cspleen <-  (MBSpl + MSpl + Mmacro_Spl)/(VSplB+VSpl)
     Cheart <-  (MBH + MH)/(VHB+VH)
     Cbrain <-  (MBBr + MBr)/(VBrB+VBr)
     
@@ -524,27 +510,29 @@ ode.func <- function(time, inits, params){
     Mart <- MBart
     Mblood <- MBven + MBart
     Mkidneys <- MBKi + MKi
-    Mliver <- MBLi + MLi 
+    Mliver <- MBLi + MLi + Mmacro_Li
     Mstomach <- MBSt + MSt + MStlumen
     Msmall_intestine <- MBSIn + MSIn
-    Mlarge_intestine <- MBLIn + MLIn
+    Mlarge_intestine <- MBLIn + MLIn+MLInlumen
     Mlungs <- MBLn + MLn
     Mrest <- MBRe + MRe
     Mfeces <- Mfeces
     Murine <- Murine
-    Mspleen <-  MBSpl + MSpl 
+    Mspleen <-  MBSpl + MSpl + Mmacro_Spl
     Mheart <-  MBH + MH
     Mbrain <-  MBBr + MBr
     
     
     list(c( "dMBart"=dMBart, "dMBven"=dMBven, "dMBKi"=dMBKi, "dMKi"=dMKi,
-            "dMBLi"=dMBLi, "dMLi"=dMLi, "dMBSt"=dMBSt,
+            "dMBLi"=dMBLi, "dMLi"=dMLi, "dMmacro_Li"=dMmacro_Li, "dMBSt"=dMBSt,
             "dMSt"=dMSt, "dMStlumen"=dMStlumen,
             "dMBSIn"=dMBSIn, "dMSIn"=dMSIn, "dMBLIn"=dMBLIn, "dMLIn"=dMLIn, 
-            "dMBLn"=dMBLn, "dMLn"=dMLn, "dMBSpl"=dMBSpl,
-            "dMSpl"=dMSpl, "dMBH"=dMBH, "dMH"=dMH, "dMBBr"=dMBBr, "dMBr"=dMBr,
+            "dMLInlumen"=dMLInlumen, "dMBLn"=dMBLn, "dMLn"=dMLn, "dMBSpl"=dMBSpl,
+            "dMSpl"=dMSpl, "dMmacro_Spl"=dMmacro_Spl,
+            "dMBH"=dMBH, "dMH"=dMH, "dMBBr"=dMBBr, "dMBr"=dMBr,
             "dMBRe"=dMBRe, "dMRe"=dMRe, "dMurine"=dMurine, 
-            "dMfeces"=dMfeces, "dVurine"=dVurine, "dVfeces"=dVfeces), 
+            "dMfeces"=dMfeces, "dMmacro"=dMmacro,
+            "dVurine"=dVurine, "dVfeces"=dVfeces), 
          
            'Cblood'=Cblood, 'Ckidneys'=Ckidneys, 'Cliver'=Cliver, 'Cstomach'=Cstomach,
            'Csmall_intestine'=Csmall_intestine, 'Clarge_intestine'=Clarge_intestine,
@@ -557,10 +545,11 @@ ode.func <- function(time, inits, params){
            'Mspleen'=Mspleen, 'Mheart'=Mheart, 'Mbrain'=Mbrain,
          
            'CBven'=CBven, 'CBart'=CBart, 'CKiB'=CKiB, 'CKi'=CKi, 'CLiB'=CLiB,
-           'CLi'=CLi, 'CStB'=CStB, 'CSt'=CSt, 'CSInB'=CSInB,
-           'CSIn'=CSIn, 'CLInB'=CLInB,
+           'CLi'=CLi, 'Cmacro_Li'=Cmacro_Li,'CStB'=CStB, 'CSt'=CSt, 'CSInB'=CSInB,
+           'CSIn'=CSIn, 'CLInB'=CLInB, 'CLInlumen'=CLInlumen,
            'CLIn'=CLIn, 'CLnB'=CLnB, 'CLn'=CLn, 'CSplB'=CSplB,
-           'CSpl'=CSpl, 'CHB'=CHB, 'CH'=CH, 'CBrB'=CBrB, 'CBr'=CBr, 'CReB'=CReB, 'CRe'=CRe)
+           'CSpl'=CSpl, 'Cmacro_Spl'=Cmacro_Spl,
+           'CHB'=CHB, 'CH'=CH, 'CBrB'=CBrB, 'CBr'=CBr, 'CReB'=CReB, 'CRe'=CRe)
         
             
   
@@ -571,21 +560,22 @@ ode.func <- function(time, inits, params){
 create.inits <- function(parameters){
   with(as.list(parameters),{
     
-    MBart<-0; MBven<-0; MBKi<-0; MKi<-0; MBLi<-0; MLi<-0; MBSt<-0; MSt<-0;
-    MStlumen<-0; MBSIn<-0; MSIn<-0; MBLIn<-0; MLIn<-0; 
-    MBLn<-0; MLn<-0; MBSpl<-0; MSpl<-0; MBH<-0; MH<-0; MBBr<-0; MBr<-0;
-    MBRe<-0; MRe<-0; Murine<-0; Mfeces<-0; Vurine <-0; Vfeces <-0
+    MBart<-0; MBven<-0; MBKi<-0; MKi<-0; MBLi<-0; MLi<-0; Mmacro_Li<-0; MBSt<-0; MSt<-0;
+    MStlumen<-0; MBSIn<-0; MSIn<-0; MBLIn<-0; MLIn<-0; MLInlumen<-0;
+    MBLn<-0; MLn<-0; MBSpl<-0; MSpl<-0; Mmacro_Spl<-0 ;MBH<-0; MH<-0; MBBr<-0; MBr<-0;
+    MBRe<-0; MRe<-0; Murine<-0; Mfeces<-0; Mmacro <-0; Vurine <-0; Vfeces <-0
     
     
     return(c("MBart"=MBart, "MBven"=MBven, "MBKi"=MBKi, "MKi"=MKi,
-             "MBLi"=MBLi, "MLi"=MLi, "MBSt"=MBSt,
+             "MBLi"=MBLi, "MLi"=MLi, "Mmacro_Li"=Mmacro_Li, "MBSt"=MBSt,
              "MSt"=MSt, "MStlumen"=MStlumen,
              "MBSIn"=MBSIn, "MSIn"=MSIn, "MBLIn"=MBLIn, "MLIn"=MLIn, 
-             "MBLn"=MBLn, "MLn"=MLn,
-             "MBSpl"=MBSpl,"MSpl"=MSpl,"MBH"=MBH, "MH"=MH,
-             "MBBr"=MBBr, "MBr"=MBr,
+             "MLInlumen"=MLInlumen, "MBLn"=MBLn, "MLn"=MLn,
+             "MBSpl"=MBSpl,"MSpl"=MSpl,"Mmacro_Spl"=Mmacro_Spl,
+             "MBH"=MBH, "MH"=MH, "MBBr"=MBBr, "MBr"=MBr,
              "MBRe"=MBRe, "MRe"=MRe, "Murine"=Murine,
-             "Mfeces"=Mfeces, "Vurine"=Vurine, "Vfeces"=Vfeces
+             "Mfeces"=Mfeces, "Mmacro"=Mmacro,
+             "Vurine"=Vurine, "Vfeces"=Vfeces
            
     ))
   
@@ -633,7 +623,7 @@ obj.func <- function(x, dataset){
   admin.dose_per_kg <- 1 # administered dose in mg PFOA/kg BW 
   admin.dose <- admin.dose_per_kg*BW*1e03 #ug PFOA
   np_size_small <- 148/2
-  np_size <- np_size_small #nm, Small GO equivalent radius
+  np_size <- "np_size_small" #nm, Small GO equivalent radius
   admin.time <- 0 # time when doses are administered, in mins
   admin.type <- "iv"
   sex <- "M" 
@@ -692,7 +682,7 @@ obj.func <- function(x, dataset){
   admin.dose_per_kg <- 1 # administered dose in mg PFOA/kg BW 
   admin.dose <- admin.dose_per_kg*BW*1e03 #ug PFOA
   np_size_small <- 148/2
-  np_size <- np_size_small #nm, Small GO equivalent radius
+  np_size <- "np_size_small" #nm, Small GO equivalent radius
   admin.time <- 0 # time when doses are administered, in mins
   admin.type <- "iv"
   sex <- "M" 
@@ -758,7 +748,7 @@ obj.func <- function(x, dataset){
   admin.dose_per_kg <- 1 # administered dose in mg PFOA/kg BW 
   admin.dose <- admin.dose_per_kg*BW*1e03 #ug PFOA
   np_size_large <- 556/2
-  np_size <- np_size_large #nm, Small GO equivalent radius
+  np_size <- "np_size_large" #nm, Small GO equivalent radius
   admin.time <- 0 # time when doses are administered, in mins
   admin.type <- "iv"
   sex <- "M" 
@@ -824,7 +814,7 @@ obj.func <- function(x, dataset){
   admin.dose_per_kg <- 2 # administered dose in mg PFOA/kg BW 
   admin.dose <- admin.dose_per_kg*BW*1e03 #ug PFOA
   np_size_small <- 148/2
-  np_size <- np_size_small #nm, Small GO equivalent radius
+  np_size <- "np_size_small" #nm, Small GO equivalent radius
   admin.time <- 0 # time when doses are administered, in mins
   admin.type <- "iv"
   sex <- "M" 
@@ -880,7 +870,7 @@ obj.func <- function(x, dataset){
   admin.dose_per_kg <- 10 # administered dose in mg PFOA/kg BW 
   admin.dose <- admin.dose_per_kg*BW*1e03 #ug PFOA
   np_size_small <- 148/2
-  np_size <- np_size_small #nm, Small GO equivalent radius
+  np_size <- "np_size_small" #nm, Small GO equivalent radius
   admin.time <- 0 # time when doses are administered, in mins
   admin.type <- "iv"
   sex <- "M" 
@@ -935,7 +925,7 @@ obj.func <- function(x, dataset){
   admin.dose_per_kg <- 1 # administered dose in mg PFOA/kg BW 
   admin.dose <- admin.dose_per_kg*BW*1e03 #ug PFOA
   np_size_small <- 148/2
-  np_size <- np_size_small #nm, Small GO equivalent radius
+  np_size <- "np_size_small" #nm, Small GO equivalent radius
   admin.time <- 0 # time when doses are administered, in mins
   admin.type <- "iv"
   sex <- "M"
@@ -995,7 +985,7 @@ obj.func <- function(x, dataset){
   admin.dose_per_kg <- 1 # administered dose in mg PFOA/kg BW 
   admin.dose <- admin.dose_per_kg*BW*1e03 #ug PFOA
   np_size_large <- 556/2
-  np_size <- np_size_large #nm, Small GO equivalent radius
+  np_size <- "np_size_large" #nm, Small GO equivalent radius
   admin.time <- 0 # time when doses are administered, in mins
   admin.type <- "iv"
   sex <- "M"
@@ -1089,17 +1079,17 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
               "ftol_rel" = 0.0,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0, 
-              "maxeval" = 2000, 
+              "maxeval" = 3000, 
               "print_level" = 1)
 
 # Create initial conditions (zero initialisation)
 #Parameter names:
 
-N_pars <- 31 # Number of parameters to be fitted
-fit <-  c(rep(log(1), 31))
+N_pars <- 22 # Number of parameters to be fitted
+fit <-  c(rep(log(1), 22))
 
-# lb = c(rep(log(1e-6), 31))
-# ub = c(rep(log(1e6), 31))
+lb = c(rep(log(1e-20),22))
+ub = c(rep(log(1e20),22))
 
 # lb = c(rep(log(1e-3),13), rep(log(1e-6),5))
 # ub = c(rep(log(1e3),13), rep(log(1e6),5))
@@ -1107,8 +1097,8 @@ fit <-  c(rep(log(1), 31))
 # Run the optimization algorithm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,
-                             # lb	= lb,
-                             # ub = ub,
+                             lb	= lb,
+                             ub = ub,
                              opts = opts,
                              dataset = dataset)
 
@@ -1123,7 +1113,7 @@ BW <- 0.04  # body weight (kg)
 admin.dose_per_kg <- 1 # administered dose in mg PFOA/kg BW 
 admin.dose <- admin.dose_per_kg*BW*1e03 #ug PFOA
 np_size_small <- 148/2
-np_size <- np_size_small #nm, Small GO equivalent radius
+np_size <- "np_size_small" #nm, Small GO equivalent radius
 admin.time <- 0 # time when doses are administered, in mins
 admin.type <- "iv"
 sex <- "M" 
@@ -1167,7 +1157,7 @@ BW <- 0.04  # body weight (kg)
 admin.dose_per_kg <- 1 # administered dose in mg PFOA/kg BW 
 admin.dose <- admin.dose_per_kg*BW*1e03 #ug PFOA
 np_size_small <- 148/2
-np_size <- np_size_small #nm, Small GO equivalent radius
+np_size <- "np_size_small" #nm, Small GO equivalent radius
 admin.time <- 0 # time when doses are administered, in mins
 admin.type <- "iv"
 sex <- "M" 
@@ -1208,7 +1198,7 @@ BW <- 0.04  # body weight (kg)
 admin.dose_per_kg <- 1 # administered dose in mg PFOA/kg BW 
 admin.dose <- admin.dose_per_kg*BW*1e03 #ug PFOA
 np_size_large <- 556/2
-np_size <- np_size_large #nm, Small GO equivalent radius
+np_size <- "np_size_large" #nm, Small GO equivalent radius
 admin.time <- 0 # time when doses are administered, in mins
 admin.type <- "iv"
 sex <- "M"
@@ -1251,7 +1241,7 @@ BW <- 0.04  # body weight (kg)
 admin.dose_per_kg <- 2 # administered dose in mg PFOA/kg BW 
 admin.dose <- admin.dose_per_kg*BW*1e03 #ug PFOA
 np_size_small <- 148/2
-np_size <- np_size_small #nm, Small GO equivalent radius
+np_size <- "np_size_small" #nm, Small GO equivalent radius
 admin.time <- 0 # time when doses are administered, in mins
 admin.type <- "iv"
 sex <- "M" 
@@ -1292,7 +1282,7 @@ BW <- 0.04  # body weight (kg)
 admin.dose_per_kg <- 10 # administered dose in mg PFOA/kg BW 
 admin.dose <- admin.dose_per_kg*BW*1e03 #ug PFOA
 np_size_small <- 148/2
-np_size <- np_size_small #nm, Small GO equivalent radius
+np_size <- "np_size_small" #nm, Small GO equivalent radius
 admin.time <- 0 # time when doses are administered, in mins
 admin.type <- "iv"
 sex <- "M" 
@@ -1333,7 +1323,7 @@ BW <- 0.04  # body weight (kg)
 admin.dose_per_kg <- 1 # administered dose in mg PFOA/kg BW 
 admin.dose <- admin.dose_per_kg*BW*1e03 #ug PFOA
 np_size_small <- 148/2
-np_size <- np_size_small #nm, Small GO equivalent radius
+np_size <- "np_size_small" #nm, Small GO equivalent radius
 admin.time <- 0 # time when doses are administered, in mins
 admin.type <- "iv"
 sex <- "M"
@@ -1376,7 +1366,7 @@ BW <- 0.04  # body weight (kg)
 admin.dose_per_kg <- 1 # administered dose in mg PFOA/kg BW 
 admin.dose <- admin.dose_per_kg*BW*1e03 #ug PFOA
 np_size_large <- 556/2
-np_size <- np_size_large #nm, Small GO equivalent radius
+np_size <- "np_size_large" #nm, Small GO equivalent radius
 admin.time <- 0 # time when doses are administered, in mins
 admin.type <- "iv"
 sex <- "M"
