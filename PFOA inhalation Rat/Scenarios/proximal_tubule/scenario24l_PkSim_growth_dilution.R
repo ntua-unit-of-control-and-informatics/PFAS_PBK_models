@@ -888,9 +888,9 @@ create_fixed_params <- function(user.input){
     #Surface areas Interstitial - Intracellular (m^2), from PKSim 
     BW_ref <- 0.23
     AcK_total= 437.16*BW/BW_ref
-    AcK_PTC <- AcK_total*VPTC/VFil # surface area of decending/ascending limb cells (loop of Henle)
+    AcK_PTC <- AcK_total*VPTC/VFil # surface area of proximal tubule cells
     AcK_DALC <- AcK_total*VDALC/VFil # surface area of decending/ascending limb cells (loop of Henle)
-    AcK_DTC <- AcK_total*VDTC/VFil # surface area of decending/ascending limb cells (loop of Henle)
+    AcK_DTC <- AcK_total*VDTC/VFil # surface area of distal tubule cells
     AcK_CDC <- AcK_total*VCDC/VFil # surface area of collecting duct cells 
     AcKTrest <- AcK_total* VKTrest/VFil
     AcL= 84.45*BW/BW_ref
