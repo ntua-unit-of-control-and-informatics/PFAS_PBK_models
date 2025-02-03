@@ -30,22 +30,23 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   Papp <- estimated_params[8]
   Papp_gut <- Papp
   
-  f_fabp_avail <- estimated_params[9]
+  f_fabp_avail <- estimated_params[10]
   f_alb_avail <- f_fabp_avail
   
-  koff_alb <-  estimated_params[10]
-  koff_fabp <-  estimated_params[12]#
+  koff_alb <-  estimated_params[9]
+  koff_fabp <-  koff_alb#
   koff_a2u <- koff_alb
   
   VmK_api <- 0
   VmK_baso <- 0
   KmK_baso <- 1e20
   KmK_api <-   1e20
-  KLfabp <-  estimated_params[13] #[L/mol]*1e-3 , value from Cheng et al. (2017)
+  KLfabp <-  (1.2e5+4e4+1.9e4)  #[L/mol]*1e-3 , value from Cheng et al. (2017)
   Ka <-5.8e5 # 5.8e05 from Rue et al. (2024)#mol/L
   CLfeces_unscaled <- estimated_params[11] #in L/h/BW^(-0.25), scaling similar to Loccisano et al. (2012)
   CLfeces <- CLfeces_unscaled*BW^(-0.25)  #in L/h
-  
+  Papp_liver <- estimated_params[12]
+    
   #In order to scale transporter Vmax, we need to have the tissue weight to estimate
   # tissue protein
   PVIN <- 2.24e-2 #Brown et al. 1997, p 416, Table 5: 1.4+0.84
@@ -320,7 +321,7 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   # the apical and basolateral side of the endothelium
   
   PeffK <- Papp*10/2 #mm/h
-  PeffL <- Papp*10/2 #mm/h
+  PeffL <- Papp_liver*10/2 #mm/h
   PeffST <- Papp*10/2 #mm/h
   PeffIN <- Papp*10/2 #mm/h
   PeffA <- Papp*10/2 #mm/h
@@ -888,9 +889,9 @@ create_fixed_params <- function(user.input){
     #Surface areas Interstitial - Intracellular (m^2), from PKSim 
     BW_ref <- 0.23
     AcK_total= 437.16*BW/BW_ref
-    AcK_PTC <- AcK_total*VPTC/VFil # surface area of proximal tubule cells
+    AcK_PTC <- AcK_total*VPTC/VFil # surface area of decending/ascending limb cells (loop of Henle)
     AcK_DALC <- AcK_total*VDALC/VFil # surface area of decending/ascending limb cells (loop of Henle)
-    AcK_DTC <- AcK_total*VDTC/VFil # surface area of distal tubule cells
+    AcK_DTC <- AcK_total*VDTC/VFil # surface area of decending/ascending limb cells (loop of Henle)
     AcK_CDC <- AcK_total*VCDC/VFil # surface area of collecting duct cells 
     AcKTrest <- AcK_total* VKTrest/VFil
     AcL= 84.45*BW/BW_ref
@@ -1016,13 +1017,13 @@ ode.func <- function(time, inits, params){
     BW_init <- unlist(params["BW"])
     if (params["sex"] == "M"){
       growth_rate = 5.9/1000 #g/d
-      BW_new <- BW_init + growth_rate*t_24
+      BW_new <- BW_init + growth_rate*t_24/24
       if(BW_new>0.597){
         BW_new<-0.597
       }
     }else{
       growth_rate = 3.5/1000 #g/d
-      BW_new <- BW_init + growth_rate*t_24
+      BW_new <- BW_init + growth_rate*t_24/24
       if(BW_new>0.365){
         BW_new<-0.365
       }
@@ -1040,15 +1041,13 @@ ode.func <- function(time, inits, params){
     'VmL_Oatp', 'VmL_Ntcp','VmL_Oatp2',  'VmIn_Oatp2', 'VmK_Oatp','VmLu_Oatp_ap', 'VmLu_Oatp_bas',
     'VmK_Oat1', 'VmK_Oat3','VmK_Urat','kKTrestF', 'kCdcF' , 'kDalcF' , 'kPtcF' , 'kDtcF' ,
     'kPtcTu', 'kDalcTu' , 'kDtcTu' , 'kCdcTu' , 'kLFLT',  'kAFAT', 'kRFRT','kMFMT', 'kLuTLuF', 'kLuTLuAF', 'kSPFSPT' ,
-    'kSTFSTT' , 'kINFINT' , 'kHFHT' ,'kBrFBrT' , 'kGoFGoT' ,'kSKFSKT' , 'kBoFBoT', "k_gut_in", 'k_gut_out')
+    'kSTFSTT' , 'kINFINT' , 'kHFHT' ,'kBrFBrT' , 'kGoFGoT' ,'kSKFSKT' , 'kBoFBoT')
     Q_scaled_params <- c('QBK', 'QBL', 'QBLtot','QBM', 'QBA',
         'QBR', 'QBLu','QBSP', 'QBH', 'QBBr', 'QBST','QBIN', 'QGE','QBGo','QBSK', 'QBBo', "QparaKi" ,"QparaLi" ,"QparaSt" ,"QparaIn" ,
   "QparaMu" ,"QparaAd" ,"QparaRe" ,"QparaLu" ,"QparaSp","QparaHt" ,"QparaBr" ,"QparaGo","QparaSk" ,"QparaBo")
     Qcardiac_init <-  unlist(params["Qcardiac"])
     params["Qcardiac"] <- unlist(params["Qcardiac"])* (BW_new/BW_init)^0.75
     params["QGE"] <-   unlist(params["QGE"])* (BW_new/BW_init)^(-0.25) 
-    params["CLfeces"] <-   unlist(params["CLfeces"])* (BW_new/BW_init)^(-0.25) 
-    
     params[BW_scaled_params] <- lapply(params[BW_scaled_params], function(x) x * unname(BW_new/BW_init))
     params[Q_scaled_params] <- lapply(params[Q_scaled_params], function(x) x * unname(unlist(params["Qcardiac"])/Qcardiac_init))
 
@@ -3635,7 +3634,6 @@ obj.func <- function(x, dataset, fixed_params){
 
 setwd("/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
 
-
 MW <- 414.07 #g/mol
 source("Goodness-of-fit-metrics.R")
 
@@ -3687,7 +3685,7 @@ Kemp_OR_Ffeces_low <- openxlsx::read.xlsx("Data/PFOA_Feces_female_oral_1_mg_per_
 Kemp_OR_Mfeces_low <- openxlsx::read.xlsx("Data/PFOA_Feces_male_oral_1_mg_per_kg-Loc.xlsx")
 
 
-setwd("/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/proximal_tubule/scenario24l_PkSim_growth_dilution")
+setwd("/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/proximal_tubule/scenario24l_PkSim_growth_dilution_simple")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -3710,7 +3708,7 @@ opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
               "ftol_rel" = 1e-07,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0, 
-              "maxeval" = 1000, 
+              "maxeval" = 600, 
               "print_level" = 1)
 
 ClINFT_unscaled= 18.1 #uL/min/mg protein, Kimura et al. 2017
@@ -3727,11 +3725,11 @@ Papp_RYU = 2*1.46e-6*3600 # cm/h, at pH = 7.4 from Ryu et al. (2024) [https://do
 # Male RAFOatp_k, Male RAFOat1, Male RAFOat3, Male RAFOatp_l,Male RAFNtcp
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
 
-N_pars <- 13 # Number of parameters to be fitted
-fit <-  c(rep(log(1),7), rep(log(mean(c(Papp_Kimura,Papp_RYU))),1), log(1), log(1),log(1e-3), log(1e-2) ,log(1e5))
+N_pars <- 12 # Number of parameters to be fitted
+fit <-  c(rep(log(1),7), rep(log(mean(c(Papp_Kimura,Papp_RYU))),1), log(1), log(1),log(1e-3),log(Papp_Kimura))
 
-lb = c(rep(log(1e-8),3), log(1e-5),rep(log(1e-8),3),  rep(log(Papp_RYU),1), log(1e-3), log(1e-6), log(1e-4), log(1e-6),log(1e2))
-ub = c(rep(log(1e8),  3),log(1e5), rep(log(1e8),  3), rep(log(Papp_Kimura),1),log(1e1),log(10),  log(1e1), log(1e1),log(1e8) )
+lb = c(rep(log(1e-8),3), log(1e-5), log(1e-2),rep(log(1e-8),2),  log(Papp_RYU), log(1e-4), log(1e-6), log(1e-5),  log(Papp_RYU))
+ub = c(rep(log(1e8),  3),log(1e5), log(1e3), rep(log(1e8),  2), log(Papp_Kimura), log(1e1),log(10),  log(1e1), log(20*Papp_Kimura))
 
 fixed_params <- create_all_fixed_params()
 # Run the optimization algorithm to estimate the parameter values
@@ -3745,7 +3743,7 @@ optimizer <- nloptr::nloptr( x0= fit,
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
-save.image("scenario24l_PkSim_growth_dilution.RData")
+save.image("scenario24l_PkSim_growth_dilution_simple.RData")
 
 
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
