@@ -22,7 +22,7 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   RAFUrat <- RAFOatp_k
   RAFOat1 <- 0
   RAFOatp2_l <- RAFOatp_l
-  RAFOatp_lu_ap <- 1.967506e+01
+  RAFOatp_lu_ap <- estimated_params[4]
   RAFOatp_lu_bas <- RAFOatp_lu_ap
   RAFNtcp <- RAFOatp_l
   RAFOatp2_Int <- 3.971124e-07
@@ -46,7 +46,7 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   CLfeces_unscaled <- 1.179123e-04 #in L/h/BW^(-0.25), scaling similar to Loccisano et al. (2012)
   CLfeces <- CLfeces_unscaled*BW^(-0.25)  #in L/h
 
-  
+  kabsUA <- estimated_params[1]
   kCLEal <- estimated_params[2]
   kCLEua <- estimated_params[3]
   

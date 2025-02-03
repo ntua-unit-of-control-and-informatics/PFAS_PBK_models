@@ -310,27 +310,27 @@ ode.func <- function(time, inits, params){
 #and partition coefficient of nanoparticles between tissue and blood (Pi), coef_i=xi/Pi
 # based on the work of Li et al., 2013, https://doi.org/10.3109/17435390.2013.863406
   
-    Pi_liver <- estimated_params[1]
-    Pi_spleen <- estimated_params[2]
-    Pi_kidney <- estimated_params[3]
-    Pi_heart <- estimated_params[4]
-    Pi_lung <- estimated_params[5]
-    Pi_rob <- estimated_params[6]
-    Pi_stomach <- estimated_params[7]
-    Pi_smallIn <- estimated_params[8]
-    Pi_largeIn <- estimated_params[9]
-    Pi_brain <- estimated_params[10]
+    xi_liver <- estimated_params[1]
+    xi_spleen <- estimated_params[2]
+    xi_kidney <- estimated_params[3]
+    xi_heart <- estimated_params[4]
+    xi_lung <- estimated_params[5]
+    xi_rob <- estimated_params[6]
+    xi_stomach <- estimated_params[7]
+    xi_smallIn <- estimated_params[8]
+    xi_largeIn <- estimated_params[9]
+    xi_brain <- estimated_params[10]
     
-    xi_liver <- estimated_params[11]
-    xi_spleen <- xi_liver
-    xi_kidney <- xi_liver
-    xi_heart <- xi_liver
-    xi_lung <- xi_liver
-    xi_rob <- xi_liver
-    xi_stomach <- xi_liver
-    xi_smallIn <- xi_liver
-    xi_largeIn <- xi_liver
-    xi_brain <- xi_liver
+    Pi_liver <- estimated_params[11]
+    Pi_spleen <- Pi_liver
+    Pi_kidney <- Pi_liver
+    Pi_heart <- Pi_liver
+    Pi_lung <- Pi_liver
+    Pi_rob <- Pi_liver
+    Pi_stomach <- Pi_liver
+    Pi_smallIn <- Pi_liver
+    Pi_largeIn <- Pi_liver
+    Pi_brain <- Pi_liver
     CLurine <- estimated_params[12]
     CLfeces <- estimated_params[13]
     
