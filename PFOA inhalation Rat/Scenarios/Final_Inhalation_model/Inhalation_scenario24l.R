@@ -650,9 +650,9 @@ create_fixed_params <- function(user.input){
     A_peritubular_PTC <- A_peritubular * VPTC/ (VPTC + VDALC)
     A_peritubular_DTC <- A_peritubular * VDALC/ (VPTC + VDALC)
     
-    # We assume that surface areas scale to the power of 2/3, based on the way that total body SA scales [https://doi.org/10.1111/j.1476-5381.2009.00267.x]
+    
     BW_PKSim <- 0.23 #kg
-    SA_scaling_factor <- (BW/BW_PKSim)^(2/3)  
+    SA_scaling_factor <- BW/BW_PKSim  
     
     PAL <- 1136e-4 #m^2
     AL <- PAL *  SA_scaling_factor #liver surface area (m^2)
@@ -916,9 +916,9 @@ create_fixed_params <- function(user.input){
     #Surface areas Interstitial - Intracellular (m^2), from PKSim 
     BW_ref <- 0.23
     AcK_total= 437.16*BW/BW_ref
-    AcK_PTC <- AcK_total*VPTC/VFil # surface area of decending/ascending limb cells (loop of Henle)
+    AcK_PTC <- AcK_total*VPTC/VFil # surface area of proximal tubule cells
     AcK_DALC <- AcK_total*VDALC/VFil # surface area of decending/ascending limb cells (loop of Henle)
-    AcK_DTC <- AcK_total*VDTC/VFil # surface area of decending/ascending limb cells (loop of Henle)
+    AcK_DTC <- AcK_total*VDTC/VFil # surface area of distal tubule cells
     AcK_CDC <- AcK_total*VCDC/VFil # surface area of collecting duct cells 
     AcKTrest <- AcK_total* VKTrest/VFil
     AcL= 84.45*BW/BW_ref
@@ -1088,9 +1088,50 @@ estimate_BFi_TVi <- function(sex, BW){
 }
 
 
-
 ode.func <- function(time, inits, params){
+  
+  t_24 <- floor(time/24)
+  BW_init <- unlist(params["BW"])
+  if (params["sex"] == "M"){
+    growth_rate = 5.9/1000 #g/d
+    BW_new <- BW_init + growth_rate*t_24
+    if(BW_new>0.597){
+      BW_new<-0.597
+    }
+  }else{
+    growth_rate = 3.5/1000 #g/d
+    BW_new <- BW_init + growth_rate*t_24
+    if(BW_new>0.365){
+      BW_new<-0.365
+    }
+  }
+  BW_scaled_params <- c ('VB', 'Vplasma', 'VK', 'VKB', 'VKF',  'VFil','VPT' , 'VDAL' , 'VDT' , 'VCD' ,'VPTC' , 'VDALC' , 'VDTC' , 'VCDC' ,'VL', 'VLB', 'VLF',  'VLbile',
+                         'VM', 'VMB', 'VMF', 'VA', 'VAB', 'VAF', 'VAT', 'VR', 'VRB',  'VRF',  'VVen' ,'VArt', 'VLu', 'VLuB', 'VLuF',
+                         'VLuAF','VSP', 'VSPB', 'VSPF','VH', 'VHB', 'VHF','VBr', 'VBrB', 'VBrF','VGo', 'VGoB', 'VGoF',
+                         'VIN', 'VINB', 'VINF', 'VST', 'VSTB', 'VSTF','VSTL', 'VINL','VSK','VSKB', 'VSKF',
+                         'VBo','VBoB', 'VBoF','VLT', 'VKTrest','VINT', 'VSTT','VMT', 'VAT', 
+                         'VLuT', 'VSPT','VHT', 'VBrT','VGoT', 'VSKT','VBoT', 'VRT',
+                         'VKT', 'A_peritubular_PTC', 'A_peritubular_DTC','AL', 'AM', 'AA', 'AR', 'ALu','ASP', 'AH', 'ABr', 'AST',
+                         'AIN', 'AGo','ASK', 'ABo','AINL', 'AcL' , 'AcM' , 'AcST' ,'AcIN', 'AcA' , 'AcLu' , 'AcALF' , 
+                         'AcSP', 'AcH' , 'AcBr' , 'AcGo','AcSK', 'AcBo' , 'AcR' , 'APT' , 'ADAL' , 'ADT', 'ACD' , 'AcK_DALC','AcK_CDC' , 'AcKTrest',
+                         'Qfeces','Qbile', 'QGFR','Qurine','kabST',"QPT" , "QTDL", "QTAL" , "QDT", "QCD", 'CLfeces', "CL_hepatobiliary", 
+                         'VmL_Oatp', 'VmL_Ntcp','VmL_Oatp2',  'VmIn_Oatp2', 'VmK_Oatp','VmLu_Oatp_ap', 'VmLu_Oatp_bas',
+                         'VmK_Oat1', 'VmK_Oat3','VmK_Urat','kKTrestF', 'kCdcF' , 'kDalcF' , 'kPtcF' , 'kDtcF' ,
+                         'kPtcTu', 'kDalcTu' , 'kDtcTu' , 'kCdcTu' , 'kLFLT',  'kAFAT', 'kRFRT','kMFMT', 'kLuTLuF', 'kLuTLuAF', 'kSPFSPT' ,
+                         'kSTFSTT' , 'kINFINT' , 'kHFHT' ,'kBrFBrT' , 'kGoFGoT' ,'kSKFSKT' , 'kBoFBoT', "k_gut_in", 'k_gut_out')
+  Q_scaled_params <- c('QBK', 'QBL', 'QBLtot','QBM', 'QBA',
+                       'QBR', 'QBLu','QBSP', 'QBH', 'QBBr', 'QBST','QBIN', 'QGE','QBGo','QBSK', 'QBBo', "QparaKi" ,"QparaLi" ,"QparaSt" ,"QparaIn" ,
+                       "QparaMu" ,"QparaAd" ,"QparaRe" ,"QparaLu" ,"QparaSp","QparaHt" ,"QparaBr" ,"QparaGo","QparaSk" ,"QparaBo")
+  Qcardiac_init <-  unlist(params["Qcardiac"])
+  params["Qcardiac"] <- unlist(params["Qcardiac"])* (BW_new/BW_init)^0.75
+  params["QGE"] <-   unlist(params["QGE"])* (BW_new/BW_init)^(-0.25) 
+  params["CLfeces"] <-   unlist(params["CLfeces"])* (BW_new/BW_init)^(-0.25) 
+  
+  params[BW_scaled_params] <- lapply(params[BW_scaled_params], function(x) x * unname(BW_new/BW_init))
+  params[Q_scaled_params] <- lapply(params[Q_scaled_params], function(x) x * unname(unlist(params["Qcardiac"])/Qcardiac_init))
+  
   with(as.list(c(inits, params)),{
+    
     
     #====================PFOA mass balance at each tissue or fluid compartment==============================     
     
