@@ -2870,7 +2870,7 @@ obj.func <- function(x, dataset, fixed_params){
   params <- c(fixed_params[[13]], variable_params)
   events <- create.events(params)
   inits <- create.inits (params)
-  sample_time <- seq(0,192,1)
+  sample_time <- seq(0,672,1)
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params, events = events,
                                       method="lsodes",rtol = 1e-04, atol = 1e-04))
