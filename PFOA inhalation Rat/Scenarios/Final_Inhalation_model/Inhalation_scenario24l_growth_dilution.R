@@ -12,38 +12,38 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   #assuming the density of tissue is 1 g/mL.
   # Estimated parameters
   if(sex == "M"){
-    RAFOatp_k <- 5.746413e+01
+    RAFOatp_k <- 1.099896e+02 
   }else{
-    RAFOatp_k <- 5.750634e-08
+    RAFOatp_k <- 2.255270e-07
   }
-  RAFOat3 <- 1.349494e+01
-  CL_int <- 3.311641e+02 #uL/min/million hepatocytes
-  RAFOatp_l <- 1.093618e+06
+  RAFOat3 <- 1.326016e+01
+  CL_int <- 1.398679e+02 #uL/min/million hepatocytes
+  RAFOatp_l <- 5.401378e+01
   RAFUrat <- RAFOatp_k
   RAFOat1 <- 0
   RAFOatp2_l <- RAFOatp_l
-  RAFOatp_lu_ap <- estimated_params[4]
+  RAFOatp_lu_ap <- 4.930695e-01
   RAFOatp_lu_bas <- RAFOatp_lu_ap
   RAFNtcp <- RAFOatp_l
-  RAFOatp2_Int <- 3.971124e-07
+  RAFOatp2_Int <- 4.983705e-05
   
-  Papp <- 2.284868e-01
+  Papp <- 2.814245e-01
   Papp_gut <- Papp
   
-  f_fabp_avail <- 3.429259e-01
+  f_fabp_avail <- 2.926230e-01
   f_alb_avail <- f_fabp_avail
   
-  koff_alb <-  6.222039e-01
-  koff_fabp <-  7.506130e+00
+  koff_alb <-  4.074131e-01
+  koff_fabp <-  2.559813e-01
   koff_a2u <- koff_alb
   
   VmK_api <- 0
   VmK_baso <- 0
   KmK_baso <- 1e20
   KmK_api <-   1e20
-  KLfabp <-  1.000000e+06 #[L/mol]*1e-3 , value from Cheng et al. (2017)
+  KLfabp <-  9.932378e+05 #[L/mol]*1e-3 , value from Cheng et al. (2017)
   Ka <-5.8e5 # 5.8e05 from Rue et al. (2024)#mol/L
-  CLfeces_unscaled <- 1.179123e-04 #in L/h/BW^(-0.25), scaling similar to Loccisano et al. (2012)
+  CLfeces_unscaled <- 2.068868e-04 #in L/h/BW^(-0.25), scaling similar to Loccisano et al. (2012)
   CLfeces <- CLfeces_unscaled*BW^(-0.25)  #in L/h
 
   kabsUA <- estimated_params[1]
@@ -565,6 +565,10 @@ create_fixed_params <- function(user.input){
     VAF <- PVAF * PVA * BW #adipose interstitial fluid volume kg=L
     VAT <- VA - VAF #adipose tissue volume kg=L
     
+    #Upper airways
+    PVUA <- 257e-3/288 #mm^3/g, for a 16-wk old male 288 g, Gross et al., 1982, https://pubmed.ncbi.nlm.nih.gov/7130058/
+    VUA <- PVUA * BW  #total volume of nasal cavity
+    
     #Lung
     PVLu <- 0.48e-2 #Brown et al. 1997, p 418-19 mean of values for male rat
     VLu <- PVLu * BW
@@ -1031,7 +1035,7 @@ create_fixed_params <- function(user.input){
       
       
       "admin.time" = admin.time, "admin.dose" = admin.dose,
-      "admin.type" = admin.type, "MW"=MW, 
+      "admin.type" = admin.type, "MW"=MW, "sex" = sex, "BW" = BW,
       "depfr_head" = depfr_head, "depfr_AF" = depfr_AF
      
       
@@ -1088,37 +1092,39 @@ estimate_BFi_TVi <- function(sex, BW){
 }
 
 
-ode.func <- function(time, inits, params){
+
   
-  t_24 <- floor(time/24)
-  BW_init <- unlist(params["BW"])
-  if (params["sex"] == "M"){
-    growth_rate = 5.9/1000 #g/d
-    BW_new <- BW_init + growth_rate*t_24
-    if(BW_new>0.597){
-      BW_new<-0.597
+ode.func <- function(time, inits, params){
+    t_24 <- floor(time/24)
+    BW_init <- unlist(params["BW"])
+    if (params["sex"] == "M"){
+      growth_rate = 5.9/1000 #g/d
+      BW_new <- BW_init + growth_rate*t_24
+      if(BW_new>0.597){
+        BW_new<-0.597
+      }
+    }else{
+      growth_rate = 3.5/1000 #g/d
+      BW_new <- BW_init + growth_rate*t_24
+      if(BW_new>0.365){
+        BW_new<-0.365
+      }
     }
-  }else{
-    growth_rate = 3.5/1000 #g/d
-    BW_new <- BW_init + growth_rate*t_24
-    if(BW_new>0.365){
-      BW_new<-0.365
-    }
-  }
+
   BW_scaled_params <- c ('VB', 'Vplasma', 'VK', 'VKB', 'VKF',  'VFil','VPT' , 'VDAL' , 'VDT' , 'VCD' ,'VPTC' , 'VDALC' , 'VDTC' , 'VCDC' ,'VL', 'VLB', 'VLF',  'VLbile',
                          'VM', 'VMB', 'VMF', 'VA', 'VAB', 'VAF', 'VAT', 'VR', 'VRB',  'VRF',  'VVen' ,'VArt', 'VLu', 'VLuB', 'VLuF',
                          'VLuAF','VSP', 'VSPB', 'VSPF','VH', 'VHB', 'VHF','VBr', 'VBrB', 'VBrF','VGo', 'VGoB', 'VGoF',
                          'VIN', 'VINB', 'VINF', 'VST', 'VSTB', 'VSTF','VSTL', 'VINL','VSK','VSKB', 'VSKF',
                          'VBo','VBoB', 'VBoF','VLT', 'VKTrest','VINT', 'VSTT','VMT', 'VAT', 
-                         'VLuT', 'VSPT','VHT', 'VBrT','VGoT', 'VSKT','VBoT', 'VRT',
+                         'VLuT', 'VSPT','VHT', 'VBrT','VGoT', 'VSKT','VBoT', 'VRT', 'VUA',
                          'VKT', 'A_peritubular_PTC', 'A_peritubular_DTC','AL', 'AM', 'AA', 'AR', 'ALu','ASP', 'AH', 'ABr', 'AST',
-                         'AIN', 'AGo','ASK', 'ABo','AINL', 'AcL' , 'AcM' , 'AcST' ,'AcIN', 'AcA' , 'AcLu' , 'AcALF' , 
+                         'AIN', 'AGo','ASK', 'ABo','AINL', 'AcL' , 'AcM' , 'AcST' ,'AcIN', 'AcA' , 'AcLu' , 'AcALF' , 'AUA', 'ALF',
                          'AcSP', 'AcH' , 'AcBr' , 'AcGo','AcSK', 'AcBo' , 'AcR' , 'APT' , 'ADAL' , 'ADT', 'ACD' , 'AcK_DALC','AcK_CDC' , 'AcKTrest',
                          'Qfeces','Qbile', 'QGFR','Qurine','kabST',"QPT" , "QTDL", "QTAL" , "QDT", "QCD", 'CLfeces', "CL_hepatobiliary", 
                          'VmL_Oatp', 'VmL_Ntcp','VmL_Oatp2',  'VmIn_Oatp2', 'VmK_Oatp','VmLu_Oatp_ap', 'VmLu_Oatp_bas',
                          'VmK_Oat1', 'VmK_Oat3','VmK_Urat','kKTrestF', 'kCdcF' , 'kDalcF' , 'kPtcF' , 'kDtcF' ,
                          'kPtcTu', 'kDalcTu' , 'kDtcTu' , 'kCdcTu' , 'kLFLT',  'kAFAT', 'kRFRT','kMFMT', 'kLuTLuF', 'kLuTLuAF', 'kSPFSPT' ,
-                         'kSTFSTT' , 'kINFINT' , 'kHFHT' ,'kBrFBrT' , 'kGoFGoT' ,'kSKFSKT' , 'kBoFBoT', "k_gut_in", 'k_gut_out')
+                         'kSTFSTT' , 'kINFINT' , 'kHFHT' ,'kBrFBrT' , 'kGoFGoT' ,'kSKFSKT' , 'kBoFBoT', "k_gut_in", 'k_gut_out', 'CLEal', 'CLEua')
   Q_scaled_params <- c('QBK', 'QBL', 'QBLtot','QBM', 'QBA',
                        'QBR', 'QBLu','QBSP', 'QBH', 'QBBr', 'QBST','QBIN', 'QGE','QBGo','QBSK', 'QBBo', "QparaKi" ,"QparaLi" ,"QparaSt" ,"QparaIn" ,
                        "QparaMu" ,"QparaAd" ,"QparaRe" ,"QparaLu" ,"QparaSp","QparaHt" ,"QparaBr" ,"QparaGo","QparaSk" ,"QparaBo")
@@ -3035,7 +3041,8 @@ obj.func <- function(x, dataset, fixed_params){
 ################################################################################
 
 
-setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
+setwd('/Users/eviepapakyriakopoulou/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat')
+#setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat")
 
 MW <- 414.07 #g/mol
 source("Goodness-of-fit-metrics.R")
@@ -3058,8 +3065,9 @@ hind_INH_Fblood_low <- openxlsx::read.xlsx("Inhalation_data/Hinderliter_2006_fem
 hind_INH_Fblood_medium <- openxlsx::read.xlsx("Inhalation_data/Hinderliter_2006_female_plasma_single_Medium_dose.xlsx")
 hind_INH_Fblood_high <- openxlsx::read.xlsx("Inhalation_data/Hinderliter_2006_female_plasma_single_High_dose.xlsx")
 
-setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Inhalation_based_on_scenario15_PT/Training/AAFE/Inhalation_scenario24e")
+#setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Inhalation_based_on_scenario15_PT/Training/AAFE/Inhalation_scenario24e")
 
+setwd('/Users/eviepapakyriakopoulou/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_Inhalation_model/Training/AAFE/Inhalation_scenario24l_growth_dilution_simple')
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = gus_OR_Mtissues, "df8" = gus_INH_Mblood,
@@ -3108,7 +3116,7 @@ optimizer <- nloptr::nloptr( x0= fit,
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
-save.image("Inhalation_scenario24e.RData")
+save.image("Inhalation_scenario24l_growth_dilution_simple.RData")
 
 
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
