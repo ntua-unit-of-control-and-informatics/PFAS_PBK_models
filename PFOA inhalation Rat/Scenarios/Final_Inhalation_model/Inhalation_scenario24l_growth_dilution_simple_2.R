@@ -22,7 +22,7 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   RAFUrat <- RAFOatp_k
   RAFOat1 <- 0
   RAFOatp2_l <- RAFOatp_l
-  RAFOatp_lu_ap <- 2.276790e-01
+  RAFOatp_lu_ap <- estimated_params[4]#2.276790e-01
   RAFOatp_lu_bas <- RAFOatp_lu_ap
   RAFNtcp <- RAFOatp_l
   RAFOatp2_Int <- 3.236773e-08
@@ -45,7 +45,7 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   Ka <-5.8e5 # 5.8e05 from Rue et al. (2024)#mol/L
   CLfeces_unscaled <- 1.035092e-04 #in L/h/BW^(-0.25), scaling similar to Loccisano et al. (2012)
   CLfeces <- CLfeces_unscaled*BW^(-0.25)  #in L/h
-
+  
   kabsUA <- estimated_params[1] #L/h/m^2
   kCLEal <- estimated_params[2] #L/h/m^2
   kCLEua <- estimated_params[3] #L/h/m^2
@@ -1036,7 +1036,7 @@ create_fixed_params <- function(user.input){
       "admin.time" = admin.time, "admin.dose" = admin.dose,
       "admin.type" = admin.type, "MW"=MW, "sex" = sex, "BW" = BW,
       "depfr_head" = depfr_head, "depfr_AF" = depfr_AF
-     
+      
       
     ))
     
@@ -1092,24 +1092,24 @@ estimate_BFi_TVi <- function(sex, BW){
 
 
 
-  
-ode.func <- function(time, inits, params){
-    t_24 <- floor(time/24)
-    BW_init <- unlist(params["BW"])
-    if (params["sex"] == "M"){
-      growth_rate = 5.9/1000 #g/d
-      BW_new <- BW_init + growth_rate*t_24
-      if(BW_new>0.597){
-        BW_new<-0.597
-      }
-    }else{
-      growth_rate = 3.5/1000 #g/d
-      BW_new <- BW_init + growth_rate*t_24
-      if(BW_new>0.365){
-        BW_new<-0.365
-      }
-    }
 
+ode.func <- function(time, inits, params){
+  t_24 <- floor(time/24)
+  BW_init <- unlist(params["BW"])
+  if (params["sex"] == "M"){
+    growth_rate = 5.9/1000 #g/d
+    BW_new <- BW_init + growth_rate*t_24
+    if(BW_new>0.597){
+      BW_new<-0.597
+    }
+  }else{
+    growth_rate = 3.5/1000 #g/d
+    BW_new <- BW_init + growth_rate*t_24
+    if(BW_new>0.365){
+      BW_new<-0.365
+    }
+  }
+  
   BW_scaled_params <- c ('VB', 'Vplasma', 'VK', 'VKB', 'VKF',  'VFil','VPT' , 'VDAL' , 'VDT' , 'VCD' ,'VPTC' , 'VDALC' , 'VDTC' , 'VCDC' ,'VL', 'VLB', 'VLF',  'VLbile',
                          'VM', 'VMB', 'VMF', 'VA', 'VAB', 'VAF', 'VAT', 'VR', 'VRB',  'VRF',  'VVen' ,'VArt', 'VLu', 'VLuB', 'VLuF',
                          'VLuAF','VSP', 'VSPB', 'VSPF','VH', 'VHB', 'VHF','VBr', 'VBrB', 'VBrF','VGo', 'VGoB', 'VGoF',
@@ -2642,7 +2642,7 @@ obj.func <- function(x, dataset, fixed_params){
   inits <- create.inits(params)
   events <- create.events(params)
   
- 
+  
   # sample_time: a vector of time points to solve the ODEs
   sample_time= sort(union(events$data$time, seq(0,48,1)))
   
@@ -2796,7 +2796,7 @@ obj.func <- function(x, dataset, fixed_params){
   inits <- create.inits(params)
   events <- create.events(params)
   
- 
+  
   # sample_time: a vector of time points to solve the ODEs
   sample_time= sort(union(events$data$time, seq(0,30,1)))
   
@@ -3065,7 +3065,7 @@ hind_INH_Fblood_high <- openxlsx::read.xlsx("Inhalation_data/Hinderliter_2006_fe
 
 #setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Inhalation_based_on_scenario15_PT/Training/AAFE/Inhalation_scenario24e")
 
-setwd('/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_Inhalation_model/Training/AAFE/Inhalation_scenario24l_growth_dilution_simple')
+setwd('/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_Inhalation_model/Training/AAFE/Inhalation_scenario24l_growth_dilution_simple_2')
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = gus_OR_Mtissues, "df8" = gus_INH_Mblood,
@@ -3096,11 +3096,11 @@ Papp_RYU = 1.46e-6*3600 # cm/h, at pH = 7.4 from Ryu et al. (2024) [https://doi.
 #Parameter names:
 #  kabsUA, kCLEal, kCLEua, RAFlu
 
-N_pars <- 3 # Number of parameters to be fitted
-fit <-  c(log(1), log(1),log(1))
+N_pars <- 4 # Number of parameters to be fitted
+fit <-  c(log(1), log(1),log(1),log(1))
 
-lb	= c(log(1e-6), log(1e-6),log(1e-6))
-ub = c(log(1e6), log(1e6),log(1e6))
+lb	= c(log(1e-6), log(1e-6),log(1e-6),log(1e-6))
+ub = c(log(1e6), log(1e6),log(1e6),log(1e6))
 
 fixed_params <- create_all_fixed_params()
 # Run the optimization algorithm to estimate the parameter values
@@ -3114,7 +3114,7 @@ optimizer <- nloptr::nloptr( x0= fit,
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
-save.image("Inhalation_scenario24l_growth_dilution_simple.RData")
+save.image("Inhalation_scenario24l_growth_dilution_simple_2.RData")
 
 
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
@@ -3444,45 +3444,45 @@ create.plots <- function(predictions, observations, compartment){
 
 # Convert Kudo High dose from long to wide format using reshape
 experiment_inh_1 <- reshape(kudo_high_dose[c("Tissue" ,"Time_hours", 
-                                        "Concentration_microg_per_g_organ")], 
-                       idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+                                             "Concentration_microg_per_g_organ")], 
+                            idvar = "Time_hours", timevar = "Tissue", direction = "wide")
 colnames(experiment_inh_1) <- c("Time",kudo_high_dose$Tissue )
 
 # Convert Kudo Low dose from long to wide format using reshape
 experiment_inh_2 <- reshape(kudo_low_dose[c("Tissue" ,"Time_hours", 
-                                       "Concentration_microg_per_g_organ")], 
-                       idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+                                            "Concentration_microg_per_g_organ")], 
+                            idvar = "Time_hours", timevar = "Tissue", direction = "wide")
 colnames(experiment_inh_2) <- c("Time",kudo_low_dose$Tissue )
 
 # Convert Kim IV Male tissues from long to wide format using reshape
 experiment_inh_3 <- reshape(kim_IV_Mtissues[c("Tissue" ,"Time_hours", 
-                                         "Concentration_microg_per_g_organ")], 
-                       idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+                                              "Concentration_microg_per_g_organ")], 
+                            idvar = "Time_hours", timevar = "Tissue", direction = "wide")
 colnames(experiment_inh_3) <- c("Time",kim_IV_Mtissues$Tissue )
 
 # Convert Kim ORAL Male tissues from long to wide format using reshape
 experiment_inh_4 <- reshape(kim_OR_Mtissues[c("Tissue" ,"Time_hours", 
-                                         "Concentration_microg_per_g_organ")], 
-                       idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+                                              "Concentration_microg_per_g_organ")], 
+                            idvar = "Time_hours", timevar = "Tissue", direction = "wide")
 colnames(experiment_inh_4) <- c("Time",kim_OR_Mtissues$Tissue )
 
 # Convert Kim IV female tissues from long to wide format using reshape
 experiment_inh_5 <- reshape(kim_IV_Ftissues[c("Tissue" ,"Time_hours", 
-                                         "Concentration_microg_per_g_organ")], 
-                       idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+                                              "Concentration_microg_per_g_organ")], 
+                            idvar = "Time_hours", timevar = "Tissue", direction = "wide")
 colnames(experiment_inh_5) <- c("Time",kim_IV_Ftissues$Tissue )
 
 # Convert Kim ORAL female tissues from long to wide format using reshape
 experiment_inh_6 <- reshape(kim_OR_Ftissues[c("Tissue" ,"Time_hours", 
-                                         "Concentration_microg_per_g_organ")], 
-                       idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+                                              "Concentration_microg_per_g_organ")], 
+                            idvar = "Time_hours", timevar = "Tissue", direction = "wide")
 colnames(experiment_inh_6) <- c("Time",kim_OR_Ftissues$Tissue )
 
 
 # Convert Gustafsson Oral male tissues from long to wide format using reshape
 experiment_inh_7 <- reshape(gus_OR_Mtissues[c("Tissue" ,"Time_hours", 
-                                          "Concentration_microg_per_g_organ")], 
-                        idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+                                              "Concentration_microg_per_g_organ")], 
+                            idvar = "Time_hours", timevar = "Tissue", direction = "wide")
 colnames(experiment_inh_7) <- c("Time",unique(gus_OR_Mtissues$Tissue))
 
 # Convert Gustafsson Inhalation male blood from long to wide format using reshape
@@ -3501,43 +3501,43 @@ colnames(experiment_inh_9) <- c("Time",unique(gus_INH_Mtissues$Tissue))
 
 # Convert Hinderliter Inhalation male single low from long to wide format using reshape
 experiment_inh_10 <- reshape(hind_INH_Mblood_low[c("Tissue" ,"Time_hours", 
-                                                  "Concentration_microg_per_g_organ")], 
-                            idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+                                                   "Concentration_microg_per_g_organ")], 
+                             idvar = "Time_hours", timevar = "Tissue", direction = "wide")
 colnames(experiment_inh_10) <- c("Time",unique(hind_INH_Mblood_low$Tissue))
 
 
 # Convert Hinderliter Inhalation male single medium from long to wide format using reshape
 experiment_inh_11 <- reshape(hind_INH_Mblood_medium[c("Tissue" ,"Time_hours", 
-                                                     "Concentration_microg_per_g_organ")], 
-                            idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+                                                      "Concentration_microg_per_g_organ")], 
+                             idvar = "Time_hours", timevar = "Tissue", direction = "wide")
 colnames(experiment_inh_11) <- c("Time",unique(hind_INH_Mblood_medium$Tissue))
 
 
 # Convert Hinderliter Inhalation male single high from long to wide format using reshape
 experiment_inh_12 <- reshape(hind_INH_Mblood_high[c("Tissue" ,"Time_hours", 
-                                                   "Concentration_microg_per_g_organ")], 
-                            idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+                                                    "Concentration_microg_per_g_organ")], 
+                             idvar = "Time_hours", timevar = "Tissue", direction = "wide")
 colnames(experiment_inh_12) <- c("Time",unique(hind_INH_Mblood_high$Tissue))
 
 
 # Convert Hinderliter Inhalation female single low from long to wide format using reshape
 experiment_inh_13 <- reshape(hind_INH_Fblood_low[c("Tissue" ,"Time_hours", 
-                                                  "Concentration_microg_per_g_organ")], 
-                            idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+                                                   "Concentration_microg_per_g_organ")], 
+                             idvar = "Time_hours", timevar = "Tissue", direction = "wide")
 colnames(experiment_inh_13) <- c("Time",unique(hind_INH_Fblood_low$Tissue))
 
 
 # Convert Hinderliter Inhalation female single medium from long to wide format using reshape
 experiment_inh_14 <- reshape(hind_INH_Fblood_medium[c("Tissue" ,"Time_hours", 
-                                                     "Concentration_microg_per_g_organ")], 
-                            idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+                                                      "Concentration_microg_per_g_organ")], 
+                             idvar = "Time_hours", timevar = "Tissue", direction = "wide")
 colnames(experiment_inh_14) <- c("Time",unique(hind_INH_Fblood_medium$Tissue))
 
 
 # Convert Hinderliter Inhalation female single high from long to wide format using reshape
 experiment_inh_15 <- reshape(hind_INH_Fblood_high[c("Tissue" ,"Time_hours", 
-                                                   "Concentration_microg_per_g_organ")], 
-                            idvar = "Time_hours", timevar = "Tissue", direction = "wide")
+                                                    "Concentration_microg_per_g_organ")], 
+                             idvar = "Time_hours", timevar = "Tissue", direction = "wide")
 colnames(experiment_inh_15) <- c("Time",unique(hind_INH_Fblood_high$Tissue))
 
 # Put the experiments in a list
