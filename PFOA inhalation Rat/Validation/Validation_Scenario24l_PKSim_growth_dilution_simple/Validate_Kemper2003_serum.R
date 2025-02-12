@@ -1,6 +1,6 @@
 library(deSolve)
 #setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation")
-setwd("/Users/eviepapakyriakopoulou/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_Scenario24l_PKSim")
+setwd("/Users/eviepapakyriakopoulou/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_Scenario24l_PKSim_growth_dilution_simple")
 
 #===============
 # Generate predictions
@@ -21,7 +21,7 @@ AAFE <- function(predictions, observations, times=NULL){
 }
 
 
-load("scenario24l_PkSim_simplified.RData")
+load("scenario24l_PkSim_growth_dilution_simple_2.RData")
 # Body weight 
 
 
@@ -271,5 +271,6 @@ AAFE_Kemper_serum <- mean(score)
 print(paste0("The AAFE on the serum data of Kemper et al. (2003) was ", AAFE_Kemper_serum))
 write.csv(results_df,
           #"C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_results/Kemper_2003_serum_results.csv",
-          "/Users/eviepapakyriakopoulou/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_Scenario24l_PKSim/Kemper_2003_serum_results.csv",
+          "/Users/eviepapakyriakopoulou/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_Scenario24l_PKSim_growth_dilution_simple/Kemper_2003_serum_results.csv",
           row.names =F)
+

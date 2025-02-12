@@ -1,6 +1,6 @@
 library(deSolve)
 #setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation")
-setwd("/Users/eviepapakyriakopoulou/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_Scenario24l_PKSim")
+setwd("/Users/eviepapakyriakopoulou/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_Scenario24l_PKSim_growth_dilution_simple")
 
 #  absolute average fold error
 AAFE <- function(predictions, observations, times=NULL){
@@ -20,7 +20,7 @@ AAFE <- function(predictions, observations, times=NULL){
 #===============
 
 
-load("scenario24l_PkSim_simplified.RData")
+load("scenario24l_PkSim_growth_dilution_simple_2.RData")
 
 # Set up simulations for the 1st case, i.e. Lupton (2020) ORAL female feces
 BW <- 0.184  # body weight (kg) 
@@ -155,5 +155,5 @@ print(paste0("The AAFE on the excreta data of Lupton et al. (2020) is ", AAFE_Lu
 
 write.csv(results_df,
           #"C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_results/Kemper_2003_excreta_Loccisano_results.csv",
-          "/Users/eviepapakyriakopoulou/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_Scenario24l_PKSim/Lupton_2020_excreta_results.csv",
+          "/Users/eviepapakyriakopoulou/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_Scenario24l_PKSim_growth_dilution_simple/Lupton_2020_excreta_results.csv",
           row.names =F)
