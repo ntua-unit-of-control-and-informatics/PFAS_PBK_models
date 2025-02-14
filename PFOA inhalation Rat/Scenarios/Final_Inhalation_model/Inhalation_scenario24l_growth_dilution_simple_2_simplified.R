@@ -587,7 +587,7 @@ create_params <- function(user.input){
     KmK_baso <- 1e20
     KmK_api <-   1e20
     KLfabp <-  (1.2e5+4e4+1.9e4) #[L/mol]*1e-3 , value from Cheng et al. (2017)
-    Ka <-5.8e5 # 5.8e05 from Rue et al. (2024)#mol/L
+    Ka <-5e5 # 5.8e05 from Rue et al. (2024)#mol/L
     CLfeces_unscaled <- 1.035092e-04 #in L/h/BW^(-0.25), scaling similar to Loccisano et al. (2012)
     CLfeces <- CLfeces_unscaled*BW^(-0.25)  #in L/h
     

@@ -18,9 +18,9 @@ AAFE <- function(predictions, observations, times=NULL){
 #===============
 # Generate predictions
 #===============
-load("Inhalation_scenario24l_growth_dilution_simple_2_simplified.RData")
+load("Inhalation_scenario24l_growth_dilution_simple_2_simplified2.RData")
 # Body weight 
-BW <- 0.25  #kg, not reported in the study
+BW <- 0.225  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
 sex <- "M"
 inhalation_params=estimate_BFn_TVn(sex, BW)
 BFn = inhalation_params["BFn"]# 1/h
@@ -96,6 +96,7 @@ solution_25M <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
 
 
 #1mg/m^3 dose female
+BW <- 0.21  #kg, not reported in the study - 180-240 g average BW of female CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
 sex <- "F"
 inhalation_params=estimate_BFn_TVn(sex, BW)
 BFn = inhalation_params["BFn"]# 1/h
