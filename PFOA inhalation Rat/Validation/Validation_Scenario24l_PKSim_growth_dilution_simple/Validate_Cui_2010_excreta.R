@@ -20,7 +20,7 @@ AAFE <- function(predictions, observations, times=NULL){
 #===============
 
 
-load("scenario24l_PkSim_growth_dilution_simple.RData")
+load("scenario24l_PkSim_growth_dilution_simple_2.RData")
 # Body weight 
 
 

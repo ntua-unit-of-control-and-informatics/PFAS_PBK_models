@@ -1,7 +1,7 @@
 library(ggplot2)
 
 #setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_results")
-setwd("/Users/eviepapakyriakopoulou/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_Scenario24l_PKSim")
+setwd("/Users/eviepapakyriakopoulou/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_Scenario24l_PKSim_growth_dilution_simple")
 
 # Load Results 
 
