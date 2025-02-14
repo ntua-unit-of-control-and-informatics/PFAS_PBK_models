@@ -1,6 +1,6 @@
 library(deSolve)
 #setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation")
-setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_Inhalation_model/Validation")
+setwd('/Users/eviepapakyriakopoulou/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_Inhalation_model/Validation')
 
 #  absolute average fold error
 AAFE <- function(predictions, observations, times=NULL){
@@ -18,7 +18,7 @@ AAFE <- function(predictions, observations, times=NULL){
 #===============
 # Generate predictions
 #===============
-load("scenario24l_PkSim_growth_dilution.RData")
+load("Inhalation_scenario24l_growth_dilution_simple_2_simplified.RData")
 # Body weight 
 BW <- 0.25  #kg, not reported in the study
 sex <- "M"
@@ -29,21 +29,28 @@ duration <- 6 #hours
 admin.dose_mg_per_m3 <- 1 # administered dose in mg/m^3
 depfr_head <- 0.3057
 depfr_AF <- (0.1195+0.0243)
-dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn))#ug PFOA, for 6h inhalation
-admin.time <- sort(c(seq(0,4), seq(7,11), seq(14,18))*24) #time when doses are administered, in hours
+k = 1*duration
+dose <- admin.dose_mg_per_m3*duration*BFn*TVn/k#ug PFOA, for 6h inhalation
+admin.time <- c(seq(0,5/24,1/24), seq(1,1+5/24,1/24), seq(2,2+5/24,1/24), seq(3,3+5/24,1/24), seq(4,4+5/24,1/24),
+              seq(7,7+5/24,1/24), seq(8,8+5/24,1/24),  seq(9,9+5/24,1/24), seq(10,10+5/24,1/24), seq(11,11+5/24,1/24),
+              seq(14,14+5/24,1/24), seq(15,15+5/24,1/24),  seq(16,16+5/24,1/24), seq(17,17+5/24,1/24), seq(18,18+5/24,1/24))*24
 admin.dose <- rep(dose, length(admin.time))
 admin.type <- "nasal"
 
-parameters <-   create.params(list('BW'=BW,
-                                   "admin.dose"= admin.dose,
+user_input <-  list('BW'=BW,"admin.dose"= admin.dose,
                                    "admin.time" = admin.time, 
                                    "admin.type" = admin.type,
                                    "estimated_params" = estimated_params,
-                                   "sex" = sex))
-events <- create.events(parameters)
+                                   "sex" = sex)
+
+params <- create_params(user_input)
+inits <- create.inits(params)
+events <- create.events(params)
+
+
 sample_time <- seq(0,22*24,2)
 solution_1M <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                      y = inits, parms = parameters, events = events,
+                                      y = inits, parms = params, events = events,
                                       method="lsodes",rtol = 1e-7, atol = 1e-7))
 
 
@@ -53,15 +60,18 @@ solution_1M <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
 admin.dose_mg_per_m3 <- 10 # administered dose in mg/m^3
 dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn))#ug PFOA, for 6h inhalation
 admin.dose <- rep(dose, length(admin.time))
-parameters <- create.params( list('BW'=BW,
-                                  "admin.dose"= admin.dose,
-                                  "admin.time" = admin.time, 
-                                  "admin.type" = admin.type,
-                                  "estimated_params" = estimated_params,
-                                  "sex" = sex))
-events <- create.events(parameters)
+user_input <-  list('BW'=BW,"admin.dose"= admin.dose,
+                                   "admin.time" = admin.time, 
+                                   "admin.type" = admin.type,
+                                   "estimated_params" = estimated_params,
+                                   "sex" = sex)
+params <- create_params(user_input)
+inits <- create.inits(params)
+events <- create.events(params)
+
+
 solution_10M <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                       y = inits, parms = parameters, events = events,
+                                       y = inits, parms = params, events = events,
                                        method="lsodes",rtol = 1e-7, atol = 1e-7))
 
 
@@ -70,15 +80,17 @@ solution_10M <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
 admin.dose_mg_per_m3 <- 25 # administered dose in mg/m^3
 dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn))#ug PFOA, for 6h inhalation
 admin.dose <- rep(dose, length(admin.time))
-parameters <- create.params( list('BW'=BW,
-                                  "admin.dose"= admin.dose,
-                                  "admin.time" = admin.time, 
-                                  "admin.type" = admin.type,
-                                  "estimated_params" = estimated_params,
-                                  "sex" = sex))
-events <- create.events(parameters)
+user_input <-  list('BW'=BW,"admin.dose"= admin.dose,
+                    "admin.time" = admin.time, 
+                    "admin.type" = admin.type,
+                    "estimated_params" = estimated_params,
+                    "sex" = sex)
+params <- create_params(user_input)
+inits <- create.inits(params)
+events <- create.events(params)
+
 solution_25M <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                      y = inits, parms = parameters, events = events,
+                                      y = inits, parms = params, events = events,
                                       method="lsodes",rtol = 1e-7, atol = 1e-7))
 
 
@@ -91,15 +103,18 @@ TVn = inhalation_params["TVn"]#
 admin.dose_mg_per_m3 <- 1 # administered dose in mg/m^3
 dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn))#ug PFOA, for 6h inhalation
 admin.dose <- rep(dose, length(admin.time))
-parameters <- create.params( list('BW'=BW,
-                                  "admin.dose"= admin.dose,
-                                  "admin.time" = admin.time, 
-                                  "admin.type" = admin.type,
-                                  "estimated_params" = estimated_params,
-                                  "sex" = sex))
-events <- create.events(parameters)
+user_input <-  list('BW'=BW,"admin.dose"= admin.dose,
+                    "admin.time" = admin.time, 
+                    "admin.type" = admin.type,
+                    "estimated_params" = estimated_params,
+                    "sex" = sex)
+params <- create_params(user_input)
+inits <- create.inits(params)
+events <- create.events(params)
+
+
 solution_1F <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                      y = inits, parms = parameters, events = events,
+                                      y = inits, parms = params, events = events,
                                       method="lsodes",rtol = 1e-7, atol = 1e-7))
 
 
@@ -109,15 +124,16 @@ solution_1F <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
 admin.dose_mg_per_m3 <- 10 # administered dose in mg/m^3
 dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn))#ug PFOA, for 6h inhalation
 admin.dose <- rep(dose, length(admin.time))
-parameters <- create.params( list('BW'=BW,
-                                  "admin.dose"= admin.dose,
-                                  "admin.time" = admin.time, 
-                                  "admin.type" = admin.type,
-                                  "estimated_params" = estimated_params,
-                                  "sex" = sex))
-events <- create.events(parameters)
+user_input <-  list('BW'=BW,"admin.dose"= admin.dose,
+                    "admin.time" = admin.time, 
+                    "admin.type" = admin.type,
+                    "estimated_params" = estimated_params,
+                    "sex" = sex)
+params <- create_params(user_input)
+inits <- create.inits(params)
+events <- create.events(params)
 solution_10F <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                      y = inits, parms = parameters, events = events,
+                                      y = inits, parms = params, events = events,
                                       method="lsodes",rtol = 1e-7, atol = 1e-7))
 
 
@@ -126,15 +142,17 @@ solution_10F <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
 admin.dose_mg_per_m3 <- 25 # administered dose in mg/m^3
 dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn))#ug PFOA, for 6h inhalation
 admin.dose <- rep(dose, length(admin.time))
-parameters <- create.params( list('BW'=BW,
-                                  "admin.dose"= admin.dose,
-                                  "admin.time" = admin.time, 
-                                  "admin.type" = admin.type,
-                                  "estimated_params" = estimated_params,
-                                  "sex" = sex))
-events <- create.events(parameters)
+user_input <-  list('BW'=BW,"admin.dose"= admin.dose,
+                    "admin.time" = admin.time, 
+                    "admin.type" = admin.type,
+                    "estimated_params" = estimated_params,
+                    "sex" = sex)
+params <- create_params(user_input)
+inits <- create.inits(params)
+events <- create.events(params)
+
 solution_25F <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                      y = inits, parms = parameters, events = events,
+                                      y = inits, parms = params, events = events,
                                       method="lsodes",rtol = 1e-7, atol = 1e-7))
 
 
@@ -161,7 +179,7 @@ df <- openxlsx::read.xlsx("Raw_Data/All_data_Hinderliter_2006_repeated.xlsx")
 obs_plasma_1M <- df[df$Dose_mg_per_m3 == 1 & df$Sex == "M",]
 rounded_time <- sapply(obs_plasma_1M$Time_h, custom_round)
 rounded_soltime <- sapply(solution_1M$time, custom_round)
-preds_plasma_1M <- solution_1M[rounded_soltime %in% rounded_time, "Cplasma"]/1000
+preds_plasma_1M <- unique(solution_1M[rounded_soltime %in% rounded_time, "Cplasma"]/1000)
 score[1] <- AAFE(preds_plasma_1M,obs_plasma_1M$Concentration_microg_per_g_organ)
 
 results_df_1M<- data.frame("Study" = "Hinderliter_2006", "Dose" =  obs_plasma_1M$Dose_mg_per_m3,
@@ -177,7 +195,7 @@ df <- openxlsx::read.xlsx("Raw_Data/All_data_Hinderliter_2006_repeated.xlsx")
 obs_plasma_10M <- df[df$Dose_mg_per_m3 == 10 & df$Sex == "M",]
 rounded_time <- sapply(obs_plasma_10M$Time_h, custom_round)
 rounded_soltime <- sapply(solution_10M$time, custom_round)
-preds_plasma_10M <- solution_10M[rounded_soltime %in% rounded_time, "Cplasma"]/1000
+preds_plasma_10M <- unique(solution_10M[rounded_soltime %in% rounded_time, "Cplasma"]/1000)
 score[2] <- AAFE(preds_plasma_10M,obs_plasma_10M$Concentration_microg_per_g_organ)
 
 results_df_10M<- data.frame("Study" = "Hinderliter_2006", "Dose" =  obs_plasma_10M$Dose_mg_per_m3,
@@ -193,7 +211,7 @@ df <- openxlsx::read.xlsx("Raw_Data/All_data_Hinderliter_2006_repeated.xlsx")
 obs_plasma_25M <- df[df$Dose_mg_per_m3 == 25 & df$Sex == "M",]
 rounded_time <- sapply(obs_plasma_25M$Time_h, custom_round)
 rounded_soltime <- sapply(solution_25M$time, custom_round)
-preds_plasma_25M <- solution_25M[rounded_soltime %in% rounded_time, "Cplasma"]/1000
+preds_plasma_25M <- unique(solution_25M[rounded_soltime %in% rounded_time, "Cplasma"]/1000)
 score[3] <- AAFE(preds_plasma_25M,obs_plasma_25M$Concentration_microg_per_g_organ)
 
 results_df_25M<- data.frame("Study" = "Hinderliter_2006", "Dose" =  obs_plasma_25M$Dose_mg_per_m3,
@@ -208,7 +226,7 @@ df <- openxlsx::read.xlsx("Raw_Data/All_data_Hinderliter_2006_repeated.xlsx")
 obs_plasma_1F <- df[df$Dose_mg_per_m3 == 1 & df$Sex == "F",]
 rounded_time <- sapply(obs_plasma_1F$Time_h, custom_round)
 rounded_soltime <- sapply(solution_1F$time, custom_round)
-preds_plasma_1F <- solution_1F[rounded_soltime %in% rounded_time, "Cplasma"]/1000
+preds_plasma_1F <- unique(solution_1F[rounded_soltime %in% rounded_time, "Cplasma"]/1000)
 score[4] <- AAFE(preds_plasma_1F,obs_plasma_1F$Concentration_microg_per_g_organ)
 
 results_df_1F<- data.frame("Study" = "Hinderliter_2006", "Dose" =  obs_plasma_1F$Dose_mg_per_m3,
@@ -223,7 +241,7 @@ df <- openxlsx::read.xlsx("Raw_Data/All_data_Hinderliter_2006_repeated.xlsx")
 obs_plasma_10F <- df[df$Dose_mg_per_m3 == 10 & df$Sex == "F",]
 rounded_time <- sapply(obs_plasma_10F$Time_h, custom_round)
 rounded_soltime <- sapply(solution_10F$time, custom_round)
-preds_plasma_10F <- solution_10F[rounded_soltime %in% rounded_time, "Cplasma"]/1000
+preds_plasma_10F <- unique(solution_10F[rounded_soltime %in% rounded_time, "Cplasma"]/1000)
 score[5] <- AAFE(preds_plasma_10F,obs_plasma_10F$Concentration_microg_per_g_organ)
 
 results_df_10F<- data.frame("Study" = "Hinderliter_2006", "Dose" =  obs_plasma_10F$Dose_mg_per_m3,
@@ -237,7 +255,7 @@ df <- openxlsx::read.xlsx("Raw_Data/All_data_Hinderliter_2006_repeated.xlsx")
 obs_plasma_25F <- df[df$Dose_mg_per_m3 == 25 & df$Sex == "F",]
 rounded_time <- sapply(obs_plasma_25F$Time_h, custom_round)
 rounded_soltime <- sapply(solution_25F$time, custom_round)
-preds_plasma_25F <- solution_25F[rounded_soltime %in% rounded_time, "Cplasma"]/1000
+preds_plasma_25F <- unique(solution_25F[rounded_soltime %in% rounded_time, "Cplasma"]/1000)
 score[6] <- AAFE(preds_plasma_25F,obs_plasma_25F$Concentration_microg_per_g_organ)
 
 results_df_25F<- data.frame("Study" = "Hinderliter_2006", "Dose" =  obs_plasma_25F$Dose_mg_per_m3,
@@ -255,5 +273,7 @@ print(paste0("The AAFE on the Plasma data of Hinderliter et al. (2006) was ", AA
 
 write.csv(results_df,
           #"C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_results/Cui_2008_results.csv",
-          "C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Final_Inhalation_model/Validation/Validation_results/Hinderliter_2006_results.csv",
+          '/Users/eviepapakyriakopoulou/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_Inhalation_model/Validation/Validation_results/Hinderliter_2006_results.csv',
           row.names =F)
+
+
