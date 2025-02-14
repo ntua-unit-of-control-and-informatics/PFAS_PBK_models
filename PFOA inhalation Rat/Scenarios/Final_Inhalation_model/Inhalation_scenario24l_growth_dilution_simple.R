@@ -22,8 +22,8 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   RAFUrat <- RAFOatp_k
   RAFOat1 <- 0
   RAFOatp2_l <- RAFOatp_l
-  RAFOatp_lu_ap <- 2.276790e-01
-  RAFOatp_lu_bas <- RAFOatp_lu_ap
+  RAFOatp_lu_ap <- estimated_params[4]
+  RAFOatp_lu_bas <- estimated_params[5]
   RAFNtcp <- RAFOatp_l
   RAFOatp2_Int <- 3.236773e-08
   
@@ -142,26 +142,17 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   VmL_Ntcp = VmL_Ntcp_scaled*RAFNtcp #in vivo value, in  ug/h
   KmL_Ntcp= 20 * MW #umol/L, Ruggiero et al. 2021 --> ug/L
   
-  #respiratory area of nasal cavity
-  RA_area = 623*1e-6 # [mm^2] -->m2 Gross et al., 1982, https://pubmed.ncbi.nlm.nih.gov/7130058/
-  RA_capillary_density = 362 #capillaries/mm^2
-  capillary_area = RA_area/(RA_area*RA_capillary_density) #mm^2, area of one capillary
-  
-  #Lung
-  #Organ surface area
-  PAUA <- ((1343.5+76.8)*1e-06)/0.288 #m2/kg, total surface area 1343.5 mm^2 for a 16-wk old male 288 g, Gross et al., 1982, https://pubmed.ncbi.nlm.nih.gov/7130058/
-  #plus nasopharynx area 76.8 mm^2 calculated by Ménache et al., 1997, https://doi.org/10.1080/00984109708984003
-  AUA <- PAUA*BW  #m2
-  PALF <- 27.2e-4/0.3 #27.2 cm2, BW=0.3 in the study--> 27.2e-4 m2/kg, Mercer et al., 1994 https://doi.org/10.1152/jappl.1987.62.4.1480
-  ALF <- PALF*BW #m2
+  #respiratory surface areas
+ 
+  Nasal_SA <-  19*1e-4 #m2 Oller and Oberdörster (2010) [https://doi.org/10.1016/j.yrtph.2010.02.006]
+  Alveolar_SA <- 0.40 #m2 Oller and Oberdörster (2010) [https://doi.org/10.1016/j.yrtph.2010.02.006]
   
   
   lung_protein_per_gram <- 134 # 134 mg/mL tissue --> 134 mg/g tissue, Figure 2, https://doi.org/10.1007/s00580-021-03242-z 
-  kUAB <- kabsUA * RA_area #absorption rate from upper airways to blood, in L/h
-  CLEal <- kCLEal * ALF #clearance rate from alveolar lining fluid to stomach, in L/h
-  CLEua <- kCLEua * AUA #clearance rate rate from upper airways to stomach, in L/h
-  #kLuTLuAF <- kLuAF * ALF #transport rate from alveolar lining fluid to lung tissue, 
-  
+  kUAB <- kabsUA * Nasal_SA #absorption rate from upper airways to blood, in L/h
+  CLEal <- kCLEal * Alveolar_SA #clearance rate from alveolar lining fluid to stomach, in L/h
+  CLEua <- kCLEua * Nasal_SA #clearance rate rate from upper airways to stomach, in L/h
+
   #oatp-lung-ap (from ALF to tissue)
   VmLu_Oatp_ap_in_vitro= 9.3 #nmol/mg protein/min  (Weaver et al. 2010)
   VmLu_Oatp_ap_scaled = 60*VmLu_Oatp_ap_in_vitro*MW*lung_protein_per_gram*(VLu*1000)/1000   #physiologically scaled to in vivo, ug/h
@@ -312,7 +303,7 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   kINFINT = ((Papp/100) * fixed_params$AcIN)*1000 #m^3/h * 1000 --> L/h 
   kAFAT = ((Papp/100) * fixed_params$AcA)*1000 #m^3/h * 1000 --> L/h 
   kLuTLuF = ((Papp/100) * fixed_params$AcLu)*1000 #m^3/h * 1000 --> L/h
-  kLuTLuAF = ((Papp/100) * fixed_params$AcALF)*1000 #m^3/h * 1000 --> L/h
+  kLuTLuAF = ((Papp/100) * Alveolar_SA)*1000 #m^3/h * 1000 --> L/h
   kSPFSPT = ((Papp/100) * fixed_params$AcSP)*1000 #m^3/h * 1000 --> L/h 
   kHFHT = ((Papp/100) * fixed_params$AcH)*1000 #m^3/h * 1000 --> L/h 
   kBrFBrT = ((Papp/100) * fixed_params$AcBr)*1000 #m^3/h * 1000 --> L/h 
@@ -387,9 +378,6 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
     'KmK_Oatp'=KmK_Oatp, 'VmLu_Oatp_ap'= VmLu_Oatp_ap,
     'KmLu_Oatp_ap'=KmLu_Oatp_ap, 'VmLu_Oatp_bas'= VmLu_Oatp_bas,
     'KmLu_Oatp_bas'=KmLu_Oatp_bas,
-    
-    "RA_area" = RA_area, "capillary_area"=capillary_area,
-    "AUA"=AUA, "ALF"=ALF,
     
     'VmK_Oat1'=VmK_Oat1, 'KmK_Oat1'=KmK_Oat1, 'KmK_Oat1'=KmK_Oat1, 
     'VmK_Oat3'=VmK_Oat3, 'KmK_Oat3'=KmK_Oat3, 
@@ -1123,7 +1111,7 @@ ode.func <- function(time, inits, params){
                          'VmL_Oatp', 'VmL_Ntcp','VmL_Oatp2',  'VmIn_Oatp2', 'VmK_Oatp','VmLu_Oatp_ap', 'VmLu_Oatp_bas',
                          'VmK_Oat1', 'VmK_Oat3','VmK_Urat','kKTrestF', 'kCdcF' , 'kDalcF' , 'kPtcF' , 'kDtcF' ,
                          'kPtcTu', 'kDalcTu' , 'kDtcTu' , 'kCdcTu' , 'kLFLT',  'kAFAT', 'kRFRT','kMFMT', 'kLuTLuF', 'kLuTLuAF', 'kSPFSPT' ,
-                         'kSTFSTT' , 'kINFINT' , 'kHFHT' ,'kBrFBrT' , 'kGoFGoT' ,'kSKFSKT' , 'kBoFBoT', "k_gut_in", 'k_gut_out', 'CLEal', 'CLEua')
+                         'kSTFSTT' , 'kINFINT' , 'kHFHT' ,'kBrFBrT' , 'kGoFGoT' ,'kSKFSKT' , 'kBoFBoT', "k_gut_in", 'k_gut_out')
   Q_scaled_params <- c('QBK', 'QBL', 'QBLtot','QBM', 'QBA',
                        'QBR', 'QBLu','QBSP', 'QBH', 'QBBr', 'QBST','QBIN', 'QGE','QBGo','QBSK', 'QBBo', "QparaKi" ,"QparaLi" ,"QparaSt" ,"QparaIn" ,
                        "QparaMu" ,"QparaAd" ,"QparaRe" ,"QparaLu" ,"QparaSp","QparaHt" ,"QparaBr" ,"QparaGo","QparaSk" ,"QparaBo")
@@ -3096,11 +3084,11 @@ Papp_RYU = 1.46e-6*3600 # cm/h, at pH = 7.4 from Ryu et al. (2024) [https://doi.
 #Parameter names:
 #  kabsUA, kCLEal, kCLEua, RAFlu
 
-N_pars <- 3 # Number of parameters to be fitted
-fit <-  c(log(1), log(1),log(1))
+N_pars <- 5 # Number of parameters to be fitted
+fit <-  c(log(1), log(1),log(1), log(1),log(1))
 
-lb	= c(log(1e-6), log(1e-6),log(1e-6))
-ub = c(log(1e6), log(1e6),log(1e6))
+lb	= c(log(1e-10), log(1e-10),log(1e-10), log(1e-10),log(1e-10))
+ub = c(log(1e6), log(1e6),log(1e6), log(1e6),log(1e6))
 
 fixed_params <- create_all_fixed_params()
 # Run the optimization algorithm to estimate the parameter values
