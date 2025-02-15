@@ -1,6 +1,6 @@
 library(deSolve)
 #setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation")
-setwd('/Users/eviepapakyriakopoulou/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_Inhalation_model/Validation')
+setwd('/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_Inhalation_model/Validation')
 
 #  absolute average fold error
 AAFE <- function(predictions, observations, times=NULL){
@@ -20,7 +20,7 @@ AAFE <- function(predictions, observations, times=NULL){
 #===============
 load("Inhalation_scenario24l_growth_dilution_simple_2_simplified2.RData")
 # Body weight 
-BW <- 0.225  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
+BW <- 0.21  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
 sex <- "M"
 inhalation_params=estimate_BFn_TVn(sex, BW)
 BFn = inhalation_params["BFn"]# 1/h
@@ -30,7 +30,7 @@ admin.dose_mg_per_m3 <- 1 # administered dose in mg/m^3
 depfr_head <- 0.3057
 depfr_AF <- (0.1195+0.0243)
 k = 1*duration
-dose <- admin.dose_mg_per_m3*duration*BFn*TVn/k#ug PFOA, for 6h inhalation
+dose <- admin.dose_mg_per_m3*duration*BFn*TVn/k#ug PFOA, hour dose of the 6h inhalation
 admin.time <- c(seq(0,5/24,1/24), seq(1,1+5/24,1/24), seq(2,2+5/24,1/24), seq(3,3+5/24,1/24), seq(4,4+5/24,1/24),
               seq(7,7+5/24,1/24), seq(8,8+5/24,1/24),  seq(9,9+5/24,1/24), seq(10,10+5/24,1/24), seq(11,11+5/24,1/24),
               seq(14,14+5/24,1/24), seq(15,15+5/24,1/24),  seq(16,16+5/24,1/24), seq(17,17+5/24,1/24), seq(18,18+5/24,1/24))*24
@@ -58,7 +58,7 @@ solution_1M <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
 
 #10mg/m^3 dose male
 admin.dose_mg_per_m3 <- 10 # administered dose in mg/m^3
-dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn))#ug PFOA, for 6h inhalation
+dose <- admin.dose_mg_per_m3*duration*BFn*TVn/k#ug PFOA, hour dose of the 6h inhalation
 admin.dose <- rep(dose, length(admin.time))
 user_input <-  list('BW'=BW,"admin.dose"= admin.dose,
                                    "admin.time" = admin.time, 
@@ -70,6 +70,7 @@ inits <- create.inits(params)
 events <- create.events(params)
 
 
+
 solution_10M <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                        y = inits, parms = params, events = events,
                                        method="lsodes",rtol = 1e-7, atol = 1e-7))
@@ -78,7 +79,7 @@ solution_10M <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
 
 #25mg/m^3 dose male
 admin.dose_mg_per_m3 <- 25 # administered dose in mg/m^3
-dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn))#ug PFOA, for 6h inhalation
+dose <- admin.dose_mg_per_m3*duration*BFn*TVn/k#ug PFOA, hour dose of the 6h inhalation
 admin.dose <- rep(dose, length(admin.time))
 user_input <-  list('BW'=BW,"admin.dose"= admin.dose,
                     "admin.time" = admin.time, 
@@ -96,13 +97,13 @@ solution_25M <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
 
 
 #1mg/m^3 dose female
-BW <- 0.21  #kg, not reported in the study - 180-240 g average BW of female CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
+BW <- 0.15  #kg, not reported in the study - 180-240 g average BW of female CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
 sex <- "F"
 inhalation_params=estimate_BFn_TVn(sex, BW)
 BFn = inhalation_params["BFn"]# 1/h
 TVn = inhalation_params["TVn"]# 
 admin.dose_mg_per_m3 <- 1 # administered dose in mg/m^3
-dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn))#ug PFOA, for 6h inhalation
+dose <- admin.dose_mg_per_m3*duration*BFn*TVn/k#ug PFOA, hour dose of the 6h inhalation
 admin.dose <- rep(dose, length(admin.time))
 user_input <-  list('BW'=BW,"admin.dose"= admin.dose,
                     "admin.time" = admin.time, 
@@ -123,7 +124,7 @@ solution_1F <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
 
 #10mg/m^3 dose male
 admin.dose_mg_per_m3 <- 10 # administered dose in mg/m^3
-dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn))#ug PFOA, for 6h inhalation
+dose <- admin.dose_mg_per_m3*duration*BFn*TVn/k#ug PFOA, hour dose of the 6h inhalation
 admin.dose <- rep(dose, length(admin.time))
 user_input <-  list('BW'=BW,"admin.dose"= admin.dose,
                     "admin.time" = admin.time, 
@@ -131,6 +132,7 @@ user_input <-  list('BW'=BW,"admin.dose"= admin.dose,
                     "estimated_params" = estimated_params,
                     "sex" = sex)
 params <- create_params(user_input)
+
 inits <- create.inits(params)
 events <- create.events(params)
 solution_10F <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -141,7 +143,7 @@ solution_10F <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
 
 #25mg/m^3 dose male
 admin.dose_mg_per_m3 <- 25 # administered dose in mg/m^3
-dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn))#ug PFOA, for 6h inhalation
+dose <- admin.dose_mg_per_m3*duration*BFn*TVn/k#ug PFOA, hour dose of the 6h inhalation
 admin.dose <- rep(dose, length(admin.time))
 user_input <-  list('BW'=BW,"admin.dose"= admin.dose,
                     "admin.time" = admin.time, 
@@ -187,8 +189,11 @@ results_df_1M<- data.frame("Study" = "Hinderliter_2006", "Dose" =  obs_plasma_1M
                           "Tissue" = obs_plasma_1M$Tissue ,
                           "Type" = obs_plasma_1M$Type, sex = obs_plasma_1M$Sex,
                           "Observed" =obs_plasma_1M$Concentration_microg_per_g_organ,
-                          "Predicted" = preds_plasma_1M, "Time" = obs_plasma_1M$Time_h )
+                          "Predicted" = preds_plasma_1M, "Time" = obs_plasma_1M$Time_h, time = rounded_time)
 
+ggplot(data = results_df_1M)+
+  geom_line(aes(x =rounded_time, y= Predicted ))+
+  geom_point(aes(x =rounded_time, y= Observed ))
 
 
 
@@ -203,8 +208,12 @@ results_df_10M<- data.frame("Study" = "Hinderliter_2006", "Dose" =  obs_plasma_1
                            "Tissue" = obs_plasma_10M$Tissue ,
                            "Type" = obs_plasma_10M$Type, sex = obs_plasma_10M$Sex,
                            "Observed" =obs_plasma_10M$Concentration_microg_per_g_organ,
-                           "Predicted" = preds_plasma_10M, "Time" = obs_plasma_10M$Time_h )
+                           "Predicted" = preds_plasma_10M, "Time" = obs_plasma_10M$Time_h, time = rounded_time )
 
+
+ggplot(data = results_df_10M)+
+  geom_line(aes(x =rounded_time, y= Predicted ))+
+  geom_point(aes(x =rounded_time, y= Observed ))
 
 
 
@@ -219,7 +228,11 @@ results_df_25M<- data.frame("Study" = "Hinderliter_2006", "Dose" =  obs_plasma_2
                             "Tissue" = obs_plasma_25M$Tissue ,
                             "Type" = obs_plasma_25M$Type, sex = obs_plasma_25M$Sex,
                             "Observed" =obs_plasma_25M$Concentration_microg_per_g_organ,
-                            "Predicted" = preds_plasma_25M, "Time" = obs_plasma_25M$Time_h )
+                            "Predicted" = preds_plasma_25M, "Time" = obs_plasma_25M$Time_h , time = rounded_time)
+
+ggplot(data = results_df_25M)+
+  geom_line(aes(x =rounded_time, y= Predicted ))+
+  geom_point(aes(x =rounded_time, y= Observed ))
 
 
 
@@ -234,8 +247,10 @@ results_df_1F<- data.frame("Study" = "Hinderliter_2006", "Dose" =  obs_plasma_1F
                            "Tissue" = obs_plasma_1F$Tissue ,
                            "Type" = obs_plasma_1F$Type, sex = obs_plasma_1F$Sex,
                            "Observed" =obs_plasma_1F$Concentration_microg_per_g_organ,
-                           "Predicted" = preds_plasma_1F, "Time" = obs_plasma_1F$Time_h )
-
+                           "Predicted" = preds_plasma_1F, "Time" = obs_plasma_1F$Time_h, time = rounded_time )
+ggplot(data = results_df_1F)+
+  geom_line(aes(x =rounded_time, y= Predicted ))+
+  geom_point(aes(x =rounded_time, y= Observed ))
 
 
 df <- openxlsx::read.xlsx("Raw_Data/All_data_Hinderliter_2006_repeated.xlsx")
@@ -249,8 +264,11 @@ results_df_10F<- data.frame("Study" = "Hinderliter_2006", "Dose" =  obs_plasma_1
                             "Tissue" = obs_plasma_10F$Tissue ,
                             "Type" = obs_plasma_10F$Type, sex = obs_plasma_10F$Sex,
                             "Observed" =obs_plasma_10F$Concentration_microg_per_g_organ,
-                            "Predicted" = preds_plasma_10F, "Time" = obs_plasma_10F$Time_h )
+                            "Predicted" = preds_plasma_10F, "Time" = obs_plasma_10F$Time_h, time = rounded_time )
 
+ggplot(data = results_df_10F)+
+  geom_line(aes(x =rounded_time, y= Predicted ))+
+  geom_point(aes(x =rounded_time, y= Observed ))
 
 df <- openxlsx::read.xlsx("Raw_Data/All_data_Hinderliter_2006_repeated.xlsx")
 obs_plasma_25F <- df[df$Dose_mg_per_m3 == 25 & df$Sex == "F",]
@@ -263,9 +281,11 @@ results_df_25F<- data.frame("Study" = "Hinderliter_2006", "Dose" =  obs_plasma_2
                             "Tissue" = obs_plasma_25F$Tissue ,
                             "Type" = obs_plasma_25F$Type, sex = obs_plasma_25F$Sex,
                             "Observed" =obs_plasma_25F$Concentration_microg_per_g_organ,
-                            "Predicted" = preds_plasma_25F, "Time" = obs_plasma_25F$Time_h )
+                            "Predicted" = preds_plasma_25F, "Time" = obs_plasma_25F$Time_h, time = rounded_time )
 
-
+ggplot(data = results_df_25F)+
+  geom_line(aes(x =rounded_time, y= Predicted ))+
+  geom_point(aes(x =rounded_time, y= Observed ))
 
 results_df <- rbind(results_df_1M, results_df_10M, results_df_25M, results_df_1F, results_df_10F, results_df_25F)
 
@@ -274,7 +294,7 @@ print(paste0("The AAFE on the Plasma data of Hinderliter et al. (2006) was ", AA
 
 write.csv(results_df,
           #"C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_results/Cui_2008_results.csv",
-          '/Users/eviepapakyriakopoulou/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_Inhalation_model/Validation/Validation_results/Hinderliter_2006_results.csv',
+          '/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_Inhalation_model/Validation/Validation_results/Hinderliter_2006_results.csv',
           row.names =F)
 
 
