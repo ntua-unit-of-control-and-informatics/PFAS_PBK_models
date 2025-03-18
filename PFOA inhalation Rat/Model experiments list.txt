@@ -35,3 +35,20 @@ Model experiments list
 33.Gustafsson (2022) ORAL male blood           (dose = 0.364 mg/kg PFOA)
 34.Gustafsson (2022) ORAL male tissues         (dose = 0.364 mg/kg PFOA)
 
+Inhalation model
+
+1.kudo (2007) high dose, lung tissue  (dose = 16.56 mg/kg PFOA) MALE, IV                                 
+2.kudo (2007) low dose, lung tissue   (dose = 0.041 mg/kg PFOA) MALE, IV
+3.kim (2016) IV male lung tissue  (dose = 1 mg/kg PFOA)
+4.kim (2016) ORAL male lung tissue  (dose = 1 mg/kg PFOA)
+5.kim (2016) IV female lung tissue  (dose = 1 mg/kg PFOA)
+6.kim (2016) ORAL female lung tissue (dose = 1 mg/kg PFOA)
+7.Gustafsson (2022) ORAL male tissues  (dose = 0.364 mg/kg PFOA)
+8.Gustafsson (2022) INHALATION male blood   (dose = 0.364 mg/kg PFOA)
+9.Gustafsson (2022) INHALATION male tissues   (dose = 0.364 mg/kg PFOA)
+10.Hinderliter (2006) INHALATION male single low plasma 
+11.Hinderliter (2006) INHALATION male single medium plasma 
+12.Hinderliter (2006) INHALATION male single high plasma
+13.Hinderliter (2006) INHALATION female single low plasma 
+14.Hinderliter (2006) INHALATION female single medium plasma 
+15.Hinderliter (2006) INHALATION female single high plasma 
