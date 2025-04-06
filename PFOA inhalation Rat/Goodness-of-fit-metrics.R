@@ -138,8 +138,9 @@ AAFE <- function(predictions, observations, times=NULL){
   # Total number of observations
   N <- length(y_obs)
   log_ratio <- rep(NA, N) 
+  eps <- 1e-10
   for ( i in 1:N){
-    log_ratio[i] <- abs(log((y_pred[i]/y_obs[i]), base = 10))
+    log_ratio[i] <- abs(log(( (y_pred[i]+eps)/ (y_obs[i] + eps)), base = 10))
   }
   aafe <- 10^(sum(log_ratio)/N) 
   return(aafe)
