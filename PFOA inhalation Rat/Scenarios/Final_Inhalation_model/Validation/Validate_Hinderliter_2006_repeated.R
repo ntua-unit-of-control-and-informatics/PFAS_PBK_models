@@ -1,6 +1,6 @@
 library(deSolve)
 #setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation")
-setwd('/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_Inhalation_model/Validation')
+setwd('/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_Inhalation_model/Validation')
 
 #  absolute average fold error
 AAFE <- function(predictions, observations, times=NULL){
@@ -18,7 +18,7 @@ AAFE <- function(predictions, observations, times=NULL){
 #===============
 # Generate predictions
 #===============
-load("Inhalation_scenario24l_growth_dilution_simple_2_simplified2.RData")
+load("inhalation_permeability_same_lung_raf_simplified.RData")
 # Body weight 
 BW <- 0.21  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
 sex <- "M"
@@ -51,7 +51,7 @@ events <- create.events(params)
 sample_time <- seq(0,22*24,2)
 solution_1M <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params, events = events,
-                                      method="lsodes",rtol = 1e-7, atol = 1e-7))
+                                      method="lsodes",rtol = 1e-2, atol = 1e-2))
 
 
 
@@ -73,7 +73,7 @@ events <- create.events(params)
 
 solution_10M <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                        y = inits, parms = params, events = events,
-                                       method="lsodes",rtol = 1e-7, atol = 1e-7))
+                                       method="lsodes",rtol = 1e-2, atol = 1e-2))
 
 
 
@@ -92,7 +92,7 @@ events <- create.events(params)
 
 solution_25M <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params, events = events,
-                                      method="lsodes",rtol = 1e-7, atol = 1e-7))
+                                      method="lsodes",rtol = 1e-2, atol = 1e-2))
 
 
 
@@ -117,7 +117,7 @@ events <- create.events(params)
 
 solution_1F <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params, events = events,
-                                      method="lsodes",rtol = 1e-7, atol = 1e-7))
+                                      method="lsodes",rtol = 1e-2, atol = 1e-2))
 
 
 
@@ -137,7 +137,7 @@ inits <- create.inits(params)
 events <- create.events(params)
 solution_10F <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params, events = events,
-                                      method="lsodes",rtol = 1e-7, atol = 1e-7))
+                                      method="lsodes",rtol = 1e-2, atol = 1e-2))
 
 
 
@@ -156,7 +156,7 @@ events <- create.events(params)
 
 solution_25F <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                       y = inits, parms = params, events = events,
-                                      method="lsodes",rtol = 1e-7, atol = 1e-7))
+                                      method="lsodes",rtol = 1e-2, atol = 1e-2))
 
 
 
@@ -294,7 +294,7 @@ print(paste0("The AAFE on the Plasma data of Hinderliter et al. (2006) was ", AA
 
 write.csv(results_df,
           #"C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_results/Cui_2008_results.csv",
-          '/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_Inhalation_model/Validation/Validation_results/Hinderliter_2006_results.csv',
+          '/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_Inhalation_model/Validation/Validation_results/Hinderliter_2006_results.csv',
           row.names =F)
 
 
