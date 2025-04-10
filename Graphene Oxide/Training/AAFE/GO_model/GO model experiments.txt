@@ -1,9 +1,0 @@
-GO model experiments
-
-1. Liu (2012) 1 mg/kg small_tissues, male, IV
-2. Liu (2012) 1 mg/kg small_tissues_diff_time_points, male, IV
-3. Liu (2012) 1 mg/kg large_tissues_diff_time_points, male, IV
-4. Liu (2012) 2 mg/kg small_tissues, male, IV
-5. Liu (2012) 10 mg/kg small_tissues, male, IV
-6. Liu (2012) 1 mg/kg small_blood diff_time_points, male, IV
-7. Liu (2012) 1 mg/kg large_blood_diff_time_points, male, IV
