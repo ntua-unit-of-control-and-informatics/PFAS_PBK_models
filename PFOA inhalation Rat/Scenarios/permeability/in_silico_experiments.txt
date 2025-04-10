@@ -1,0 +1,28 @@
+1) Ka for fabp and albumin estimated, fraction of concentration for fabp and albumin 1
+	a. same for two species (old_IPR_albumin_fapb_estimated)
+	b. Albumin same for two species, FABP different
+	c.  FABP  same for two species, Albumin  different
+	d. Both different for two species (sex_different_ka)
+ 
+2) Ka for albumin estimated, Ka for fabp fix, fraction of concentration for fabp and albumin 1
+	a. same for two species
+	b. different for two species
+
+3) Ka for fabp  estimated, Ka for albumin  fix, fraction of concentration for fabp and albumin 1
+	a. same for two species
+	b. different for two species
+
+4) fraction of concentration for fabp and albumin estimated, Ka for fabp and albumin estimated, 
+	a. same for two species
+	b. Albumin same for two species, FABP different
+	c.  FABP  same for two species, Albumin  different
+	d. Both different for two species
+
+
+5) fraction of concentration for fabp estimated, fraction of concentration of albumin fixed, Ka for fabp and albumin estimated, 
+	a. same for two species
+	b. different for two species
+
+6) fraction of concentration for albumin estimated, fraction of concentration of fabp  fixed, Ka for fabp and albumin estimated, 
+	a. same for two species
+	b. different for two species

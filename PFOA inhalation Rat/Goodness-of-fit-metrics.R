@@ -48,14 +48,15 @@ SODI <- function(observations, predictions, comp.names =NULL){
     }
     
     N_obs[i] <- N # populate the N_obs vector
+    eps <- 1e-10
     
     for (j in 1:N){
       
       # sum of relative squared errors (error = observations - predictions)
       
-      Et <- Et + ( abs(observations[[i]][j] - predictions[[i]][j])  / observations[[i]][j] )  ^2
+      Et <- Et + ( abs(observations[[i]][j] - predictions[[i]][j]+eps)  / (observations[[i]][j]+eps) )  ^2
       
-      St <- St + ( abs(observations[[i]][j] - predictions[[i]][j])  / predictions[[i]][j] )  ^2
+      St <- St + ( abs(observations[[i]][j] - predictions[[i]][j]+eps)  / (predictions[[i]][j]+eps) )  ^2
       
     }
     
@@ -138,8 +139,9 @@ AAFE <- function(predictions, observations, times=NULL){
   # Total number of observations
   N <- length(y_obs)
   log_ratio <- rep(NA, N) 
+  eps <- 1e-10
   for ( i in 1:N){
-    log_ratio[i] <- abs(log((y_pred[i]/y_obs[i]), base = 10))
+    log_ratio[i] <- abs(log(( (y_pred[i]+eps)/ (y_obs[i] + eps)), base = 10))
   }
   aafe <- 10^(sum(log_ratio)/N) 
   return(aafe)
