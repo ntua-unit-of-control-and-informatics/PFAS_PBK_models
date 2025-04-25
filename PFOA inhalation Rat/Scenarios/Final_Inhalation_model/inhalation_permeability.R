@@ -2103,13 +2103,12 @@ create_all_fixed_params <- function(){
   # Set up simulations for the 9th case, i.e. Hinderliter Inhalation male single low
   BW <- (0.311+0.195)/2  #kg, https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   sex <- "M"
-  inhalation_params=estimate_BFn_TVn(sex, BW)
-  BFn = inhalation_params["BFn"]# 1/h
-  TVn = inhalation_params["TVn"]# L
+  BFn = 166*60# 1/h
+  TVn = 1.71*1e-3# L
   duration <- 6 #hours
   admin.dose_mg_per_m3 <- 1.2 # administered dose in mg/m^3
-  depfr_head <- 0.2864
-  depfr_AF <- (0.1440+0.0254)
+  depfr_head <- 0.3073
+  depfr_AF <- (0.1537+0.0281)
   k = 1*duration
   admin.dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn)/k,length.out = k) #ug PFOA, for 6h inhalation
   admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
@@ -2127,13 +2126,12 @@ create_all_fixed_params <- function(){
   # Set up simulations for the 10th case, i.e. Hinderliter Inhalation male single medium
   BW <- (0.311+0.195)/2  #kg, https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   sex <- "M"
-  inhalation_params=estimate_BFn_TVn(sex, BW)
-  BFn = inhalation_params["BFn"]# 1/h
-  TVn = inhalation_params["TVn"]# L
+  BFn = 166*60# 1/h
+  TVn = 1.71*1e-3# L
   duration <- 6 #hours
   admin.dose_mg_per_m3 <- 9.8 # administered dose in mg/m^3
-  depfr_head <- 0.3057
-  depfr_AF <- (0.1195+0.0243)
+  depfr_head <- 0.3272
+  depfr_AF <- (0.1289+0.0276)
   k = 1*duration
   admin.dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn)/k,length.out = k) #ug PFOA, for 6h inhalation
   admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
@@ -2150,13 +2148,12 @@ create_all_fixed_params <- function(){
   # Set up simulations for the 11th case, i.e. Hinderliter Inhalation male single high
   BW <- (0.311+0.195)/2 #kg,  https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   sex <- "M"
-  inhalation_params=estimate_BFn_TVn(sex, BW)
-  BFn = inhalation_params["BFn"]# 1/h
-  TVn = inhalation_params["TVn"]# L
+  BFn = 166*60# 1/h
+  TVn = 1.71*1e-3# L
   duration <- 6 #hours
   admin.dose_mg_per_m3 <- 27 # administered dose in mg/m^3
-  depfr_head <- 0.3573
-  depfr_AF <- (0.1618+0.0241)
+  depfr_head <- 0.3812
+  depfr_AF <- (0.1694+0.0259)
   k = 1*duration
   admin.dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn)/k,length.out = k) #ug PFOA, for 6h inhalation
   admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
@@ -2174,13 +2171,12 @@ create_all_fixed_params <- function(){
   # Set up simulations for the 12th case, i.e. Hinderliter Inhalation female single low
   BW <- (0.197+0.145)/2  #kg,  https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   sex <- "F"
-  inhalation_params=estimate_BFn_TVn(sex, BW)
-  BFn = inhalation_params["BFn"]# 1/h
-  TVn = inhalation_params["TVn"]# L
+  BFn = 166*60# 1/h
+  TVn = 1.05*1e-3# L
   duration <- 6 #hours
   admin.dose_mg_per_m3 <- 1.2 # administered dose in mg/m^3
-  depfr_head <- 0.2822
-  depfr_AF <- (0.1148+0.0177)
+  depfr_head <- 0.2991
+  depfr_AF <- (0.1305+0.0243)
   k = 1*duration
   admin.dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn)/k,length.out = k) #ug PFOA, for 6h inhalation
   admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
@@ -2197,13 +2193,12 @@ create_all_fixed_params <- function(){
   # Set up simulations for the 13th case, i.e. Hinderliter Inhalation female single medium
   BW <- (0.197+0.145)/2  #kg,  https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   sex <- "F"
-  inhalation_params=estimate_BFn_TVn(sex, BW)
-  BFn = inhalation_params["BFn"]# 1/h
-  TVn = inhalation_params["TVn"]# L
+  BFn = 166*60# 1/h
+  TVn = 1.05*1e-3# L
   duration <- 6 #hours
   admin.dose_mg_per_m3 <- 9.8 # administered dose in mg/m^3
-  depfr_head <- 0.3101
-  depfr_AF <- (0.0939+0.0165)
+  depfr_head <- 0.3376
+  depfr_AF <- (0.1074+0.0228)
   k = 1*duration
   admin.dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn)/k,length.out = k) #ug PFOA, for 6h inhalation
   admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
@@ -2220,13 +2215,12 @@ create_all_fixed_params <- function(){
   # Set up simulations for the 14th case, i.e. Hinderliter Inhalation female single high
   BW <- (0.197+0.145)/2  #kg,  https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   sex <- "F"
-  inhalation_params=estimate_BFn_TVn(sex, BW)
-  BFn = inhalation_params["BFn"]# 1/h
-  TVn = inhalation_params["TVn"]# L
+  BFn = 166*60# 1/h
+  TVn = 1.05*1e-3# L
   duration <- 6 #hours
   admin.dose_mg_per_m3 <- 27 # administered dose in mg/m^3
-  depfr_head <- 0.3372
-  depfr_AF <- (0.1327+0.0177)
+  depfr_head <- 0.3404
+  depfr_AF <- (0.1510+0.0242)
   k = 1*duration
   admin.dose <- rep((admin.dose_mg_per_m3*duration*BFn*TVn)/k,length.out = k) #ug PFOA, for 6h inhalation
   admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
@@ -2589,9 +2583,8 @@ obj.func <- function(x, dataset, fixed_params){
   ##########################
   # Set up simulations for the 10th case, i.e. Hinderliter Inhalation male single low
   BW <- (0.311+0.195)/2  #kg, https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
-  depfr_head <- 0.2864
-  depfr_AF <- (0.1440+0.0254)
-  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[10]])
+  sex = "M"
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[9]])
   params <- c(fixed_params[[9]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
@@ -2640,9 +2633,7 @@ obj.func <- function(x, dataset, fixed_params){
   ##########################
   # Set up simulations for the 11th case, i.e. Hinderliter Inhalation male single medium
   BW <- (0.311+0.195)/2  #kg, https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
-  depfr_head <- 0.3057
-  depfr_AF <- (0.1195+0.0243)
-  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[11]])
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[10]])
   params <- c(fixed_params[[10]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
@@ -2691,9 +2682,7 @@ obj.func <- function(x, dataset, fixed_params){
   ##########################
   # Set up simulations for the 12th case, i.e. Hinderliter Inhalation male single high
   BW <- (0.311+0.195)/2  #kg, https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
-  depfr_head <- 0.3573
-  depfr_AF <- (0.1618+0.0241)
-  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[12]])
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[11]])
   params <- c(fixed_params[[11]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
@@ -2741,9 +2730,7 @@ obj.func <- function(x, dataset, fixed_params){
   # Set up simulations for the 13th case, i.e. Hinderliter Inhalation female single low
   BW <- (0.197+0.145)/2  #kg,  https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   sex <- "F"
-  depfr_head <- 0.2822
-  depfr_AF <- (0.1148+0.0177)
-  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[13]])
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[12]])
   params <- c(fixed_params[[12]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
@@ -2789,9 +2776,7 @@ obj.func <- function(x, dataset, fixed_params){
   ##########################
   # Set up simulations for the 14th case, i.e. Hinderliter Inhalation female single low
   BW <- (0.197+0.145)/2  #kg,  https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
-  depfr_head <- 0.3101
-  depfr_AF <- (0.0939+0.0165)
-  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[14]])
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[13]])
   params <- c(fixed_params[[13]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
@@ -2837,9 +2822,7 @@ obj.func <- function(x, dataset, fixed_params){
   ##########################
   # Set up simulations for the 15th case, i.e. Hinderliter Inhalation female single high
   BW <- (0.197+0.145)/2  #kg,  https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
-  depfr_head <- 0.3372
-  depfr_AF <- (0.1327+0.0177)
-  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[15]])
+  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[14]])
   params <- c(fixed_params[[14]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
