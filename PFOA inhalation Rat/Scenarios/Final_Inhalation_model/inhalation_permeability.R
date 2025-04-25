@@ -2082,16 +2082,11 @@ create_all_fixed_params <- function(){
   # Set up simulations for the 8th case, i.e. Gustafsson (2022) Inhalation male blood
   BW <- 0.5125  #kg, from Gustafsson et al., 2022
   sex <- "M"
-  inhalation_params=estimate_BFi_TVi(sex, BW)
-  BFi = inhalation_params["BFi"]# breaths/h
-  TVi = inhalation_params["TVi"]# L per breath
   duration <- 0.375 #hours, 22.5 min
   admin.dose_per_g <- 0.164 # administered dose in mg PFOA/kg BW 
   depfr_head <-0
   depfr_AF <-1
-  #admin.dose_mg_per_L <- 1000*335 * 0.3/1000 # [ug PFOA/g dust] * [g dust/L]  administered dose in mg/m^3 0.25-0.35 mg/L
-  #depfr_AF <- (0.6107+0.0543)
-  k = duration*24 #partition of administration packages
+  k = 9#partition of administration packages
   admin.dose <- rep((admin.dose_per_g*BW*1000)/k, length.out = k) #ug PFOA, for 22.5 min inhalation
   admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
   admin.type <- "inh"
@@ -2104,32 +2099,9 @@ create_all_fixed_params <- function(){
   params[[8]] <- create_fixed_params(user_input)
   
   
-  # Set up simulations for the 2nd case, i.e. Gustafsson Inhalation male tissues
-  BW <- 0.5125  #kg, from Gustafsson et al., 2022
-  sex <- "M"
-  inhalation_params=estimate_BFi_TVi(sex, BW)
-  BFi = inhalation_params["BFi"]# 1/h
-  TVi = inhalation_params["TVi"]# L
-  duration <- 0.375 #hours, 22.5 min
-  admin.dose_per_g <- 0.164 # administered dose in mg PFOA/kg BW 
-  admin.dose_mg_per_m3 <- 300 # administered dose in mg/m^3 0.25-0.35 mg/L
-  depfr_AF <- (0.6107+0.0543)
-  k = duration*24 #partition of administration packages
-  admin.dose <- rep((admin.dose_mg_per_m3*duration*BFi*TVi)/k, length.out = k) #ug PFOA, for 22.5 min inhalation
-  admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
-  admin.type <- "inh"
-  
-  user_input <- list('BW'=BW,
-                     "admin.dose"= admin.dose,
-                     "admin.time" = admin.time, 
-                     "admin.type" = admin.type,
-                     "sex" = sex, "depfr_head" = depfr_head, "depfr_AF" = depfr_AF )
-  params[[9]] <- create_fixed_params(user_input)
-  
-  
   
   # Set up simulations for the 9th case, i.e. Hinderliter Inhalation male single low
-  BW <- 0.21  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
+  BW <- (0.311+0.195)/2  #kg, https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   sex <- "M"
   inhalation_params=estimate_BFn_TVn(sex, BW)
   BFn = inhalation_params["BFn"]# 1/h
@@ -2149,11 +2121,11 @@ create_all_fixed_params <- function(){
                      "admin.time" = admin.time, 
                      "admin.type" = admin.type,
                      "sex" = sex, "depfr_head" = depfr_head, "depfr_AF" = depfr_AF)
-  params[[10]] <- create_fixed_params(user_input)
+  params[[9]] <- create_fixed_params(user_input)
   
   
   # Set up simulations for the 10th case, i.e. Hinderliter Inhalation male single medium
-  BW <- 0.21  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
+  BW <- (0.311+0.195)/2  #kg, https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   sex <- "M"
   inhalation_params=estimate_BFn_TVn(sex, BW)
   BFn = inhalation_params["BFn"]# 1/h
@@ -2172,11 +2144,11 @@ create_all_fixed_params <- function(){
                      "admin.time" = admin.time, 
                      "admin.type" = admin.type,
                      "sex" = sex, "depfr_head" = depfr_head, "depfr_AF" = depfr_AF)
-  params[[11]] <- create_fixed_params(user_input) 
+  params[[10]] <- create_fixed_params(user_input) 
   
   
   # Set up simulations for the 11th case, i.e. Hinderliter Inhalation male single high
-  BW <- 0.21  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
+  BW <- (0.311+0.195)/2 #kg,  https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   sex <- "M"
   inhalation_params=estimate_BFn_TVn(sex, BW)
   BFn = inhalation_params["BFn"]# 1/h
@@ -2196,11 +2168,11 @@ create_all_fixed_params <- function(){
                      "admin.time" = admin.time, 
                      "admin.type" = admin.type,
                      "sex" = sex, "depfr_head" = depfr_head, "depfr_AF" = depfr_AF ) 
-  params[[12]] <- create_fixed_params(user_input)
+  params[[11]] <- create_fixed_params(user_input)
   
   
   # Set up simulations for the 12th case, i.e. Hinderliter Inhalation female single low
-  BW <- 0.16  #kg, not reported in the study - 180-240 g average BW of female CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
+  BW <- (0.197+0.145)/2  #kg,  https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   sex <- "F"
   inhalation_params=estimate_BFn_TVn(sex, BW)
   BFn = inhalation_params["BFn"]# 1/h
@@ -2214,18 +2186,16 @@ create_all_fixed_params <- function(){
   admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
   admin.type <- "nasal"
   
-  
-  
   user_input <- list('BW'=BW,
                      "admin.dose"= admin.dose,
                      "admin.time" = admin.time, 
                      "admin.type" = admin.type,
                      "sex" = sex, "depfr_head" = depfr_head, "depfr_AF" = depfr_AF )
-  params[[13]] <- create_fixed_params(user_input)
+  params[[12]] <- create_fixed_params(user_input)
   
   
   # Set up simulations for the 13th case, i.e. Hinderliter Inhalation female single medium
-  BW <- 0.16  #kg, not reported in the study - 180-240 g average BW of female CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
+  BW <- (0.197+0.145)/2  #kg,  https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   sex <- "F"
   inhalation_params=estimate_BFn_TVn(sex, BW)
   BFn = inhalation_params["BFn"]# 1/h
@@ -2244,11 +2214,11 @@ create_all_fixed_params <- function(){
                      "admin.time" = admin.time, 
                      "admin.type" = admin.type,
                      "sex" = sex, "depfr_head" = depfr_head, "depfr_AF" = depfr_AF )
-  params[[14]] <- create_fixed_params(user_input) 
+  params[[13]] <- create_fixed_params(user_input) 
   
   
   # Set up simulations for the 14th case, i.e. Hinderliter Inhalation female single high
-  BW <- 0.16  #kg, not reported in the study - 180-240 g average BW of female CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
+  BW <- (0.197+0.145)/2  #kg,  https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   sex <- "F"
   inhalation_params=estimate_BFn_TVn(sex, BW)
   BFn = inhalation_params["BFn"]# 1/h
@@ -2262,13 +2232,12 @@ create_all_fixed_params <- function(){
   admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
   admin.type <- "nasal"
   
-  
   user_input <- list('BW'=BW,
                      "admin.dose"= admin.dose,
                      "admin.time" = admin.time, 
                      "admin.type" = admin.type,
                      "sex" = sex, "depfr_head" = depfr_head, "depfr_AF" = depfr_AF )
-  params[[15]] <- create_fixed_params(user_input) 
+  params[[14]] <- create_fixed_params(user_input) 
   
   
   
@@ -2586,27 +2555,6 @@ obj.func <- function(x, dataset, fixed_params){
   #-------------------------
   ##########################
   
-  # Set up simulations for the 9th case, i.e. Gustafsson (2022) Inhalation male tissues
-  BW <- 0.5125  #kg, from Gustafsson et al., 2022
-  depfr_head <- 0.2864
-  depfr_AF <- (0.1440+0.0254)
-  variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[9]])
-  params <- c(fixed_params[[9]], variable_params)
-  inits <- create.inits(params)
-  events <- create.events(params)
-  
-  
-  # sample_time: a vector of time points to solve the ODEs
-  sample_time= sort(union(events$data$time, seq(0,48,1)))
-  
-  # ode(): The solver of the ODEs
-  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                      y = inits, parms = params,
-                                      events = events,
-                                      method="lsodes",rtol = 1e-02, atol = 1e-02))
-  
-  # We need to keep only the predictions for the relevant compartments for the time points 
-  # at which we have available data. 
   #======================================df9=========================================================
   
   exp_data <- dataset$df9 # retrieve data of Gustafsson (2022) Inhalation male tissues
@@ -2640,11 +2588,11 @@ obj.func <- function(x, dataset, fixed_params){
   #-------------------------
   ##########################
   # Set up simulations for the 10th case, i.e. Hinderliter Inhalation male single low
-  BW <- 0.21  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
+  BW <- (0.311+0.195)/2  #kg, https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   depfr_head <- 0.2864
   depfr_AF <- (0.1440+0.0254)
   variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[10]])
-  params <- c(fixed_params[[10]], variable_params)
+  params <- c(fixed_params[[9]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
   
@@ -2691,11 +2639,11 @@ obj.func <- function(x, dataset, fixed_params){
   #-------------------------
   ##########################
   # Set up simulations for the 11th case, i.e. Hinderliter Inhalation male single medium
-  BW <- 0.21  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
+  BW <- (0.311+0.195)/2  #kg, https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   depfr_head <- 0.3057
   depfr_AF <- (0.1195+0.0243)
   variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[11]])
-  params <- c(fixed_params[[11]], variable_params)
+  params <- c(fixed_params[[10]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
   
@@ -2742,11 +2690,11 @@ obj.func <- function(x, dataset, fixed_params){
   #-------------------------
   ##########################
   # Set up simulations for the 12th case, i.e. Hinderliter Inhalation male single high
-  BW <- 0.21  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
+  BW <- (0.311+0.195)/2  #kg, https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   depfr_head <- 0.3573
   depfr_AF <- (0.1618+0.0241)
   variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[12]])
-  params <- c(fixed_params[[12]], variable_params)
+  params <- c(fixed_params[[11]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
   
@@ -2791,12 +2739,12 @@ obj.func <- function(x, dataset, fixed_params){
   #-------------------------
   ##########################
   # Set up simulations for the 13th case, i.e. Hinderliter Inhalation female single low
-  BW <- 0.16  #kg, not reported in the study - 180-240 g average BW of female CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
+  BW <- (0.197+0.145)/2  #kg,  https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   sex <- "F"
   depfr_head <- 0.2822
   depfr_AF <- (0.1148+0.0177)
   variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[13]])
-  params <- c(fixed_params[[13]], variable_params)
+  params <- c(fixed_params[[12]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
   
@@ -2840,11 +2788,11 @@ obj.func <- function(x, dataset, fixed_params){
   #-------------------------
   ##########################
   # Set up simulations for the 14th case, i.e. Hinderliter Inhalation female single low
-  BW <- 0.16  #kg, not reported in the study - 180-240 g average BW of female CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
+  BW <- (0.197+0.145)/2  #kg,  https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   depfr_head <- 0.3101
   depfr_AF <- (0.0939+0.0165)
   variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[14]])
-  params <- c(fixed_params[[14]], variable_params)
+  params <- c(fixed_params[[13]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
   
@@ -2888,11 +2836,11 @@ obj.func <- function(x, dataset, fixed_params){
   #-------------------------
   ##########################
   # Set up simulations for the 15th case, i.e. Hinderliter Inhalation female single high
-  BW <- 0.16  #kg, not reported in the study - 180-240 g average BW of female CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
+  BW <- (0.197+0.145)/2  #kg,  https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
   depfr_head <- 0.3372
   depfr_AF <- (0.1327+0.0177)
   variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[15]])
-  params <- c(fixed_params[[15]], variable_params)
+  params <- c(fixed_params[[14]], variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
   

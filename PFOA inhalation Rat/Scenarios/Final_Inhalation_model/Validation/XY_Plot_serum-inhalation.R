@@ -1,7 +1,7 @@
 library(ggplot2)
 
 #setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_results")
-setwd('/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_Inhalation_model/Validation/Validation_results')
+setwd('/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_Inhalation_model/Validation/Validation_results')
 
 # Load Results 
 
@@ -37,6 +37,10 @@ names(Experiment) <- unique(c( Hinderliter_nasal_M_1$Experiment, Hinderliter_nas
                                Hinderliter_nasal_M_10$Experiment,Hinderliter_nasal_F_10$Experiment,
                                Hinderliter_nasal_M_25$Experiment, Hinderliter_nasal_F_25$Experiment))
 
+
+ggplot(data = Hinderliter_2006_results[Hinderliter_2006_results$Dose == 10 & Hinderliter_2006_results$sex == "F",])+
+  geom_line(aes(x =Time, y= Predicted ))+
+  geom_point(aes(x =Time, y= Observed ))
 
 
 scatter_plot <- ggplot()+

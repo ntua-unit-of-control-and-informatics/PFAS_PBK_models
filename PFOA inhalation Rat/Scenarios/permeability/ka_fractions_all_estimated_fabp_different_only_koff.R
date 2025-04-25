@@ -58,7 +58,7 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   KmK_baso <- 1e20
   KmK_api <-   5e4
   KLfabp <- 5.261153e+06#(1.2e5+4e4+1.9e4) #[L/mol]*1e-3 , value from Cheng et al. (2017)
-  Ka <- 1.507899e+04# 7e4 # from Rue et al. (2024)#mol/L
+  Ka <- 1.507899e+04# 5.8e5 # from Rue et al. (2024)#mol/L
   CLfeces_unscaled <-9.551628e-05#in L/h/BW^(-0.25), scaling similar to Loccisano et al. (2012)
   CLfeces <- CLfeces_unscaled*BW^(-0.25) 
   
