@@ -58,9 +58,10 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   kabsUA <- estimated_params[1] #L/h/m^2
   kCLEal <- estimated_params[2] #L/h/m^2
   kCLEua <- estimated_params[3] #L/h/m^2
-  RAFOatp_lu_ap <- estimated_params[4] 
+  k_desorption <- estimated_params[4] 
+  RAFOatp_lu_ap <- 1
   RAFOatp_lu_bas <- RAFOatp_lu_ap
-
+  
   #In order to scale transporter Vmax, we need to have the tissue weight to estimate
   # tissue protein
   PVIN <- 2.24e-2 #Brown et al. 1997, p 416, Table 5: 1.4+0.84
@@ -153,11 +154,11 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   VmL_Ntcp = VmL_Ntcp_scaled*RAFNtcp #in vivo value, in  ug/h
   KmL_Ntcp= 20 * MW #umol/L, Ruggiero et al. 2021 --> ug/L
   
- 
+  
   #Lung
   lung_protein_per_gram <- 134 # 134 mg/mL tissue --> 134 mg/g tissue, Figure 2, https://doi.org/10.1007/s00580-021-03242-z 
   
-  #oatp-lung-ap (from ALF to tissue)
+  #oatp-lung-ap (from ELF to tissue)
   VmLu_Oatp_ap_in_vitro= 9.3 #nmol/mg protein/min  (Weaver et al. 2010)
   VmLu_Oatp_ap_scaled = 60*VmLu_Oatp_ap_in_vitro*MW*lung_protein_per_gram*(VLu*1000)/1000   #physiologically scaled to in vivo, ug/h
   VmLu_Oatp_ap = VmLu_Oatp_ap_scaled*RAFOatp_lu_ap #in vivo value, in  ug/h
@@ -228,7 +229,7 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   CalbHF_init <- CalbHB_init* IPR_H
   CalbBrF_init <- CalbBrB_init* IPR_Br
   CalbSKF_init <- CalbSKB_init* IPR_SK
-  CalbLuAF_init <- 10/100 * CalbB_init #based on Woods et al. 2015 statement https://doi.org/10.1016/j.jconrel.2015.05.269
+  CalbLuELF_init <- 10/100 * CalbB_init #based on Woods et al. 2015 statement https://doi.org/10.1016/j.jconrel.2015.05.269
   
   
   #Alpha2mu-globulin concentration in kidney tissue (mol/L)
@@ -274,7 +275,7 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   #Papp = Peff_RYU
   k_gut_in = ( (2*Peff_monolayer/100) * fixed_params$AINL)*1000 #L/h
   k_gut_out = ( (2*Peff_monolayer/100) * fixed_params$AINL)*1000 #L/h
-   
+  
   kUAB <- kabsUA * fixed_params$Nasal_SA #absorption rate from upper airways to blood, in L/h
   CLEal <- kCLEal * fixed_params$Alveolar_SA #clearance rate from alveolar lining fluid to stomach, in L/h
   CLEua <- kCLEua * fixed_params$Nasal_SA #clearance rate rate from upper airways to stomach, in L/h
@@ -288,7 +289,7 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   kINFINT = ((2*Peff_monolayer/100) * fixed_params$AcIN)*1000 #m^3/h * 1000 --> L/h 
   kAFAT = ((2*Peff_monolayer/100) * fixed_params$AcA)*1000 #m^3/h * 1000 --> L/h 
   kLuTLuF = ((2*Peff_monolayer/100) * fixed_params$AcLu)*1000 #m^3/h * 1000 --> L/h
-  kLuTLuAF = ((2*Peff_monolayer/100) * fixed_params$AcALF)*1000 #m^3/h * 1000 --> L/h
+  kLuTLuELF = ((2*Peff_monolayer/100) * fixed_params$AcELF)*1000 #m^3/h * 1000 --> L/h
   kSPFSPT = ((2*Peff_monolayer/100) * fixed_params$AcSP)*1000 #m^3/h * 1000 --> L/h 
   kHFHT = ((2*Peff_monolayer/100) * fixed_params$AcH)*1000 #m^3/h * 1000 --> L/h 
   kBrFBrT = ((2*Peff_monolayer/100) * fixed_params$AcBr)*1000 #m^3/h * 1000 --> L/h 
@@ -349,7 +350,7 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
     'CalbB_init'= CalbB_init, 'CalbKF_init'=CalbKF_init, 'CalbLF_init'=CalbLF_init,
     'CalbMF_init'=CalbMF_init, 'CalbAF_init'=CalbAF_init, 'CalbRF_init'=CalbRF_init,
     'CalbBoF_init'=CalbBoF_init, 'CalbLuF_init' =CalbLuF_init,
-    'CalbLuAF_init'=CalbLuAF_init, 'CalbSPF_init' =CalbSPF_init,
+    'CalbLuELF_init'=CalbLuELF_init, 'CalbSPF_init' =CalbSPF_init,
     'CalbGoF_init' =CalbGoF_init, 'CalbHF_init' =CalbHF_init,
     'CalbBrF_init' =CalbBrF_init, 'CalbSTF_init' =CalbSTF_init,
     'CalbINF_init' =CalbINF_init, 'CalbSKF_init' =CalbSKF_init, 
@@ -390,7 +391,7 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
     'kPtcTu'=kPtcTu, 'kDalcTu' = kDalcTu, 'kDtcTu' = kDtcTu, 'kCdcTu' = kCdcTu, 
     'kLFLT'=kLFLT,  'kAFAT'=kAFAT, 
     'kRFRT'=kRFRT,
-    'kMFMT'=kMFMT, 'kLuTLuF' =kLuTLuF, 'kLuTLuAF'=kLuTLuAF, 'kSPFSPT' =kSPFSPT,
+    'kMFMT'=kMFMT, 'kLuTLuF' =kLuTLuF, 'kLuTLuELF'=kLuTLuELF, 'kSPFSPT' =kSPFSPT,
     'kSTFSTT' =kSTFSTT, 'kINFINT' =kINFINT, 'kHFHT' =kHFHT,
     'kBrFBrT' =kBrFBrT, 'kGoFGoT' =kGoFGoT,
     'kSKFSKT' =kSKFSKT, 'kBoFBoT'=kBoFBoT,
@@ -404,7 +405,9 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
     "PparaKi" = PparaKi,"PparaLi" = PparaLi,"PparaSt" = PparaSt,"PparaIn" = PparaIn,
     "PparaMu" = PparaMu,"PparaAd" = PparaAd,"PparaRe" = PparaRe,"PparaLu" = PparaLu,
     "PparaSp" = PparaSp,"PparaHt" = PparaHt,"PparaBr" = PparaBr,"PparaGo" = PparaGo,
-    "PparaSk" = PparaSk,"PparaBo" = PparaBo
+    "PparaSk" = PparaSk,"PparaBo" = PparaBo,
+    
+    "k_desorption" = k_desorption
     
     
   ))
@@ -554,8 +557,8 @@ create_fixed_params <- function(user.input){
     PVAF <- 0.14 #pkSim
     VAF <- PVAF * PVA * BW #adipose interstitial fluid volume kg=L
     VAT <- VA - VAF #adipose tissue volume kg=L
-   
-     #Upper airways
+    
+    #Upper airways
     PVUA <- 257e-3/288 #mm^3/g, for a 16-wk old male 288 g, Gross et al., 1982, https://pubmed.ncbi.nlm.nih.gov/7130058/
     VUA <- PVUA * BW  #total volume of nasal cavity
     
@@ -566,9 +569,9 @@ create_fixed_params <- function(user.input){
     VLuB <- PVLuB * PVLu * BW #Brown et al. 1997, p 459 --> capillary blood occupied 9% of the lung volume
     PVLuF <- 0.263/280 #0.263 ml, Shah & Betts, 2012. https://doi.org/10.1007/s10928-011-9232-2
     VLuF <- PVLuF * BW #lung interstitial fluid volume
-    PVLuAF <- 0.4/275 #0.4 mL Leslie et al, 1989 https://doi.org/10.1164/ajrccm/139.2.360 --> Watkins & Rannels 1979 https://doi.org/10.1152/jappl.1979.47.2.325  
-    VLuAF <- PVLuAF * BW #lung alveolar lining fluid volume kg=LL
-    VLuT <- VLu - VLuF - VLuAF #lung tissue volume kg=L
+    PVLuELF <- 0.4/275 #0.4 mL Leslie et al, 1989 https://doi.org/10.1164/ajrccm/139.2.360 --> Watkins & Rannels 1979 https://doi.org/10.1152/jappl.1979.47.2.325  
+    VLuELF <- PVLuELF * BW #lung alveolar lining fluid volume kg=LL
+    VLuT <- VLu - VLuF - VLuELF #lung tissue volume kg=L
     
     #Spleen
     PVSP <- 0.2e-2  #Brown et al. 1997, p 416, Table 5
@@ -691,7 +694,7 @@ create_fixed_params <- function(user.input){
     EF_colon_descendens <- 1.95
     EF_colon_sigmoid <- 1.95
     
-   
+    
     
     SA_pksim_effective <- (Duodenum*EF_Duodenum+Upper_jejunum*EF_Upper_jejunum+Lower_jejunum*EF_Lower_jejunum+
                              Upper_ileum*EF_Upper_ileum+Lower_ileum*EF_Lower_ileum+Cecum*EF_Cecum+
@@ -863,7 +866,7 @@ create_fixed_params <- function(user.input){
     AFil <- APT + ADAL + ADT + ACD
     
     #Alveolar cells surface area (Type I and II), m^2
-    AcALF = ((78.8*2*5320*1e-6) + (125*2*123*1e-6))*BW/0.29  #Stone et al., 1992, BW_ref = 0.29, values for each lung , https://doi.org/10.1165/ajrcmb/6.2.235
+    AcELF = ((78.8*2*5320*1e-6) + (125*2*123*1e-6))*BW/0.29  #Stone et al., 1992, BW_ref = 0.29, values for each lung , https://doi.org/10.1165/ajrcmb/6.2.235
     
     # #canalicular surface area, m^2
     # rat_hep_surf_area = 22.95 * 1e2 # 22.95*1e6 cm2 --> m2,  https://doi.org/10.1074/jbc.271.12.6702
@@ -888,7 +891,7 @@ create_fixed_params <- function(user.input){
       'VAF'=VAF, 'VAT'=VAT, 'VR'=VR, 'VRB'=VRB, 
       'VRF'=VRF, 'VRT'=VRT, 'VVen' = VVen,
       'VArt' = VArt, 'VLu'=VLu, 'VLuB'=VLuB, 'VLuF'=VLuF,
-      'VLuAF'=VLuAF, 'VLuT'=VLuT,'VUA'=VUA, 
+      'VLuELF'=VLuELF, 'VLuT'=VLuT,'VUA'=VUA, 
       'VSP'=VSP, 'VSPB'=VSPB, 'VSPF'=VSPF, 'VSPT'=VSPT,
       'VH'=VH, 'VHB'=VHB, 'VHF'=VHF, 'VHT'=VHT,
       'VBr'=VBr, 'VBrB'=VBrB, 'VBrF'=VBrF, 'VBrT'=VBrT,
@@ -909,7 +912,7 @@ create_fixed_params <- function(user.input){
       'ASK'= ASK, 'ABo'=ABo,
       
       'AINL' = AINL, 'AcL' = AcL, 'AcM' = AcM, 'AcST' = AcST, 
-      'AcIN' = AcIN, 'AcA' = AcA, 'AcLu' = AcLu, 'AcALF' = AcALF, 
+      'AcIN' = AcIN, 'AcA' = AcA, 'AcLu' = AcLu, 'AcELF' = AcELF, 
       'AcSP' = AcSP, 'AcH' = AcH, 'AcBr' = AcBr, 'AcGo' = AcGo, 
       'AcSK' = AcSK, 'AcBo' = AcBo, 'AcR' = AcR, 'APT' = APT, 
       'ADAL' = ADAL, 'ADT' = ADT, 'ACD' = ACD, 'AcK_DTC' = AcK_DTC,
@@ -1011,17 +1014,17 @@ ode.func <- function(time, inits, params){
   }
   BW_scaled_params <- c ('VB', 'Vplasma', 'VK', 'VKB', 'VKF',  'VFil','VPT' , 'VDAL' , 'VDT' , 'VCD' ,'VPTC' , 'VDALC' , 'VDTC' , 'VCDC' ,'VL', 'VLB', 'VLF',  'VLbile',
                          'VM', 'VMB', 'VMF', 'VA', 'VAB', 'VAF', 'VAT', 'VR', 'VRB',  'VRF',  'VVen' ,'VArt', 'VLu', 'VLuB', 'VLuF',
-                         'VLuAF','VSP', 'VSPB', 'VSPF','VH', 'VHB', 'VHF','VBr', 'VBrB', 'VBrF','VGo', 'VGoB', 'VGoF',
+                         'VLuELF','VSP', 'VSPB', 'VSPF','VH', 'VHB', 'VHF','VBr', 'VBrB', 'VBrF','VGo', 'VGoB', 'VGoF',
                          'VIN', 'VINB', 'VINF', 'VST', 'VSTB', 'VSTF','VSTL', 'VINL','VSK','VSKB', 'VSKF',
                          'VBo','VBoB', 'VBoF','VLT', 'VKTrest','VINT', 'VSTT','VMT', 'VAT', 
                          'VLuT', 'VSPT','VHT', 'VBrT','VGoT', 'VSKT','VBoT', 'VRT',
                          'VKT', 'A_peritubular_PTC', 'A_peritubular_DTC','AL', 'AM', 'AA', 'AR', 'ALu','ASP', 'AH', 'ABr', 'AST',
-                         'AIN', 'AGo','ASK', 'ABo','AINL', 'AcL' , 'AcM' , 'AcST' ,'AcIN', 'AcA' , 'AcLu' , 'AcALF' , 
+                         'AIN', 'AGo','ASK', 'ABo','AINL', 'AcL' , 'AcM' , 'AcST' ,'AcIN', 'AcA' , 'AcLu' , 'AcELF' , 
                          'AcSP', 'AcH' , 'AcBr' , 'AcGo','AcSK', 'AcBo' , 'AcR' , 'APT' , 'ADAL' , 'ADT', 'ACD' , 'AcK_DALC','AcK_CDC' , 'AcKTrest',
                          'Qfeces','Qbile', 'QGFR','Qurine','kabST',"QPT" , "QTDL", "QTAL" , "QDT", "QCD", 'CLfeces', "CL_hepatobiliary", 
                          'VmL_Oatp', 'VmL_Ntcp','VmL_Oatp2',  'VmIn_Oatp2', 'VmK_Oatp','VmLu_Oatp_ap', 'VmLu_Oatp_bas',
                          'VmK_Oat1', 'VmK_Oat3','VmK_Urat','kKTrestF', 'kCdcF' , 'kDalcF' , 'kPtcF' , 'kDtcF' ,
-                         'kPtcTu', 'kDalcTu' , 'kDtcTu' , 'kCdcTu' , 'kLFLT',  'kAFAT', 'kRFRT','kMFMT', 'kLuTLuF', 'kLuTLuAF', 'kSPFSPT' ,
+                         'kPtcTu', 'kDalcTu' , 'kDtcTu' , 'kCdcTu' , 'kLFLT',  'kAFAT', 'kRFRT','kMFMT', 'kLuTLuF', 'kLuTLuELF', 'kSPFSPT' ,
                          'kSTFSTT' , 'kINFINT' , 'kHFHT' ,'kBrFBrT' , 'kGoFGoT' ,'kSKFSKT' , 'kBoFBoT', "k_gut_in", 'k_gut_out')
   Q_scaled_params <- c('QBK', 'QBL', 'QBLtot','QBM', 'QBA',
                        'QBR', 'QBLu','QBSP', 'QBH', 'QBBr', 'QBST','QBIN', 'QGE','QBGo','QBSK', 'QBBo', "PparaKi" ,"PparaLi" ,"PparaSt" ,"PparaIn" ,
@@ -1179,7 +1182,7 @@ ode.func <- function(time, inits, params){
     MLuB <- MLuBf + MLuBb
     MLuF <- MLuFf + MLuFb
     MLuT <- MLuTf 
-    MLuAF <- MLuAFf + MLuAFb
+    MLuELF <- MLuELFf + MLuELFb + MLuELFdust
     CLuB <- MLuB/VLuB # blood concentration
     CLuBf <- MLuBf/VLuB
     CLuBb <- MLuBb/VLuB
@@ -1187,12 +1190,12 @@ ode.func <- function(time, inits, params){
     CLuFf <- MLuFf/VLuF
     CLuFb <- MLuFb/VLuF
     CLuTf <- MLuTf/VLuT #tissue concentration
-    CLuAF <- MLuAF/VLuAF #alveolar lining fluid concentration
-    CLuAFf <- MLuAFf/VLuAF
-    CLuAFb <- MLuAFb/VLuAF
+    CLuELF <- MLuELF/VLuELF #alveolar lining fluid concentration
+    CLuELFf <- MLuELFf/VLuELF
+    CLuELFb <- MLuELFb/VLuELF
+    CLuELFdust <- MLuELFdust/VLuELF
     
     #Spleen
-    
     MSPB <- MSPBf + MSPBb
     MSPF <- MSPFf + MSPFb
     MSPT <- MSPTf 
@@ -1386,7 +1389,7 @@ ode.func <- function(time, inits, params){
     dCFabpLTf <- koff_fabp*CLTb/MW/1e6 - kon_fabp*CFabpLTf*CLTf/MW/1e6
     
     #Calculation of free and bound PFOA in alveolar lining fluid
-    dCalbLuAFf = koff_alb*CLuAFb/MW/1e6 - kon_alb*CalbLuAFf*CLuAFf/MW/1e6
+    dCalbLuELFf = koff_alb*CLuELFb/MW/1e6 - kon_alb*CalbLuELFf*CLuELFf/MW/1e6
     
     # Bound PFOA
     #Blood
@@ -1442,7 +1445,7 @@ ode.func <- function(time, inits, params){
     dMLTb <- kon_fabp*CFabpLTf*CLTf*VLT - koff_fabp*CLTb*VLT 
     
     #Alveolar lining fluid
-    dMLuAFb <-  kon_alb*CalbLuAFf*CLuAFf*VLuAF -  koff_alb*CLuAFb*VLuAF 
+    dMLuELFb <-  kon_alb*CalbLuELFf*CLuELFf*VLuELF -  koff_alb*CLuELFb*VLuELF 
     
     #====================================================================================================================
     
@@ -1542,7 +1545,7 @@ ode.func <- function(time, inits, params){
     #Stomach tissue subcompartment
     dMSTTf = kSTFSTT*(CSTFf-CSTTf) + kabST*CSTL 
     #Stomach lumen
-    dMSTL = - QGE*CSTL -kabST*CSTL  + CLEal*CLuAFf + CLEua*CUA 
+    dMSTL = - QGE*CSTL -kabST*CSTL  + CLEal*CLuELFf + CLEua*CUA 
     
     
     #Intestine
@@ -1602,12 +1605,13 @@ ode.func <- function(time, inits, params){
     dMLuFf = (Ptrans_diff_Lu+PparaLu)*ALu*(CLuBf-CLuFf)+ kLuTLuF*(CLuTf-CLuFf) + 
       koff_alb*CLuFb*VLuF - kon_alb*CalbLuFf*CLuFf*VLuF - (VmLu_Oatp_bas*CLuFf/(KmLu_Oatp_bas+CLuFf)) 
     #Lung tissue
-    dMLuTf =  - kLuTLuF*(CLuTf-CLuFf) -  kLuTLuAF*(CLuTf-CLuAFf) + (VmLu_Oatp_bas*CLuFf/(KmLu_Oatp_bas+CLuFf)) +
-      (VmLu_Oatp_ap*CLuAFf/(KmLu_Oatp_ap+CLuAFf)) 
+    dMLuTf =  - kLuTLuF*(CLuTf-CLuFf) -  kLuTLuELF*(CLuTf-CLuELFf) + (VmLu_Oatp_bas*CLuFf/(KmLu_Oatp_bas+CLuFf)) +
+      (VmLu_Oatp_ap*CLuELFf/(KmLu_Oatp_ap+CLuELFf)) 
     #Alveolar lining fluid
-    dMLuAFf =  kLuTLuAF*(CLuTf-CLuAFf) + koff_alb*CLuAFb*VLuAF - kon_alb*CalbLuAFf*CLuAFf*VLuAF -
-      (VmLu_Oatp_ap*CLuAFf/(KmLu_Oatp_ap+CLuAFf)) - CLEal*CLuAFf
-    
+    dMLuELFf =  k_desorption * CLuELFdust + kLuTLuELF*(CLuTf-CLuELFf) + 
+      koff_alb*CLuELFb*VLuELF - kon_alb*CalbLuELFf*CLuELFf*VLuELF -
+      (VmLu_Oatp_ap*CLuELFf/(KmLu_Oatp_ap+CLuELFf)) - CLEal*CLuELFf
+    dMLuELFdust <- -k_desorption * CLuELFdust
     
     #Spleen
     #blood subcompartment
@@ -1698,8 +1702,8 @@ ode.func <- function(time, inits, params){
     Cadipose <-  (MAB + MAF+ MAT)/(VAB+VAF+VAT)
     
     CUpperair <- MUA/VUA
-    CalveolarLF <- (MLuAFf+MLuAFb)/VLuAF
-    Clungs <-  (MLuB + MLuF+ MLuT + MLuAF)/(VLuB+VLuF+VLuT+VLuAF)
+    CLuELF <- (MLuELFf+MLuELFb+MLuELFdust)/VLuELF
+    Clungs <-  (MLuB + MLuF+ MLuT + MLuELF +MLuELFdust )/(VLuB+VLuF+VLuT+VLuELF)
     Clungtissue <- (MLuB + MLuF+ MLuT)/(VLuB+VLuF+VLuT)
     Crest <-  (MRB + MRF+ MRT)/(VRB+VRF+VRT)
     Ccarcass <- (MMB+MMF+MMT+MAB+MAF+MAT+MRB+MRF+MRT+MBoB+MBoF+MBoT+MSKB+MSKF+MSKT)/(VM+VA+VR+VBo+VSK)
@@ -1715,7 +1719,7 @@ ode.func <- function(time, inits, params){
     Cskin <-  (MSKB + MSKF+ MSKT)/(VSKB+VSKF+VSKT)
     Cbones <-  (MBoB + MBoF+ MBoT)/(VBoB+VBoF+VBoT)
     
-
+    
     #Concentration calculation in each compartment 
     
     
@@ -1733,7 +1737,7 @@ ode.func <- function(time, inits, params){
             'dCa2uDTCf' = dCa2uDTCf, 'dCa2uCDCf' = dCa2uCDCf, 'dCa2uKTrestf' = dCa2uKTrestf,
             'dCFabpPTCf' = dCFabpPTCf, 'dCFabpDALCf' = dCFabpDALCf, 'dCFabpDTCf' = dCFabpDTCf,
             'dCFabpCDCf' = dCFabpCDCf, 'dCFabpKTrestf' = dCFabpKTrestf,
-            'dCFabpLTf' = dCFabpLTf, 'dCalbLuAFf' = dCalbLuAFf,
+            'dCFabpLTf' = dCFabpLTf, 'dCalbLuELFf' = dCalbLuELFf,
             
             
             'dMVenb' = dMVenb, 'dMArtb' = dMArtb, 'dMKBb' = dMKBb, 
@@ -1747,7 +1751,7 @@ ode.func <- function(time, inits, params){
             'dMGoFb' = dMGoFb, 'dMSKFb' = dMSKFb, 'dMBoFb' = dMBoFb,
             'dMPTCb' = dMPTCb, 'dMDALCb' = dMDALCb, 'dMDTCb' = dMDTCb,
             'dMCDCb' = dMCDCb, 'dMKTrestb' = dMKTrestb,
-            'dMLTb' = dMLTb, 'dMLuAFb'=dMLuAFb,
+            'dMLTb' = dMLTb, 'dMLuELFb'=dMLuELFb,
             
             
             'dMArtf'=dMArtf, 'dMVenf'=dMVenf, 'dMKBf'=dMKBf, 
@@ -1765,7 +1769,8 @@ ode.func <- function(time, inits, params){
             'dMMBf'=dMMBf, 'dMMFf'=dMMFf, 'dMMTf'=dMMTf,
             'dMABf'=dMABf, 'dMAFf'=dMAFf, 'dMATf'=dMATf, 
             'dMRBf'=dMRBf, 'dMRFf'=dMRFf,'dMRTf'=dMRTf, 'dMUA'=dMUA,
-            'dMLuBf'=dMLuBf, 'dMLuFf'=dMLuFf,'dMLuTf'=dMLuTf,'dMLuAFf' = dMLuAFf,
+            'dMLuBf'=dMLuBf, 'dMLuFf'=dMLuFf,'dMLuTf'=dMLuTf,'dMLuELFf' = dMLuELFf,
+            "dMLuELFdust" = dMLuELFdust,
             
             'dMSPBf'=dMSPBf, 'dMSPFf'=dMSPFf, 'dMSPTf'=dMSPTf,
             'dMHBf'=dMHBf, 'dMHFf'=dMHFf, 'dMHTf'=dMHTf,
@@ -1793,7 +1798,7 @@ ode.func <- function(time, inits, params){
     'CABb'=CABb, 'CAF'=CAF, 'CAFf'=CAFf, 'CAFb'=CAFb, 'CATf'=CATf, 'CRB'=CRB, 'CRBf'=CRBf,
     'CRBb'=CRBb, 'CRF'=CRF, 'CRFf'=CRFf, 'CRFb'=CRFb, 'CRTf'=CRTf, 'CUA'=CUA, 'CLuB'=CLuB,
     'CLuBf'=CLuBf, 'CLuBb'=CLuBb, 'CLuF'=CLuF, 'CLuFf'=CLuFf, 'CLuFb'=CLuFb, 'CLuTf'=CLuTf,
-    'CLuAF'=CLuAF, 'CLuAFf'=CLuAFf, 'CLuAFb'=CLuAFb, 'CSPB'=CSPB, 'CSPBf'=CSPBf, 
+    'CLuELF'=CLuELF, 'CLuELFf'=CLuELFf, 'CLuELFb'=CLuELFb, 'CSPB'=CSPB, 'CSPBf'=CSPBf, 
     'CSPBb'=CSPBb, 'CSPF'=CSPF, 'CSPFf'=CSPFf, 'CSPFb'=CSPFb, 'CSPTf'=CSPTf,  'CHB'=CHB,
     'CHBf'=CHBf, 'CHBb'=CHBb, 'CHF'=CHF, 'CHFf'=CHFf, 'CHFb'=CHFb, 'CHTf'=CHTf, 
     'CBrB'=CBrB, 'CBrBf'=CBrBf, 'CBrBb'=CBrBb, 'CBrF'=CBrF, 'CBrFf'=CBrFf, 'CBrFb'=CBrFb,
@@ -1805,10 +1810,10 @@ ode.func <- function(time, inits, params){
     'Cblood'=Cblood, 'Mblood'=Mblood, 'Cplasma'=Cplasma, 
     'Ckidney'=Ckidney, 'Mkidney'=Mkidney, 'Cliver'=Cliver, 'Mliver'=Mliver, 
     'Cstomach'=Cstomach, 'Cintestine'=Cintestine, 'Cmuscle'=Cmuscle, 'Cadipose'=Cadipose,
-    'CUpperair'=CUpperair, 'CalveolarLF'=CalveolarLF, "Clungtissue" = Clungtissue, 'Clungs'=Clungs,
+    'CUpperair'=CUpperair,  "Clungtissue" = Clungtissue, 'Clungs'=Clungs,
     'Crest'=Crest, 'Ccarcass'=Ccarcass, 'Cfeces'=Cfeces,
     'Curine'=Curine, 'Cspleen'=Cspleen, 'Cheart'=Cheart, 'Cbrain'=Cbrain, 
-    'Mbrain'=Mbrain, 'Cgonads'=Cgonads, 'Cskin'=Cskin, 'Cbones'=Cbones, 'CalveolarLF' = CalveolarLF,
+    'Mbrain'=Mbrain, 'Cgonads'=Cgonads, 'Cskin'=Cskin, 'Cbones'=Cbones, 
     "CLbile" = CLbile
     
     )
@@ -1860,10 +1865,10 @@ create.inits <- function(parameters){
     MKTrestf <- 0; MPT <- 0;  MDAL<- 0;
     MDT <- 0; MCD <- 0;
     
-    CFabpLTf<- CFabpLT_init; CalbLuAFf<- CalbLuAF_init;
+    CFabpLTf<- CFabpLT_init; CalbLuELFf<- CalbLuELF_init;
     MLTf<- 0; MLTb<- 0;  MPTCb = 0; MDALCb = 0; MDTCb = 0
     MCDCb = 0; MKTrestb = 0; MLbile <-0; MSTTf <- 0;  MINTf <- 0; MLuTf <- 0; 
-    MLuAFf <- 0; MUA <- 0; MLuAFb<- 0; MSPTf <- 0; MHTf <- 0;  MBrTf <- 0;
+    MLuELFf <- 0; MUA <- 0; MLuELFb<- 0; MLuELFdust <- 0; MSPTf <- 0; MHTf <- 0;  MBrTf <- 0;
     MGoTf <- 0;  MSKTf <- 0; MBoTf <- 0; MMTf <- 0; MATf <- 0; MRTf <- 0;
     
     MPT <- 0; MBladder <- 0; Murine <-0;MSTL <-0;  MINL <-0;
@@ -1884,7 +1889,7 @@ create.inits <- function(parameters){
              'Ca2uDTCf' =  Ca2uDTCf, 'Ca2uCDCf' =  Ca2uCDCf, 'Ca2uKTrestf' = Ca2uKTrestf,
              'CFabpPTCf' =  CFabpPTCf, 'CFabpDALCf' = CFabpDALCf, 'CFabpDTCf' = CFabpDTCf,
              'CFabpCDCf' = CFabpCDCf, 'CFabpKTrestf' =CFabpKTrestf,
-             'CFabpLTf' = CFabpLTf, 'CalbLuAFf' = CalbLuAFf,
+             'CFabpLTf' = CFabpLTf, 'CalbLuELFf' = CalbLuELFf,
              
              
              'MVenb' = MVenb, 'MArtb' = MArtb, 'MKBb' = MKBb, 
@@ -1899,7 +1904,7 @@ create.inits <- function(parameters){
              'MPTCb' = MPTCb, 'MDALCb' = MDALCb, 'MDTCb' = MDTCb,
              'MCDCb' = MCDCb, 'MKTrestb' = MKTrestb, 'MLTb' = MLTb, 
              
-             'MLuAFb'=MLuAFb,
+             'MLuELFb'=MLuELFb,
              
              'MArtf'=MArtf, 'MVenf'=MVenf, 'MKBf'=MKBf, 
              'MKFf'=MKFf,  'MPTCf' = MPTCf, 'MDALCf' = MDALCf,  
@@ -1916,7 +1921,8 @@ create.inits <- function(parameters){
              'MMBf'=MMBf, 'MMFf'=MMFf, 'MMTf'=MMTf,
              'MABf'=MABf, 'MAFf'=MAFf, 'MATf'=MATf, 
              'MRBf'=MRBf, 'MRFf'=MRFf,'MRTf'=MRTf,'MUA'=MUA,
-             'MLuBf'=MLuBf, 'MLuFf'=MLuFf,'MLuTf'=MLuTf,'MLuAFf' = MLuAFf,
+             'MLuBf'=MLuBf, 'MLuFf'=MLuFf,'MLuTf'=MLuTf,'MLuELFf' = MLuELFf,
+             "MLuELFdust" = MLuELFdust,
              
              
              'MSPBf'=MSPBf, 'MSPFf'=MSPFf, 'MSPTf'=MSPTf,
@@ -1952,7 +1958,7 @@ create.events <- function(parameters){
                                                value = admin.dose, method = c("add")) ))
       }else if (admin.type == "inh"){
         
-        events <- list(data = rbind(data.frame(var = c("MLuAFf"),  time = admin.time, 
+        events <- list(data = rbind(data.frame(var = c("MLuELFdust"),  time = admin.time, 
                                                
                                                value = admin.dose*depfr_AF, method = c("add")) ))
       }else if (admin.type == "nasal"){
@@ -1961,7 +1967,7 @@ create.events <- function(parameters){
                                                
                                                value = c(admin.dose*depfr_head), method = c("add")),
                                     
-                                    data.frame(var = c("MLuAFf"),  time = admin.time, 
+                                    data.frame(var = c("MLuELFf"),  time = admin.time, 
                                                
                                                value = c(admin.dose*depfr_AF), method = c("add")) ))
         
@@ -2077,12 +2083,9 @@ create_all_fixed_params <- function(){
   # Set up simulations for the 8th case, i.e. Gustafsson (2022) Inhalation male blood
   BW <- 0.5125  #kg, from Gustafsson et al., 2022
   sex <- "M"
-  duration <- 0.375 #hours, 22.5 min
-  admin.dose_per_g <- 0.164 # administered dose in mg PFOA/kg BW 
-  depfr_head <-0
-  depfr_AF <-1
+  duration <- 0.345 #hours, 22.5 min
   k = 9#partition of administration packages
-  admin.dose <- rep((admin.dose_per_g*BW*1000)/k, length.out = k) #ug PFOA, for 22.5 min inhalation
+  admin.dose <- rep((512.5*0.62*0.335)/k, length.out = k) #ug PFOA, for 22.5 min inhalation
   admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
   admin.type <- "inh"
   
@@ -2090,7 +2093,7 @@ create_all_fixed_params <- function(){
                      "admin.dose"= admin.dose,
                      "admin.time" = admin.time, 
                      "admin.type" = admin.type,
-                     "sex" = sex, "depfr_head" = depfr_head, "depfr_AF" = depfr_AF)
+                     "sex" = sex, "depfr_head" = 0, "depfr_AF" = 1)
   params[[8]] <- create_fixed_params(user_input)
   
   
@@ -2473,7 +2476,7 @@ obj.func <- function(x, dataset, fixed_params){
   #======================================df7=========================================================
   exp_data <- dataset$df7 # retrieve data of Gustafsson (2022) oral male tissues
   colnames(exp_data)[c(2,3)] <- c("time", "concentration")
-  column_names <- c("CalveolarLF","Clungtissue")
+  column_names <- c("CLuELF","Clungtissue")
   
   preds_gus_OR_Mtissues <- list()
   # loop over compartments with available data
@@ -2485,7 +2488,7 @@ obj.func <- function(x, dataset, fixed_params){
     preds_gus_OR_Mtissues [[i]] <- solution[solution$time %in% exp_time, column_names[i]]/1000
   }
   
-  obs_gus_OR_Mtissues <- list( exp_data[exp_data$Tissue == "ALF", "concentration"],
+  obs_gus_OR_Mtissues <- list( exp_data[exp_data$Tissue == "ELF", "concentration"],
                                exp_data[exp_data$Tissue == "Lung", "concentration"]) 
   
   score[7] <- AAFE(predictions = preds_gus_OR_Mtissues, observations = obs_gus_OR_Mtissues)
@@ -2548,7 +2551,7 @@ obj.func <- function(x, dataset, fixed_params){
   
   exp_data <- dataset$df9 # retrieve data of Gustafsson (2022) Inhalation male tissues
   colnames(exp_data)[c(2,3)] <- c("time", "concentration")
-  column_names <- c("CalveolarLF","Cliver","Clungtissue", "Ckidney")
+  column_names <- c("CLuELF","Cliver","Clungtissue", "Ckidney")
   
   preds_gus_INH_Mtissues <- list()
   # loop over compartments with available data
@@ -2561,7 +2564,7 @@ obj.func <- function(x, dataset, fixed_params){
   }
   
   
-  obs_gus_INH_Mtissues <- list(exp_data[exp_data$Tissue == "ALF", "concentration"],
+  obs_gus_INH_Mtissues <- list(exp_data[exp_data$Tissue == "ELF", "concentration"],
                                exp_data[exp_data$Tissue == "Liver", "concentration"],
                                exp_data[exp_data$Tissue == "Lung", "concentration"], 
                                exp_data[exp_data$Tissue == "Kidney", "concentration"]) 
@@ -2570,6 +2573,20 @@ obj.func <- function(x, dataset, fixed_params){
   
   score[9] <- AAFE(predictions = preds_gus_INH_Mtissues, observations = obs_gus_INH_Mtissues)
   
+  column_names <- c("CLuELF")
+  preds_gus_INH_Mtissues <- list()
+  # loop over compartments with available data
+  for (i in 1:length(unique(exp_data$Tissue))) {
+    compartment <- unique(exp_data$Tissue)[i]
+    #Retrieve time points at which measurements are available for compartment i
+    exp_time <- exp_data[exp_data$Tissue == compartment, "time"]
+    
+    preds_gus_INH_Mtissues [[i]] <- solution[solution$time %in% exp_time, column_names[i]]/1000
+  }
+  
+  
+  obs_gus_INH_Mtissues <- list(exp_data[exp_data$Tissue == "ELF", "concentration"]) 
+  score[16] <- AAFE(predictions = preds_gus_INH_Mtissues, observations = obs_gus_INH_Mtissues)
   
   ##########################
   #-------------------------
@@ -3060,7 +3077,7 @@ preds_kim_OR_Ftissues <-  solution[, c("time","Clungs")]
 
 
 ##########################################################################################
-# Set up simulations for the 7th case, i.e. Gustafsson (2022) Inhalation male tissues
+# Set up simulations for the 7th case, i.e. Gustafsson (2022) oral male tissues
 BW <- 0.5125  #kg, from Gustafsson et al., 2022
 sex <- "M"
 variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[7]])
@@ -3075,7 +3092,7 @@ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     events = events,
                                     method="lsodes",rtol = 1e-02, atol = 1e-02))
 
-preds_gus_OR_Mtissues <-  solution[, c("time", "CalveolarLF","Cliver", "Clungtissue", "Ckidney")]
+preds_gus_OR_Mtissues <-  solution[, c("time", "CLuELF","Cliver", "Clungtissue", "Ckidney")]
 
 ##########################################################################################
 # Set up simulations for the 8th case, i.e. Gustafsson Inhalation male blood
@@ -3091,29 +3108,14 @@ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
                                     method="lsodes",rtol = 1e-02, atol = 1e-02))
 
 preds_gus_INH_Mblood <-  solution[, c("time", "Cplasma")]
-
-#################################################################################
-# Set up simulations for the 9th case, i.e. Gustafsson Inhalation male tissues
-BW <- 0.5125  #kg, from Gustafsson et al., 2022
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[9]])
-params <- c(fixed_params[[9]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-
-
-sample_time=seq(0,48,0.2)
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_gus_INH_Mtissues <-  solution[, c("time", "CalveolarLF","Cliver", "Clungtissue", "Ckidney")]
+preds_gus_INH_Mtissues <-  solution[, c("time", "CLuELF","Cliver", "Clungtissue", "Ckidney")]
 
 
 #################################################################################
 # Set up simulations for the 10th case, i.e. Hinderliter Inhalation male single low
-BW <- 0.225  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[10]])
-params <- c(fixed_params[[10]], variable_params)
+BW <- (0.311+0.195)/2  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[9]])
+params <- c(fixed_params[[9]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -3128,9 +3130,9 @@ preds_hind_INH_Mblood_low <-  solution[, c("time", "Cplasma")]
 
 #################################################################################
 # Set up simulations for the 11th case, i.e. Hinderliter Inhalation male single medium
-BW <- 0.225  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[11]])
-params <- c(fixed_params[[11]], variable_params)
+BW <- (0.311+0.195)/2  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[10]])
+params <- c(fixed_params[[10]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -3145,11 +3147,11 @@ preds_hind_INH_Mblood_medium <-  solution[, c("time", "Cplasma")]
 
 #################################################################################
 # Set up simulations for the 12th case, i.e. Hinderliter Inhalation male single high
-BW <- 0.225  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
+BW <- (0.311+0.195)/2  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
 depfr_head <- 0.2822
 depfr_AF <- (0.1148+0.0177)
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[12]])
-params <- c(fixed_params[[12]], variable_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[11]])
+params <- c(fixed_params[[11]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -3163,12 +3165,10 @@ preds_hind_INH_Mblood_high <-  solution[, c("time", "Cplasma")]
 
 #################################################################################
 # Set up simulations for the 13th case, i.e. Hinderliter Inhalation female single low
-BW <- 0.21  #kg, not reported in the study - 180-240 g average BW of female CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
+BW <- (0.197+0.145)/2  #kg
 sex <- "F" 
-depfr_head <- 0.3101
-depfr_AF <- (0.0939+0.0165)
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[13]])
-params <- c(fixed_params[[13]], variable_params)
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[12]])
+params <- c(fixed_params[[12]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -3181,11 +3181,9 @@ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
 preds_hind_INH_Fblood_low <-  solution[, c("time", "Cplasma")]
 
 # Set up simulations for the 14th case, i.e. Hinderliter Inhalation female single medium
-BW <- 0.21  #kg, not reported in the study - 180-240 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
-depfr_head <- 0.3372
-depfr_AF <- (0.1327+0.0177)
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[14]])
-params <- c(fixed_params[[14]], variable_params)
+BW <- (0.197+0.145)/2  #
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[13]])
+params <- c(fixed_params[[13]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -3200,9 +3198,9 @@ preds_hind_INH_Fblood_medium <-  solution[, c("time", "Cplasma")]
 
 
 # Set up simulations for the 15th case, i.e. Hinderliter Inhalation female single high
-BW <- 0.21  #kg, not reported in the study - 180-240 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[15]])
-params <- c(fixed_params[[15]], variable_params)
+BW <- (0.197+0.145)/2  #kg,
+variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[14]])
+params <- c(fixed_params[[14]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -3387,9 +3385,9 @@ colnames(preds_kim_IV_Mtissues) <- c( "Time","Lung")
 colnames(preds_kim_OR_Mtissues) <- colnames(preds_kim_IV_Mtissues)
 colnames(preds_kim_IV_Ftissues) <- colnames(preds_kim_IV_Mtissues)
 colnames(preds_kim_OR_Ftissues) <- colnames(preds_kim_IV_Mtissues)
-colnames(preds_gus_OR_Mtissues) <- c ("Time", "ALF", "Liver", "Lung", "Kidney")
+colnames(preds_gus_OR_Mtissues) <- c ("Time", "ELF", "Liver", "Lung", "Kidney")
 colnames(preds_gus_INH_Mblood) <- c ("Time", "Plasma")
-colnames(preds_gus_INH_Mtissues) <- c ("Time", "ALF", "Liver", "Lung", "Kidney")
+colnames(preds_gus_INH_Mtissues) <- c ("Time", "ELF", "Liver", "Lung", "Kidney")
 colnames(preds_hind_INH_Mblood_low) <- c ("Time", "Plasma")
 colnames(preds_hind_INH_Mblood_medium) <- c ("Time", "Plasma")
 colnames(preds_hind_INH_Mblood_high) <- c ("Time", "Plasma")
