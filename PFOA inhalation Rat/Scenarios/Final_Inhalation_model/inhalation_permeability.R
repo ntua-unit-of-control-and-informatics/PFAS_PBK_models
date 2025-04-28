@@ -34,7 +34,7 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   Ppara <- 0.2*1e-6*3600 #cm/h, from Korzekwa et al. (2022) [doi:10.1111/cts.13314]
   Peff_monolayer <- (Paq*Papp_RYU - Paq*Ppara)/(Paq+Ppara-Papp_RYU)
   
-  Pgap_continuous <- 2.774701e-02 #, cm/s, permeability by diffusion through tight junctions in continuous capillary types
+  Pgap_continuous <- 2.774701e-02 *3600#, cm/h, permeability by diffusion through tight junctions in continuous capillary types
   Pgap_fenestrated <- Pgap_continuous#estimated_params[9] # cm/s,permeability by diffusion through fenestra in fenestrated capillary types
   Pgap_sinusoidal <-Pgap_continuous#estimated_params[10] # cm/s,permeability by diffusion through discontinuities in sinusoidal capillary types
   # pH_isf <- 6; pH_iw <- 7.4; pKaa <- 3.8; pKab <- 1
@@ -50,8 +50,8 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   VmK_baso <- 0
   KmK_baso <- 1e20
   KmK_api <-   5e4
-  KLfabp <- 5.261153e+06#(1.2e5+4e4+1.9e4) #[L/mol]*1e-3 , value from Cheng et al. (2017)
-  Ka <- 1.507899e+04# 7e4 # from Rue et al. (2024)#mol/L
+  KLfabp <- 5.261153e+06#(1.2e5+4e4+1.9e4) #[L/mol] , value from Cheng et al. (2017)
+  Ka <- 1.507899e+04 # 6e5 from Rue et al. (2024)#mol/L
   CLfeces_unscaled <-9.551628e-05#in L/h/BW^(-0.25), scaling similar to Loccisano et al. (2012)
   CLfeces <- CLfeces_unscaled*BW^(-0.25) 
   
@@ -253,11 +253,6 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   CFabpKT_init <- f_fabp_avail*2.65*1e-6  #[umol/L]*1e-6 -->(mol/L), from Cheng et al. (2017)
   
   #======Table S2=======#
-  #Equilibrium association constant (m^3/mol= 10^-3*M-1) for albumin(Ka), LFABP(KL_fabp),
-  #and alpha2mu-globulin(Ka2u). See SI section S2-2 for details
-  
-  #Ka <-  24.18 #3.1*7.8 m3/mol multiplying by number of binding sites (Cheng et al. 2021)
-  #Ka <-  1e05*1e-3 #[L/mol]*1e-3--->m3/mol
   Ka2u <- 5*1e02 #[L/mol]*1e-3--->m3/mol, value from Cheng et al. (2017)
   
   
@@ -334,20 +329,20 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   Ptrans_diff_Bo <- Peff_monolayer*10 #mm/h
   
   #Estimation of permeability through capillary fenestra and discontinuities:
-  PparaKi <- Pgap_fenestrated*3600*10 #mm/h
-  PparaLi <- Pgap_sinusoidal*3600*10 #mm/h
-  PparaSt <- Pgap_fenestrated*3600*10 #mm/h
-  PparaIn <- Pgap_fenestrated*3600*10 #mm/h
-  PparaMu <- Pgap_continuous*3600*10 #mm/h
-  PparaAd <- Pgap_continuous*3600*10 #mm/h
-  PparaRe <- Pgap_continuous*3600*10 #mm/h
-  PparaLu <- Pgap_continuous*3600*10 #mm/h
-  PparaSp <- Pgap_sinusoidal*3600*10 #mm/h
-  PparaHt <- Pgap_continuous*3600*10 #mm/h
+  PparaKi <- Pgap_fenestrated*10 #mm/h
+  PparaLi <- Pgap_sinusoidal*10 #mm/h
+  PparaSt <- Pgap_fenestrated*10 #mm/h
+  PparaIn <- Pgap_fenestrated*10 #mm/h
+  PparaMu <- Pgap_continuous*10 #mm/h
+  PparaAd <- Pgap_continuous*10 #mm/h
+  PparaRe <- Pgap_continuous*10 #mm/h
+  PparaLu <- Pgap_continuous*10 #mm/h
+  PparaSp <- Pgap_sinusoidal*10 #mm/h
+  PparaHt <- Pgap_continuous*10 #mm/h
   PparaBr <- 0
-  PparaGo <- Pgap_fenestrated*3600*10 #mm/h
-  PparaSk <- Pgap_continuous*3600*10 #mm/h
-  PparaBo <- Pgap_continuous*3600*10 #mm/h
+  PparaGo <- Pgap_fenestrated*10 #mm/h
+  PparaSk <- Pgap_continuous*10 #mm/h
+  PparaBo <- Pgap_continuous*10 #mm/h
   
   return(list(
     
