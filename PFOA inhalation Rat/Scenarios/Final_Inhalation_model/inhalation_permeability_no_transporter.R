@@ -2254,7 +2254,7 @@ obj.func <- function(x, dataset, fixed_params){
   
   # x: a vector with the values of the optimized parameters (it is not the x
   # from the odes!!!)
-  estimated_params <- exp(x)
+  estimated_params <- (x)
   ##########################
   #-------------------------
   # Kudo high
@@ -2907,8 +2907,10 @@ kim_IV_Ftissues <- openxlsx::read.xlsx("Data/PFOA_female_tissues_IV_kim_2016.xls
 kim_OR_Ftissues <- openxlsx::read.xlsx("Data/PFOA_female_tissues_ORAL_kim_2016.xlsx")
 gus_OR_Mblood <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Plasma Male rats_Oral.xlsx")
 gus_OR_Mtissues <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Tissues Male rats_Oral.xlsx")
+gus_OR_Mtissues$Tissue[1] <- "ELF"
 gus_INH_Mblood <- openxlsx::read.xlsx("Inhalation_data/Gustafsson 2022_PFOA_Plasma Male rats_Inhalation.xlsx")
 gus_INH_Mtissues <- openxlsx::read.xlsx("Inhalation_data/Gustafsson 2022_PFOA_Tissues Male rats_Inhalation.xlsx")
+gus_INH_Mtissues$Tissue[1] <- "ELF"
 hind_INH_Mblood_low <- openxlsx::read.xlsx("Inhalation_data/Hinderliter_2006_male_plasma_single_Low_dose.xlsx")
 hind_INH_Mblood_medium <- openxlsx::read.xlsx("Inhalation_data/Hinderliter_2006_male_plasma_single_Medium_dose.xlsx")
 hind_INH_Mblood_high <- openxlsx::read.xlsx("Inhalation_data/Hinderliter_2006_male_plasma_single_High_dose.xlsx")
@@ -2928,12 +2930,12 @@ dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mt
 
 
 #Initialise optimiser to NULL for better error handling later
-opts <- list( "algorithm" = "NLOPT_LN_NEWUOA", #"NLOPT_LN_NEWUOA"
+opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"
               "xtol_rel" = 1e-07,
               "ftol_rel" = 1e-07,
               "ftol_abs" = 0.0,
               "xtol_abs" = 0.0, 
-              "maxeval" = 1000, 
+              "maxeval" = 200, 
               "print_level" = 1)
 
 ClINFT_unscaled= 18.1 #uL/min/mg protein, Kimura et al. 2017
@@ -2948,12 +2950,12 @@ Papp_RYU = 1.46e-6*3600 # cm/h, at pH = 7.4 from Ryu et al. (2024) [https://doi.
 # Create initial conditions (zero initialisation)
 #Parameter names:
 #  kabsUA, kCLEal, kCLEua, RAFlu
-
 N_pars <- 4 # Number of parameters to be fitted
-fit <-  c(log(1), log(1),log(1), log(1))
+fit <-  c(1e-5,1e-5,1e-1,4e-5)
 
-lb	= c(log(1e-10), log(1e-10),log(1e-10), log(1e-10))
-ub = c(log(1e6), log(1e6),log(1e6), log(1e6))
+lb	= c(1e-8,1e-8,1e-8,1e-8)
+ub = c(10,10,10,1e-2)
+
 
 fixed_params <- create_all_fixed_params()
 # Run the optimization algorithm to estimate the parameter values
@@ -2966,7 +2968,7 @@ optimizer <- nloptr::nloptr( x0= fit,
                              fixed_params = fixed_params)
 
 #estimated_params <- exp(optimizer$solution)
-estimated_params <- exp(optimizer$solution)
+estimated_params <- (optimizer$solution)
 save.image("inhalation_permeability_no_transporter.RData")
 
 

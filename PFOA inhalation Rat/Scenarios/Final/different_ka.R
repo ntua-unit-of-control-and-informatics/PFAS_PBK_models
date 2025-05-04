@@ -4233,33 +4233,33 @@ preds_Kemp_OR_Mfeces_low[,2:dim(preds_Kemp_OR_Mfeces_low)[2]] <- preds_Kemp_OR_M
 #Plot the predictions against the observations
 library(ggplot2) 
 
-# Function that creates a plot given a compartment name and the respective predictions and observations
-create.plots <- function(predictions, observations, compartment){  
-  #Colours of observations and predictions
-  cls <-  c("predictions" = "#56B4E9",  "Observations" = "#D55E00")
+create.plots <- function(predictions, observations, compartment) {  
+  # Custom colors and legend labels
+  cls <- c("Prediction" = "#0072B2", "Observation" = "#D55E00")
   
-  ggplot(data = predictions)+
-    geom_line( aes_string(x= "Time", y= rlang::expr(!!compartment), 
-                          color = '"predictions"'),  size=1.5,alpha = 0.7) +
-    geom_point(data=observations, aes_string(x="Time", y= rlang::expr(!!compartment), 
-                                             color='"Observations"'), size=4)+
-    labs(title = rlang::expr(!!compartment), 
-         y = expression("PFOA concentration (" * mu* "g/g tissue)" ),
-         x = "Time (hours)")+
-    theme(plot.title = element_text(hjust = 0.5))+
-    scale_color_manual("", values=cls,
-                       guide = guide_legend(override.aes =
-                                              list(shape = c(16,NA),
-                                                   linetype = c(0,1))))+
-    theme_light() + 
-    theme(legend.position=c(1,1), 
-          legend.justification=c(0, 1), 
-          legend.key.size = unit(1.5, 'cm'),  
-          legend.title = element_text(size=14),
-          axis.title=element_text(size=14),
-          legend.text = element_text(size=14)
+  ggplot(data = predictions) +
+    geom_line(aes_string(x = "Time", y = rlang::expr(!!compartment), color = '"Prediction"'), 
+              size = 1.2, alpha = 0.9) +
+    geom_point(data = observations, 
+               aes_string(x = "Time", y = rlang::expr(!!compartment), color = '"Observation"'), 
+               size = 3.5, shape = 21, stroke = 1, fill = "white") +
+    labs(title = compartment, 
+         y = expression("PFOA concentration (" * mu * "g/g tissue)"),
+         x = "Time (hours)",
+         color = "Type") +
+    scale_color_manual(values = cls) +
+    theme_bw(base_size = 14) +
+    theme(
+      plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+      axis.title = element_text(size = 14),
+      axis.text = element_text(size = 12),
+      legend.position = "bottom",
+      legend.box = "horizontal",
+      legend.title = element_text(size = 14),
+      legend.text = element_text(size = 13),
+      panel.grid.major = element_line(color = "grey90"),
+      panel.grid.minor = element_blank()
     )
-  
 }
 
 
