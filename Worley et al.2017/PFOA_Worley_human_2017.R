@@ -12,6 +12,8 @@ library(ggplot2)
 #1. Parameters of the model
 #=========================
 
+
+
 create.params  <- function(user_input){
   with( as.list(user_input),{
     # User input: BW(kg)
@@ -501,4 +503,4 @@ predicted.feats <- c("AR", "Adif" , "A_baso", "AKb", "ACl", "Aefflux" ,
 jaqpotr::deploy.pbpk(user.input = user_input,out.vars = predicted.feats,
                      create.params = create.params,  create.inits = create.inits,
                      create.events = create.events, custom.func = custom.func,
-                     envFile = ".env")
+                     ode.fun =  ode.func, envFile = ".env")
