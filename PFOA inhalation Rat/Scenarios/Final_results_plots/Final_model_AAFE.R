@@ -2546,676 +2546,12 @@ dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mt
 
 fixed_params <- create_all_fixed_params()
 
-
-# Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
-BW <- 0.29  # body weight (kg)
-sex <- "M" 
-variable_params <- create_variable_params(BW,sex, fixed_params[[1]])
-params <- c(fixed_params[[1]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-sample_time=c(0, 1e-10, 1e-5, 1e-2, seq(0.1,2,0.1))
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,
-                                    events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_kudo_high <-  solution[, c("time","Cblood","Cliver","Ckidney", "Ccarcass","Clungs", 
-                                 "Cspleen", "Cheart","Cbrain", "Cgonads", "Cstomach", 
-                                 "Cintestine")]
-###############################################################################
-# Set up simulations for the 2nd case, i.e. kudo (2007) low dose, tissues
-BW <- 0.29  # body weight (kg)
-sex <- "M" 
-variable_params <- create_variable_params(BW,sex, fixed_params[[2]])
-params <- c(fixed_params[[2]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-
-# sample_time: a vector of time points to solve the ODEs
-sample_time= c(0, 1e-10, 1e-5, 1e-2,  seq(0.1,2,0.1))
-
-# ode(): The solver of the ODEs
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,
-                                    events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_kudo_low <- solution[, c("time","Cblood","Cliver","Ckidney", "Ccarcass","Clungs", 
-                               "Cspleen", "Cheart","Cbrain", "Cgonads", "Cstomach", 
-                               "Cintestine")]
-############################################################################
-# Set up simulations for the 3rd case, i.e. kim (2016) IV male tissues
-BW <- 0.25 #kg, from Kim et al. 2018
-variable_params <- create_variable_params(BW,sex, fixed_params[[3]])
-params <- c(fixed_params[[3]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-
-# sample_time: a vector of time points to solve the ODEs
-sample_time= c(0, 1e-10, 1e-5, 1e-2, seq(1,288,1))
-
-# ode(): The solver of the ODEs
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,
-                                    events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_kim_IV_Mtissues <-  solution[, c("time", "Cliver","Ckidney", "Clungs", 
-                                       "Cspleen", "Cheart")]
-
-#########################################################################
-# Set up simulations for the 4th case, i.e. kim (2016) ORAL male tissues
-BW <- 0.25 #kg, from Kim et al. 2018
-sex <- "M" 
-variable_params <- create_variable_params(BW,sex, fixed_params[[4]])
-params <- c(fixed_params[[4]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-
-# sample_time: a vector of time points to solve the ODEs
-sample_time=seq(0,288,1)
-
-# ode(): The solver of the ODEs
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,
-                                    events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_kim_OR_Mtissues <-  solution[, c("time", "Cliver","Ckidney", "Clungs", 
-                                       "Cspleen", "Cheart")]
-
-###################################################################
-# Set up simulations for the 5th case, i.e. kim (2016) IV female tissues
-BW <- 0.25 #kg, from Kim et al. 2018
-sex <- "F" 
-variable_params <- create_variable_params(BW,sex, fixed_params[[5]])
-params <- c(fixed_params[[5]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-
-# sample_time: a vector of time points to solve the ODEs
-sample_time= c(0, 1e-10, 1e-5, 1e-2,  seq(1,24,1))
-
-# ode(): The solver of the ODEs
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,
-                                    events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_kim_IV_Ftissues <-  solution[, c("time", "Cliver","Ckidney", "Clungs", 
-                                       "Cspleen", "Cheart")]
-
-#################################################################################
-# Set up simulations for the 6th case, i.e. kim (2016) IV female tissues
-BW <- 0.25 #kg, from Kim et al. 2018
-sex <- "F" 
-variable_params <- create_variable_params(BW,sex, fixed_params[[6]])
-params <- c(fixed_params[[6]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-
-# sample_time: a vector of time points to solve the ODEs
-sample_time= c(0, 1e-10, 1e-5, 1e-2,  seq(1,24,1))
-
-# ode(): The solver of the ODEs
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,
-                                    events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_kim_OR_Ftissues <-  solution[, c("time", "Cliver","Ckidney", "Clungs", 
-                                       "Cspleen", "Cheart")]
-
-###############################################################################################
-# Set up simulations for the 7th case, i.e. Dzierlenga (2021) ORAL male tissues
-BW <- 0.3  # body weight (kg) not reported, based on 8 week male rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
-sex <- "M" 
-variable_params <- create_variable_params(BW,sex, fixed_params[[7]])
-params <- c(fixed_params[[7]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-
-# sample_time: a vector of time points to solve the ODEs
-sample_time=seq(0,864,1)
-
-# ode(): The solver of the ODEs
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,
-                                    events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_dzi_OR_Mtissues <-  solution[, c("time", "Cliver","Ckidney", "Cbrain")]
-
-#############################################################################################
-# Set up simulations for the 8th case, i.e. Dzierlenga (2021) ORAL female tissues
-BW <- 0.2  # body weight (kg) not reported, # body weight (kg) not reported, based on 8 week female rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
-sex <- "F" 
-variable_params <- create_variable_params(BW,sex, fixed_params[[8]])
-params <- c(fixed_params[[8]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-
-# sample_time: a vector of time points to solve the ODEs
-sample_time=seq(0,24,0.1)
-
-# ode(): The solver of the ODEs
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,
-                                    events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_dzi_OR_Ftissues <-  solution[, c("time", "Cliver","Ckidney", "Cbrain")]
-
-######################################################################################
-# Set up simulations for the 9th case, i.e. Kim (2016) ORAL male blood
-BW <- 0.25  #kg, from Kim et al. 2018
-sex <- "M" 
-variable_params <- create_variable_params(BW,sex, fixed_params[[9]])
-params <- c(fixed_params[[9]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-
-# sample_time: a vector of time points to solve the ODEs
-sample_time=seq(0,288,1)
-
-# ode(): The solver of the ODEs
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,
-                                    events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_kim_OR_Mblood <-  solution[, c("time", "Cplasma")]
-
-######################################################################################
-# Set up simulations for the 10th case, i.e. Kim (2016) IV male blood
-BW <- 0.25 #kg, from Kim et al. 2018
-sex <- "M" 
-variable_params <- create_variable_params(BW,sex, fixed_params[[10]])
-params <- c(fixed_params[[10]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-
-# sample_time: a vector of time points to solve the ODEs
-
-sample_time= c(0, 1e-10, 1e-5, 1e-2, 5/60, seq(1,288,1))
-
-# ode(): The solver of the ODEs
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,
-                                    events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_kim_IV_Mblood <-  solution[, c("time", "Cplasma")]
-
-##########################
-#-------------------------
-# Kemper 2003 (Worley)
-#-------------------------
-##########################
-# Set up simulations for the 11th case, i.e.Kemper 2003 (Worley) ORAL female LOW
-
-sex <- "F"
-BW <- 0.2 #kg
-sample_time <- seq(0,192,1)
-variable_params <- create_variable_params(BW,sex, fixed_params[[11]])
-params <- c(fixed_params[[11]], variable_params)
-events <- create.events(params)
-inits <- create.inits (params)
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params, events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_Kemp_OR_Furine_low <-  solution[, c("time", "Murine")]
-preds_Kemp_OR_Ffeces_low <-  solution[, c("time", "Mfeces")]
-
-##########################################################################################
-# Set up simulations for the 12th case, i.e.Kemper 2003 (Worley) ORAL female  MEDIUM
-variable_params <- create_variable_params(BW,sex, fixed_params[[12]])
-params <- c(fixed_params[[12]], variable_params)
-events <- create.events(params)
-inits <- create.inits (params)
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params, events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_Kemp_OR_Furine_med <-  solution[, c("time", "Murine")]
-preds_Kemp_OR_Ffeces_med <-  solution[, c("time", "Mfeces")]
-
-##########################################################################################
-# Set up simulations for the 13th case, i.e.Kemper 2003 (Worley) ORAL female HIGH
-sample_time <- seq(0,672,1)
-variable_params <- create_variable_params(BW,sex, fixed_params[[13]])
-params <- c(fixed_params[[13]], variable_params)
-events <- create.events(params)
-inits <- create.inits (params)
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params, events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_Kemp_OR_Furine_high <-  solution[1:169, c("time", "Murine")]
-preds_Kemp_OR_Ffeces_high <-  solution[, c("time", "Mfeces")]
-
-###################################################################################################
-# Set up simulations for the 14th case, i.e.Kemper 2003 (Worley) ORAL male LOW
-
-sex <- "M"
-BW <- 0.3 #kg
-sample_time <- seq(0,673,1)
-variable_params <- create_variable_params(BW,sex, fixed_params[[14]])
-params <- c(fixed_params[[14]], variable_params)
-inits <- create.inits (params)
-events <- create.events(params)
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params, events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_Kemp_OR_Murine_low <-  solution[, c("time", "Murine")]
-preds_Kemp_OR_Mfeces_low <-  solution[, c("time", "Mfeces")]
-
-####################################################################################################
-# Set up simulations for the 15th case, i.e.Kemper 2003 (Worley) ORAL male MEDIUM
-variable_params <- create_variable_params(BW,sex, fixed_params[[15]])
-params <- c(fixed_params[[15]], variable_params)
-inits <- create.inits (params)
-events <- create.events(params)
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params, events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_Kemp_OR_Murine_med <-  solution[, c("time", "Murine")]
-preds_Kemp_OR_Mfeces_med <-  solution[, c("time", "Mfeces")]
-
-######################################################################################################
-# Set up simulations for the 16th case, i.e.Kemper 2003 (Worley) ORAL male  HIGH
-variable_params <- create_variable_params(BW,sex, fixed_params[[16]])
-params <- c(fixed_params[[16]], variable_params)
-inits <- create.inits (params)
-events <- create.events(params)
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params, events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_Kemp_OR_Murine_high <-  solution[, c("time", "Murine")]
-preds_Kemp_OR_Mfeces_high <-  solution[, c("time", "Mfeces")]
-
-#####################################################################################################
-# Set up simulations for the 17th case, i.e. Dzierlenga 2021, IV male serum
-BW <- 0.3   # body weight (kg) not reported, # body weight (kg) not reported, based on 8 week male rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
-sex <- "M"
-variable_params <- create_variable_params(BW,sex, fixed_params[[17]])
-params <- c(fixed_params[[17]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-sample_time <- c(0, 1e-10, 1e-5, 1e-2,  0.083, 0.25, 0.5, 1, 3, 6, seq(12, 1200, 4))
-
-# ode(): The solver of the ODEs
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,
-                                    events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_dzi_IV_Mserum <-  solution[, c("time", "Cplasma")]
-
-##############################################################################################
-# Set up simulations for the 18th case, i.e. Dzierlenga 2021, ORAL male serum low
-BW <- 0.3   # body weight (kg) not reported, # body weight (kg) not reported, based on 8 week male rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
-sex <- "M"
-variable_params <- create_variable_params(BW,sex, fixed_params[[18]])
-params <- c(fixed_params[[18]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-sample_time <- c(0, 0.25, 1, 3, 6, seq(12, 1200, 4))
-
-# ode(): The solver of the ODEs
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,
-                                    events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_dzi_OR_Mserum_low <-  solution[, c("time", "Cplasma")]
-
-########################################################################################################
-# Set up simulations for the 19th case, i.e. Dzierlenga 2021, ORAL male serum medium
-BW <- 0.3   # body weight (kg) not reported, # body weight (kg) not reported, based on 8 week male rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
-sex <- "M"
-variable_params <- create_variable_params(BW,sex, fixed_params[[19]])
-params <- c(fixed_params[[19]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-sample_time <- c(0, 0.25, 1, 3, 6, seq(12, 1200, 4))
-
-# ode(): The solver of the ODEs
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,
-                                    events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_dzi_OR_Mserum_medium <-  solution[, c("time", "Cplasma")]
-
-##############################################################################################
-# Set up simulations for the 20th case, i.e. Dzierlenga 2021, ORAL male serum high
-BW <- 0.3   # body weight (kg) not reported, # body weight (kg) not reported, based on 8 week male rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
-sex <- "M"
-variable_params <- create_variable_params(BW,sex, fixed_params[[20]])
-params <- c(fixed_params[[20]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-sample_time <- c(0, 0.25, 1, 3, 6, seq(12, 1200, 4))
-
-# ode(): The solver of the ODEs
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,
-                                    events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_dzi_OR_Mserum_high <-  solution[, c("time", "Cplasma")]
-
-###############################################################################################
-# Set up simulations for the 21th case, i.e. Dzierlenga 2021, IV female serum
-BW <- 0.2    # body weight (kg) not reported, based on 8 week female rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
-sex <- "F"
-variable_params <- create_variable_params(BW,sex, fixed_params[[21]])
-params <- c(fixed_params[[21]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-sample_time <- c(0, 1e-10, 1e-5, 1e-2, 0.083, 0.25, seq(0.5, 192, 0.5))
-
-# ode(): The solver of the ODEs
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,
-                                    events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_dzi_IV_Fserum <-  solution[, c("time", "Cplasma")]
-
-#########################################################################################
-# Set up simulations for the 22th case, i.e. Dzierlenga 2021, ORAL female serum low
-BW <- 0.2    # body weight (kg) not reported, based on 8 week female rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
-sex <- "F"
-variable_params <- create_variable_params(BW,sex, fixed_params[[22]])
-params <- c(fixed_params[[22]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-sample_time <- seq(0, 96, 0.25)
-
-# ode(): The solver of the ODEs
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,
-                                    events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_dzi_OR_Fserum_low <-  solution[, c("time", "Cplasma")]
-
-################################################################################################
-# Set up simulations for the 23th case, i.e. Dzierlenga 2021, ORAL female serum medium
-BW <- 0.2    # body weight (kg) not reported, based on 8 week female rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
-sex <- "F"
-variable_params <- create_variable_params(BW,sex, fixed_params[[23]])
-params <- c(fixed_params[[23]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-sample_time <- c(0, 0.25, seq(1, 192, 0.5))
-
-# ode(): The solver of the ODEs
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,
-                                    events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_dzi_OR_Fserum_medium <-  solution[, c("time", "Cplasma")]
-
-########################################################################################
-# Set up simulations for the 24th case, i.e. Dzierlenga 2021, ORAL female serum high
-BW <- 0.2    # body weight (kg) not reported, based on 8 week female rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
-sex <- "F"
-variable_params <- create_variable_params(BW,sex, fixed_params[[24]])
-params <- c(fixed_params[[24]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-
-# sample_time: a vector of time points to solve the ODEs
-sample_time <- seq(0, 96, 0.25)
-
-# ode(): The solver of the ODEs
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,
-                                    events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_dzi_OR_Fserum_high <-  solution[, c("time", "Cplasma")]
-
-##########################################################################################
-# Set up simulations for the 25th case, i.e. Kim (2016) ORAL female blood
-BW <- 0.25  #kg, from Kim et al. 2018
-sex <- "F" 
-variable_params <- create_variable_params(BW,sex, fixed_params[[25]])
-params <- c(fixed_params[[25]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-sample_time= c(seq(0, 1.2, 0.2), seq(1.5,24,0.5))
-
-# ode(): The solver of the ODEs
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,
-                                    events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_kim_OR_Fblood <-  solution[, c("time", "Cplasma")]
-
-########################################################################################
-# Set up simulations for the 26th case, i.e. Kim (2016) IV female blood
-BW <- 0.25 #kg, from Kim et al. 2018
-sex <- "F" 
-variable_params <- create_variable_params(BW,sex, fixed_params[[26]])
-params <- c(fixed_params[[26]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-sample_time= c(0, 1e-10, 1e-5, 1e-2,  seq(0.5, 25, 0.5))
-
-# ode(): The solver of the ODEs
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,
-                                    events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_kim_IV_Fblood <-  solution[, c("time", "Cplasma")]
-
-###############################################################################################
-# Set up simulations for the 27th case, i.e. Gustafsson (2022) oral male blood
-BW <- 0.5125  #kg, from Gustafsson et al., 2022
-sex <- "M" 
-variable_params <- create_variable_params(BW,sex, fixed_params[[27]])
-params <- c(fixed_params[[27]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-sample_time= seq(0,48,0.2)
-
-# ode(): The solver of the ODEs
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,
-                                    events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_gus_OR_Mblood <-  solution[, c("time", "Cplasma")]
-preds_gus_OR_Mtissues <-  solution[, c("time", "CLuELF","Cliver", "Clungtissue", "Ckidney")]
-
-##########################################################################################
-# Set up simulations for the 8th case, i.e. Gustafsson Inhalation male blood
-BW <- 0.5125  #kg, from Gustafsson et al., 2022
-variable_params <- create_variable_params(BW,sex, fixed_params[[28]])
-params <- c(fixed_params[[28]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-
-sample_time=seq(0,48,0.2)
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_gus_INH_Mblood <-  solution[, c("time", "Cplasma")]
-preds_gus_INH_Mtissues <-  solution[, c("time", "CLuELF","Cliver", "Clungtissue", "Ckidney")]
-
-
-#################################################################################
-# Set up simulations for the 10th case, i.e. Hinderliter Inhalation male single low
-BW <- (0.311+0.195)/2  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
-variable_params <- create_variable_params(BW,sex, fixed_params[[29]])
-params <- c(fixed_params[[29]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-
-
-sample_time= seq(0,30,0.1)
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_hind_INH_Mblood_low <-  solution[, c("time", "Cplasma")]
-
-
-#################################################################################
-# Set up simulations for the 11th case, i.e. Hinderliter Inhalation male single medium
-BW <- (0.311+0.195)/2  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
-variable_params <- create_variable_params(BW,sex, fixed_params[[30]])
-params <- c(fixed_params[[30]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-
-
-sample_time= seq(0,30,0.1)
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_hind_INH_Mblood_medium <-  solution[, c("time", "Cplasma")]
-
-
-#################################################################################
-# Set up simulations for the 12th case, i.e. Hinderliter Inhalation male single high
-BW <- (0.311+0.195)/2  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
-depfr_head <- 0.2822
-depfr_AF <- (0.1148+0.0177)
-variable_params <- create_variable_params(BW,sex, fixed_params[[31]])
-params <- c(fixed_params[[31]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-
-
-sample_time= seq(0,30,0.1)
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_hind_INH_Mblood_high <-  solution[, c("time", "Cplasma")]
-
-#################################################################################
-# Set up simulations for the 13th case, i.e. Hinderliter Inhalation female single low
-BW <- (0.197+0.145)/2  #kg
-sex <- "F" 
-variable_params <- create_variable_params(BW,sex, fixed_params[[32]])
-params <- c(fixed_params[[32]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-
-
-sample_time= seq(0,9,0.04)
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_hind_INH_Fblood_low <-  solution[, c("time", "Cplasma")]
-
-# Set up simulations for the 14th case, i.e. Hinderliter Inhalation female single medium
-BW <- (0.197+0.145)/2  #
-variable_params <- create_variable_params(BW,sex, fixed_params[[33]])
-params <- c(fixed_params[[33]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-
-
-
-sample_time= seq(0,30,0.1)
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-preds_hind_INH_Fblood_medium <-  solution[, c("time", "Cplasma")]
-
-
-# Set up simulations for the 15th case, i.e. Hinderliter Inhalation female single high
-BW <- (0.197+0.145)/2  #kg,
-variable_params <- create_variable_params(BW,sex, fixed_params[[34]])
-params <- c(fixed_params[[34]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-
-
-sample_time= seq(0,30,0.1)
-
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,events = events,
-                                    method="lsodes",rtol = 1e-3, atol = 1e-3))
-
-preds_hind_INH_Fblood_high <-  solution[, c("time", "Cplasma")]
-
-
-#convert ug/L, which is returned by the ODE function, to ug/g, which are the units in all the datasets
-preds_kudo_high[,2:dim(preds_kudo_high)[2]] <- preds_kudo_high[,2:dim(preds_kudo_high)[2]] /1000 
-preds_kudo_high <- preds_kudo_high[2:dim(preds_kudo_high)[1],]
-preds_kudo_low[,2:dim(preds_kudo_low)[2]] <- preds_kudo_low[,2:dim(preds_kudo_low)[2]] /1000 
-preds_kudo_low <- preds_kudo_low[2:dim(preds_kudo_low)[1],]
-preds_kim_IV_Mtissues[,2:dim(preds_kim_IV_Mtissues)[2]] <- preds_kim_IV_Mtissues[,2:dim(preds_kim_IV_Mtissues)[2]] /1000
-preds_kim_IV_Mtissues <- preds_kim_IV_Mtissues[2:dim(preds_kim_IV_Mtissues)[1],]
-preds_kim_OR_Mtissues[,2:dim(preds_kim_OR_Mtissues)[2]] <- preds_kim_OR_Mtissues[,2:dim(preds_kim_OR_Mtissues)[2]] /1000
-preds_kim_IV_Ftissues[,2:dim(preds_kim_IV_Ftissues)[2]] <- preds_kim_IV_Ftissues[,2:dim(preds_kim_IV_Ftissues)[2]] /1000
-preds_kim_IV_Ftissues <- preds_kim_IV_Ftissues[2:dim(preds_kim_IV_Ftissues)[1],]
-preds_kim_OR_Ftissues[,2:dim(preds_kim_OR_Ftissues)[2]] <- preds_kim_OR_Ftissues[,2:dim(preds_kim_OR_Ftissues)[2]] /1000
-preds_dzi_OR_Mtissues[,2:dim(preds_dzi_OR_Mtissues)[2]] <- preds_dzi_OR_Mtissues[,2:dim(preds_dzi_OR_Mtissues)[2]] /1000
-preds_dzi_OR_Ftissues[,2:dim(preds_dzi_OR_Ftissues)[2]] <- preds_dzi_OR_Ftissues[,2:dim(preds_dzi_OR_Ftissues)[2]] /1000
-preds_kim_OR_Mblood[,2:dim(preds_kim_OR_Mblood)[2]] <- preds_kim_OR_Mblood[,2:dim(preds_kim_OR_Mblood)[2]] /1000
-preds_kim_IV_Mblood[,2:dim(preds_kim_IV_Mblood)[2]] <- preds_kim_IV_Mblood[,2:dim(preds_kim_IV_Mblood)[2]] /1000
-preds_kim_IV_Mblood <- preds_kim_IV_Mblood[2:dim(preds_kim_IV_Mblood)[1],]
-preds_Kemp_OR_Ffeces_high[,2:dim(preds_Kemp_OR_Ffeces_high)[2]] <- preds_Kemp_OR_Ffeces_high[,2:dim(preds_Kemp_OR_Ffeces_high)[2]] /1000
-preds_Kemp_OR_Mfeces_high[,2:dim(preds_Kemp_OR_Mfeces_high)[2]] <- preds_Kemp_OR_Mfeces_high[,2:dim(preds_Kemp_OR_Mfeces_high)[2]] /1000
-preds_Kemp_OR_Furine_low[,2:dim(preds_Kemp_OR_Furine_low)[2]] <- preds_Kemp_OR_Furine_low[,2:dim(preds_Kemp_OR_Furine_low)[2]] /1000
-preds_Kemp_OR_Furine_med[,2:dim(preds_Kemp_OR_Furine_med)[2]] <- preds_Kemp_OR_Furine_med[,2:dim(preds_Kemp_OR_Furine_med)[2]] /1000
-preds_Kemp_OR_Furine_high[,2:dim(preds_Kemp_OR_Furine_high)[2]] <- preds_Kemp_OR_Furine_high[,2:dim(preds_Kemp_OR_Furine_high)[2]] /1000
-preds_Kemp_OR_Murine_low[,2:dim(preds_Kemp_OR_Murine_low)[2]] <- preds_Kemp_OR_Murine_low[,2:dim(preds_Kemp_OR_Murine_low)[2]] /1000
-preds_Kemp_OR_Murine_med[,2:dim(preds_Kemp_OR_Murine_med)[2]] <- preds_Kemp_OR_Murine_med[,2:dim(preds_Kemp_OR_Murine_med)[2]] /1000
-preds_Kemp_OR_Murine_high[,2:dim(preds_Kemp_OR_Murine_high)[2]] <- preds_Kemp_OR_Murine_high[,2:dim(preds_Kemp_OR_Murine_high)[2]] /1000
-preds_dzi_IV_Mserum[,2:dim(preds_dzi_IV_Mserum)[2]] <- preds_dzi_IV_Mserum[,2:dim(preds_dzi_IV_Mserum)[2]] /1000
-preds_dzi_IV_Mserum <- preds_dzi_IV_Mserum[2:dim(preds_dzi_IV_Mserum)[1],]
-preds_dzi_OR_Mserum_low[,2:dim(preds_dzi_OR_Mserum_low)[2]] <- preds_dzi_OR_Mserum_low[,2:dim(preds_dzi_OR_Mserum_low)[2]] /1000
-preds_dzi_OR_Mserum_medium[,2:dim(preds_dzi_OR_Mserum_medium)[2]] <- preds_dzi_OR_Mserum_medium[,2:dim(preds_dzi_OR_Mserum_medium)[2]] /1000
-preds_dzi_OR_Mserum_high[,2:dim(preds_dzi_OR_Mserum_high)[2]] <- preds_dzi_OR_Mserum_high[,2:dim(preds_dzi_OR_Mserum_high)[2]] /1000
-preds_dzi_IV_Fserum[,2:dim(preds_dzi_IV_Fserum)[2]] <- preds_dzi_IV_Fserum[,2:dim(preds_dzi_IV_Fserum)[2]] /1000
-preds_dzi_IV_Fserum <- preds_dzi_IV_Fserum[2:dim(preds_dzi_IV_Fserum)[1],]
-preds_dzi_OR_Fserum_low[,2:dim(preds_dzi_OR_Fserum_low)[2]] <- preds_dzi_OR_Fserum_low[,2:dim(preds_dzi_OR_Fserum_low)[2]] /1000
-preds_dzi_OR_Fserum_medium[,2:dim(preds_dzi_OR_Fserum_medium)[2]] <- preds_dzi_OR_Fserum_medium[,2:dim(preds_dzi_OR_Fserum_medium)[2]] /1000
-preds_dzi_OR_Fserum_high[,2:dim(preds_dzi_OR_Fserum_high)[2]] <- preds_dzi_OR_Fserum_high[,2:dim(preds_dzi_OR_Fserum_high)[2]] /1000
-preds_kim_OR_Fblood[,2:dim(preds_kim_OR_Fblood)[2]] <- preds_kim_OR_Fblood[,2:dim(preds_kim_OR_Fblood)[2]] /1000
-preds_kim_IV_Fblood[,2:dim(preds_kim_IV_Fblood)[2]] <- preds_kim_IV_Fblood[,2:dim(preds_kim_IV_Fblood)[2]] /1000
-preds_kim_IV_Fblood <- preds_kim_IV_Fblood[2:dim(preds_kim_IV_Fblood)[1],]
-preds_Kemp_OR_Ffeces_med[,2:dim(preds_Kemp_OR_Ffeces_med)[2]] <- preds_Kemp_OR_Ffeces_med[,2:dim(preds_Kemp_OR_Ffeces_med)[2]] /1000
-preds_Kemp_OR_Mfeces_med[,2:dim(preds_Kemp_OR_Mfeces_med)[2]] <- preds_Kemp_OR_Mfeces_med[,2:dim(preds_Kemp_OR_Mfeces_med)[2]] /1000
-preds_Kemp_OR_Ffeces_low[,2:dim(preds_Kemp_OR_Ffeces_low)[2]] <- preds_Kemp_OR_Ffeces_low[,2:dim(preds_Kemp_OR_Ffeces_low)[2]] /1000
-preds_Kemp_OR_Mfeces_low[,2:dim(preds_Kemp_OR_Mfeces_low)[2]] <- preds_Kemp_OR_Mfeces_low[,2:dim(preds_Kemp_OR_Mfeces_low)[2]] /1000
-preds_gus_OR_Mblood[,2:dim(preds_gus_OR_Mblood)[2]] <- preds_gus_OR_Mblood[,2:dim(preds_gus_OR_Mblood)[2]] /1000
-preds_gus_OR_Mtissues[,2:dim(preds_gus_OR_Mtissues)[2]] <- preds_gus_OR_Mtissues[,2:dim(preds_gus_OR_Mtissues)[2]] /1000
-preds_gus_INH_Mblood[,2:dim(preds_gus_INH_Mblood)[2]] <- preds_gus_INH_Mblood[,2:dim(preds_gus_INH_Mblood)[2]] /1000
-preds_gus_INH_Mtissues[,2:dim(preds_gus_INH_Mtissues)[2]] <- preds_gus_INH_Mtissues[,2:dim(preds_gus_INH_Mtissues)[2]] /1000
-preds_hind_INH_Mblood_low[,2:dim(preds_hind_INH_Mblood_low)[2]] <- preds_hind_INH_Mblood_low[,2:dim(preds_hind_INH_Mblood_low)[2]] /1000
-preds_hind_INH_Mblood_medium[,2:dim(preds_hind_INH_Mblood_medium)[2]] <- preds_hind_INH_Mblood_medium[,2:dim(preds_hind_INH_Mblood_medium)[2]] /1000
-preds_hind_INH_Mblood_high[,2:dim(preds_hind_INH_Mblood_high)[2]] <- preds_hind_INH_Mblood_high[,2:dim(preds_hind_INH_Mblood_high)[2]] /1000
-preds_hind_INH_Fblood_low[,2:dim(preds_hind_INH_Fblood_low)[2]] <- preds_hind_INH_Fblood_low[,2:dim(preds_hind_INH_Fblood_low)[2]] /1000
-preds_hind_INH_Fblood_medium[,2:dim(preds_hind_INH_Fblood_medium)[2]] <- preds_hind_INH_Fblood_medium[,2:dim(preds_hind_INH_Fblood_medium)[2]] /1000
-preds_hind_INH_Fblood_high[,2:dim(preds_hind_INH_Fblood_high)[2]] <- preds_hind_INH_Fblood_high[,2:dim(preds_hind_INH_Fblood_high)[2]] /1000
-
+N_data <- length(dataset)
+score <- rep(NA, N_data)
 
 BW <- 0.29  # body weight (kg)
 sex <- "M" 
-variable_params <- create_variable_params(BW, sex,estimated_params, fixed_params[[1]])
+variable_params <- create_variable_params(BW, sex, fixed_params[[1]])
 params <- c(fixed_params[[1]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -3256,7 +2592,7 @@ score[1] <- AAFE(predictions = preds_kudo_high, observations = obs_kudo_high)
 # Set up simulations for the 2nd case, i.e. kudo (2007) low dose, tissues
 BW <- 0.29  # body weight (kg)
 sex <- "M" 
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[2]])
+variable_params <- create_variable_params(BW,sex, fixed_params[[2]])
 params <- c(fixed_params[[2]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -3302,7 +2638,7 @@ score[2] <- AAFE(predictions = preds_kudo_low, observations = obs_kudo_low)
 ##########################
 # Set up simulations for the 3rd case, i.e. kim (2016) IV male tissues
 BW <- 0.25 #kg, from Kim et al. 2018
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[3]])
+variable_params <- create_variable_params(BW,sex, fixed_params[[3]])
 params <- c(fixed_params[[3]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -3342,7 +2678,7 @@ score[3] <- AAFE(predictions = preds_kim_IV_Mtissues, observations = obs_kim_IV_
 # Set up simulations for the 4th case, i.e. kim (2016) ORAL male tissues
 BW <- 0.25 #kg, from Kim et al. 2018
 sex <- "M" 
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[4]])
+variable_params <- create_variable_params(BW,sex, fixed_params[[4]])
 params <- c(fixed_params[[4]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -3381,7 +2717,7 @@ score[4] <- AAFE(predictions = preds_kim_OR_Mtissues, observations = obs_kim_OR_
 # Set up simulations for the 5th case, i.e. kim (2016) IV female tissues
 BW <- 0.25 #kg, from Kim et al. 2018
 sex <- "F" 
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[5]])
+variable_params <- create_variable_params(BW,sex, fixed_params[[5]])
 params <- c(fixed_params[[5]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -3421,7 +2757,7 @@ score[5] <- AAFE(predictions = preds_kim_IV_Ftissues, observations = obs_kim_IV_
 # Set up simulations for the 6th case, i.e. kim (2016) IV female tissues
 BW <- 0.25 #kg, from Kim et al. 2018
 sex <- "F" 
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[6]])
+variable_params <- create_variable_params(BW,sex, fixed_params[[6]])
 params <- c(fixed_params[[6]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -3461,7 +2797,7 @@ score[6] <- AAFE(predictions = preds_kim_OR_Ftissues, observations = obs_kim_OR_
 # Set up simulations for the 7th case, i.e. Dzierlenga (2021) ORAL male tissues
 BW <- 0.3  # body weight (kg) not reported, based on 8 week male rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
 sex <- "M" 
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[7]])
+variable_params <- create_variable_params(BW,sex, fixed_params[[7]])
 params <- c(fixed_params[[7]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -3495,7 +2831,6 @@ obs_dzi_OR_Mtissues <- list( exp_data[exp_data$Tissue == "Liver", "concentration
                              exp_data[exp_data$Tissue == "Brain", "concentration"]) 
 
 score[7] <- AAFE(predictions = preds_dzi_OR_Mtissues, observations = obs_dzi_OR_Mtissues)
-score[39] <- AAFE(predictions = preds_dzi_OR_Mtissues[[1]], observations = obs_dzi_OR_Mtissues[[1]])
 
 ##########################
 #-------------------------
@@ -3505,7 +2840,7 @@ score[39] <- AAFE(predictions = preds_dzi_OR_Mtissues[[1]], observations = obs_d
 # Set up simulations for the 8th case, i.e. Dzierlenga (2021) ORAL female tissues
 BW <- 0.2  # body weight (kg) not reported, # body weight (kg) not reported, based on 8 week female rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
 sex <- "F" 
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[8]])
+variable_params <- create_variable_params(BW,sex, fixed_params[[8]])
 params <- c(fixed_params[[8]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -3550,7 +2885,7 @@ score[8] <- AAFE(predictions = preds_dzi_OR_Ftissues, observations = obs_dzi_OR_
 # Set up simulations for the 9th case, i.e. Kim (2016) ORAL male blood
 BW <- 0.25  #kg, from Kim et al. 2018
 sex <- "M" 
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[9]])
+variable_params <- create_variable_params(BW,sex, fixed_params[[9]])
 params <- c(fixed_params[[9]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -3583,8 +2918,7 @@ for (i in 1:length(unique(exp_data$Tissue))) {
 obs_kim_OR_Mblood <- list(exp_data[exp_data$Tissue == "Plasma", "concentration"])
 
 score[9] <- AAFE(predictions = preds_kim_OR_Mblood, observations = obs_kim_OR_Mblood)
-score[35] <- AAFE(predictions = list(preds_kim_OR_Mblood[[1]][length(preds_kim_OR_Mblood[[1]])]), 
-                  observations = list(obs_kim_OR_Mblood[[1]][length(obs_kim_OR_Mblood[[1]])]))
+
 ##########################
 #-------------------------
 # Kim IV male blood
@@ -3593,7 +2927,7 @@ score[35] <- AAFE(predictions = list(preds_kim_OR_Mblood[[1]][length(preds_kim_O
 # Set up simulations for the 10th case, i.e. Kim (2016) IV male blood
 BW <- 0.25 #kg, from Kim et al. 2018
 sex <- "M" 
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[10]])
+variable_params <- create_variable_params(BW,sex, fixed_params[[10]])
 params <- c(fixed_params[[10]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -3627,8 +2961,6 @@ for (i in 1:length(unique(exp_data$Tissue))) {
 obs_kim_IV_Mblood <- list(exp_data[exp_data$Tissue == "Plasma", "concentration"])
 
 score[10] <- AAFE(predictions = preds_kim_IV_Mblood, observations = obs_kim_IV_Mblood)
-score[36] <- AAFE(predictions = list(preds_kim_IV_Mblood[[1]][length(preds_kim_IV_Mblood[[1]])]), 
-                  observations = list(obs_kim_IV_Mblood[[1]][length(preds_kim_IV_Mblood[[1]])]))
 ##########################
 #-------------------------
 # Kemper 2003 (Worley)
@@ -3639,7 +2971,7 @@ score[36] <- AAFE(predictions = list(preds_kim_IV_Mblood[[1]][length(preds_kim_I
 sex <- "F"
 BW <- 0.2 #kg
 sample_time <- seq(0,192,1)
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[11]])
+variable_params <- create_variable_params(BW,sex, fixed_params[[11]])
 params <- c(fixed_params[[11]], variable_params)
 events <- create.events(params)
 inits <- create.inits (params)
@@ -3696,7 +3028,7 @@ score[12] <- AAFE(predictions = preds_Kemp_OR_Ffeces_low, observations = obs_Kem
 
 
 # Set up simulations for the 12th case, i.e.Kemper 2003 (Worley) ORAL female  MEDIUM
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[12]])
+variable_params <- create_variable_params(BW,sex, fixed_params[[12]])
 params <- c(fixed_params[[12]], variable_params)
 events <- create.events(params)
 inits <- create.inits (params)
@@ -3755,7 +3087,7 @@ score[14] <- AAFE(predictions = preds_Kemp_OR_Ffeces_med, observations = obs_Kem
 ##########################################################################################
 # Set up simulations for the 13ath case, i.e.Kemper 2003 (Worley) ORAL female HIGH
 sample_time <- seq(0,672,1)
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[13]])
+variable_params <- create_variable_params(BW,sex, fixed_params[[13]])
 params <- c(fixed_params[[13]], variable_params)
 events <- create.events(params)
 inits <- create.inits (params)
@@ -3816,7 +3148,7 @@ score[16] <- AAFE(predictions = preds_Kemp_OR_Ffeces_high, observations = obs_Ke
 sex <- "M"
 BW <- 0.3 #kg
 sample_time <- seq(0,673,1)
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[14]])
+variable_params <- create_variable_params(BW,sex, fixed_params[[14]])
 params <- c(fixed_params[[14]], variable_params)
 inits <- create.inits (params)
 events <- create.events(params)
@@ -3872,7 +3204,7 @@ score[18] <- AAFE(predictions = preds_Kemp_OR_Mfeces_low, observations = obs_Kem
 
 ####################################################################################################
 # Set up simulations for the 15th case, i.e.Kemper 2003 (Worley) ORAL male MEDIUM
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[15]])
+variable_params <- create_variable_params(BW,sex, fixed_params[[15]])
 params <- c(fixed_params[[15]], variable_params)
 inits <- create.inits (params)
 events <- create.events(params)
@@ -3930,7 +3262,7 @@ score[20] <- AAFE(predictions = preds_Kemp_OR_Mfeces_med, observations = obs_Kem
 
 ######################################################################################################
 # Set up simulations for the 16th case, i.e.Kemper 2003 (Worley) ORAL male  HIGH
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[16]])
+variable_params <- create_variable_params(BW,sex, fixed_params[[16]])
 params <- c(fixed_params[[16]], variable_params)
 inits <- create.inits (params)
 events <- create.events(params)
@@ -3994,7 +3326,7 @@ score[22] <- AAFE(predictions = preds_Kemp_OR_Mfeces_high, observations = obs_Ke
 # Set up simulations for the 17th case, i.e. Dzierlenga 2021, IV male serum
 BW <- 0.3   # body weight (kg) not reported, # body weight (kg) not reported, based on 8 week male rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
 sex <- "M"
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[17]])
+variable_params <- create_variable_params(BW,sex, fixed_params[[17]])
 params <- c(fixed_params[[17]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -4036,7 +3368,7 @@ score[23] <- AAFE(predictions = preds_dzi_IV_Mserum, observations = obs_dzi_IV_M
 # Set up simulations for the 18th case, i.e. Dzierlenga 2021, ORAL male serum low
 BW <- 0.3   # body weight (kg) not reported, # body weight (kg) not reported, based on 8 week male rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
 sex <- "M"
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[18]])
+variable_params <- create_variable_params(BW,sex, fixed_params[[18]])
 params <- c(fixed_params[[18]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -4077,7 +3409,7 @@ score[24] <- AAFE(predictions = preds_dzi_OR_Mserum_low, observations = obs_dzi_
 # Set up simulations for the 19th case, i.e. Dzierlenga 2021, ORAL male serum medium
 BW <- 0.3   # body weight (kg) not reported, # body weight (kg) not reported, based on 8 week male rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
 sex <- "M"
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[19]])
+variable_params <- create_variable_params(BW,sex, fixed_params[[19]])
 params <- c(fixed_params[[19]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -4116,7 +3448,7 @@ score[25] <- AAFE(predictions = preds_dzi_OR_Mserum_medium, observations = obs_d
 # Set up simulations for the 20th case, i.e. Dzierlenga 2021, ORAL male serum high
 BW <- 0.3   # body weight (kg) not reported, # body weight (kg) not reported, based on 8 week male rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
 sex <- "M"
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[20]])
+variable_params <- create_variable_params(BW,sex, fixed_params[[20]])
 params <- c(fixed_params[[20]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -4155,7 +3487,7 @@ score[26] <- AAFE(predictions = preds_dzi_OR_Mserum_high, observations = obs_dzi
 # Set up simulations for the 21th case, i.e. Dzierlenga 2021, IV female serum
 BW <- 0.2    # body weight (kg) not reported, based on 8 week female rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
 sex <- "F"
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[21]])
+variable_params <- create_variable_params(BW,sex, fixed_params[[21]])
 params <- c(fixed_params[[21]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -4194,7 +3526,7 @@ score[27] <- AAFE(predictions = preds_dzi_IV_Fserum, observations = obs_dzi_IV_F
 # Set up simulations for the 22th case, i.e. Dzierlenga 2021, ORAL female serum low
 BW <- 0.2    # body weight (kg) not reported, based on 8 week female rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
 sex <- "F"
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[22]])
+variable_params <- create_variable_params(BW,sex, fixed_params[[22]])
 params <- c(fixed_params[[22]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -4233,7 +3565,7 @@ score[28] <- AAFE(predictions = preds_dzi_OR_Fserum_low, observations = obs_dzi_
 # Set up simulations for the 23th case, i.e. Dzierlenga 2021, ORAL female serum medium
 BW <- 0.2    # body weight (kg) not reported, based on 8 week female rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
 sex <- "F"
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[23]])
+variable_params <- create_variable_params(BW,sex, fixed_params[[23]])
 params <- c(fixed_params[[23]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -4272,7 +3604,7 @@ score[29] <- AAFE(predictions = preds_dzi_OR_Fserum_medium, observations = obs_d
 # Set up simulations for the 24th case, i.e. Dzierlenga 2021, ORAL female serum high
 BW <- 0.2    # body weight (kg) not reported, based on 8 week female rats from https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
 sex <- "F"
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[24]])
+variable_params <- create_variable_params(BW,sex, fixed_params[[24]])
 params <- c(fixed_params[[24]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -4312,7 +3644,7 @@ score[30] <- AAFE(predictions = preds_dzi_OR_Fserum_high, observations = obs_dzi
 # Set up simulations for the 25th case, i.e. Kim (2016) ORAL female blood
 BW <- 0.25  #kg, from Kim et al. 2018
 sex <- "F" 
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[25]])
+variable_params <- create_variable_params(BW,sex, fixed_params[[25]])
 params <- c(fixed_params[[25]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -4341,8 +3673,7 @@ for (i in 1:length(unique(exp_data$Tissue))) {
 
 obs_kim_OR_Fblood <- list(exp_data[exp_data$Tissue == "Plasma", "concentration"])
 score[31] <- AAFE(predictions = preds_kim_OR_Fblood, observations = obs_kim_OR_Fblood)
-score[37] <- AAFE(predictions = list(preds_kim_OR_Fblood[[1]][length(preds_kim_OR_Fblood[[1]])]), 
-                  observations = list(obs_kim_OR_Fblood[[1]][length(obs_kim_OR_Fblood[[1]])]))
+
 ##########################
 #-------------------------
 # Kim IV female blood
@@ -4351,7 +3682,7 @@ score[37] <- AAFE(predictions = list(preds_kim_OR_Fblood[[1]][length(preds_kim_O
 # Set up simulations for the 26th case, i.e. Kim (2016) IV male blood
 BW <- 0.25 #kg, from Kim et al. 2018
 sex <- "F" 
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[26]])
+variable_params <- create_variable_params(BW,sex, fixed_params[[26]])
 params <- c(fixed_params[[26]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -4380,8 +3711,6 @@ for (i in 1:length(unique(exp_data$Tissue))) {
 
 obs_kim_IV_Fblood <- list(exp_data[exp_data$Tissue == "Plasma", "concentration"])
 score[32] <- AAFE(predictions = preds_kim_IV_Fblood, observations = obs_kim_IV_Fblood)
-score[38] <- AAFE(predictions = list(preds_kim_IV_Fblood[[1]][length(preds_kim_IV_Fblood[[1]])]), 
-                  observations = list(obs_kim_IV_Fblood[[1]][length(obs_kim_IV_Fblood[[1]])]))
 ##########################
 #-------------------------
 # Gustafsson Oral male blood
@@ -4390,7 +3719,7 @@ score[38] <- AAFE(predictions = list(preds_kim_IV_Fblood[[1]][length(preds_kim_I
 # Set up simulations for the 27th case, i.e. Gustafsson (2022) oral male blood
 BW <- 0.5125  #kg, from Gustafsson et al., 2022
 sex <- "M" 
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[27]])
+variable_params <- create_variable_params(BW,sex, fixed_params[[27]])
 params <- c(fixed_params[[27]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
@@ -4420,25 +3749,6 @@ for (i in 1:length(unique(exp_data$Tissue))) {
 obs_gus_OR_Mblood <- list(exp_data[exp_data$Tissue == "Plasma", "concentration"])
 score[33] <- AAFE(predictions = preds_gus_OR_Mblood, observations = obs_gus_OR_Mblood)
 
-##########################
-#-------------------------
-# Gustafsson Oral male tissues
-#-------------------------
-##########################
-# Set up simulations for the 28st case, i.e. Gustafsson (2022) Inhalation male tissues
-BW <- 0.5125  #kg, from Gustafsson et al., 2022
-sex <- "M"
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[28]])
-params <- c(fixed_params[[28]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-sample_time= seq(0,48,0.2)
-
-# ode(): The solver of the ODEs
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,
-                                    events = events,
-                                    method="lsodes",rtol = 1e-03, atol = 1e-03))
 
 #======================================df28=========================================================
 exp_data <- dataset$df28 # retrieve data of Gustafsson (2022) oral male tissues
@@ -4462,48 +3772,6 @@ obs_gus_OR_Mtissues <- list( exp_data[exp_data$Tissue == "ALF", "concentration"]
 
 score[34] <- AAFE(predictions = preds_gus_OR_Mtissues, observations = obs_gus_OR_Mtissues)
 
-
-##########################
-#-------------------------
-# Gustafsson Oral male tissues
-#-------------------------
-##########################
-# Set up simulations for the 28st case, i.e. Gustafsson (2022) oral male tissues
-BW <- 0.5125  #kg, from Gustafsson et al., 2022
-sex <- "M"
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[7]])
-params <- c(fixed_params[[7]], variable_params)
-inits <- create.inits(params)
-events <- create.events(params)
-sample_time= seq(0,48,1)
-
-# ode(): The solver of the ODEs
-solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
-                                    y = inits, parms = params,
-                                    events = events,
-                                    method="lsodes",rtol = 1e-02, atol = 1e-02))
-
-#======================================df7=========================================================
-exp_data <- dataset$df7 # retrieve data of Gustafsson (2022) oral male tissues
-colnames(exp_data)[c(2,3)] <- c("time", "concentration")
-column_names <- c("CLuELF","Clungtissue")
-
-preds_gus_OR_Mtissues <- list()
-# loop over compartments with available data
-for (i in 1:length(unique(exp_data$Tissue))) {
-  compartment <- unique(exp_data$Tissue)[i]
-  #Retrieve time points at which measurements are available for compartment i
-  exp_time <- exp_data[exp_data$Tissue == compartment, 2]
-  
-  preds_gus_OR_Mtissues [[i]] <- solution[solution$time %in% exp_time, column_names[i]]/1000
-}
-
-obs_gus_OR_Mtissues <- list( exp_data[exp_data$Tissue == "ELF", "concentration"],
-                             exp_data[exp_data$Tissue == "Lung", "concentration"]) 
-
-score[7] <- AAFE(predictions = preds_gus_OR_Mtissues, observations = obs_gus_OR_Mtissues)
-
-
 ##########################
 #-------------------------
 # Gustafsson Inhalation male blood
@@ -4511,8 +3779,8 @@ score[7] <- AAFE(predictions = preds_gus_OR_Mtissues, observations = obs_gus_OR_
 ##########################
 # Set up simulations for the 8th case, i.e. Gustafsson (2022) Inhalation male blood
 BW <- 0.5125  #kg, from Gustafsson et al., 2022
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[8]])
-params <- c(fixed_params[[8]], variable_params)
+variable_params <- create_variable_params(BW,sex, fixed_params[[28]])
+params <- c(fixed_params[[28]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -4531,7 +3799,7 @@ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
 
 #======================================df8=========================================================
 
-exp_data <- dataset$df8 # retrieve data of Gustafsson (2022)
+exp_data <- dataset$df29 # retrieve data of Gustafsson (2022)
 colnames(exp_data)[c(2,3)] <- c("time", "concentration")
 column_names <- c("Cplasma")
 
@@ -4548,7 +3816,7 @@ for (i in 1:length(unique(exp_data$Tissue))) {
 
 obs_gus_INH_Mblood <- list(exp_data[exp_data$Tissue == "Plasma", "concentration"])
 
-score[8] <- AAFE(predictions = preds_gus_INH_Mblood, observations = obs_gus_INH_Mblood)
+score[35] <- AAFE(predictions = preds_gus_INH_Mblood, observations = obs_gus_INH_Mblood)
 
 
 ##########################
@@ -4559,7 +3827,7 @@ score[8] <- AAFE(predictions = preds_gus_INH_Mblood, observations = obs_gus_INH_
 
 #======================================df9=========================================================
 
-exp_data <- dataset$df9 # retrieve data of Gustafsson (2022) Inhalation male tissues
+exp_data <- dataset$df30 # retrieve data of Gustafsson (2022) Inhalation male tissues
 colnames(exp_data)[c(2,3)] <- c("time", "concentration")
 column_names <- c("CLuELF","Cliver","Clungtissue", "Ckidney")
 
@@ -4581,22 +3849,8 @@ obs_gus_INH_Mtissues <- list(exp_data[exp_data$Tissue == "ELF", "concentration"]
 
 
 
-score[9] <- AAFE(predictions = preds_gus_INH_Mtissues, observations = obs_gus_INH_Mtissues)
+score[36] <- AAFE(predictions = preds_gus_INH_Mtissues, observations = obs_gus_INH_Mtissues)
 
-column_names <- c("CLuELF")
-preds_gus_INH_Mtissues <- list()
-# loop over compartments with available data
-for (i in 1:length(unique(exp_data$Tissue))) {
-  compartment <- unique(exp_data$Tissue)[i]
-  #Retrieve time points at which measurements are available for compartment i
-  exp_time <- exp_data[exp_data$Tissue == compartment, "time"]
-  
-  preds_gus_INH_Mtissues [[i]] <- solution[solution$time %in% exp_time, column_names[i]]/1000
-}
-
-
-obs_gus_INH_Mtissues <- list(exp_data[exp_data$Tissue == "ELF", "concentration"]) 
-score[16] <- AAFE(predictions = preds_gus_INH_Mtissues, observations = obs_gus_INH_Mtissues)
 
 ##########################
 #-------------------------
@@ -4606,8 +3860,8 @@ score[16] <- AAFE(predictions = preds_gus_INH_Mtissues, observations = obs_gus_I
 # Set up simulations for the 10th case, i.e. Hinderliter Inhalation male single low
 BW <- (0.311+0.195)/2  #kg, https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
 sex = "M"
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[9]])
-params <- c(fixed_params[[9]], variable_params)
+variable_params <- create_variable_params(BW,sex, fixed_params[[29]])
+params <- c(fixed_params[[29]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -4626,7 +3880,7 @@ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
 
 #======================================df10=========================================================
 
-exp_data <- dataset$df10 # retrieve data of Hinderliter Inhalation male single low
+exp_data <- dataset$df31# retrieve data of Hinderliter Inhalation male single low
 colnames(exp_data)[c(2,3)] <- c("time", "concentration")
 column_names <- c("Cplasma")
 
@@ -4644,7 +3898,7 @@ for (i in 1:length(unique(exp_data$Tissue))) {
 obs_hind_INH_Mblood_low <- list(exp_data[exp_data$Tissue == "Plasma", "concentration"])
 
 
-score[10] <- AAFE(predictions = preds_hind_INH_Mblood_low, observations = obs_hind_INH_Mblood_low)
+score[37] <- AAFE(predictions = preds_hind_INH_Mblood_low, observations = obs_hind_INH_Mblood_low)
 
 
 
@@ -4655,8 +3909,8 @@ score[10] <- AAFE(predictions = preds_hind_INH_Mblood_low, observations = obs_hi
 ##########################
 # Set up simulations for the 11th case, i.e. Hinderliter Inhalation male single medium
 BW <- (0.311+0.195)/2  #kg, https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[10]])
-params <- c(fixed_params[[10]], variable_params)
+variable_params <- create_variable_params(BW,sex, fixed_params[[30]])
+params <- c(fixed_params[[30]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -4675,7 +3929,7 @@ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
 
 #======================================df11=========================================================
 
-exp_data <- dataset$df11 # retrieve data of Hinderliter Inhalation male single medium
+exp_data <- dataset$df32 # retrieve data of Hinderliter Inhalation male single medium
 colnames(exp_data)[c(2,3)] <- c("time", "concentration")
 column_names <- c("Cplasma")
 
@@ -4693,7 +3947,7 @@ for (i in 1:length(unique(exp_data$Tissue))) {
 obs_hind_INH_Mblood_medium <- list(exp_data[exp_data$Tissue == "Plasma", "concentration"])
 
 
-score[11] <- AAFE(predictions = preds_hind_INH_Mblood_medium, observations = obs_hind_INH_Mblood_medium)
+score[38] <- AAFE(predictions = preds_hind_INH_Mblood_medium, observations = obs_hind_INH_Mblood_medium)
 
 
 
@@ -4704,8 +3958,8 @@ score[11] <- AAFE(predictions = preds_hind_INH_Mblood_medium, observations = obs
 ##########################
 # Set up simulations for the 12th case, i.e. Hinderliter Inhalation male single high
 BW <- (0.311+0.195)/2  #kg, https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[11]])
-params <- c(fixed_params[[11]], variable_params)
+variable_params <- create_variable_params(BW,sex, fixed_params[[41]])
+params <- c(fixed_params[[41]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -4723,7 +3977,7 @@ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
 
 #======================================df12=========================================================
 
-exp_data <- dataset$df12 # retrieve data of Hinderliter Inhalation male single high
+exp_data <- dataset$df33 # retrieve data of Hinderliter Inhalation male single high
 colnames(exp_data)[c(2,3)] <- c("time", "concentration")
 column_names <- c("Cplasma")
 
@@ -4741,7 +3995,7 @@ for (i in 1:length(unique(exp_data$Tissue))) {
 obs_hind_INH_Mblood_high <- list(exp_data[exp_data$Tissue == "Plasma", "concentration"])
 
 
-score[12] <- AAFE(predictions = preds_hind_INH_Mblood_high, observations = obs_hind_INH_Mblood_high)
+score[39] <- AAFE(predictions = preds_hind_INH_Mblood_high, observations = obs_hind_INH_Mblood_high)
 
 
 ##########################
@@ -4752,8 +4006,8 @@ score[12] <- AAFE(predictions = preds_hind_INH_Mblood_high, observations = obs_h
 # Set up simulations for the 13th case, i.e. Hinderliter Inhalation female single low
 BW <- (0.197+0.145)/2  #kg,  https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
 sex <- "F"
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[12]])
-params <- c(fixed_params[[12]], variable_params)
+variable_params <- create_variable_params(BW,sex, fixed_params[[32]])
+params <- c(fixed_params[[32]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -4771,7 +4025,7 @@ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
 
 #======================================df13=========================================================
 
-exp_data <- dataset$df13 # retrieve data of Hinderliter Inhalation male single low
+exp_data <- dataset$df34 # retrieve data of Hinderliter Inhalation male single low
 colnames(exp_data)[c(2,3)] <- c("time", "concentration")
 column_names <- c("Cplasma")
 
@@ -4788,7 +4042,7 @@ for (i in 1:length(unique(exp_data$Tissue))) {
 obs_hind_INH_Fblood_low <- list(exp_data[exp_data$Tissue == "Plasma", "concentration"])
 
 
-score[13] <- AAFE(predictions = preds_hind_INH_Fblood_low, observations = obs_hind_INH_Fblood_low)
+score[40] <- AAFE(predictions = preds_hind_INH_Fblood_low, observations = obs_hind_INH_Fblood_low)
 
 
 ##########################
@@ -4798,8 +4052,8 @@ score[13] <- AAFE(predictions = preds_hind_INH_Fblood_low, observations = obs_hi
 ##########################
 # Set up simulations for the 14th case, i.e. Hinderliter Inhalation female single low
 BW <- (0.197+0.145)/2  #kg,  https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[13]])
-params <- c(fixed_params[[13]], variable_params)
+variable_params <- create_variable_params(BW,sex, fixed_params[[33]])
+params <- c(fixed_params[[33]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -4817,7 +4071,7 @@ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
 
 #======================================df14=========================================================
 
-exp_data <- dataset$df14 # retrieve data of Hinderliter Inhalation male single medium
+exp_data <- dataset$df35 # retrieve data of Hinderliter Inhalation male single medium
 colnames(exp_data)[c(2,3)] <- c("time", "concentration")
 column_names <- c("Cplasma")
 
@@ -4834,7 +4088,7 @@ for (i in 1:length(unique(exp_data$Tissue))) {
 obs_hind_INH_Fblood_medium <- list (exp_data[exp_data$Tissue == "Plasma", "concentration"])
 
 
-score[14] <- AAFE(predictions = preds_hind_INH_Fblood_medium, observations = obs_hind_INH_Fblood_medium)
+score[41] <- AAFE(predictions = preds_hind_INH_Fblood_medium, observations = obs_hind_INH_Fblood_medium)
 
 
 ##########################
@@ -4844,8 +4098,8 @@ score[14] <- AAFE(predictions = preds_hind_INH_Fblood_medium, observations = obs
 ##########################
 # Set up simulations for the 15th case, i.e. Hinderliter Inhalation female single high
 BW <- (0.197+0.145)/2  #kg,  https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
-variable_params <- create_variable_params(BW,sex,estimated_params, fixed_params[[14]])
-params <- c(fixed_params[[14]], variable_params)
+variable_params <- create_variable_params(BW,sex, fixed_params[[34]])
+params <- c(fixed_params[[34]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -4863,7 +4117,7 @@ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
 
 #======================================df15=========================================================
 
-exp_data <- dataset$df15 # retrieve data of Hinderliter Inhalation male single high
+exp_data <- dataset$df36 #retrieve data of Hinderliter Inhalation male single high
 colnames(exp_data)[c(2,3)] <- c("time", "concentration")
 column_names <- c("Cplasma")
 
@@ -4880,4 +4134,4 @@ for (i in 1:length(unique(exp_data$Tissue))) {
 obs_hind_INH_Fblood_high <- list (exp_data[exp_data$Tissue == "Plasma", "concentration"])
 
 
-score[15] <- AAFE(predictions = preds_hind_INH_Fblood_high, observations = obs_hind_INH_Fblood_high)
+score[42] <- AAFE(predictions = preds_hind_INH_Fblood_high, observations = obs_hind_INH_Fblood_high)
