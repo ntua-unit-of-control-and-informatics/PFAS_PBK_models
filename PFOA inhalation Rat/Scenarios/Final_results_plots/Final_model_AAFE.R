@@ -3958,8 +3958,8 @@ score[38] <- AAFE(predictions = preds_hind_INH_Mblood_medium, observations = obs
 ##########################
 # Set up simulations for the 12th case, i.e. Hinderliter Inhalation male single high
 BW <- (0.311+0.195)/2  #kg, https://animal.ncku.edu.tw/p/412-1130-16363.php?Lang=en
-variable_params <- create_variable_params(BW,sex, fixed_params[[41]])
-params <- c(fixed_params[[41]], variable_params)
+variable_params <- create_variable_params(BW,sex, fixed_params[[31]])
+params <- c(fixed_params[[31]], variable_params)
 inits <- create.inits(params)
 events <- create.events(params)
 
