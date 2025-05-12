@@ -1,0 +1,5 @@
+"Study","Dose","Tissue","Type","Observed","Predicted","Time"
+"Lupton_2020",0.047,"Liver","oral",0.02,0.722753288929732,324
+"Lupton_2020",0.047,"Kidney","oral",0.03,0.143920726003622,324
+"Lupton_2020",0.047,"Blood","oral",0.01,0.118093291551427,324
+"Lupton_2020",0.047,"Skin","oral",0.02,0.00704081916222035,324

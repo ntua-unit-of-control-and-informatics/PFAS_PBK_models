@@ -502,7 +502,7 @@ create_fixed_params <- function(user.input){
     VCDC <- f_tubular*f_CDC_prot_to_tub_prot*VKT #for comparison, for 300g male rat we have 0.38mL and Worley and Fisher have 0.34 mL
     VKTrest <- (1-f_tubular)*VKT
     
-    VBladder <- 0.001 #https://doi.org/10.1152/physrev.00038.2003 (CHECK)
+    VBladder <- 0.001 #mL, bladder capacity. https://doi.org/10.1152/physrev.00038.2003 
     
     #Liver
     PVL <- 3.66e-2 #Brown et al. 1997
@@ -2302,7 +2302,7 @@ create_all_fixed_params <- function(){
   sex <- "M"
   duration <- 0.345 #hours, 22.5 min
   k = 9#partition of administration packages
-  admin.dose <- rep((512.5*0.62*0.335)/k, length.out = k) #ug PFOA, for 22.5 min inhalation
+  admin.dose <- rep((510*0.62*0.335)/k, length.out = k) #ug PFOA, for 22.5 min inhalation
   admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
   admin.type <- "inh"
   

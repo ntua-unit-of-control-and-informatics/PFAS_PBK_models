@@ -2085,7 +2085,7 @@ create_all_fixed_params <- function(){
   sex <- "M"
   duration <- 0.345 #hours, 22.5 min
   k = 9#partition of administration packages
-  admin.dose <- rep((512.5*0.62*0.335)/k, length.out = k) #ug PFOA, for 22.5 min inhalation
+  admin.dose <- rep((510*0.62*0.335)/k, length.out = k) #ug PFOA, for 22.5 min inhalation
   admin.time <- seq(0,duration ,length.out = k) #time when doses are administered, in hours
   admin.type <- "inh"
   
