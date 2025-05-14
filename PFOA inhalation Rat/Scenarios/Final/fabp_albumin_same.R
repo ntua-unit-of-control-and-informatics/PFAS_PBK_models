@@ -49,8 +49,8 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   f_alb_avail<- estimated_params[11]
   f_fabp_avail  <-estimated_params[12]
   
-  koff_alb <-  estimated_params[13]
-  koff_fabp <-     estimated_params[14]#
+  koff_alb <-  1#estimated_params[13]
+  koff_fabp <-     estimated_params[13]#
   koff_a2u <- koff_alb
   
   VmK_baso <- 0

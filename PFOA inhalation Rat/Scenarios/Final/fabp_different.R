@@ -213,22 +213,24 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   IPR_Go = 0.5 #assumption
   IPR_Bo = 0.5 #assumption
   IPR_R = (IPR_K+IPR_L+IPR_ST+IPR_IN+IPR_M+IPR_A+IPR_Lu+IPR_Sp+IPR_H+IPR_SK+IPR_Br+IPR_Go+IPR_Bo)/13 #average IPR of all the included organs (kg=L)
+  Hct <- 0.41
   
-  CalbKF_init  <- CalbKB_init* IPR_K
-  CalbLF_init <- CalbLB_init* IPR_L 
-  CalbSTF_init <- CalbSTB_init* IPR_ST
-  CalbINF_init <- CalbINB_init* IPR_IN
-  CalbMF_init <- CalbMB_init* IPR_M
-  CalbAF_init <- CalbAB_init* IPR_A
-  CalbRF_init <- CalbRB_init* IPR_R
-  CalbBoF_init <- CalbBoB_init* IPR_Bo
-  CalbLuF_init <- CalbLuB_init* IPR_Lu
-  CalbSPF_init <- CalbSPB_init* IPR_Sp
-  CalbGoF_init <- CalbGoB_init* IPR_Go
-  CalbHF_init <- CalbHB_init* IPR_H
-  CalbBrF_init <- CalbBrB_init* IPR_Br
-  CalbSKF_init <- CalbSKB_init* IPR_SK
-  CalbLuAF_init <- 10/100 * CalbB_init #based on Woods et al. 2015 statement https://doi.org/10.1016/j.jconrel.2015.05.269
+  #Convert blood concentration to plasma concentration first to derive the interstitial concentration
+  CalbKF_init  <- (CalbKB_init/(1-Hct)) * IPR_K
+  CalbLF_init <- (CalbLB_init/(1-Hct))* IPR_L 
+  CalbSTF_init <- (CalbSTB_init/(1-Hct))* IPR_ST
+  CalbINF_init <- (CalbINB_init/(1-Hct))* IPR_IN
+  CalbMF_init <- (CalbMB_init/(1-Hct))* IPR_M
+  CalbAF_init <- (CalbAB_init/(1-Hct))* IPR_A
+  CalbRF_init <- (CalbRB_init/(1-Hct))* IPR_R
+  CalbBoF_init <- (CalbBoB_init/(1-Hct))* IPR_Bo
+  CalbLuF_init <- (CalbLuB_init/(1-Hct))* IPR_Lu
+  CalbSPF_init <- (CalbSPB_init/(1-Hct))* IPR_Sp
+  CalbGoF_init <- (CalbGoB_init/(1-Hct))* IPR_Go
+  CalbHF_init <- (CalbHB_init/(1-Hct))* IPR_H
+  CalbBrF_init <- (CalbBrB_init/(1-Hct))* IPR_Br
+  CalbSKF_init <- (CalbSKB_init/(1-Hct))* IPR_SK
+  CalbLuAF_init <- (10/100/(1-Hct)) * CalbB_init #based on Woods et al. 2015 statement https://doi.org/10.1016/j.jconrel.2015.05.269
   
   
   #Alpha2mu-globulin concentration in kidney tissue (mol/L)
@@ -1439,10 +1441,10 @@ ode.func <- function(time, inits, params){
     
     #Proximal convoluted tubule
     dMPT =  QGFR*CArtf + kPtcTu*(CPTCf - CPT) - (VmK_Oatp*CPT/(KmK_Oatp+CPT)) - 
-      (VmK_Urat*CPT/(KmK_Urat+CPT)) + (VmK_api*CPTCf/(KmK_api+CPTCf))- QTDL*CPT
+      (VmK_Urat*CPT/(KmK_Urat+CPT)) + (VmK_api*CPTCf/(KmK_api+CPTCf))- QTAL*CPT
     
     #Descending limb, Ascending limb (Loop of Henle )
-    dMDAL =  QTDL*CPT + kDalcTu*(CDALCf - CDAL)  -  QDT*CDAL
+    dMDAL =  QTAL*CPT + kDalcTu*(CDALCf - CDAL)  -  QDT*CDAL
     
     # Distal convoluted tubule 
     dMDT =   QDT*CDAL + kDtcTu*(CDTCf - CDT) -  QCD*CDT
@@ -3676,7 +3678,7 @@ optimizer <- nloptr::nloptr( x0= fit,
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
-save.image("fabp_different.RData")
+save.image("fabp_different2.RData")
 
 
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
