@@ -27,11 +27,11 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   RAFNtcp <- RAFOatp_l
   RAFOatp2_Int <- 6.799068e-07
   
-  
+  hindrance <- 0.05
   wall_width <-  0.5e-6*100 #[m] -->[cm], capillary wall width. From Ashoor et al. (2018) [10.1016/j.rpor.2018.09.007]. Similar value from Sosula (1974) [10.1016/0026-2862(74)90011-9]
   basement_membrane <-  0.5e-6*100 #assumption
   dif <- 5.46e-6 #[cm^2/s], from  Gauthier et al. (2024) [10.1021/acsestwater.4c00631]
-  Pgap_continuous <- dif/ (wall_width+basement_membrane) #cm/s
+  Pgap_continuous <- dif*hindrance/ (wall_width+basement_membrane) #cm/s
   Pgap_fenestrated <- Pgap_continuous
   # In organs with sinusoid there is no basement membrane at gaps,
   # so we use basemenent membrane thickness = 0
@@ -39,28 +39,29 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   Papp_RYU <- 1.46e-6 # cm/s, at pH = 7.4 from Ryu et al. (2024) [https://doi.org/10.1016/j.chemosphere.2024.142390]
   Peff_monolayer <- Papp_RYU*3600 #cm/h
   
-  #fraction of gaps in capilalry surface
-  f_kidney <- 0.5 #Bulger et al. (1983) [10.1172/jci110950] 
+  #fraction of gaps in capillary surface
+  f_kidney <- 0.5 #Bulger et al. (1983) [10.1172/jci110950] Mou et al. (2024) [10.3390/ijms25169107]
   f_liver <- 0.08 #  Simon-Santamaria et al. (2010)[10.1093/gerona/glq108] (Antwi et al. (2023) give a range 2-20% [10.1371/journal.pone.0293526] )
-  f_spleen <- 0.3 #assumption
-  f_intestine <- 0.2 #assumption
-  f_non_fenestrated <- estimated_params[7]
+  f_spleen <- 0.1 #assumption
+  f_intestine <- 0.02 #assumption
+  f_non_fenestrated <- 0.0048 # Clough & Michel (1988) [10.1113/jphysiol.1988.sp017348]
   
   VmK_api <- 0
   VmK_baso <- 0
   KmK_baso <- 1e20
   KmK_api <-   5e4
-  KLfabp <- (1.2e5+4e4+1.9e4) #[L/mol]*1e-3 , value from Cheng et al. (2017)
-  Ka <- 5.6e5# from Rue et al. (2024)#mol/L
-  CLfeces_unscaled <-estimated_params[8]#in L/h/BW^(-0.25), scaling similar to Loccisano et al. (2012)
+  KLfabp <- 1.2e5 #[L/mol], from Sheng et al. 2018
+  Ka <- 5.8e5# from Rue et al. (2024)#mol/L
+  CLfeces_unscaled <- estimated_params[7]#in L/h/BW^(-0.25), scaling similar to Loccisano et al. (2012)
   CLfeces <- CLfeces_unscaled*BW^(-0.25) 
   
-  f_alb_avail<- 1
-  f_fabp_avail  <-1
+  f_alb_avail<-  estimated_params[8]
+  f_fabp_avail  <- estimated_params[9]
+  f_a2u_avail <- 1
   
-  koff_alb <-  estimated_params[9]
-  koff_fabp <-     estimated_params[10]#
-  koff_a2u <- estimated_params[11]
+  koff_alb <- estimated_params[10]
+  koff_fabp <-   estimated_params[11]#
+  koff_a2u <- koff_alb
   #In order to scale transporter Vmax, we need to have the tissue weight to estimate
   # tissue protein
   PVIN <- 2.24e-2 #Brown et al. 1997, p 416, Table 5: 1.4+0.84
@@ -236,7 +237,7 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   #Alpha2mu-globulin concentration in kidney tissue (mol/L)
   if (sex == "M"){
     a2u_globulin_k = 8.77*kidney_protein_total*1e-3/VK #mg/L, 8.77 mg/g kidney protein from https://doi.org/10.1016/0300-483X(86)90197-6 
-    Ca2uKT_init <- f_alb_avail*(a2u_globulin_k*1e-3/15.5e3) #[mol/L]
+    Ca2uKT_init <- f_a2u_avail*(a2u_globulin_k*1e-3/15.5e3) #[mol/L]
     
     #Ca2uKT_init <- 321.51*1e-3 #[umol/L]*1e-3 -->(mol/m3), from Cheng et al. (2017)
     
@@ -331,7 +332,7 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   Ptrans_diff_SK <- Peff_monolayer*10* (1-f_non_fenestrated) #mm/h
   Ptrans_diff_Bo <- Peff_monolayer*10* (1-f_non_fenestrated) #mm/h
   
-
+  
   
   #Estimation of permeability through capillary fenestra and discontinuities:
   PparaKi <- Pgap_fenestrated*3600*10*f_kidney#mm/h
@@ -2282,7 +2283,7 @@ create_all_fixed_params <- function(){
 #
 obj.func <- function(x, dataset, fixed_params){
   N_data <- length(dataset)
-  score <- rep(NA, N_data+5)
+  score <- rep(NA, N_data+7)
   
   # x: a vector with the values of the optimized parameters (it is not the x
   # from the odes!!!)
@@ -2576,7 +2577,7 @@ obj.func <- function(x, dataset, fixed_params){
                                exp_data[exp_data$Tissue == "Brain", "concentration"]) 
   
   score[7] <- AAFE(predictions = preds_dzi_OR_Mtissues, observations = obs_dzi_OR_Mtissues)
-  score[39] <- AAFE(predictions = preds_dzi_OR_Mtissues[[1]], observations = obs_dzi_OR_Mtissues[[1]])
+  score[39] <- 2*AAFE(predictions = preds_dzi_OR_Mtissues[[1]], observations = obs_dzi_OR_Mtissues[[1]])
   
   ##########################
   #-------------------------
@@ -2622,6 +2623,10 @@ obj.func <- function(x, dataset, fixed_params){
                                exp_data[exp_data$Tissue == "Brain", "concentration"]) 
   
   score[8] <- AAFE(predictions = preds_dzi_OR_Ftissues, observations = obs_dzi_OR_Ftissues)
+  
+  
+  score[40] <- 2*AAFE(predictions = preds_dzi_OR_Ftissues[[1]], observations = obs_dzi_OR_Ftissues[[1]])
+  
   
   ##########################
   #-------------------------
@@ -3618,7 +3623,7 @@ Kemp_OR_Ffeces_low <- openxlsx::read.xlsx("Data/PFOA_Feces_female_oral_1_mg_per_
 Kemp_OR_Mfeces_low <- openxlsx::read.xlsx("Data/PFOA_Feces_male_oral_1_mg_per_kg-Loc.xlsx")
 
 
-setwd("/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final/diffusion_fabp_same_fixed_ka_kfabp_fixed_fractions")
+setwd("/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final/diffusion_fabp_same_fixed_ka_kfabp_fixed_koff")
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -3659,13 +3664,13 @@ Papp_RYU = 1.46e-6 # cm/s, at pH = 7.4 from Ryu et al. (2024) [https://doi.org/1
 # Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
 
 N_pars <- 11 # Number of parameters to be fitted
-fit <- log(c(3.853823e+01, 4.113336e-05, 5.238279e+03, 7.352394e+01, 3.607135e+00, 
-             1.470813e+00, 1.109408e-04,  9.651647e-05,0.1, 4.619474e-04, 1e-3))
+fit <- log(c(1.8e+01, 5e-05, 1.8e+04, 4.4e+02, 3.0e+00, 3.5e+00, 7e-05,
+             2.316007e-01, 0.3,  1, 1e-3))
 
 
 
-lb = c(rep(log(1e-7),3), log(1e-3), log(1e-1), log(1e-4), log(1e-6), log(1e-6),log(1e-6),log(1e-6),log(1e-6))
-ub = c(rep(log(1e5),  3),log(1e3),  log(2e1), log(1e2),  log(0.01),  log(1e-3),log(100),log(100),log(100))
+# lb = c(rep(log(1e-7),3), log(1e-3), log(1e-1), log(1e-4), log(1e-6), log(1e-6),log(1e-6),log(1e-6),log(1e-6))
+# ub = c(rep(log(1e5),  3),log(1e3),  log(2e1), log(1e2),  log(0.01),  log(1e-3),log(100),log(100),log(100))
 
 
 
@@ -3673,15 +3678,15 @@ fixed_params <- create_all_fixed_params()
 # Run the optimization algorithm to estimate the parameter values
 optimizer <- nloptr::nloptr( x0= fit,
                              eval_f = obj.func,
-                             lb	= lb,
-                             ub = ub,
+                             # lb	= lb,
+                             # ub = ub,
                              opts = opts,
                              dataset = dataset,
                              fixed_params = fixed_params)
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
-save.image("diffusion_fabp_same_fixed_ka_kfabp_fixed_fractions.RData")
+save.image("diffusion_fabp_same_fixed_ka_kfabp_fixed_koff_new.RData")
 
 
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues

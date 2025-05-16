@@ -40,7 +40,7 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   Peff_monolayer <- Papp_RYU*3600 #cm/h
   
   #fraction of gaps in capilalry surface
-  f_kidney <- 0.5 #Bulger et al. (1983) [10.1172/jci110950] 
+  f_kidney <- 0.5 #Bulger et al. (1983) [10.1172/jci110950] Mou et al. (2024) [10.3390/ijms25169107]
   f_liver <- 0.08 #  Simon-Santamaria et al. (2010)[10.1093/gerona/glq108] (Antwi et al. (2023) give a range 2-20% [10.1371/journal.pone.0293526] )
   f_spleen <- 0.3 #assumption
   f_intestine <- 0.2 #assumption
