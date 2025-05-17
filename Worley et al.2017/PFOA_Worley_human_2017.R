@@ -53,14 +53,14 @@ create.params  <- function(user_input){
     
     #rate constants
     kdif = 0.001*24	#diffusion rate from proximal tubule cells (L/day)
-    kabsc = 2.12*24	#rate of absorption of chemical from small intestine to liver (1/(day*BW^0.25))(fit to data)
-    kunabsc = 7.06e-5*24	#rate of unabsorbed dose to appear in feces (1/(day*BW^0.25))(fit to data)
-    GEC = 3.5*24#gastric emptying time (1/(day*BW^0.25)); from Yang, 2013
-    k0C = 1.0*24	#rate of uptake from the stomach into the liver (1/(day*BW^0.25)) (fit to data)
+    kabsc = 2.12*24	#rate of absorption of chemical from small intestine to liver (1/(day*BW^-0.25))(fit to data)
+    kunabsc = 7.06e-5*24	#rate of unabsorbed dose to appear in feces (1/(day*BW^-0.25))(fit to data)
+    GEC = 3.5*24#gastric emptying time (1/(day*BW^-0.25)); from Yang, 2013
+    k0C = 1.0*24	#rate of uptake from the stomach into the liver (1/(day*BW^-0.25)) (fit to data)
     
-    keffluxc =0.1*24 #rate of clearance of PFOA from proximal tubule cells into blood (1/(day*BW^0.25))
-    kbilec = 0.0001*24 #biliary elimination rate ((male); liver to feces storage (1/(day*BW^0.25)) (fit to data)
-    kurinec = 0.063*24 #rate of urine elimination from urine storage (male) (1/(day*BW^0.25))(fit to data)
+    keffluxc =0.1*24 #rate of clearance of PFOA from proximal tubule cells into blood (1/(day*BW^-0.25))
+    kbilec = 0.0001*24 #biliary elimination rate ((male); liver to feces storage (1/(day*BW^-0.25)) (fit to data)
+    kurinec = 0.063*24 #rate of urine elimination from urine storage (male) (1/(day*BW^-0.25))(fit to data)
     kvoid = 0.06974*24  #daily urine volume rate (L/day); Van Haarst, 2004                                                   
     
     #Scaled Parameters
@@ -101,8 +101,8 @@ create.params  <- function(user_input){
     #GI Tract Parameters
     kabs = kabsc*BW^(-0.25)	#rate of absorption of chemical from small intestine to liver (/day)
     kunabs = kunabsc*BW^(-0.25)	#rate of unabsorbed dose to appear in feces (/day)
-    GE = GEC/BW^(-0.25)	#gastric emptying time (/day)
-    k0 = k0C/BW^(-0.25) 	#rate of uptake from the stomach into the liver (/day)
+    GE = GEC*BW^(-0.25)	#gastric emptying time (/day)
+    k0 = k0C*BW^(-0.25) 	#rate of uptake from the stomach into the liver (/day)
     
     water_consumption <- 1.36# L/day
 
