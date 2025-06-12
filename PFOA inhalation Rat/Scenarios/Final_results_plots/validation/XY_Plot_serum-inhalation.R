@@ -1,7 +1,7 @@
 library(ggplot2)
 
-#setwd("C:/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_results")
-setwd('/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_Inhalation_model/Validation/Validation_results')
+#setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_results")
+setwd("/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation")
 
 # Load Results 
 
@@ -73,6 +73,6 @@ scatter_plot <- ggplot()+
 
 #print(scatter_plot)
 
-ggsave("validation_plot_PFOA_serum.png", scatter_plot, width = 11, height = 7, units = "in", dpi = 300)
+ggsave("validation_plot_PFOA_nasal_serum.png", scatter_plot, width = 11, height = 7, units = "in", dpi = 300)
 
 

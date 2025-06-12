@@ -1,5 +1,5 @@
 library(deSolve)
-setwd("/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation")
+setwd("/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation")
 
 #  absolute average fold error
 AAFE <- function(predictions, observations, times=NULL){
@@ -19,7 +19,7 @@ AAFE <- function(predictions, observations, times=NULL){
 #===============
 
 
-load("no_IF_no_apical_one_permeability_koffc_simplified.RData")
+load("inhalation_permeability_latest.RData")
 
 # Set up simulations for the 1st case, i.e. Lupton (2020) ORAL female feces
 BW <- 0.184  # body weight (kg) 
@@ -153,5 +153,5 @@ print(paste0("The AAFE on the excreta data of Lupton et al. (2020) is ", AAFE_Lu
 
 
 write.csv(results_df,
-          "/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation/Lupton_2020_excreta_results.csv",
+          "/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation/Lupton_2020_excreta_results.csv",
           row.names =F)

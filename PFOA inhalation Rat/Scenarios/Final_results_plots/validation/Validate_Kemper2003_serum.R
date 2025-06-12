@@ -1,5 +1,5 @@
 library(deSolve)
-setwd("/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation")
+setwd("/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation")
 
 #===============
 # Generate predictions
@@ -20,7 +20,7 @@ AAFE <- function(predictions, observations, times=NULL){
 }
 
 
-load("no_IF_no_apical_one_permeability_koffc_simplified.RData")
+load("inhalation_permeability_latest.RData")
 # Body weight 
 
 
@@ -269,5 +269,5 @@ results_df <- rbind(results_serum_F_iv_1, results_serum_F_oral_1, results_serum_
 AAFE_Kemper_serum <- mean(score)
 print(paste0("The AAFE on the serum data of Kemper et al. (2003) was ", AAFE_Kemper_serum))
 write.csv(results_df,
-          "/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation/Kemper_2003_serum_results.csv",
+          "/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation/Kemper_2003_serum_results.csv",
           row.names =F)

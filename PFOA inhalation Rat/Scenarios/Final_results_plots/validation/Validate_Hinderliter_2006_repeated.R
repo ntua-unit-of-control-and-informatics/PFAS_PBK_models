@@ -1,5 +1,5 @@
 library(deSolve)
-setwd("/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation")
+setwd("/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation")
 
 #  absolute average fold error
 AAFE <- function(predictions, observations, times=NULL){
@@ -17,7 +17,7 @@ AAFE <- function(predictions, observations, times=NULL){
 #===============
 # Generate predictions
 #===============
-load("inhalation_permeability_same_lung_raf_simplified.RData")
+load("inhalation_permeability_latest.RData")
 # Body weight 
 BW <- 0.21  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
 sex <- "M"
@@ -177,7 +177,7 @@ custom_round <- function(time) {
 score <- rep(NA,6)
 
 # Gather the required data for the x-y plot
-df <- openxlsx::read.xlsx("Raw_Data/Hinderliter/All_data_Hinderliter_2006_repeated.xlsx")
+df <- openxlsx::read.xlsx("Raw_Data/Hinderliter_2006/All_data_Hinderliter_2006_repeated.xlsx")
 obs_plasma_1M <- df[df$Dose_mg_per_m3 == 1 & df$Sex == "M",]
 rounded_time <- sapply(obs_plasma_1M$Time_h, custom_round)
 rounded_soltime <- sapply(solution_1M$time, custom_round)
@@ -190,13 +190,9 @@ results_df_1M<- data.frame("Study" = "Hinderliter_2006", "Dose" =  obs_plasma_1M
                           "Observed" =obs_plasma_1M$Concentration_microg_per_g_organ,
                           "Predicted" = preds_plasma_1M, "Time" = obs_plasma_1M$Time_h, time = rounded_time)
 
-ggplot(data = results_df_1M)+
-  geom_line(aes(x =rounded_time, y= Predicted ))+
-  geom_point(aes(x =rounded_time, y= Observed ))
 
 
-
-df <- openxlsx::read.xlsx("Raw_Data/Hinderliter/All_data_Hinderliter_2006_repeated.xlsx")
+df <- openxlsx::read.xlsx("Raw_Data/Hinderliter_2006/All_data_Hinderliter_2006_repeated.xlsx")
 obs_plasma_10M <- df[df$Dose_mg_per_m3 == 10 & df$Sex == "M",]
 rounded_time <- sapply(obs_plasma_10M$Time_h, custom_round)
 rounded_soltime <- sapply(solution_10M$time, custom_round)
@@ -210,13 +206,9 @@ results_df_10M<- data.frame("Study" = "Hinderliter_2006", "Dose" =  obs_plasma_1
                            "Predicted" = preds_plasma_10M, "Time" = obs_plasma_10M$Time_h, time = rounded_time )
 
 
-ggplot(data = results_df_10M)+
-  geom_line(aes(x =rounded_time, y= Predicted ))+
-  geom_point(aes(x =rounded_time, y= Observed ))
 
 
-
-df <- openxlsx::read.xlsx("Raw_Data/Hinderliter/All_data_Hinderliter_2006_repeated.xlsx")
+df <- openxlsx::read.xlsx("Raw_Data/Hinderliter_2006/All_data_Hinderliter_2006_repeated.xlsx")
 obs_plasma_25M <- df[df$Dose_mg_per_m3 == 25 & df$Sex == "M",]
 rounded_time <- sapply(obs_plasma_25M$Time_h, custom_round)
 rounded_soltime <- sapply(solution_25M$time, custom_round)
@@ -229,13 +221,11 @@ results_df_25M<- data.frame("Study" = "Hinderliter_2006", "Dose" =  obs_plasma_2
                             "Observed" =obs_plasma_25M$Concentration_microg_per_g_organ,
                             "Predicted" = preds_plasma_25M, "Time" = obs_plasma_25M$Time_h , time = rounded_time)
 
-ggplot(data = results_df_25M)+
-  geom_line(aes(x =rounded_time, y= Predicted ))+
-  geom_point(aes(x =rounded_time, y= Observed ))
 
 
 
-df <- openxlsx::read.xlsx("Raw_Data/Hinderliter/All_data_Hinderliter_2006_repeated.xlsx")
+
+df <- openxlsx::read.xlsx("Raw_Data/Hinderliter_2006/All_data_Hinderliter_2006_repeated.xlsx")
 obs_plasma_1F <- df[df$Dose_mg_per_m3 == 1 & df$Sex == "F",]
 rounded_time <- sapply(obs_plasma_1F$Time_h, custom_round)
 rounded_soltime <- sapply(solution_1F$time, custom_round)
@@ -247,12 +237,9 @@ results_df_1F<- data.frame("Study" = "Hinderliter_2006", "Dose" =  obs_plasma_1F
                            "Type" = obs_plasma_1F$Type, sex = obs_plasma_1F$Sex,
                            "Observed" =obs_plasma_1F$Concentration_microg_per_g_organ,
                            "Predicted" = preds_plasma_1F, "Time" = obs_plasma_1F$Time_h, time = rounded_time )
-ggplot(data = results_df_1F)+
-  geom_line(aes(x =rounded_time, y= Predicted ))+
-  geom_point(aes(x =rounded_time, y= Observed ))
 
 
-df <- openxlsx::read.xlsx("Raw_Data/Hinderliter/All_data_Hinderliter_2006_repeated.xlsx")
+df <- openxlsx::read.xlsx("Raw_Data/Hinderliter_2006/All_data_Hinderliter_2006_repeated.xlsx")
 obs_plasma_10F <- df[df$Dose_mg_per_m3 == 10 & df$Sex == "F",]
 rounded_time <- sapply(obs_plasma_10F$Time_h, custom_round)
 rounded_soltime <- sapply(solution_10F$time, custom_round)
@@ -265,11 +252,9 @@ results_df_10F<- data.frame("Study" = "Hinderliter_2006", "Dose" =  obs_plasma_1
                             "Observed" =obs_plasma_10F$Concentration_microg_per_g_organ,
                             "Predicted" = preds_plasma_10F, "Time" = obs_plasma_10F$Time_h, time = rounded_time )
 
-ggplot(data = results_df_10F)+
-  geom_line(aes(x =rounded_time, y= Predicted ))+
-  geom_point(aes(x =rounded_time, y= Observed ))
 
-df <- openxlsx::read.xlsx("Raw_Data/Hinderliter/All_data_Hinderliter_2006_repeated.xlsx")
+
+df <- openxlsx::read.xlsx("Raw_Data/Hinderliter_2006/All_data_Hinderliter_2006_repeated.xlsx")
 obs_plasma_25F <- df[df$Dose_mg_per_m3 == 25 & df$Sex == "F",]
 rounded_time <- sapply(obs_plasma_25F$Time_h, custom_round)
 rounded_soltime <- sapply(solution_25F$time, custom_round)
@@ -282,9 +267,6 @@ results_df_25F<- data.frame("Study" = "Hinderliter_2006", "Dose" =  obs_plasma_2
                             "Observed" =obs_plasma_25F$Concentration_microg_per_g_organ,
                             "Predicted" = preds_plasma_25F, "Time" = obs_plasma_25F$Time_h, time = rounded_time )
 
-ggplot(data = results_df_25F)+
-  geom_line(aes(x =rounded_time, y= Predicted ))+
-  geom_point(aes(x =rounded_time, y= Observed ))
 
 results_df <- rbind(results_df_1M, results_df_10M, results_df_25M, results_df_1F, results_df_10F, results_df_25F)
 
@@ -292,7 +274,7 @@ AAFE_Hinderliter <- mean(score)
 print(paste0("The AAFE on the Plasma data of Hinderliter et al. (2006) was ", AAFE_Hinderliter))
 
 write.csv(results_df,
-          '/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation/Hinderliter_2006_results.csv',
+          '/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation/Hinderliter_2006_results.csv',
           row.names =F)
 
 

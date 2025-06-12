@@ -1,5 +1,5 @@
 library(deSolve)
-setwd("/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation")
+setwd("/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation")
 
 #  absolute average fold error
 AAFE <- function(predictions, observations, times=NULL){
@@ -19,7 +19,8 @@ AAFE <- function(predictions, observations, times=NULL){
 #===============
 
 
-load("no_IF_no_apical_one_permeability_koffc_simplified.RData")
+load("inhalation_permeability_latest.RData")
+
 # Body weight 
 
 
@@ -315,5 +316,5 @@ print(paste0("The AAFE on the excreta data of Cui et al. (2010) is ", AAFE_Cui))
 
 
 write.csv(results_df,
-          "/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation/Cui_2010_Excreta_results.csv",
+          "/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation/Cui_2010_Excreta_results.csv",
           row.names =F)

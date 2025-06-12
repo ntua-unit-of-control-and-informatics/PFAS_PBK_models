@@ -2,7 +2,7 @@ library(ggplot2)
 library(dplyr)
 
 # Set working directory
-setwd("/Users/ptsir/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation")
+setwd("/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation")
 
 # Load Results 
 Cui_results <- read.csv("Cui_2008_results.csv", header = TRUE)

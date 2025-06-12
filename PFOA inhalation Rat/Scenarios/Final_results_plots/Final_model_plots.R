@@ -822,7 +822,7 @@ create_fixed_params <- function(user.input){
     Q_scaling_factor = QGFR/QPT_ref
     
     QPT <- Q_scaling_factor * QPT_ref #L/h, proximal tubule flow (short +long)
-    QDAL <- Q_scaling_factor * QTDL_ref #L/h, Thin descending limb (short +long)
+    QTDL <- Q_scaling_factor * QTDL_ref #L/h, Thin descending limb (short +long)
     QTAL <- Q_scaling_factor * QTAL_ref #L/h, Thin+thick (short +long) ascending 
     QDT <- Q_scaling_factor * QDT_ref  #L/h, Distal tubule (short + long)
     QCD <- Q_scaling_factor * QCD_ref  #L/h, collecting duct (Cortical + medullary)
@@ -933,7 +933,7 @@ create_fixed_params <- function(user.input){
       'QBSK'=QBSK, 'QBBo'=QBBo, 'Hct' = Hct,
       
       
-      "QPT" = QPT, "QDAL" = QDAL, "QTAL" = QTAL, "QDT" = QDT, "QCD" = QCD,
+      "QPT" = QPT, "QTDL" = QTDL, "QTAL" = QTAL, "QDT" = QDT, "QCD" = QCD,
       
       'f_tubular' =  f_tubular,  'f_PTC_prot_to_tub_prot' = f_PTC_prot_to_tub_prot, 
       'f_DALC_prot_to_tub_prot' = f_DALC_prot_to_tub_prot, 
@@ -978,7 +978,7 @@ ode.func <- function(time, inits, params){
                          'VKT', 'A_peritubular_PTC', 'A_peritubular_DTC','AL', 'AM', 'AA', 'AR', 'ALu','ASP', 'AH', 'ABr', 'AST',
                          'AIN', 'AGo','ASK', 'ABo','AINL', 'AcL' , 'AcM' , 'AcST' ,'AcIN', 'AcA' , 'AcLu' , 'AcELF' , 
                          'AcSP', 'AcH' , 'AcBr' , 'AcGo','AcSK', 'AcBo' , 'AcR' , 'APT' , 'ADAL' , 'ADT', 'ACD' , 'AcK_DALC','AcK_CDC' , 'AcKTrest',
-                         'Qfeces','Qbile', 'QGFR','Qurine','kabST',"QPT" , "QDAL", "QTAL" , "QDT", "QCD", 'CLfeces', "CL_hepatobiliary", 
+                         'Qfeces','Qbile', 'QGFR','Qurine','kabST',"QPT" , "QTDL", "QTAL" , "QDT", "QCD", 'CLfeces', "CL_hepatobiliary", 
                          'VmL_Oatp', 'VmL_Ntcp','VmL_Oatp2',  'VmIn_Oatp2', 'VmK_Oatp','VmLu_Oatp_ap', 'VmLu_Oatp_bas',
                          'VmK_Oat1', 'VmK_Oat3','VmK_Urat','kKTrestF', 'kCdcF' , 'kDalcF' , 'kPtcF' , 'kDtcF' ,
                          'kPtcTu', 'kDalcTu' , 'kDtcTu' , 'kCdcTu' , 'kLFLT',  'kAFAT', 'kRFRT','kMFMT', 'kLuTLuF', 'kLuTLuELF', 'kSPFSPT' ,
@@ -1459,10 +1459,10 @@ ode.func <- function(time, inits, params){
     
     #Proximal convoluted tubule
     dMPT =  QGFR*CArtf + kPtcTu*(CPTCf - CPT) - (VmK_Oatp*CPT/(KmK_Oatp+CPT)) - 
-      (VmK_Urat*CPT/(KmK_Urat+CPT)) + (VmK_api*CPTCf/(KmK_api+CPTCf))- QDAL*CPT
+      (VmK_Urat*CPT/(KmK_Urat+CPT)) + (VmK_api*CPTCf/(KmK_api+CPTCf))- QTDL*CPT
     
     #Descending limb, Ascending limb (Loop of Henle )
-    dMDAL =  QDAL*CPT + kDalcTu*(CDALCf - CDAL)  -  QDT*CDAL
+    dMDAL =  QTDL*CPT + kDalcTu*(CDALCf - CDAL)  -  QDT*CDAL
     
     # Distal convoluted tubule 
     dMDT =   QDT*CDAL + kDtcTu*(CDTCf - CDT) -  QCD*CDT
