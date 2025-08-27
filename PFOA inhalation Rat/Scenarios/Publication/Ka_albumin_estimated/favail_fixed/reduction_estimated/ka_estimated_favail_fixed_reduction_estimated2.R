@@ -264,7 +264,6 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   
   #passive diffusion rates, in L/h
   kLFLT = ((2*Peff_monolayer/100) * fixed_params$AcL)*1000 #m^3/h * 1000 --> L/h
-  #kLTLbile = ((Papp/100) * AcLBilec)*1000 #m^3/h * 1000 --> L/h
   kMFMT = ((2*Peff_monolayer/100) * fixed_params$AcM)*1000 #m^3/h * 1000 --> L/h
   kSTFSTT = ((2*Peff_monolayer/100) * fixed_params$AcST)*1000 #m^3/h * 1000 --> L/h 
   kINFINT = ((2*Peff_monolayer/100) * fixed_params$AcIN)*1000 #m^3/h * 1000 --> L/h 
@@ -1612,7 +1611,7 @@ ode.func <- function(time, inits, params){
       (VmL_Ntcp*CLFf/(KmL_Ntcp+CLFf)) + koff_fabp*CLTb*VLiT-
       kon_fabp*CFabpLTf*CLTf*VLiT - CL_hepatobiliary*CLTf
     #Bile  canaliculi subcompartment
-    dMLbile = CL_hepatobiliary*CLTf - CBile*Qbile
+    dMBile = CL_hepatobiliary*CLTf - CBile*Qbile
     
     #Stomach
     #blood subcompartment
@@ -1852,7 +1851,7 @@ ode.func <- function(time, inits, params){
             'dMDT' =  dMDT, 'dMCD' = dMCD,
             
             'dMBladder' = dMBladder, 'dMLBf'=dMLBf, 
-            'dMLFf'=dMLFf, 'dMLTf'=dMLTf, 'dMLbile'=dMLbile,
+            'dMLFf'=dMLFf, 'dMLTf'=dMLTf, 'dMBile'=dMBile,
             
             'dMSTBf'=dMSTBf, 'dMSTFf'=dMSTFf, 'dMSTTf'=dMSTTf, 'dMSTL'=dMSTL,
             'dMINBf'=dMINBf, 'dMINFf'=dMINFf, 'dMINTf'=dMINTf,'dMINL'=dMINL,
