@@ -1,5 +1,5 @@
 library(deSolve)
-setwd("/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation")
+setwd("/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Publication/Final_results_plots/Validation")
 
 #  absolute average fold error
 AAFE <- function(predictions, observations, times=NULL){
@@ -19,7 +19,7 @@ AAFE <- function(predictions, observations, times=NULL){
 #===============
 
 
-load("inhalation_permeability_latest.RData")
+load("PBK_validation.RData")
 
 # Body weight 
 
@@ -48,11 +48,10 @@ user_input <- list('BW'=BW_init,
                    "admin.dose"= admin.dose,
                    "admin.time" = admin.time, 
                    "admin.type" = admin.type,
-                   "estimated_params" = estimated_params,
                    "sex" = sex)
 
 
-params <- create_params(user_input)
+params <- create.params(user_input)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -87,11 +86,10 @@ user_input <- list('BW'=BW_init,
                    "admin.dose"= admin.dose,
                    "admin.time" = admin.time, 
                    "admin.type" = admin.type,
-                   "estimated_params" = estimated_params,
                    "sex" = sex)
 
 
-params <- create_params(user_input)
+params <- create.params(user_input)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -127,11 +125,10 @@ user_input <- list('BW'=BW_init,
                    "admin.dose"= admin.dose,
                    "admin.time" = admin.time, 
                    "admin.type" = admin.type,
-                   "estimated_params" = estimated_params,
                    "sex" = sex)
 
 
-params <- create_params(user_input)
+params <- create.params(user_input)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -167,11 +164,10 @@ user_input <- list('BW'=BW_init,
                    "admin.dose"= admin.dose,
                    "admin.time" = admin.time, 
                    "admin.type" = admin.type,
-                   "estimated_params" = estimated_params,
                    "sex" = sex)
 
 
-params <- create_params(user_input)
+params <- create.params(user_input)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -316,5 +312,5 @@ print(paste0("The AAFE on the excreta data of Cui et al. (2010) is ", AAFE_Cui))
 
 
 write.csv(results_df,
-          "/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation/Cui_2010_Excreta_results.csv",
+          "/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Publication/Final_results_plots/Validation/Cui_2010_Excreta_results.csv",
           row.names =F)

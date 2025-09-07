@@ -1,5 +1,5 @@
 library(deSolve)
-setwd("/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation")
+setwd("/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Publication/Final_results_plots/Validation")
 
 #  absolute average fold error
 AAFE <- function(predictions, observations, times=NULL){
@@ -17,7 +17,7 @@ AAFE <- function(predictions, observations, times=NULL){
 #===============
 # Generate predictions
 #===============
-load("inhalation_permeability_latest.RData")
+load("PBK_validation.RData")
 
 ##########################
 #-------------------------
@@ -38,10 +38,10 @@ user_input <- list('BW'=BW,
                    "admin.dose"= admin.dose,
                    "admin.time" = admin.time, 
                    "admin.type" = admin.type,
-                   "estimated_params" = estimated_params,
+                   
                    "sex" = sex)
 
-params <- create_params(user_input)
+params <- create.params(user_input)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -85,5 +85,5 @@ AAFE_Lupton <-  AAFE(preds_Lup_OR_Ftissues,obs_Lup_OR_Ftissues)
 print(paste0("The AAFE on the tissue data of Lupton et al. (2020) was ", AAFE_Lupton))
 
 write.csv(results_df,
-          "/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation/Lupton_2020_tissue_results.csv",
+          "/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Publication/Final_results_plots/Validation/Lupton_2020_tissue_results.csv",
           row.names =F)

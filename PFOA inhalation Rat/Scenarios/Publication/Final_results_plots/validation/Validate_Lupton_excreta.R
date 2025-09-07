@@ -1,5 +1,5 @@
 library(deSolve)
-setwd("/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation")
+setwd("/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Publication/Final_results_plots/Validation")
 
 #  absolute average fold error
 AAFE <- function(predictions, observations, times=NULL){
@@ -19,7 +19,7 @@ AAFE <- function(predictions, observations, times=NULL){
 #===============
 
 
-load("inhalation_permeability_latest.RData")
+load("PBK_validation.RData")
 
 # Set up simulations for the 1st case, i.e. Lupton (2020) ORAL female feces
 BW <- 0.184  # body weight (kg) 
@@ -35,10 +35,10 @@ user_input <- list('BW'=BW,
                    "admin.dose"= admin.dose,
                    "admin.time" = admin.time, 
                    "admin.type" = admin.type,
-                   "estimated_params" = estimated_params,
+                   
                    "sex" = sex)
 
-params <- create_params(user_input)
+params <- create.params(user_input)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -67,10 +67,10 @@ user_input <- list('BW'=BW,
                    "admin.dose"= admin.dose,
                    "admin.time" = admin.time, 
                    "admin.type" = admin.type,
-                   "estimated_params" = estimated_params,
+                   
                    "sex" = sex)
 
-params <- create_params(user_input)
+params <- create.params(user_input)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -153,5 +153,5 @@ print(paste0("The AAFE on the excreta data of Lupton et al. (2020) is ", AAFE_Lu
 
 
 write.csv(results_df,
-          "/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation/Lupton_2020_excreta_results.csv",
+          "/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Publication/Final_results_plots/Validation/Lupton_2020_excreta_results.csv",
           row.names =F)

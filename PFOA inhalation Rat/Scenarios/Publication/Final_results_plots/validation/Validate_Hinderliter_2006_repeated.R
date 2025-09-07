@@ -1,5 +1,5 @@
 library(deSolve)
-setwd("/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation")
+setwd("/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Publication/Final_results_plots/Validation")
 
 #  absolute average fold error
 AAFE <- function(predictions, observations, times=NULL){
@@ -17,13 +17,12 @@ AAFE <- function(predictions, observations, times=NULL){
 #===============
 # Generate predictions
 #===============
-load("inhalation_permeability_latest.RData")
+load("PBK_validation.RData")
 # Body weight 
 BW <- 0.21  #kg, not reported in the study - 200-250 g average BW of male CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
 sex <- "M"
-inhalation_params=estimate_BFn_TVn(sex, BW)
-BFn = inhalation_params["BFn"]# 1/h
-TVn = inhalation_params["TVn"]# L
+BFn = 166*60# 1/h
+TVn = 1.71*1e-3# L
 duration <- 6 #hours
 admin.dose_mg_per_m3 <- 1 # administered dose in mg/m^3
 depfr_head <- 0.3057
@@ -39,10 +38,10 @@ admin.type <- "nasal"
 user_input <-  list('BW'=BW,"admin.dose"= admin.dose,
                                    "admin.time" = admin.time, 
                                    "admin.type" = admin.type,
-                                   "estimated_params" = estimated_params,
+                    "depfr_head" = depfr_head, "depfr_AF" = depfr_AF,
                                    "sex" = sex)
 
-params <- create_params(user_input)
+params <- create.params(user_input)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -62,9 +61,9 @@ admin.dose <- rep(dose, length(admin.time))
 user_input <-  list('BW'=BW,"admin.dose"= admin.dose,
                                    "admin.time" = admin.time, 
                                    "admin.type" = admin.type,
-                                   "estimated_params" = estimated_params,
+                    "depfr_head" = depfr_head, "depfr_AF" = depfr_AF,
                                    "sex" = sex)
-params <- create_params(user_input)
+params <- create.params(user_input)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -83,9 +82,9 @@ admin.dose <- rep(dose, length(admin.time))
 user_input <-  list('BW'=BW,"admin.dose"= admin.dose,
                     "admin.time" = admin.time, 
                     "admin.type" = admin.type,
-                    "estimated_params" = estimated_params,
+                    "depfr_head" = depfr_head, "depfr_AF" = depfr_AF,
                     "sex" = sex)
-params <- create_params(user_input)
+params <- create.params(user_input)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -98,18 +97,17 @@ solution_25M <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
 #1mg/m^3 dose female
 BW <- 0.15  #kg, not reported in the study - 180-240 g average BW of female CD® IGS (SD) rats at 6 to 8 weekshttps://animalab.eu/cd-sprague-dawley-igs-rat-crl-cd-sd
 sex <- "F"
-inhalation_params=estimate_BFn_TVn(sex, BW)
-BFn = inhalation_params["BFn"]# 1/h
-TVn = inhalation_params["TVn"]# 
+BFn = 166*60# 1/h
+TVn = 1.05*1e-3# L
 admin.dose_mg_per_m3 <- 1 # administered dose in mg/m^3
 dose <- admin.dose_mg_per_m3*duration*BFn*TVn/k#ug PFOA, hour dose of the 6h inhalation
 admin.dose <- rep(dose, length(admin.time))
 user_input <-  list('BW'=BW,"admin.dose"= admin.dose,
                     "admin.time" = admin.time, 
                     "admin.type" = admin.type,
-                    "estimated_params" = estimated_params,
+                    "depfr_head" = depfr_head, "depfr_AF" = depfr_AF,
                     "sex" = sex)
-params <- create_params(user_input)
+params <- create.params(user_input)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -128,9 +126,9 @@ admin.dose <- rep(dose, length(admin.time))
 user_input <-  list('BW'=BW,"admin.dose"= admin.dose,
                     "admin.time" = admin.time, 
                     "admin.type" = admin.type,
-                    "estimated_params" = estimated_params,
+                    "depfr_head" = depfr_head, "depfr_AF" = depfr_AF,
                     "sex" = sex)
-params <- create_params(user_input)
+params <- create.params(user_input)
 
 inits <- create.inits(params)
 events <- create.events(params)
@@ -147,9 +145,9 @@ admin.dose <- rep(dose, length(admin.time))
 user_input <-  list('BW'=BW,"admin.dose"= admin.dose,
                     "admin.time" = admin.time, 
                     "admin.type" = admin.type,
-                    "estimated_params" = estimated_params,
+                    "depfr_head" = depfr_head, "depfr_AF" = depfr_AF,
                     "sex" = sex)
-params <- create_params(user_input)
+params <- create.params(user_input)
 inits <- create.inits(params)
 events <- create.events(params)
 
@@ -274,7 +272,7 @@ AAFE_Hinderliter <- mean(score)
 print(paste0("The AAFE on the Plasma data of Hinderliter et al. (2006) was ", AAFE_Hinderliter))
 
 write.csv(results_df,
-          '/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation/Hinderliter_2006_results.csv',
+          '/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Publication/Final_results_plots/Validation/Hinderliter_2006_results.csv',
           row.names =F)
 
 

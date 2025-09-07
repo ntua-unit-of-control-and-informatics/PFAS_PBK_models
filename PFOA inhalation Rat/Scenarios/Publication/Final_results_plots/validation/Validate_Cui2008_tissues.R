@@ -1,6 +1,5 @@
 library(deSolve)
-#setwd("C:/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation")
-setwd("/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation")
+setwd("/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Publication/Final_results_plots/Validation")
 
 #  absolute average fold error
 AAFE <- function(predictions, observations, times=NULL){
@@ -18,7 +17,7 @@ AAFE <- function(predictions, observations, times=NULL){
 #===============
 # Generate predictions
 #===============
-load("inhalation_permeability_latest.RData")
+load("PBK_validation.RData")
 # Body weight 
 BW <- 0.2 #kg
 sex <- "M"
@@ -27,11 +26,11 @@ admin.type <-"oral"
 admin.time <- seq(0.01,27*24.01,24)
 dose <- rep(5,28) #mg/kg
 admin.dose <- dose * BW*1000 #ug
-parameters <-   create_params(list('BW'=BW,
+parameters <-   create.params(list('BW'=BW,
                                    "admin.dose"= admin.dose,
                                    "admin.time" = admin.time, 
                                    "admin.type" = admin.type,
-                                   "estimated_params" = estimated_params,
+                                   
                                    "sex" = sex))
 events <- create.events(parameters)
 inits <- create.inits (parameters)
@@ -49,11 +48,11 @@ solution_5 <- solution_5[solution_5$time == 28*24, pred_comps]/1000 #[ug/L]/1000
 #20mg/kg dose
 dose <- rep(20,28) #mg/kg
 admin.dose <- dose * BW * 1000 #ug
-parameters <- create_params( list('BW'=BW,
+parameters <- create.params( list('BW'=BW,
                                   "admin.dose"= admin.dose,
                                   "admin.time" = admin.time, 
                                   "admin.type" = admin.type,
-                                  "estimated_params" = estimated_params,
+                                  
                                   "sex" = sex))
 events <- create.events(parameters)
 solution_20 <- data.frame(deSolve::ode(times = sample_time,  func = ode.func,
@@ -95,5 +94,5 @@ AAFE_Cui <- mean(score)
 print(paste0("The AAFE on the tissue data of Cui et al. (2010) was ", AAFE_Cui))
 
 write.csv(results_df,
-          "/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Validation/Validation_permeability/Cui_2008_results.csv",
+          "/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Publication/Final_results_plots/Validation/Cui_2008_results.csv",
           row.names =F)

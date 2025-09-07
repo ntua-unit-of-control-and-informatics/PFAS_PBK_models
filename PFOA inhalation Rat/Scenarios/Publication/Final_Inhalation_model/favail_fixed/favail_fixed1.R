@@ -8,7 +8,7 @@ create_variable_params <- function(BW,sex,  estimated_params, fixed_params){
   
   kabsUA <- estimated_params[1] #L/h/m^2
   kCLEua <- 0 #L/h/m^2
-  k_desorption <- 1e3 #L/h
+  k_desorption <- 1e4 #L/h
   RAFOatp_lu_ap <- 0#4.992703e-01#4.060400e-01
   RAFOatp_lu_bas <- estimated_params[2]#RAFOatp_lu_ap
   

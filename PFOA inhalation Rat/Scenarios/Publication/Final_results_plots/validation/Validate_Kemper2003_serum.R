@@ -1,5 +1,5 @@
 library(deSolve)
-setwd("/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation")
+setwd("/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Publication/Final_results_plots/Validation")
 
 #===============
 # Generate predictions
@@ -20,7 +20,7 @@ AAFE <- function(predictions, observations, times=NULL){
 }
 
 
-load("inhalation_permeability_latest.RData")
+load("PBK_validation.RData")
 # Body weight 
 
 
@@ -30,11 +30,11 @@ BW <- 0.2 #kg
 admin.time <- 0
 admin.type <-"iv"
 admin.dose <- 1 * BW*1000 #ug
-parameters <-   create_params(list('BW'=BW,
+parameters <-   create.params(list('BW'=BW,
                                    "admin.dose"= admin.dose,
                                    "admin.time" = admin.time, 
                                    "admin.type" = admin.type,
-                                   "estimated_params" = estimated_params,
+                                   
                                    "sex" = sex))
 events <- create.events(parameters)
 inits <- create.inits (parameters)
@@ -45,11 +45,11 @@ solution_F_iv_1 <- data.frame(deSolve::ode(times = sample_time,  func = ode.func
 
 #Female, oral 1mg/kg dose
 admin.type <-"oral"
-parameters <-   create_params(list('BW'=BW,
+parameters <-   create.params(list('BW'=BW,
                                    "admin.dose"= admin.dose,
                                    "admin.time" = admin.time, 
                                    "admin.type" = admin.type,
-                                   "estimated_params" = estimated_params,
+                                   
                                    "sex" = sex))
 events <- create.events(parameters)
 sample_time <-  c( seq(0,0.9,0.1),seq(1,100,1))
@@ -59,11 +59,11 @@ solution_F_oral_1 <- data.frame(deSolve::ode(times = sample_time,  func = ode.fu
 
 #Female, oral 5mg/kg dose
 admin.dose <- 5 * BW*1000 #ug
-parameters <-   create_params(list('BW'=BW,
+parameters <-   create.params(list('BW'=BW,
                                    "admin.dose"= admin.dose,
                                    "admin.time" = admin.time, 
                                    "admin.type" = admin.type,
-                                   "estimated_params" = estimated_params,
+                                   
                                    "sex" = sex))
 events <- create.events(parameters)
 sample_time <-  c( seq(0,0.9,0.1),seq(1,72,1))
@@ -73,11 +73,11 @@ solution_F_oral_5 <- data.frame(deSolve::ode(times = sample_time,  func = ode.fu
 
 #Female, oral 25mg/kg dose
 admin.dose <- 25 * BW*1000 #ug
-parameters <-   create_params(list('BW'=BW,
+parameters <-   create.params(list('BW'=BW,
                                    "admin.dose"= admin.dose,
                                    "admin.time" = admin.time, 
                                    "admin.type" = admin.type,
-                                   "estimated_params" = estimated_params,
+                                   
                                    "sex" = sex))
 events <- create.events(parameters)
 sample_time <-  c( seq(0,0.9,0.1),seq(1,96,1))
@@ -92,11 +92,11 @@ BW <- 0.3 #kg
 admin.type <-"iv"
 admin.time <- 0
 admin.dose <- 1 * BW*1000 #ug
-parameters <-   create_params(list('BW'=BW,
+parameters <-   create.params(list('BW'=BW,
                                    "admin.dose"= admin.dose,
                                    "admin.time" = admin.time, 
                                    "admin.type" = admin.type,
-                                   "estimated_params" = estimated_params,
+                                   
                                    "sex" = sex))
 events <- create.events(parameters)
 sample_time <-  c( seq(0,0.9,0.1),seq(1,528,1))
@@ -106,11 +106,11 @@ solution_M_iv_1 <- data.frame(deSolve::ode(times = sample_time,  func = ode.func
 
 #Male, oral 1mg/kg dose
 admin.type <-"oral"
-parameters <-   create_params(list('BW'=BW,
+parameters <-   create.params(list('BW'=BW,
                                    "admin.dose"= admin.dose,
                                    "admin.time" = admin.time, 
                                    "admin.type" = admin.type,
-                                   "estimated_params" = estimated_params,
+                                   
                                    "sex" = sex))
 events <- create.events(parameters)
 sample_time <-  c( seq(0,0.9,0.1),seq(1,529,1))
@@ -120,11 +120,11 @@ solution_M_oral_1 <- data.frame(deSolve::ode(times = sample_time,  func = ode.fu
 
 #Male, oral 5mg/kg dose
 admin.dose <- 5 * BW*1000 #ug
-parameters <-   create_params(list('BW'=BW,
+parameters <-   create.params(list('BW'=BW,
                                    "admin.dose"= admin.dose,
                                    "admin.time" = admin.time, 
                                    "admin.type" = admin.type,
-                                   "estimated_params" = estimated_params,
+                                   
                                    "sex" = sex))
 events <- create.events(parameters)
 sample_time <-  c( seq(0,0.9,0.1),seq(1,527,1))
@@ -134,11 +134,11 @@ solution_M_oral_5 <- data.frame(deSolve::ode(times = sample_time,  func = ode.fu
 
 #Male, oral 25mg/kg dose
 admin.dose <- 25 * BW*1000 #ug
-parameters <-   create_params(list('BW'=BW,
+parameters <-   create.params(list('BW'=BW,
                                    "admin.dose"= admin.dose,
                                    "admin.time" = admin.time, 
                                    "admin.type" = admin.type,
-                                   "estimated_params" = estimated_params,
+                                   
                                    "sex" = sex))
 events <- create.events(parameters)
 sample_time <-  c( seq(0,0.9,0.1),seq(1,528,1))
@@ -269,5 +269,5 @@ results_df <- rbind(results_serum_F_iv_1, results_serum_F_oral_1, results_serum_
 AAFE_Kemper_serum <- mean(score)
 print(paste0("The AAFE on the serum data of Kemper et al. (2003) was ", AAFE_Kemper_serum))
 write.csv(results_df,
-          "/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Final_results_plots/Validation/Kemper_2003_serum_results.csv",
+          "/Users/user/Documents/GitHub/PFAS_PBK_models/PFOA inhalation Rat/Scenarios/Publication/Final_results_plots/Validation/Kemper_2003_serum_results.csv",
           row.names =F)
