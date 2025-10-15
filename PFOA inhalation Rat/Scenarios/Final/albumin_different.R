@@ -3676,7 +3676,7 @@ optimizer <- nloptr::nloptr( x0= fit,
 
 #estimated_params <- exp(optimizer$solution)
 estimated_params <- exp(optimizer$solution)
-save.image("albumin_different.RData")
+save.image("results_5000iter_4chains.RData")
 
 
 # Set up simulations for the 1st case, i.e. kudo (2007) high dose, tissues
