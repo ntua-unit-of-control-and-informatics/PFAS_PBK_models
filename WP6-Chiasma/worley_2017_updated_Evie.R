@@ -330,9 +330,9 @@ user_input <- list(
   "exposure_time" = seq(0,30,1),
   "ingestion" = 10,
   "ingestion_time" = 0,
-  "admin_dose" = 10,
+  "admin_dose" = 0,
   "admin_time" = 0,
-  "admin_type" = "iv",
+  "admin_type" = "oral",
   "exp_type" = "continuous",
   "time_scale" = "years"
 )
