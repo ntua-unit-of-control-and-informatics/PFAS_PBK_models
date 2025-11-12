@@ -1,4 +1,3 @@
-library(truncnorm)
 
 sample.params.worley  <- function(user_input, seed = 125){
   with( as.list(user_input),{
@@ -26,13 +25,13 @@ sample.params.worley  <- function(user_input, seed = 125){
       
       BW = 80.4 #kg, mean BW Willmann et al., 2007
       
-      Htc = rtruncnorm(   1,    a = 0,    b = Inf,  mean = 0.45, sd = 0.027) #https://doi.org/10.1080/10408440390242324
+      Htc = truncnorm::rtruncnorm(   1,    a = 0,    b = Inf,  mean = 0.45, sd = 0.027) #https://doi.org/10.1080/10408440390242324
       
       #Scaled Parameters
       #Cardiac output and blood flows (https://doi.org/10.1007/s10928-007-9053-5)
-      QC = rtruncnorm(1,a = 0,b = Inf,  mean = 6293, sd = 809) *60/1000 *(1-Htc) * inv_time_scale	#cardiac output in L/time_scale; adjusted for plasma, ml/min --> L/h
-      QK = rtruncnorm(1,a = 0,b = Inf,  mean = 1356, sd = 372) *60/1000 *(1-Htc) * inv_time_scale#plasma flow to kidney (L/time_scale), ml/min --> L/h
-      QL = rtruncnorm(1,a = 0,b = Inf,  mean = 1689, sd = 269) *60/1000 *(1-Htc) * inv_time_scale#plasma flow to liver (L/time_scale), ml/min --> L/h
+      QC = truncnorm::rtruncnorm(1,a = 0,b = Inf,  mean = 6293, sd = 809) *60/1000 *(1-Htc) * inv_time_scale	#cardiac output in L/time_scale; adjusted for plasma, ml/min --> L/h
+      QK = truncnorm::rtruncnorm(1,a = 0,b = Inf,  mean = 1356, sd = 372) *60/1000 *(1-Htc) * inv_time_scale#plasma flow to kidney (L/time_scale), ml/min --> L/h
+      QL = truncnorm::rtruncnorm(1,a = 0,b = Inf,  mean = 1689, sd = 269) *60/1000 *(1-Htc) * inv_time_scale#plasma flow to liver (L/time_scale), ml/min --> L/h
       QR = QC - QK - QL 	#plasma flow to rest of body (L/time_scale), ml/min
       if (QR < 0){
         QR <- 500 *60/1000 *(1-Htc) * inv_time_scale
@@ -44,28 +43,28 @@ sample.params.worley  <- function(user_input, seed = 125){
       QBal = QC - (QK + QL + QR) #Balance check of blood flows; should equal zero, ml/min
       #Tissue Volumes
       
-      VPlas = rtruncnorm(1,a = 0,b = Inf,  mean = 3.46, sd = 0.42) #L https://doi.org/10.1080/10408440390242324
-      VK = rtruncnorm(1,a = 0,b = Inf,  mean = 444, sd = 110) *1e-3 #mL --> L (https://doi.org/10.1007/s10928-007-9053-5)
+      VPlas = truncnorm::rtruncnorm(1,a = 0,b = Inf,  mean = 3.46, sd = 0.42) #L https://doi.org/10.1080/10408440390242324
+      VK = truncnorm::rtruncnorm(1,a = 0,b = Inf,  mean = 444, sd = 110) *1e-3 #mL --> L (https://doi.org/10.1007/s10928-007-9053-5)
       MK = VK*1.0*1000	#mass of the kidney (g)
       VKb = VK*0.16	#volume of blood in the kidney (L); fraction blood volume of kidney (0.16) from Brown, 1997
       VfilC = 4e-4	#fraction vol. of filtrate (L/kg BW)
       VPTCC = 1.35e-4 #vol. of proximal tubule cells (L/g kidney) (60 million PTC cells/gram kidney, 1 PTC = 2250 um3)
       Vfil = VfilC*BW	#volume of filtrate (L)
       VKC = VK / BW  # L/kg
-      VL = rtruncnorm(1,a = 0,b = Inf,  mean = 2341, sd = 560) *1e-3 #mL --> L (https://doi.org/10.1007/s10928-007-9053-5)
+      VL = truncnorm::rtruncnorm(1,a = 0,b = Inf,  mean = 2341, sd = 560) *1e-3 #mL --> L (https://doi.org/10.1007/s10928-007-9053-5)
       ML = VL*1.05*1000	#mass of the liver (g)
       
     }else if(sex == "F"){
       
       BW = 68.8 #kg, mean BW Willmann et al., 2007
       
-      Htc = rtruncnorm(1,a = 0,b = Inf,  mean = 0.39, sd = 0.029) #https://doi.org/10.1080/10408440390242324
+      Htc = truncnorm::rtruncnorm(1,a = 0,b = Inf,  mean = 0.39, sd = 0.029) #https://doi.org/10.1080/10408440390242324
       
       #Scaled Parameters
       #Cardiac output and blood flows (https://doi.org/10.1007/s10928-007-9053-5)
-      QC = rtruncnorm(1,a = 0,b = Inf,  mean = 5781, sd = 725) *60/1000 *(1-Htc) * inv_time_scale	#cardiac output in L/time_scale; adjusted for plasma, ml/min --> L/h
-      QK = rtruncnorm(1,a = 0,b = Inf,  mean = 1150, sd = 323) *60/1000 *(1-Htc)* inv_time_scale#plasma flow to kidney (L/time_scale), ml/min --> L/h
-      QL = rtruncnorm(1,a = 0,b = Inf,  mean = 1687, sd = 261) *60/1000 *(1-Htc)* inv_time_scale#plasma flow to liver (L/time_scale), ml/min --> L/h
+      QC = truncnorm::rtruncnorm(1,a = 0,b = Inf,  mean = 5781, sd = 725) *60/1000 *(1-Htc) * inv_time_scale	#cardiac output in L/time_scale; adjusted for plasma, ml/min --> L/h
+      QK = truncnorm::rtruncnorm(1,a = 0,b = Inf,  mean = 1150, sd = 323) *60/1000 *(1-Htc)* inv_time_scale#plasma flow to kidney (L/time_scale), ml/min --> L/h
+      QL = truncnorm::rtruncnorm(1,a = 0,b = Inf,  mean = 1687, sd = 261) *60/1000 *(1-Htc)* inv_time_scale#plasma flow to liver (L/time_scale), ml/min --> L/h
       QR = QC - QK - QL 	#plasma flow to rest of body (L/time_scale), ml/min
       QBal = QC - (QK + QL + QR) #Balance check of blood flows; should equal zero, ml/min
       if (QR < 0){
@@ -77,15 +76,15 @@ sample.params.worley  <- function(user_input, seed = 125){
       }
       #Tissue Volumes
       
-      VPlas = rtruncnorm(1,a = 0,b = Inf,  mean = 2.68, sd = 0.28) #L https://doi.org/10.1080/10408440390242324
-      VK = rtruncnorm(1,a = 0,b = Inf,  mean = 413, sd = 106) *1e-3 #mL --> L (https://doi.org/10.1007/s10928-007-9053-5)
+      VPlas = truncnorm::rtruncnorm(1,a = 0,b = Inf,  mean = 2.68, sd = 0.28) #L https://doi.org/10.1080/10408440390242324
+      VK = truncnorm::rtruncnorm(1,a = 0,b = Inf,  mean = 413, sd = 106) *1e-3 #mL --> L (https://doi.org/10.1007/s10928-007-9053-5)
       MK = VK*1.0*1000	#mass of the kidney (g)
       VKb = VK*0.16	#volume of blood in the kidney (L); fraction blood volume of kidney (0.16) from Brown, 1997
       VfilC = 4e-4	#fraction vol. of filtrate (L/kg BW)
       VPTCC = 1.35e-4 #vol. of proximal tubule cells (L/g kidney) (60 million PTC cells/gram kidney, 1 PTC = 2250 um3)
       Vfil = VfilC*BW	#volume of filtrate (L)
       VKC = VK / BW  # L/kg
-      VL = rtruncnorm(1,a = 0,b = Inf,  mean = 1938, sd = 490) *1e-3 #mL --> L (https://doi.org/10.1007/s10928-007-9053-5)
+      VL = truncnorm::rtruncnorm(1,a = 0,b = Inf,  mean = 1938, sd = 490) *1e-3 #mL --> L (https://doi.org/10.1007/s10928-007-9053-5)
       ML = VL*1.05*1000	#mass of the liver (g)
       
       
@@ -113,7 +112,7 @@ sample.params.worley  <- function(user_input, seed = 125){
     #Partition Coefficients (from rat tissue data, Kudo et al, 2007)
     PK = 1.17 #kidney:blood
     PR = 0.11 #rest of body:blood
-    PL = rtruncnorm(1,a = 0,b = Inf,  mean = 0.26, sd = 0.06) #liver:blood partition coefficient, M & F, https://pubs.acs.org/doi/10.1021/acs.est.3c02765
+    PL = truncnorm::rtruncnorm(1,a = 0,b = Inf,  mean = 0.26, sd = 0.06) #liver:blood partition coefficient, M & F, https://pubs.acs.org/doi/10.1021/acs.est.3c02765
     
     #rate constants
     kdif = 0.001*inv_time_scale	#diffusion rate from proximal tubule cells (L/time_scale)
@@ -142,7 +141,7 @@ sample.params.worley  <- function(user_input, seed = 125){
     kbile = kbilec*BW^(-0.25)	#biliary elimination; liver to feces storage (/time_scale)
     kurine = kurinec*BW^(-0.25)	#urinary elimination, from filtrate (/time_scale)
     kefflux = keffluxc*BW^(-0.25)	#efflux clearance rate, from PTC to blood (/time_scale)
-    GFR = rtruncnorm(1,a = 0,b = Inf,  mean = 40.2, sd = 21.2) *60/1000 * inv_time_scale#mL/min --> L/h 	# M & F ; Levey et al., 2010, https://doi.org/10.1681/asn.v451159
+    GFR = truncnorm::rtruncnorm(1,a = 0,b = Inf,  mean = 40.2, sd = 21.2) *60/1000 * inv_time_scale#mL/min --> L/h 	# M & F ; Levey et al., 2010, https://doi.org/10.1681/asn.v451159
     
     
     #GI Tract Parameters
@@ -337,6 +336,9 @@ user_input <- list(
   "exp_type" = "continuous",
   "time_scale" = "years"
 )
+
+params_worley <- sample.params.worley(user_input, seed = 1231)
+params_worley2 <- create.params.worley(user_input)
 
 run_worley <- function(user_input, solver = "lsodes", rtol = 1e-7, atol = 1e-7, seed = 1231){
   params_worley <- sample.params.worley(user_input, seed = seed)
