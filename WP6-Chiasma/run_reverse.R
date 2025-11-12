@@ -2,10 +2,10 @@ library(tidyr)
 library(dplyr)
 library(ggplot2)
 
-seed = 345
+seed = 921
 res_pbk_bmd <- PfasDosim::reverse_dosimetry_pfoa(
                           BW = 70, sex = "F", duration = 30,
-                          compartment = "serum", BMDL = 10, BMDU = 200,  
+                          compartment = "kidney", BMDL = 10, BMDU = 50,  
                           PBK_probabilistic = TRUE, N_samples = 100, 
                           seed = seed, optim_tol = 1e-3, 
                           solver = "lsodes", rtol = 1e-4, atol = 1e-4, 
@@ -14,7 +14,7 @@ res_pbk_bmd <- PfasDosim::reverse_dosimetry_pfoa(
 
 res_bmd_only <- PfasDosim::reverse_dosimetry_pfoa(
                           BW = 70, sex = "F", duration = 30,
-                          compartment = "serum", BMDL = 10, BMDU = 200,  
+                          compartment = "kidney", BMDL = 10, BMDU = 50,  
                           PBK_probabilistic = FALSE, N_samples = 100, 
                           seed = seed, optim_tol = 1e-3, 
                           solver = "lsodes", rtol = 1e-4, atol = 1e-4, 
@@ -69,7 +69,7 @@ ggplot(dens_df, aes(x = x, y = density)) +
   theme(legend.position = "top", panel.grid.minor = element_line(colour = "grey90")) +
   guides(fill = guide_legend(override.aes = list(alpha = 0.4)))
 
-ggsave(paste0("Serum_BMDL = 10, BMDU = 200",".png"),
+ggsave(paste0("Kidney_BMDL = 10, BMDU = 50_new",".png"),
        device = 'png', dpi = 300,
        width = 13,
        height = 10,
