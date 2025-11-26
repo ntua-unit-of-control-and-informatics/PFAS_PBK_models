@@ -6,9 +6,8 @@
 # We did not include simultaneous IV and oral because there are no such experiments
 
 library(deSolve)
-library(ggplot2)
 library(tidyverse)
-
+library(nloptr)
 
 #=========================
 #1. Parameters of the model
@@ -24,7 +23,7 @@ create.params  <- function(user_input){
     QCC = 12.5*24 #cardiac output in L/day/kg^0.75; Brown 1997		 
     QLC = 0.25 #fraction blood flow to liver; Brown 1997	
     QKC = 0.175 #fraction blood flow to kidney; Brown 1997.
-    Htc = 0.467 #reported in Abraham. 0.44 hematocrit for the rat; Davies 1993
+    Htc = 0.467 #hematocrit for the rat; Davies 1993
     
     #Tissue Volumes 
     VplasC = 0.0428 #fraction vol. of plasma (L/kg BW); Davies 1993
@@ -33,21 +32,37 @@ create.params  <- function(user_input){
     VfilC = 4e-4	#fraction vol. of filtrate (L/kg BW)
     VPTCC = 1.35e-4 #vol. of proximal tubule cells (L/g kidney) (60 million PTC cells/gram kidney, 1 PTC = 2250 um3)
     
+    #Chemical Specific Parameters
+    MW = 414.07	#PFOA molecular mass (g/mol)
+    
+    Free = 0.001#value 0.001 Smeltz 2023 alternative value 0.00245 from Ryu 2024
     
     #Kidney Transport Parameters
     Vmax_baso_invitro = 439.2 #Vmax of basolateral transporter (pmol/mg protein/min); averaged in vitro value of OAT1 and OAT3 from Nakagawa, 2007
     Km_baso = 20100 #Km of basolateral transporter (ug/L) Average of OAT1 and OAT3 from Nakagawa et. al, 2007
     Vmax_apical_invitro = 37400 #Vmax of apical transporter (pmol/mg protein/min); invitro value for OAT4 from Yang et al, 2010
     Km_apical = 77500#Km of apical transporter (ug/L), in vitro value for OAT4 and URAT1 from Yang et al, 2010.
+    #RAFbaso = 1	#relative activity factor, basolateral transporters (male) (fit to data)	
+    #RAFapi = 0.0007	#relative activity factor, apical transporters (male) (fit to data)	
     protein = 2.0e-6	#amount of protein in proximal tubule cells (mg protein/proximal tubule cell)
     GFRC = 24.19*24	#glomerular filtration rate (L/day/kg kidney) (male); Corley, 2005
     
+    #Partition Coefficients (from Allendorf 2021)
+    PL = 0.434698291544763 #liver:blood
+    PK = 0.413283707125888 #kidney:blood
+    PR = 0.534206103089267 #rest of body:blood
     
     #rate constants
     kdif = 0.001*24	#diffusion rate from proximal tubule cells (L/day)
+    kabsc = 2.12*24	#rate of absorption of chemical from small intestine to liver (1/(day*BW^-0.25))(fit to data)
+    kunabsc = 7.06e-5*24	#rate of unabsorbed dose to appear in feces (1/(day*BW^-0.25))(fit to data)
     GEC = 3.5*24#gastric emptying time (1/(day*BW^-0.25)); from Yang, 2013
+    k0C = 1.0*24	#rate of uptake from the stomach into the liver (1/(day*BW^-0.25)) (fit to data)
+    
     keffluxc =0.1*24 #rate of clearance of PFOA from proximal tubule cells into blood (1/(day*BW^-0.25))
-    kvoid = 0.06974*24  #daily urine volume rate (L/day); Van Haarst, 2004 
+    kbilec = 0.0001*24 #biliary elimination rate ((male); liver to feces storage (1/(day*BW^-0.25)) (fit to data)
+    kurinec = 0.063*24 #rate of urine elimination from urine storage (male) (1/(day*BW^-0.25))(fit to data)
+    kvoid = 0.06974*24  #daily urine volume rate (L/day); Van Haarst, 2004                                                   
     
     #Scaled Parameters
     #Cardiac output and blood flows
@@ -99,9 +114,8 @@ create.params  <- function(user_input){
                  'kdif' = kdif, "Km_baso" = Km_baso, "Km_apical" = Km_apical,
                  "kbile" = kbile, "kurine" = kurine, "kefflux" = kefflux,
                  "GFR" = GFR, "kabs" = kabs, "kunabs" = kunabs, "GE" = GE, "k0" = k0,
-                 "kvoid" = kvoid, "admin_type" = admin_type,
+                 "PL" = PL, "PK" = PK, "PR" = PR, "kvoid" = kvoid, "admin_type" = admin_type,
                  "admin_time_iv" = admin_time_iv, "admin_dose_iv" = admin_dose_iv,
-                 "admin_time_bolus" = admin_time_bolus, "admin_dose_bolus"= admin_dose_bolus,
                  "Cwater" = Cwater, "Cwater_time" = Cwater_time,
                  "ingestion" = ingestion,"ingestion_time" = ingestion_time,
                  "water_consumption" = water_consumption 
@@ -183,7 +197,7 @@ create.events <- function(parameters){
         
         events <- list(data = rbind(data.frame(var = c("AST"),  time = admin_time_bolus, 
                                                value = admin_dose_bolus, method = c("add"))
-                                    ))
+        ))
       }
     }
     
@@ -192,11 +206,10 @@ create.events <- function(parameters){
   })
 }
 
+
 #==================
 #4. Custom function 
 #==================
-
-#Fitting functions
 mse_custom <- function(observed, predicted){
   mean((observed - predicted)^2)
 }
@@ -238,7 +251,9 @@ cumulative_exp_data<-function(df,time_col,concentration_col, multiply_col){
   
   return(result_df)
 }
-
+custom.func <- function(){
+  return()
+}
 #==============
 #5. ODEs System
 #==============
@@ -248,7 +263,7 @@ ode.func <- function(time, inits, params, custom.func){
     
     CR = AR/VR #concentration in rest of body (ug/L)
     CVR = CR/PR	#concentration in venous blood leaving the rest of the body (ug/L)
-    CKb = AKb/VKb	#concentration in kidney blood (ug/L) 
+    CKb = AKb/VKb	#concentration in kidney blodd (ug/L) 
     CVK = CKb #/PK	#concentration in venous blood leaving kidney (ug/L)
     CPTC = APTC/VPTC	#concentration in PTC (ug/L)
     Cfil = Afil/Vfil	#concentration in filtrate (ug/L)
@@ -321,7 +336,7 @@ ode.func <- function(time, inits, params, custom.func){
          "total_oral_uptake" = total_oral_uptake, "amount_per_gram_liver" = amount_per_gram_liver,
          "Atissue" = Atissue, "Aloss" = Aloss, "Atotal" = Atotal, "CR" =CR, "CVR" = CVR, "CKb" = CKb, 
          "CVK" = CVK, "CPTC" = CPTC,
-         "Cfil" = Cfil, "CL" = CL, "CVL" = CVL, "CA_free" = CA_free, "CA" = CA, "Curine"= Curine)
+         "Cfil" = Cfil, "CL" = CL, "CVL" = CVL, "CA_free" = CA_free, "CA" = CA)
     
   })
 }
@@ -331,9 +346,9 @@ ode.func <- function(time, inits, params, custom.func){
 #=============
 # PFOA Abraham Trial Runs
 
-#Experimental data 
+#Experimental data
 
-#Creates a table with time and cumulative amount in feces 
+#Creates a table with time and cumulative amount in feces
 #Continuous amount in feces is at the 6 hour time point
 exp_data_feces <- read.csv("exp_data_feces.csv")
 feces_exp<-cumulative_exp_data(exp_data_feces,"time","PFOA","feces.weight") %>% mutate(cumulative_mass= cumulative_mass/ 1000) %>% filter(time <= 6)
@@ -346,21 +361,7 @@ urine_exp<-cumulative_exp_data(exp_data_urine,"time","PFOA","urine.volume")%>% m
 #Creates a teble with time and plasma concentration
 plasma_exp <- read.csv("exp_data_plasma.csv")%>% select("time","PFOA")
 
-
-#--------------------#
-# Changing parameter #
-#--------------------#
-
 BW <- 82
-
-#Partition Coefficients (from Allendorf 2021)
-PL = 0.434698291544763 #liver:blood
-PK = 0.413283707125888 #kidney:blood
-PR = 0.534206103089267 #rest of body:blood
-
-#Chemical Specific Parameters
-MW = 414.07	#PFOA molecular mass (g/mol)
-Free = 0.001 #value 0.001 Smeltz 2023 alternative value 0.00245 from Ryu 2024
 
 admin_type <-  "bolus" # administration type values: iv/oral/oral bolus
 admin_dose_bolus <- c(3.96) # administered dose through bolus in ug
@@ -373,108 +374,66 @@ Cwater_time <- 0
 ingestion <- 0 #ug/day
 ingestion_time <- c(0)
 
-#Parameter for estimation
-RAFbaso = 1	#relative activity factor, basolateral transporters (male) (fit to data)	
-RAFapi = 0.0007	#relative activity factor, apical transporters (male) (fit to data)
-kabsc = 2.12*24	#rate of absorption of chemical from small intestine to liver (1/(day*BW^-0.25))(fit to data)
-kunabsc = 7.06e-5*24	#rate of unabsorbed dose to appear in feces (1/(day*BW^-0.25))(fit to data)
-k0C = 1.0*24	#rate of uptake from the stomach into the liver (1/(day*BW^-0.25)) (fit to data)
-kbilec = 0.0001*24 #biliary elimination rate ((male); liver to feces storage (1/(day*BW^-0.25)) (fit to data)
-kurinec = 0.063*24 #rate of urine elimination from urine storage (male) (1/(day*BW^-0.25))(fit to data)
+
+#=========
+# 1.Here add parameters for estimation
+# 2.Remove them from create.param function
+# 3.Add the in the input tables and x0 below
+
+RAFbaso = 1	
+RAFapi = 0.0007	
 
 
+
+#=====================
+#7. Objective function 
+#=====================
 obj.func<-function(x){
-  user_input <- list( "admin_type" = admin_type,
-                      "admin_dose_bolus" = admin_dose_bolus, 
-                      "admin_time_bolus" = admin_time_bolus,
-                      "BW"=BW, "Cwater" = Cwater, 
-                      "Cwater_time" = Cwater_time, "ingestion" = ingestion,
-                      "ingestion_time" = ingestion_time,
-                      "RAFbaso"=x[1],
-                      "RAFapi"=x[2],
-                      "kabsc"=x[3],
-                      "kunabsc"=x[4],
-                      "k0c"=x[5],
-                      "kbilec"=x[6],
-                      "kurinec"=x[7])
+user_input <- list( "admin_type" = admin_type,
+                    "admin_dose_bolus"=admin_dose_bolus,
+                    "admin_time_bolus"=admin_time_bolus,
+                    "admin_dose_iv" = admin_dose_iv, 
+                    "admin_time_iv" = admin_time_iv,
+                    "BW"=BW, "Cwater" = Cwater, 
+                    "Cwater_time" = Cwater_time, "ingestion" = ingestion,
+                    "ingestion_time" = ingestion_time,
+                    "RAFbaso"=x[1],
+                    "RAFapi"=x[2])
   params <- create.params(user_input)
   inits <- create.inits(params)
   events <- create.events(params)
-  
+
   sample_time=sort(unique(c(0,plasma_exp$time,urine_exp$time,feces_exp$time)))
-  
+
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func, y = inits, parms = params,
                                       events = events,
                                       method="lsodes",rtol = 1e-05, atol = 1e-05))
-  
+
   preds_plasma <- solution[solution$time %in% plasma_exp$time, "CA"]
   preds_feces <- solution[solution$time %in% feces_exp$time,"Afeces" ]
   preds_urine <- solution[solution$time %in% urine_exp$time, "Aurine"]
-  
-  score_plasma<-AAFE(plasma_exp,preds_plasma)
-  score_urine<-AAFE(urine_exp,preds_urine)
-  score_feces<-AAFE(feces_exp,preds_feces)
-  
-  return(mean(c(score_plasma,score_urine,score_feces)))
-  
-}
 
-obj.func_blood<-function(x){
-  user_input <- list( "admin_type" = admin_type,
-                      "admin_dose_bolus" = admin_dose_bolus, 
-                      "admin_time_bolus" = admin_time_bolus,
-                      "BW"=BW, "Cwater" = Cwater, 
-                      "Cwater_time" = Cwater_time, "ingestion" = ingestion,
-                      "ingestion_time" = ingestion_time,
-                      "RAFbaso"=x[1],
-                      "RAFapi"=x[2],
-                      "kabsc"=x[3],
-                      "kunabsc"=x[4],
-                      "k0c"=x[5],
-                      "kbilec"=x[6],
-                      "kurinec"=x[7],
-                      "PR"=x[8]
-                      )
-  params <- create.params(user_input)
-  inits <- create.inits(params)
-  events <- create.events(params)
-  
-  sample_time=c(0,plasma_exp$time)
-  
-  solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func, y = inits, parms = params,
-                                      events = events,
-                                      method="lsodes",rtol = 1e-05, atol = 1e-05))
-  
-  preds_plasma <- solution[solution$time %in% plasma_exp$time, "CA"]
-  
-  
-  score_plasma<-AAFE(plasma_exp,preds_plasma)
-  
-  
-  return(score_plasma)}
-  
+  score_plasma<-AAFE(preds_plasma,plasma_exp$PFOA)
+  score_urine<-AAFE(preds_urine,urine_exp$cumulative_mass)
+  score_feces<-AAFE(preds_feces,feces_exp$cumulative_mass)
+
+  return(mean(c(score_plasma,score_urine,score_feces)))
+
+}
 
 #---------------------------------#
 # Set up the Optimization process #
 #---------------------------------#
 
-# Initial values of the unknown parameters 
-x0 <- c(RAFbaso,
-        RAFapi,
-        kabsc,
-        kunabsc,
-        k0C,
-        kbilec,
-        kurinec,
-        PR
-        )
+x0 <- c("RAFbaso"=RAFbaso,
+        "RAFapi"=RAFapi)
 
 # Maximum number of iterations of the optimization algorithm
-N_iter <- 10000
+N_iter <- 1000
 
 
 # Extra options for the optimization algorithm
-opts <- list( "algorithm" = "NLOPT_LN_NEWUOA", #"NLOPT_LN_NEWUOA",  #"NLOPT_LN_SBPLX" ,
+opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA",  #"NLOPT_LN_SBPLX" ,
               "xtol_rel" = 1e-05,
               "ftol_rel" = 1e-05,
               "ftol_abs" = 0.0,
@@ -482,18 +441,18 @@ opts <- list( "algorithm" = "NLOPT_LN_NEWUOA", #"NLOPT_LN_NEWUOA",  #"NLOPT_LN_S
               "maxeval" = N_iter,
               "print_level" = 1 )
 
-# Call the optimization algorithm and provide him with the input data
+#Call the optimization algorithm and provide him with the input data
 optimization <- nloptr::nloptr(x0 = x0,
-                               eval_f = obj.func,
-                               lb	= rep(1e-05, length(x0)),
-                               ub = rep(1e+02, length(x0)),
-                               opts = opts)
+                              eval_f = obj.func,
+                              lb	= rep(1e-05, length(x0)),
+                              ub = rep(1e+02, length(x0)),
+opts = opts)
 
-optimization <- nloptr::nloptr(x0 = x0,
-                               eval_f = obj.func_blood,
-                               lb	= rep(1e-05, length(x0)),
-                               ub = rep(1e+02, length(x0)),
-                               opts = opts)
+# optimization <- nloptr::nloptr(x0 = x0,
+#                                eval_f = obj.func_blood,
+#                                lb	= rep(1e-06, length(x0)),
+#                                ub = rep(1e+04, length(x0)),
+#                                opts = opts)
 # The "optimization" object contains the results of the optimization process
 # as well as the final values of the optimized parameters
 
@@ -503,29 +462,20 @@ optimization$objective
 # The values of the optimized params 
 x_opt <- optimization$solution
 
-
-
-
 #---------------------------------------------#
 # Plot predictions over the experimental data #
 #---------------------------------------------#
-
-# Step 1: Solve the ODEs using the optimized values of parameters
-user_input <- list( "admin_type" = admin_type,
-                    "admin_dose_bolus" = admin_dose_bolus, 
-                    "admin_time_bolus" = admin_time_bolus,
-                    "BW"=BW, "Cwater" = Cwater, 
-                    "Cwater_time" = Cwater_time, "ingestion" = ingestion,
-                    "ingestion_time" = ingestion_time,
-                    "RAFbaso"=x_opt[1],
-                    "RAFapi"=x_opt[2],
-                    "kabsc"=x_opt[3],
-                    "kunabsc"=x_opt[4],
-                    "k0c"=x_opt[5],
-                    "kbilec"=x_opt[6],
-                    "kurinec"=x_opt[7],
-                    "PR"=x_opt[8]
-                    )
+  
+  # Step 1: Solve the ODEs using the optimized values of parameters
+  user_input <- list( "admin_type" = admin_type,
+                      "admin_dose_bolus" = admin_dose_bolus, 
+                      "admin_time_bolus" = admin_time_bolus,
+                      "BW"=BW, "Cwater" = Cwater, 
+                      "Cwater_time" = Cwater_time, "ingestion" = ingestion,
+                      "ingestion_time" = ingestion_time,
+                      "RAFbaso"=x_opt[1],
+                      "RAFapi"=x_opt[2]
+  )
 
 params <- create.params(user_input)
 inits <- create.inits(params)
@@ -543,30 +493,30 @@ compartments <- c('CA','Aurine','Afeces')
 color_codes <- scales::hue_pal()(length(compartments))
 
 plot <- ggplot()+
-   geom_line(data = solution, aes(x = time, y = Aurine, color='Aurine'), size=1.3)+
-  geom_line(data = solution, aes(x = time, y = Afeces, color='Afeces'), size=1.3)+
-  
-  
-  geom_point(data = urine_exp, aes(x = time, y = cumulative_mass, color='Aurine'), size=5)+
-  geom_point(data = feces_exp, aes(x = time, y = cumulative_mass, color='Afeces'), size=5)+
-  
-  labs(title = 'Predicted vs Observed Values',
-       y = 'Mass (ug)' , x = "Time (days)")+
-  xlim(0,6)+
-  theme(plot.title = element_text(hjust = 0.5,size=30),
-        axis.title.y =element_text(hjust = 0.5,size=25,face="bold"),
-        axis.text.y=element_text(size=22),
-        axis.title.x =element_text(hjust = 0.5,size=25,face="bold"),
-        axis.text.x=element_text(size=22),
-        legend.title=element_text(hjust = 0.5,size=25),
-        legend.text=element_text(size=22),
-        panel.border = element_rect(colour = "black", fill=NA, size=1.0)) +
-  
-  scale_color_manual("Compartments", values=color_codes)+
-  theme(legend.key.size = unit(1.5, 'cm'),
-        legend.title = element_text(size=14),
-        legend.text = element_text(size=14),
-        axis.text = element_text(size = 14))
+  geom_line(data = solution, aes(x = time, y = Aurine, color='Aurine'), size=1.3)+
+ geom_line(data = solution, aes(x = time, y = Afeces, color='Afeces'), size=1.3)+
+
+
+ geom_point(data = urine_exp, aes(x = time, y = cumulative_mass, color='Aurine'), size=5)+
+ geom_point(data = feces_exp, aes(x = time, y = cumulative_mass, color='Afeces'), size=5)+
+
+ labs(title = 'Predicted vs Observed Values',
+      y = 'Mass (ug)' , x = "Time (days)")+
+ xlim(0,6)+
+ ylim(0,0.01)+
+ theme(plot.title = element_text(hjust = 0.5,size=30),
+       axis.title.y =element_text(hjust = 0.5,size=25,face="bold"),
+       axis.text.y=element_text(size=22),
+       axis.title.x =element_text(hjust = 0.5,size=25,face="bold"),
+       axis.text.x=element_text(size=22),
+       legend.title=element_text(hjust = 0.5,size=25),
+       legend.text=element_text(size=22),
+       panel.border = element_rect(colour = "black", fill=NA, size=1.0)) +
+ scale_color_manual("Compartments", values=color_codes)+
+ theme(legend.key.size = unit(1.5, 'cm'),
+       legend.title = element_text(size=14),
+       legend.text = element_text(size=14),
+       axis.text = element_text(size = 14))
 print(plot)
 
 plot <- ggplot()+
