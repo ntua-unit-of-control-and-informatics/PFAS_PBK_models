@@ -1,10 +1,3 @@
-# The code replicates the Loccisano et al.(2012) PBK model
-# and simulates IV or Oral PFOA distribution for female or male rats of constant or varying
-# body weight. The Bernstein et al. (2021) code was used for replicating the
-# model and the parameter set was expanded to also describe female rats
-# (the original code only described male rats). 
-# We did not include simultaneous IV and oral because there are no such experiments
-
 library(deSolve)
 library(ggplot2)
 library(tidyverse)
@@ -25,7 +18,7 @@ create.params  <- function(user_input){
     QCC = 12.5*24 #cardiac output in L/day/kg^0.75; Brown 1997		 
     QLC = 0.25 #fraction blood flow to liver; Brown 1997	
     QKC = 0.175 #fraction blood flow to kidney; Brown 1997.
-    Htc = 0.467 #reported in Abraham. 0.44 hematocrit for the rat; Davies 1993
+    Htc = 0.467 #hematocrit for the rat; Davies 1993
     
     #Tissue Volumes 
     VplasC = 0.0428 #fraction vol. of plasma (L/kg BW); Davies 1993
@@ -34,21 +27,37 @@ create.params  <- function(user_input){
     VfilC = 4e-4	#fraction vol. of filtrate (L/kg BW)
     VPTCC = 1.35e-4 #vol. of proximal tubule cells (L/g kidney) (60 million PTC cells/gram kidney, 1 PTC = 2250 um3)
     
+    #Chemical Specific Parameters
+    MW = 414.07	#PFOA molecular mass (g/mol)
+    
+    #Free = 0.001#value 0.001 Smeltz 2023 alternative value 0.00245 from Ryu 2024
     
     #Kidney Transport Parameters
     Vmax_baso_invitro = 439.2 #Vmax of basolateral transporter (pmol/mg protein/min); averaged in vitro value of OAT1 and OAT3 from Nakagawa, 2007
     Km_baso = 20100 #Km of basolateral transporter (ug/L) Average of OAT1 and OAT3 from Nakagawa et. al, 2007
     Vmax_apical_invitro = 37400 #Vmax of apical transporter (pmol/mg protein/min); invitro value for OAT4 from Yang et al, 2010
     Km_apical = 77500#Km of apical transporter (ug/L), in vitro value for OAT4 and URAT1 from Yang et al, 2010.
+    #RAFbaso = 1	#relative activity factor, basolateral transporters (male) (fit to data)	
+    #RAFapi = 0.0007	#relative activity factor, apical transporters (male) (fit to data)	
     protein = 2.0e-6	#amount of protein in proximal tubule cells (mg protein/proximal tubule cell)
     GFRC = 24.19*24	#glomerular filtration rate (L/day/kg kidney) (male); Corley, 2005
     
+    #Partition Coefficients (from Allendorf 2021)
+    #PL = 0.434698291544763 #liver:blood
+    #PK = 0.413283707125888 #kidney:blood
+    #PR = 0.534206103089267 #rest of body:blood
     
     #rate constants
-    kdif = 0.001*24	#diffusion rate from proximal tubule cells (L/day)
-    GEC = 3.5*24#gastric emptying time (1/(day*BW^-0.25)); from Yang, 2013
-    keffluxc =0.1*24 #rate of clearance of PFOA from proximal tubule cells into blood (1/(day*BW^-0.25))
-    kvoid = 0.06974*24  #daily urine volume rate (L/day); Van Haarst, 2004 
+    #kdif = 0.001*24	#diffusion rate from proximal tubule cells (L/day)
+    #kabsc = 2.12*24	#rate of absorption of chemical from small intestine to liver (1/(day*BW^-0.25))(fit to data)
+    #kunabsc = 7.06e-5*24	#rate of unabsorbed dose to appear in feces (1/(day*BW^-0.25))(fit to data)
+    #GEC = 3.5*24#gastric emptying time (1/(day*BW^-0.25)); from Yang, 2013
+    #k0C = 1.0*24	#rate of uptake from the stomach into the liver (1/(day*BW^-0.25)) (fit to data)
+    
+    #keffluxc =0.1*24 #rate of clearance of PFOA from proximal tubule cells into blood (1/(day*BW^-0.25))
+    #kbilec = 0.0001*24 #biliary elimination rate ((male); liver to feces storage (1/(day*BW^-0.25)) (fit to data)
+    #kurinec = 0.063*24 #rate of urine elimination from urine storage (male) (1/(day*BW^-0.25))(fit to data)
+    #kvoid = 0.06974*24  #daily urine volume rate (L/day); Van Haarst, 2004                                                   
     
     #Scaled Parameters
     #Cardiac output and blood flows
@@ -100,17 +109,17 @@ create.params  <- function(user_input){
                  'kdif' = kdif, "Km_baso" = Km_baso, "Km_apical" = Km_apical,
                  "kbile" = kbile, "kurine" = kurine, "kefflux" = kefflux,
                  "GFR" = GFR, "kabs" = kabs, "kunabs" = kunabs, "GE" = GE, "k0" = k0,
-                 "kvoid" = kvoid, "admin_type" = admin_type,
+                 "PL" = PL, "PK" = PK, "PR" = PR, "kvoid" = kvoid, "admin_type" = admin_type,
                  "admin_time_iv" = admin_time_iv, "admin_dose_iv" = admin_dose_iv,
-                 "admin_time_bolus" = admin_time_bolus, "admin_dose_bolus"= admin_dose_bolus,
                  "Cwater" = Cwater, "Cwater_time" = Cwater_time,
                  "ingestion" = ingestion,"ingestion_time" = ingestion_time,
-                 "water_consumption" = water_consumption 
-                 
-    ))
-    
+                 "water_consumption" = water_consumption,
+                 "RAFbaso"=RAFbaso,"RAFapi"=RAFapi ,"kabsc"=kabsc ,
+                 "kunabsc"=kunabsc,"GEC"=GEC ,"k0C"=k0C ,"keffluxc"=keffluxc,
+                 "kbilec"=kbilec ,"kurinec"=kurinec, "kvoid"=kvoid)) 
   })
 }
+
 
 #===============================================
 #2. Function to create initial values for ODEs 
@@ -240,9 +249,12 @@ cumulative_exp_data<-function(df,time_col,concentration_col, multiply_col){
   return(result_df)
 }
 
-trapz <- function(x, y) {
-  idx = 2:length(x)
-  return(as.double((x[idx] - x[idx-1]) %*% (y[idx] + y[idx-1])) / 2)
+AUC <- function(x, y){
+  individual_auc <- c()
+  for (i in 1:(length(x)-1)){
+    individual_auc[i] <- (y[i]+y[i+1])*(x[i+1]-x[i])/2
+  }
+  return(sum(individual_auc))
 }
 
 #==============
@@ -260,7 +272,7 @@ ode.func <- function(time, inits, params, custom.func){
     Cfil = Afil/Vfil	#concentration in filtrate (ug/L)
     CL = AL/VL	#concentration in the liver (ug/L)
     CLiver = AL/ML #	concentration in the liver (ug/g)
-    CVL = CL/PL	#concentration in the venous blood leaving the liver (ug/L)
+    CVL = CL/PL#concentration in the venous blood leaving the liver (ug/L)
     CA_free = Aplas_free/VPlas		#concentration in plasma (ug)
     CA = CA_free/Free	#concentration of total PFOA in plasma (ug/L)
     Curine = Aurine/kvoid
@@ -335,20 +347,7 @@ ode.func <- function(time, inits, params, custom.func){
 #=============
 #6. User input 
 #=============
-# PFOA Abraham Trial Runs
-
-#--------------------#
-# Changing parameter #
-#--------------------#
-
 BW <- 82
-
-PL = 0.434698291544763 #liver:blood
-PK = 0.413283707125888 #kidney:blood
-PR = 0.534206103089267 #rest of body:blood
-#Chemical Specific Parameters
-MW = 414.07	#PFOA molecular mass (g/mol)
-Free = 0.001 #value 0.001 Smeltz 2023 alternative value 0.00245 from Ryu 2024
 
 admin_type <-  "bolus" # administration type values: iv/oral/oral bolus
 admin_dose_bolus <- c(3.96) # administered dose through bolus in ug
@@ -361,91 +360,209 @@ Cwater_time <- 0
 ingestion <- 0 #ug/day
 ingestion_time <- c(0)
 
-#Parameter for estimation
-RAFbaso = 1	#relative activity factor, basolateral transporters (male) (fit to data)	
-RAFapi = 0.0007	#relative activity factor, apical transporters (male) (fit to data)
-kabsc = 2.12*24	#rate of absorption of chemical from small intestine to liver (1/(day*BW^-0.25))(fit to data)
-kunabsc = 7.06e-5*24	#rate of unabsorbed dose to appear in feces (1/(day*BW^-0.25))(fit to data)
-k0C = 1.0*24	#rate of uptake from the stomach into the liver (1/(day*BW^-0.25)) (fit to data)
-kbilec = 0.0001*24 #biliary elimination rate ((male); liver to feces storage (1/(day*BW^-0.25)) (fit to data)
-kurinec = 0.063*24 #rate of urine elimination from urine storage (male) (1/(day*BW^-0.25))(fit to data)
+# The following parameters have been commented out of
+# create.params in ordered to be changed
+Free  = 0.001
+RAFbaso	= 1
+RAFapi = 0.0007	
+PL = 0.434698291544763
+PK = 0.413283707125888
+PR = 0.534206103089267 
+kdif = 0.001*24
+kabsc = 2.12*24
+kunabsc = 7.06e-5*24
+GEC = 3.5*24
+k0C = 1.0*24
+keffluxc =0.1*24
+kbilec = 0.0001*24
+kurinec =0.063*24 
+kvoid = 0.06974*24
 
-
-user_input <- list( "admin_type" = admin_type,
+ user_input <- list( "admin_type" = admin_type,
                     "admin_dose_bolus" = admin_dose_bolus, 
                     "admin_time_bolus" = admin_time_bolus,
                     "BW"=BW, "Cwater" = Cwater, 
                     "Cwater_time" = Cwater_time, "ingestion" = ingestion,
-                    "ingestion_time" = ingestion_time,"PL"=PL, "PK"=PK,
-                    "PR"=PR, "MW"=MW, "RAFbaso"=RAFbaso, "RAFapi"=RAFapi,
-                    "kabsc"=kabsc, "kunabsc"=kunabsc, "k0C"=k0C, "kbilec"=kbilec,
-                    "kurinec"=kurinec)
+                    "ingestion_time" = ingestion_time, "Free" =Free,
+                    "RAFbaso" = RAFbaso, "RAFapi" = RAFapi, "PL"=PL,
+                    "PK"=PK, "PR" = PR, "kdif"=kdif, "kabsc" = kabsc,
+                    "kunabsc" = kunabsc, "GEC" = GEC, "k0C" = k0C,
+                    "keffluxc" =keffluxc, "kbilec" = kbilec, "kurinec" =kurinec,
+                    "kvoid" = kvoid)
 
-obj.func<-function(x){
-  
+#================
+#7. Wrap function
+#================
+obj.func<-function(x,dp){
  
+
+ if (is.na(x)){
   params <- create.params(user_input)
   inits <- create.inits(params)
   events <- create.events(params)
   
-  sample_time=seq(0,60,0.001)
+  sample_time=seq(0,6,0.01)
   
   solution <-as.data.frame(ode(times = sample_time,  func = ode.func, y = inits, parms = params,
                                events = events, method="bdf",rtol = 1e-05, atol = 1e-05))
   
   result <- c(
     Cmax = max(solution[, "CA"]),
-    AUC = trapz(sample_time, solution[, "CA"]),
-    C_24h = solution[which.min(abs(sample_time - 12)), "CA"],
-    C_48h = solution[which.min(abs(sample_time - 6)), "CA"],
-    Total_Excreted = max(solution[, "Aurine"]) + max(solution[, "Afeces"])
-  )
+    AUC = AUC(sample_time, solution[, "CA"]),
+    C_6h = solution[which.min(abs(sample_time - 0.25)), "CA"],
+    C_6d = solution[which.min(abs(sample_time - 6)), "CA"],
+    Feces_Excreted = sum(solution[, "Afeces"]), 
+    Urine_Excreted = sum(solution[, "Aurine"]))  
   
   return(result)
-  
+  } else{
+      loop_user_input<-list()
+      loop_user_input[[x]]<-user_input[[x]]*(1+dp)
+      loopprams <- create.params(loop_user_input) # modify user_input to apply the pertribution 
+      inits <- create.inits(loopprams)
+      events <- create.events(loopprams)
+      sample_time=seq(0,6,0.01)
+      solution <-as.data.frame(ode(times = sample_time,  func = ode.func, y = inits, parms = loopprams,
+                               events = events, method="bdf",rtol = 1e-05, atol = 1e-05))
+      result <- c(
+      Cmax = max(solution[, "CA"]),
+      AUC = AUC(sample_time, solution[, "CA"]),
+      C_6h = solution[which.min(abs(sample_time - 0.25)), "CA"],
+      C_6d = solution[which.min(abs(sample_time - 6)), "CA"],
+      Feces_Excreted = sum(solution[, "Afeces"]), 
+      Urine_Excreted = sum(solution[, "Aurine"]))  
+      
+  }
 }
 
-parameters <- c(
-  "Free",
-  "kbilec",
-  "kurinec",
-  "Km_baso",
-  "Km_apical",
-  "kabsc",
-  "kunabsc",
-  "k0c",
-  "RAFbaso",
-  "RAFapi")
+#=================================
+#8. Sensitivity Analysis Parameter
+#=================================
+thetas<-list(
+"Free" ,
+"RAFbaso",	
+"RAFapi" ,
+"PL" , 
+"PK" , 
+"PR" ,
+"kdif" ,
+"kabsc" ,
+"kunabsc",
+"GEC" ,
+"k0C" ,
+"keffluxc",
+"kbilec" ,
+"kurinec",
+"kvoid")
 
-# Define parameter ranges (min, max)
-# You'll need to set appropriate ranges based on literature or uncertainty
-param_ranges <- list(
-  Free = c(0.0005, 0.005),      
-  kbilec = c(0.00005, 0.0005),   
-  kurinec = c(0.05, 0.15),                
-  Km_baso=c(20100/2,20100*2),
-  Km_apical=c(37400/2,37400*2),
-  kabsc=c(2.12*24/2,2.12*24*2),
-  kunabsc=c(7.06e-5*24/2,7.06e-5*24*2),
-  k0c=c(1.0*24/2,1.0*24*2),
-  RAFbaso=c(0.0001,1),
-  RAFapi =c(0.0001,1)             
-)
 
-#Morris screening
+#=======================
+#9. Sensitivity analysis
+#=======================
 
-# Morris screening - efficient for identifying important parameters
+# dp is the percentile change of a parameter 
+dp=0.5
 
-set.seed(123)
-morris_result <- morrisMultOut(
-  model = obj.func,
-  factors = parameters,
-  r = 4,           # Number of trajectories
-  design = list(type = "oat", levels = 10, grid.jump = 5),
-  binf = sapply(param_ranges, function(x) x[1]),
-  bsup = sapply(param_ranges, function(x) x[2]),scale=FALSE
-)
+results<- as.data.frame(
+  matrix(NA, 
+         nrow = length(c("Cmax", "AUC", "C_6h", "C_6d", "Feces_Excreted", 
+                         "Urine_Excreted" )), 
+         ncol = length(thetas),
+         dimnames = list(c("Cmax", "AUC", "C_6h", "C_6d", "Feces_Excreted", 
+                         "Urine_Excreted" ), thetas)))
 
-# Plot Morris results
-plot(morris_result)
-print(morris_result)
+for(i in 1:length(thetas)){
+ results[,i]<-obj.func(thetas[[i]],dp)
+ print(thetas[i])
+}
+
+#The Sensitivity Index table 
+SI<- as.data.frame(
+  matrix(NA, 
+         nrow = length(c("Cmax", "AUC", "C_6h", "C_6d", "Feces_Excreted", 
+                         "Urine_Excreted" )), 
+         ncol = length(thetas),
+         dimnames = list(c("Cmax", "AUC", "C_6h", "C_6d", "Feces_Excreted", 
+                         "Urine_Excreted" ), thetas)))
+
+results0<-obj.func(NA,dp)
+
+for(i in 1:length(thetas)){
+  SI[,i]<-(abs((results[,i]-results0)/results0)/dp)
+}
+SIt<-t(SI)
+
+
+plot_list <- list()
+
+# Loop through each column (each output variable)
+for(j in 1:ncol(SIt)) {
+  
+  # Get column name for title
+  col_name <- colnames(SIt)[j]
+  
+  # Create data frame for plotting
+  plot_data <- data.frame(
+    Parameter = rownames(SIt),
+    Sensitivity = SIt[, j]
+  )
+
+  plot_data$Parameter <- factor(plot_data$Parameter, 
+                                levels = plot_data$Parameter[order(plot_data$Sensitivity, decreasing = FALSE)])
+  
+  # Create the plot
+  plot_list[[j]] <- ggplot(plot_data, aes(x = Parameter, y = Sensitivity)) +
+    geom_bar(stat = "identity", width = 0.6, fill = "#2E86AB") +
+    labs(
+      title = paste("Sensitivity Analysis:", col_name),
+      x = "Parameters",
+      y = "Sensitivity Index"
+    ) +
+    coord_flip() +
+    theme_minimal() +
+    theme(
+      plot.title = element_text(hjust = 0.5, size = 12, face = "bold"),
+      axis.text.y = element_text(size = 9),
+      axis.title.x = element_text(size = 10),
+      panel.grid.major.y = element_blank(),
+      panel.grid.minor.y = element_blank()
+    ) +
+    # Add value labels
+    geom_text(aes(label = format(Sensitivity, scientific = TRUE, digits = 2)), 
+              hjust = -0.1, size = 3)
+}
+
+# Name the list elements
+names(plot_list) <- colnames(SIt)
+
+grid.arrange(grobs = plot_list, ncol = 2)
+
+# Option 2: Display plots one by one (useful for detailed inspection)
+for(j in 1:length(plot_list)) {
+  print(plot_list[[j]])
+}
+
+# =========================
+# Save Plots to Files
+# =========================
+
+# Create directory for plots
+if(!dir.exists("sensitivity_plots")) {
+  dir.create("sensitivity_plots")
+}
+
+# Save each plot as PNG
+for(j in 1:length(plot_list)) {
+  col_name <- colnames(SIt)[j]
+  
+  png_file <- paste0("sensitivity_plots/", col_name, "_sensitivity.png")
+  
+  ggsave(
+    filename = png_file,
+    plot = plot_list[[j]],
+    width = 10,
+    height = 8,
+    dpi = 300
+  )
+  print(paste("Saved:", png_file))
+}
