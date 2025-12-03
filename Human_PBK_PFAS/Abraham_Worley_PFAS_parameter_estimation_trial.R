@@ -401,71 +401,70 @@ kunabsc = 7.06e-5*24
 #8. Objective function 
 #=====================
 obj.func<-function(x){
-user_input <- list( "admin_type" = admin_type,
-                    "admin_dose_bolus"=admin_dose_bolus,
-                    "admin_time_bolus"=admin_time_bolus,
-                    "admin_dose_iv" = admin_dose_iv, 
-                    "admin_time_iv" = admin_time_iv,
-                    "BW"=BW, "Cwater" = Cwater, 
-                    "Cwater_time" = Cwater_time, "ingestion" = ingestion,
-                    "ingestion_time" = ingestion_time,
-                    "RAFapi"=x[1],
-                    "Free"=x[2],
-                    "keffluxc"=x[3],
-                    "kabsc"=x[4],
-                    "kurinec"=x[5],
-                    "kbilec"=x[6],
-                    "kunabsc"=x[7])
-
+  user_input <- list( "admin_type" = admin_type,
+                      "admin_dose_bolus"=admin_dose_bolus,
+                      "admin_time_bolus"=admin_time_bolus,
+                      "admin_dose_iv" = admin_dose_iv, 
+                      "admin_time_iv" = admin_time_iv,
+                      "BW"=BW, "Cwater" = Cwater, 
+                      "Cwater_time" = Cwater_time, "ingestion" = ingestion,
+                      "ingestion_time" = ingestion_time,
+                      "RAFapi"=x[1],
+                      "Free"=x[2],
+                      "keffluxc"=x[3],
+                      "kabsc"=x[4],
+                      "kurinec"=x[5],
+                      "kbilec"=x[6],
+                      "kunabsc"=x[7])
+  
   params <- create.params(user_input)
   inits <- create.inits(params)
   events <- create.events(params)
-
+  
   sample_time=sort(unique(c(seq(0, 450, 0.1), plasma_exp$time, urine_exp$time,feces_exp$time)))
- 
+  
   solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func, y = inits, parms = params,
                                       events = events,
                                       method="lsodes",rtol = 1e-05, atol = 1e-05))
-
+  
   #Plasma Score 
   plasma_idx <- find_nearest(solution$time, plasma_exp$time)
   preds_plasma <- solution[plasma_idx, "CA"]
-
-  
-  # Check for NA values
-  if(any(is.na(preds_plasma)) || any(is.na(plasma_exp$PFOA))) {
-    return(1e6)  # Return high error if NAs present
-  }
-  
-  score_plasma <- AAFE(preds_plasma, plasma_exp$PFOA)
   
   #Urine score
   urine_idx <- find_nearest(solution$time, urine_exp$time)
   preds_urine <- solution[urine_idx, "Aurine"]
-
   
-  # Check for NA values
-  if(any(is.na(preds_urine)) || any(is.na(urine_exp$cumulative_mass))) {
-    return(1e6)  # Return high error if NAs present
-  }
-  score_urine<-AAFE(preds_urine,urine_exp$cumulative_mass)
-  
-
   #Feces score
   feces_idx <- find_nearest(solution$time, feces_exp$time)
   preds_feces <- solution[feces_idx, "Afeces"]
-
   
-  # Check for NA values
-  if(any(is.na(preds_feces)) || any(is.na(feces_exp$cumulative_mass))) {
+  # Check for NA values in predictions
+  if(any(is.na(preds_plasma)) || any(is.na(preds_urine)) || any(is.na(preds_feces))) {
+    cat("NA values in predictions for parameters:", x, "\n")
     return(1e6)  # Return high error if NAs present
   }
-  score_feces<-AAFE(preds_feces,feces_exp$cumulative_mass)
-
- 
- 
   
-  return(mean(c(score_plasma,score_urine,score_feces)))                             
+  # Check for zero predictions (all zeros would give NA in AAFE)
+  if(all(preds_plasma == 0) || all(preds_urine == 0) || all(preds_feces == 0)) {
+    cat("Zero predictions for parameters:", x, "\n")
+    return(1e6)
+  }
+  
+  # Calculate scores
+  score_plasma <- AAFE(preds_plasma, plasma_exp$PFOA)
+  score_urine <- AAFE(preds_urine, urine_exp$cumulative_mass)
+  score_feces <- AAFE(preds_feces, feces_exp$cumulative_mass)
+  
+  # Check if any score is NA
+  if(is.na(score_plasma) || is.na(score_urine) || is.na(score_feces)) {
+    cat("NA score for parameters:", x, "\n")
+    cat("Scores:", score_plasma, score_urine, score_feces, "\n")
+    return(1e6)
+  }
+  
+  # Return mean of scores - FIXED: use c() to create a vector
+  return(mean(c(score_plasma, score_urine, score_feces)))
 }
 #---------------------------------#
 # Set up the Optimization process #
@@ -542,7 +541,7 @@ solution <- data.frame(deSolve::ode(times = sample_time,  func = ode.func, y = i
 compartments <- c('CA','Aurine','Afeces')
 color_codes <- scales::hue_pal()(length(compartments))
 
-plot <- ggplot()+
+plot1 <- ggplot()+
  geom_line(data = solution, aes(x = time, y = Aurine, color='Aurine'), size=1.3)+
  geom_line(data = solution, aes(x = time, y = Afeces, color='Afeces'), size=1.3)+
  geom_point(data = urine_exp, aes(x = time, y = cumulative_mass, color='Aurine'), size=5)+
@@ -565,9 +564,9 @@ plot <- ggplot()+
        legend.title = element_text(size=14),
        legend.text = element_text(size=14),
        axis.text = element_text(size = 14))
-print(plot)
+print(plot1)
 
-plot <- ggplot()+
+plot2 <- ggplot()+
   geom_line(data = solution, aes(x = time, y = CA, color='CA'), size=1.3)+
   geom_point(data = plasma_exp, aes(x = time, y = PFOA, color='CA'), size=5)+
   labs(title = "Predicted vs Observed Values",
@@ -587,7 +586,7 @@ plot <- ggplot()+
         legend.text = element_text(size=14),
         axis.text = element_text(size = 14))
 
-print(plot)
+print(plot2)
 
 dx=(x_opt-x0)/x0
 View(dx)
