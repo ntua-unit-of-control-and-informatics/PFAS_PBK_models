@@ -28,7 +28,7 @@ create_variable_params <- function(BW,sex, estimated_params, fixed_params){
   
   RAFOatp_k <- estimated_params[1] #1.567845e+01
   
-  RAFOat3 <- estimated_params[2] #9.75e+03
+  RAFOat3 <- estimated_params[2] #0#9.75e+03
   
   CL_int <- 1.961917e+00 #uL/min/million hepatocytes
   
@@ -54,7 +54,7 @@ create_variable_params <- function(BW,sex, estimated_params, fixed_params){
   KLfabp <-  1.2e5#[L/mol]. From Sheng et al. (2018) [doi:10.1007/s00204-017-2055-1]
   Ka <- 5e5#2.391203e+04#[L/mol]. From Rue et al. (2024)
   
-  CLfeces_unscaled <- 8.214905e-05 #in L/h/BW^(-0.25), scaling similar to Loccisano et al. (2012)
+  CLfeces_unscaled <- estimated_params[3] #8.214905e-05 #in L/h/BW^(-0.25), scaling similar to Loccisano et al. (2012)
   CLfeces <- CLfeces_unscaled*BW^(-0.25) 
   
   f_alb_avail<-  1
@@ -2002,35 +2002,8 @@ create_all_fixed_params <- function(){
                      "admin.time" = admin.time,
                      "admin.type" = admin.type,
                      "sex" = sex)
-  params[[1]] <- create_fixed_params(user_input)
-  
-  
-  
-  # Set up simulations for the arbritary values
-  BW <- 80  # body weight (kg)
-  admin.dose <- 1.76 #ug PFOA 
-  admin.time <- 0 # time when doses are administered, in hours
-  admin.type <- "dermal"
-  sex <- "M"
-  user_input <- list('BW'=BW,
-                     "admin.dose"= admin.dose,
-                     "admin.time" = admin.time,
-                     "admin.type" = admin.type,
-                     "sex" = sex)
-  params[[2]] <- create_fixed_params(user_input)
-  
-  # Set up simulations for the arbritary values
-  BW <- 80  # body weight (kg)
-  admin.dose <- 110 #ug PFOA 
-  admin.time <- 0 # time when doses are administered, in hours
-  admin.type <- "dermal"
-  sex <- "M"
-  user_input <- list('BW'=BW,
-                     "admin.dose"= admin.dose,
-                     "admin.time" = admin.time,
-                     "admin.type" = admin.type,
-                     "sex" = sex)
-  params[[3]] <- create_fixed_params(user_input)
+  params <- create_fixed_params(user_input)
+ 
   
   return(params)
   
@@ -2052,8 +2025,8 @@ obj.func <- function(x, dataset, fixed_params){
   
   BW <- 82  # body weight (kg)
   sex <- "M"
-  variable_params <- create_variable_params(BW, sex, estimated_params, fixed_params[[1]])
-  params <- c(fixed_params[[1]], variable_params)
+  variable_params <- create_variable_params(BW, sex, estimated_params, fixed_params)
+  params <- c(fixed_params, variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
   t_hours <- c(
@@ -2067,7 +2040,8 @@ obj.func <- function(x, dataset, fixed_params){
   urine_times_h  <- sort(unique(dataset$df2$Time_h))
   feces_times_h  <- sort(unique(dataset$df3$Time_h))
   
-  experimental_times <- c(plasma_times_h, urine_times_h, feces_times_h)
+  #experimental_times <- c(plasma_times_h, urine_times_h, feces_times_h)
+  experimental_times <- c(plasma_times_h, urine_times_h)
   
   simulation_time = sort(unique(c(sample_time, experimental_times)))
 
@@ -2099,37 +2073,37 @@ obj.func <- function(x, dataset, fixed_params){
   exp_data <- dataset$df2 # retrieve data of Abraham et al. 2024
   colnames(exp_data)[c(2,3)] <- c("time", "mass")
   column_names <- c("Murine")
-  
+
   preds_Abraham_2024_urine <- list()
   compartment <- "Urine" #unique(exp_data$Tissue)[i]
   exp_time <- exp_data[, 2]
-    
+
   preds_Abraham_2024_urine <- solution[solution$time %in% exp_time, "Murine"]
-  
+
   obs_Abraham_2024_urine <- list(exp_data[exp_data$Tissue == "Urine", "mass"])
-  
+
   # Estimate cumulative urine mass
   obs_Abraham_2024_urine <- cumsum(unlist(obs_Abraham_2024_urine))
-  
+
   score[2] <- AAFE(predictions = preds_Abraham_2024_urine, observations = obs_Abraham_2024_urine)
   
   #======================================df3=========================================================
   
   
-  exp_data <- dataset$df3 # retrieve data of Abraham et al. 2024
-  colnames(exp_data)[c(2,3)] <- c("time", "mass")
-  column_names <- c("Mfeces")
-  
-  preds_Abraham_2024_feces <- list()
-  compartment <- "Feces" #unique(exp_data$Tissue)[i]
-  exp_time <- exp_data[, 2]
-    
-  preds_Abraham_2024_feces <- solution[solution$time %in% exp_time, "Mfeces"] * 1000
-  
-  obs_Abraham_2024_feces <- list(exp_data[exp_data$Tissue == "Feces", "mass"])
-  #obs_Abraham_2024_feces <- cumsum(unlist(obs_Abraham_2024_feces))
-  
-  score[3] <- AAFE(predictions = preds_Abraham_2024_feces, observations = obs_Abraham_2024_feces)
+  # exp_data <- dataset$df3 # retrieve data of Abraham et al. 2024
+  # colnames(exp_data)[c(2,3)] <- c("time", "concentration")
+  # column_names <- c("Cfeces")
+  # 
+  # preds_Abraham_2024_feces <- list()
+  # compartment <- "Feces" #unique(exp_data$Tissue)[i]
+  # exp_time <- exp_data[, 2]
+  #   
+  # preds_Abraham_2024_feces <- solution[solution$time %in% exp_time, "Cfeces"]
+  # 
+  # obs_Abraham_2024_feces <- list(exp_data[exp_data$Tissue == "Feces", "concentration"])
+  # #obs_Abraham_2024_feces <- cumsum(unlist(obs_Abraham_2024_feces))
+  # 
+  # score[3] <- AAFE(predictions = preds_Abraham_2024_feces, observations = obs_Abraham_2024_feces)
   
 
   
@@ -2221,11 +2195,11 @@ obj.func <- function(x, dataset, fixed_params){
   MW <- 414.07 #g/mol
   source("Goodness-of-fit-metrics.R")
   
-  setwd('/Users/eviepapakyriakopoulou/Documents/Documents/NTUA Post-Doc/CHIASMA/PFOA extrapolation humans/Data')
+  setwd('/Users/eviepapakyriakopoulou/Documents/GitHub/PFAS_PBK_models/PFOA extrapolation to humans/Data')
   
   Abraham_2024_plasma <- openxlsx::read.xlsx("Abraham et al.2024_oral_plasma.xlsx") #ug/L
   Abraham_2024_urine <- openxlsx::read.xlsx("Abraham et al.2024_oral_urine.xlsx") #ug
-  Abraham_2024_feces <- openxlsx::read.xlsx("Abraham et al.2024_oral_feces_cut.xlsx") #ng
+  Abraham_2024_feces <- openxlsx::read.xlsx("Abraham et al.2024_oral_feces.xlsx") #ng
   
   Abraham_2024_plasma_6h <- openxlsx::read.xlsx("Abraham et al.2024_oral_plasma_6h.xlsx") #ug/L
   Abraham_2022_plasma_dermal<- openxlsx::read.xlsx("Abraham et al.2022_dermal_plasma.xlsx") #ng/L, substract background
@@ -2234,7 +2208,7 @@ obj.func <- function(x, dataset, fixed_params){
   
   dataset <- list("df1" = Abraham_2024_plasma, "df2" = Abraham_2024_urine, "df3" = Abraham_2024_feces)
   
-  setwd('/Users/eviepapakyriakopoulou/Documents/Documents/NTUA Post-Doc/CHIASMA/PFOA extrapolation humans/Trials')
+  setwd('/Users/eviepapakyriakopoulou/Documents/GitHub/PFAS_PBK_models/PFOA extrapolation to humans/Trials')
   
   #Initialise optimiser to NULL for better error handling later
   opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA"   "NLOPT_LN_SBPLX"
@@ -2251,7 +2225,7 @@ obj.func <- function(x, dataset, fixed_params){
   #fit <- log(c(0.17, 10.9, 1.36e-2, 0.586, 0.3, 1, 1, 30, 0.16, 0.04, 3.1e-6, 4.3e4, 1.6e-5))
   #fit <- rep(log(c(1)), 6)
   
-  fit <-  log(c(1.567845e+01, 1)) #1.567845e+01 
+  fit <-  log(c(1e-2, 1, 1e-03))
   
   # lb = rep(log(c(1e-12)), 2)
   # ub = rep(log(c(1e5)), 2)
@@ -2261,7 +2235,7 @@ obj.func <- function(x, dataset, fixed_params){
   optimizer <- nloptr::nloptr( x0= fit,
                                eval_f = obj.func,
                                # lb	= lb,
-                               # ub = ub,
+                               # ub = ub, 
                                opts = opts,
                                dataset = dataset,
                                fixed_params = fixed_params)
@@ -2274,8 +2248,8 @@ obj.func <- function(x, dataset, fixed_params){
   
   BW <- 82  # body weight (kg)
   sex <- "M"
-  variable_params <- create_variable_params(BW, sex, estimated_params, fixed_params[[1]])
-  params <- c(fixed_params[[1]], variable_params)
+  variable_params <- create_variable_params(BW, sex, estimated_params, fixed_params)
+  params <- c(fixed_params, variable_params)
   inits <- create.inits(params)
   events <- create.events(params)
   t_hours <- c(
@@ -2289,7 +2263,8 @@ obj.func <- function(x, dataset, fixed_params){
   urine_times_h  <- sort(unique(dataset$df2$Time_h))
   feces_times_h  <- sort(unique(dataset$df3$Time_h))
   
-  experimental_times <- c(plasma_times_h, urine_times_h, feces_times_h)
+  #experimental_times <- c(plasma_times_h, urine_times_h, feces_times_h)
+  experimental_times <- c(plasma_times_h, urine_times_h)
   
   simulation_time = sort(unique(c(sample_time, experimental_times)))
   
@@ -2300,8 +2275,7 @@ obj.func <- function(x, dataset, fixed_params){
   
   preds_Abraham_2024_plasma <- solution[solution$time %in% plasma_times_h, c("time", "Cplasma")]
   preds_Abraham_2024_urine <- solution[solution$time %in% urine_times_h, c("time", "Murine")]
-  preds_Abraham_2024_feces <- within(solution[solution$time %in% feces_times_h, c("time", "Mfeces")], 
-                                     Mfeces <- Mfeces * 1000)
+  #preds_Abraham_2024_feces <- solution[solution$time %in% feces_times_h, c("time", "Cfeces")]
   
 
   # ######################################################################################
@@ -2344,32 +2318,31 @@ obj.func <- function(x, dataset, fixed_params){
                          idvar = "Time_h", timevar = "Tissue", direction = "wide")
   colnames(experiment1) <- c("Time",unique(Abraham_2024_plasma$Tissue))
   
-  experiment2 <- reshape(Abraham_2024_urine[c("Tissue" ,"Time_h", 
-                                               "Mass_(ug)")], 
+  experiment2 <- reshape(Abraham_2024_urine[c("Tissue" ,"Time_h",
+                                               "Mass_(ug)")],
                          idvar = "Time_h", timevar = "Tissue", direction = "wide")
   colnames(experiment2) <- c("Time",unique(Abraham_2024_urine$Tissue))
-  experiment2$Urine <- cumsum(experiment2$Urine)
   
-  experiment3 <- reshape(Abraham_2024_feces[c("Tissue" ,"Time_h",
-                                              "Mass_(ng)")],
-                         idvar = "Time_h", timevar = "Tissue", direction = "wide")
-  colnames(experiment3) <- c("Time",unique(Abraham_2024_feces$Tissue))
-  experiment3$Feces <- cumsum(experiment3$Feces)
+  # experiment3 <- reshape(Abraham_2024_feces[c("Tissue" ,"Time_h",
+  #                                             "concentration_(ng/g)")],
+  #                        idvar = "Time_h", timevar = "Tissue", direction = "wide")
+  # colnames(experiment3) <- c("Time",unique(Abraham_2024_feces$Tissue))
                   
   # Put the experiments in a list
-  experiments <- list(experiment1 = experiment1, experiment2 = experiment2,
-                      experiment3 = experiment3)
+  experiments <- list(experiment1 = experiment1,
+                      experiment2 = experiment2)
+                      #experiment3 = experiment3)
 
   
   # Rename predictions so that they share the same name as the names of the experimental data 
   colnames(preds_Abraham_2024_plasma) <- c( "Time", "Plasma")
   colnames(preds_Abraham_2024_urine) <- c( "Time", "Urine")
-  colnames(preds_Abraham_2024_feces) <- c( "Time", "Feces")
+  #colnames(preds_Abraham_2024_feces) <- c( "Time", "Feces")
   
   # Create a list containing the corresponding predictions
   simulations <- list(predictions1 = preds_Abraham_2024_plasma,
-                      predictions2 = preds_Abraham_2024_urine,
-                      predictions3 = preds_Abraham_2024_feces)
+                      predictions2 = preds_Abraham_2024_urine)
+                      #predictions3 = preds_Abraham_2024_feces)
   
   
   # Iterate over all existing experiments and create the accompanying plots
