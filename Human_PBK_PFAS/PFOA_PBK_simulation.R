@@ -31,31 +31,32 @@ create.params <- function(BW) {
   VPTCC <- 1.35e-4  # vol. of proximal tubule cells (L/g kidney)
 
   # --- Chemical Specific Parameters ---
-  MW <- 300.1  # PFBS molecular mass (g/mol)
-  Free <- 0.0046  # free fraction in plasma (Smeltz 2023); fitted to model
+  MW <- 414.07  # PFOA molecular mass (g/mol)
+  Free <- 0.001  # free fraction in plasma (Smeltz 2023); fitted to model
 
   # --- Kidney Transport Parameters ---
-  Vmax_baso_invitro <- 1e-16#439.2  # Vmax of basolateral transporter (pmol/mg protein/min)
-  Km_baso <-1e-16# 20100/MW # Km of basolateral transporter (ug/L)
-  Vmax_apical_invitro <-1e-16# 37400  # Vmax of apical transporter (pmol/mg protein/min)
-  Km_apical <-1e-16# 77500/MW  # Km of apical transporter (ug/L)
+  Vmax_baso_invitro <- 439.2  # Vmax of basolateral transporter (pmol/mg protein/min)
+  Km_baso <- 20100  # Km of basolateral transporter (ug/L)
+  Vmax_apical_invitro <- 37400  # Vmax of apical transporter (pmol/mg protein/min)
+  Km_apical <- 77500  # Km of apical transporter (ug/L)
   RAFbaso <- 1  # relative activity factor, basolateral transporters (male)
-  RAFapi <- 0.0007 #*(1+0.665907) # relative activity factor, apical transporters (male); fitted to model
+  RAFapi <- 0.0007(1+0.665907) # relative activity factor, apical transporters (male); fitted to model
   protein <- 2.0e-6  # amount of protein in proximal tubule cells (mg protein/cell)
   GFRC <- 24.19 * 24  # glomerular filtration rate (L/day/kg kidney); Corley 2005
 
   # --- Partition Coefficients (from Allendorf 2021) ---
-  PL <- 0.442709613538346  # liver:blood
-  PR <- 0.1#0.51824864835907 # rest of body:blood#; fitted to model
+  PL <- 0.434698291544763  # liver:blood
+  PK <- 0.413283707125888  # kidney:blood
+  PR <- 0.5*(1-0.8347) # rest of body:blood#; fitted to model
 
   # --- Rate Constants ---
   kdif <- 0.001 * 24  # diffusion rate from proximal tubule cells (L/day)
   kabsc <- 2.12 * 24  # rate of absorption from small intestine (1/(day*BW^-0.25))
-  kunabsc <- 0# rate of unabsorbed dose to feces (1/(day*BW^-0.25)); fitted to model 
+  kunabsc <- 7.06e-5 * 24 * (1-0.9941) # rate of unabsorbed dose to feces (1/(day*BW^-0.25)); fitted to model 
   GEC <- 3.5 * 24  # gastric emptying time (1/(day*BW^-0.25)); Yang 2013
   k0C <- 1.0 * 24  # rate of uptake from stomach to liver (1/(day*BW^-0.25))
   keffluxc <- 0.1 * 24  # rate of efflux from PTC to blood (1/(day*BW^-0.25))
-  kbilec <- 0.0001 * 24 #* (1-0.47892) # biliary elimination rate (1/(day*BW^-0.25)); fitted to model 
+  kbilec <- 0.0001 * 24 * (1-0.47892) # biliary elimination rate (1/(day*BW^-0.25)); fitted to model 
   kurinec <- 0.063 * 24  # urinary elimination rate (1/(day*BW^-0.25))
   kvoid <- 0.06974 * 24  # daily urine volume rate (L/day); Van Haarst 2004
 
@@ -109,7 +110,7 @@ create.params <- function(BW) {
     "kdif" = kdif, "Km_baso" = Km_baso, "Km_apical" = Km_apical,
     "kbile" = kbile, "kurine" = kurine, "kefflux" = kefflux,
     "GFR" = GFR, "kabs" = kabs, "kunabs" = kunabs, "GE" = GE, "k0" = k0,
-    "PL" = PL, "PR" = PR, "kvoid" = kvoid,
+    "PL" = PL, "PK" = PK, "PR" = PR, "kvoid" = kvoid,
     "water_consumption" = water_consumption
   ))
 }
@@ -215,7 +216,7 @@ ode.func <- function(time, inits, params) {
     CLiver <- AL / ML  # concentration in the liver (ug/g)
     CVL <- CL / PL  # concentration in the venous blood leaving the liver (ug/L)
     CA_free <- Aplas_free / VPlas  # free concentration in plasma (ug/L)
-    CA <- CA_free / Free  # concentration of total PFBS in plasma (ug/L)
+    CA <- CA_free / Free  # concentration of total PFOA in plasma (ug/L)
     Curine <- Aurine / kvoid
 
     # Rest of Body (Tis)
@@ -298,7 +299,7 @@ ode.func <- function(time, inits, params) {
 # --- Dosing and Administration Settings ---
 BW <- 82  # Body weight (kg)
 admin_type <- "bolus"  # administration type: "iv", "oral", or "bolus"
-admin_dose_bolus <- c(18.42)  # administered dose through bolus (ug)
+admin_dose_bolus <- c(3.96)  # administered dose through bolus (ug)
 admin_time_bolus <- c(0)  # time when bolus doses are administered (days)
 admin_dose_iv <- 0  # administered dose through IV (ug)
 admin_time_iv <- 0  # time when IV doses are administered (days)
@@ -340,19 +341,20 @@ cat("ODEs solved successfully!\n")
 cat("Loading experimental data...\n")
 
 # Feces experimental data
-exp_data_feces <- read.csv("exp_data_feces.csv")
-feces_exp <- cumulative_exp_data(exp_data_feces, "time", "PFBS", "feces.weight") #%>%
- # mutate(cumulative_mass = cumulative_mass / 1000) %>%
- # filter(time <= 6)
+exp_data_feces <- read.csv("Human_PBK_PFAS/exp_data_feces.csv")
+feces_exp <- cumulative_exp_data(exp_data_feces, "time", "PFOA", "feces.weight") %>%
+  mutate(cumulative_mass = cumulative_mass / 1000) %>%
+  filter(time <= 6)
 
 # Urine experimental data
-exp_data_urine <- read.csv("exp_data_urine.csv")
-urine_exp <- cumulative_exp_data(exp_data_urine, "time", "PFBS", "urine.volume")%>%
-  mutate(time = time / 24) %>%filter(time <= 6)
+exp_data_urine <- read.csv("Human_PBK_PFAS/exp_data_urine.csv")
+urine_exp <- cumulative_exp_data(exp_data_urine, "time", "PFOA", "urine.volume") %>%
+  mutate(time = time / 24) %>%
+  filter(time <= 6)
 
 # Plasma experimental data
-plasma_exp <- read.csv("exp_data_plasma.csv") %>%
-  select("time", "PFBS")
+plasma_exp <- read.csv("Human_PBK_PFAS/exp_data_plasma.csv") %>%
+  select("time", "PFOA")
 
 cat("Experimental data loaded!\n")
 
@@ -416,8 +418,8 @@ plot_excretion <- ggplot() +
             linewidth = 1.3) +
   geom_point(data = urine_exp, aes(x = time, y = cumulative_mass, color = "Urine (Data)"),
              size = 4) +
-  #geom_point(data = feces_exp, aes(x = time, y = cumulative_mass, color = "Feces (Data)"),
-  #           size = 4) +
+  geom_point(data = feces_exp, aes(x = time, y = cumulative_mass, color = "Feces (Data)"),
+             size = 4) +
   labs(
     title = "Feces and Urine: Model Predictions vs Experimental Data",
     x = "Time (days)",
@@ -425,7 +427,7 @@ plot_excretion <- ggplot() +
     color = "Legend"
   ) +
   xlim(0, 6) +
-  #ylim(0, 0.01) +
+  ylim(0, 0.01) +
   theme_bw() +
   theme(
     plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
@@ -442,7 +444,7 @@ print(plot_excretion)
 plot_plasma <- ggplot() +
   geom_line(data = solution, aes(x = time, y = CA, color = "Model Prediction"),
             linewidth = 1.3) +
-  geom_point(data = plasma_exp, aes(x = time, y = PFBS, color = "Experimental Data"),
+  geom_point(data = plasma_exp, aes(x = time, y = PFOA, color = "Experimental Data"),
              size = 4) +
   labs(
     title = "Plasma Concentration: Model Predictions vs Experimental Data",
@@ -450,7 +452,6 @@ plot_plasma <- ggplot() +
     y = "Concentration (ug/L)",
     color = "Legend"
   ) +
-  xlim(0,6) +
   theme_bw() +
   theme(
     plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),

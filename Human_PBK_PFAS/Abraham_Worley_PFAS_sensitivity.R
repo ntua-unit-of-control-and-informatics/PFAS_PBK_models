@@ -1,3 +1,4 @@
+
 library(deSolve)
 library(ggplot2)
 library(tidyverse)
@@ -33,10 +34,10 @@ create.params  <- function(user_input){
     #Free = 0.001#value 0.001 Smeltz 2023 alternative value 0.00245 from Ryu 2024
     
     #Kidney Transport Parameters
-    Vmax_baso_invitro = 439.2 #Vmax of basolateral transporter (pmol/mg protein/min); averaged in vitro value of OAT1 and OAT3 from Nakagawa, 2007
-    Km_baso = 20100 #Km of basolateral transporter (ug/L) Average of OAT1 and OAT3 from Nakagawa et. al, 2007
-    Vmax_apical_invitro = 37400 #Vmax of apical transporter (pmol/mg protein/min); invitro value for OAT4 from Yang et al, 2010
-    Km_apical = 77500#Km of apical transporter (ug/L), in vitro value for OAT4 and URAT1 from Yang et al, 2010.
+    #Vmax_baso_invitro = 439.2 #Vmax of basolateral transporter (pmol/mg protein/min); averaged in vitro value of OAT1 and OAT3 from Nakagawa, 2007
+    #Km_baso = 20100 #Km of basolateral transporter (ug/L) Average of OAT1 and OAT3 from Nakagawa et. al, 2007
+    #Vmax_apical_invitro = 37400 #Vmax of apical transporter (pmol/mg protein/min); invitro value for OAT4 from Yang et al, 2010
+    #Km_apical = 77500#Km of apical transporter (ug/L), in vitro value for OAT4 and URAT1 from Yang et al, 2010.
     #RAFbaso = 1	#relative activity factor, basolateral transporters (male) (fit to data)	
     #RAFapi = 0.0007	#relative activity factor, apical transporters (male) (fit to data)	
     protein = 2.0e-6	#amount of protein in proximal tubule cells (mg protein/proximal tubule cell)
@@ -377,6 +378,11 @@ keffluxc =0.1*24
 kbilec = 0.0001*24
 kurinec =0.063*24 
 kvoid = 0.06974*24
+Vmax_baso_invitro = 439.2 #Vmax of basolateral transporter (pmol/mg protein/min); averaged in vitro value of OAT1 and OAT3 from Nakagawa, 2007
+Km_baso = 20100 #Km of basolateral transporter (ug/L) Average of OAT1 and OAT3 from Nakagawa et. al, 2007
+Vmax_apical_invitro = 37400 #Vmax of apical transporter (pmol/mg protein/min); invitro value for OAT4 from Yang et al, 2010
+Km_apical = 77500#Km of apical transporter (ug/L), in vitro value for OAT4 and URAT1 from Yang et al, 2010.
+    
 
  user_input <- list( "admin_type" = admin_type,
                     "admin_dose_bolus" = admin_dose_bolus, 
@@ -388,7 +394,9 @@ kvoid = 0.06974*24
                     "PK"=PK, "PR" = PR, "kdif"=kdif, "kabsc" = kabsc,
                     "kunabsc" = kunabsc, "GEC" = GEC, "k0C" = k0C,
                     "keffluxc" =keffluxc, "kbilec" = kbilec, "kurinec" =kurinec,
-                    "kvoid" = kvoid)
+                    "kvoid" = kvoid,"Vmax_baso_invitro"=Vmax_baso_invitro,
+                    "Km_baso"=Km_baso, "Vmax_apical_invitro"=Vmax_apical_invitro,
+                    "Km_apical"=Km_apical)
 
 #================
 #7. Wrap function
@@ -453,7 +461,11 @@ thetas<-list(
 "keffluxc",
 "kbilec" ,
 "kurinec",
-"kvoid")
+"kvoid",
+"Vmax_baso_invitro",
+"Km_baso",
+"Vmax_apical_invitro",
+"Km_apical")
 
 
 #=======================
@@ -566,3 +578,4 @@ for(j in 1:length(plot_list)) {
   )
   print(paste("Saved:", png_file))
 }
+
