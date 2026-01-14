@@ -367,7 +367,7 @@ cat("Creating plots...\n")
 plot_mass <- ggplot(solution) +
   geom_line(aes(x = time, y = AL, color = "Liver"), linewidth = 1.3) +
   geom_line(aes(x = time, y = AR, color = "Rest of Body"), linewidth = 1.3) +
-  geom_line(aes(x = time, y = Aplas_free/Free, color = "Plasma"), linewidth = 1.3) +
+  geom_line(aes(x = time, y = Aplas_free, color = "Plasma"), linewidth = 1.3) +
   labs(
     title = "Mass in Different Compartments",
     x = "Time (days)",

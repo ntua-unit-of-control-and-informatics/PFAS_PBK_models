@@ -40,13 +40,12 @@ create.params <- function(BW) {
   Vmax_apical_invitro <- 37400  # Vmax of apical transporter (pmol/mg protein/min)
   Km_apical <- 77500  # Km of apical transporter (ug/L)
   RAFbaso <- 1  # relative activity factor, basolateral transporters (male)
-  RAFapi <- 0.0007(1+0.665907) # relative activity factor, apical transporters (male); fitted to model
+  RAFapi <- 0.0007*(1+0.665907) # relative activity factor, apical transporters (male); fitted to model
   protein <- 2.0e-6  # amount of protein in proximal tubule cells (mg protein/cell)
   GFRC <- 24.19 * 24  # glomerular filtration rate (L/day/kg kidney); Corley 2005
 
   # --- Partition Coefficients (from Allendorf 2021) ---
   PL <- 0.434698291544763  # liver:blood
-  PK <- 0.413283707125888  # kidney:blood
   PR <- 0.5*(1-0.8347) # rest of body:blood#; fitted to model
 
   # --- Rate Constants ---
@@ -110,7 +109,7 @@ create.params <- function(BW) {
     "kdif" = kdif, "Km_baso" = Km_baso, "Km_apical" = Km_apical,
     "kbile" = kbile, "kurine" = kurine, "kefflux" = kefflux,
     "GFR" = GFR, "kabs" = kabs, "kunabs" = kunabs, "GE" = GE, "k0" = k0,
-    "PL" = PL, "PK" = PK, "PR" = PR, "kvoid" = kvoid,
+    "PL" = PL, "PR" = PR, "kvoid" = kvoid,
     "water_consumption" = water_consumption
   ))
 }
@@ -341,19 +340,19 @@ cat("ODEs solved successfully!\n")
 cat("Loading experimental data...\n")
 
 # Feces experimental data
-exp_data_feces <- read.csv("Human_PBK_PFAS/exp_data_feces.csv")
+exp_data_feces <- read.csv("exp_data_feces.csv")
 feces_exp <- cumulative_exp_data(exp_data_feces, "time", "PFOA", "feces.weight") %>%
   mutate(cumulative_mass = cumulative_mass / 1000) %>%
   filter(time <= 6)
 
 # Urine experimental data
-exp_data_urine <- read.csv("Human_PBK_PFAS/exp_data_urine.csv")
+exp_data_urine <- read.csv("exp_data_urine.csv")
 urine_exp <- cumulative_exp_data(exp_data_urine, "time", "PFOA", "urine.volume") %>%
   mutate(time = time / 24) %>%
   filter(time <= 6)
 
 # Plasma experimental data
-plasma_exp <- read.csv("Human_PBK_PFAS/exp_data_plasma.csv") %>%
+plasma_exp <- read.csv("exp_data_plasma.csv") %>%
   select("time", "PFOA")
 
 cat("Experimental data loaded!\n")
