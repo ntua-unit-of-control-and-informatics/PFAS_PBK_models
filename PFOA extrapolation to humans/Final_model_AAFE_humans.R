@@ -2090,21 +2090,21 @@ obj.func <- function(x, dataset, fixed_params){
   #======================================df3=========================================================
   
   
-  # exp_data <- dataset$df3 # retrieve data of Abraham et al. 2024
-  # colnames(exp_data)[c(2,3)] <- c("time", "concentration")
-  # column_names <- c("Cfeces")
-  # 
-  # preds_Abraham_2024_feces <- list()
-  # compartment <- "Feces" #unique(exp_data$Tissue)[i]
-  # exp_time <- exp_data[, 2]
-  #   
-  # preds_Abraham_2024_feces <- solution[solution$time %in% exp_time, "Cfeces"]
-  # 
-  # obs_Abraham_2024_feces <- list(exp_data[exp_data$Tissue == "Feces", "concentration"])
-  # #obs_Abraham_2024_feces <- cumsum(unlist(obs_Abraham_2024_feces))
-  # 
-  # score[3] <- AAFE(predictions = preds_Abraham_2024_feces, observations = obs_Abraham_2024_feces)
-  
+  exp_data <- dataset$df3 # retrieve data of Abraham et al. 2024
+  colnames(exp_data)[c(2,3)] <- c("time", "concentration")
+  column_names <- c("Cfeces")
+
+  preds_Abraham_2024_feces <- list()
+  compartment <- "Feces" #unique(exp_data$Tissue)[i]
+  exp_time <- exp_data[, 2]
+
+  preds_Abraham_2024_feces <- solution[solution$time %in% exp_time, "Cfeces"]
+
+  obs_Abraham_2024_feces <- list(exp_data[exp_data$Tissue == "Feces", "concentration"])
+  #obs_Abraham_2024_feces <- cumsum(unlist(obs_Abraham_2024_feces))
+
+  score[3] <- AAFE(predictions = preds_Abraham_2024_feces, observations = obs_Abraham_2024_feces)
+
 
   
   
@@ -2263,8 +2263,7 @@ obj.func <- function(x, dataset, fixed_params){
   urine_times_h  <- sort(unique(dataset$df2$Time_h))
   feces_times_h  <- sort(unique(dataset$df3$Time_h))
   
-  #experimental_times <- c(plasma_times_h, urine_times_h, feces_times_h)
-  experimental_times <- c(plasma_times_h, urine_times_h)
+  experimental_times <- c(plasma_times_h, urine_times_h, feces_times_h)
   
   simulation_time = sort(unique(c(sample_time, experimental_times)))
   
@@ -2275,7 +2274,7 @@ obj.func <- function(x, dataset, fixed_params){
   
   preds_Abraham_2024_plasma <- solution[solution$time %in% plasma_times_h, c("time", "Cplasma")]
   preds_Abraham_2024_urine <- solution[solution$time %in% urine_times_h, c("time", "Murine")]
-  #preds_Abraham_2024_feces <- solution[solution$time %in% feces_times_h, c("time", "Cfeces")]
+  preds_Abraham_2024_feces <- solution[solution$time %in% feces_times_h, c("time", "Cfeces")]
   
 
   # ######################################################################################
@@ -2323,26 +2322,26 @@ obj.func <- function(x, dataset, fixed_params){
                          idvar = "Time_h", timevar = "Tissue", direction = "wide")
   colnames(experiment2) <- c("Time",unique(Abraham_2024_urine$Tissue))
   
-  # experiment3 <- reshape(Abraham_2024_feces[c("Tissue" ,"Time_h",
-  #                                             "concentration_(ng/g)")],
-  #                        idvar = "Time_h", timevar = "Tissue", direction = "wide")
-  # colnames(experiment3) <- c("Time",unique(Abraham_2024_feces$Tissue))
+  experiment3 <- reshape(Abraham_2024_feces[c("Tissue" ,"Time_h",
+                                              "concentration_(ng/g)")],
+                         idvar = "Time_h", timevar = "Tissue", direction = "wide")
+  colnames(experiment3) <- c("Time",unique(Abraham_2024_feces$Tissue))
                   
   # Put the experiments in a list
   experiments <- list(experiment1 = experiment1,
-                      experiment2 = experiment2)
-                      #experiment3 = experiment3)
+                      experiment2 = experiment2,
+                      experiment3 = experiment3)
 
   
   # Rename predictions so that they share the same name as the names of the experimental data 
   colnames(preds_Abraham_2024_plasma) <- c( "Time", "Plasma")
   colnames(preds_Abraham_2024_urine) <- c( "Time", "Urine")
-  #colnames(preds_Abraham_2024_feces) <- c( "Time", "Feces")
+  colnames(preds_Abraham_2024_feces) <- c( "Time", "Feces")
   
   # Create a list containing the corresponding predictions
   simulations <- list(predictions1 = preds_Abraham_2024_plasma,
-                      predictions2 = preds_Abraham_2024_urine)
-                      #predictions3 = preds_Abraham_2024_feces)
+                      predictions2 = preds_Abraham_2024_urine,xx
+                      predictions3 = preds_Abraham_2024_feces)
   
   
   # Iterate over all existing experiments and create the accompanying plots
