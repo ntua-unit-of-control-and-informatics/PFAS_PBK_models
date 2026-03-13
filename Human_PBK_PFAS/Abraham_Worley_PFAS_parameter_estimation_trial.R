@@ -33,7 +33,6 @@ create.params  <- function(user_input){
     
     #Chemical Specific Parameters
     MW = 414.07	#PFOA molecular mass (g/mol)
-    
     #Free = 0.001#value 0.001 Smeltz 2023 alternative value 0.00245 from Ryu 2024
     
     #Kidney Transport Parameters
@@ -49,18 +48,18 @@ create.params  <- function(user_input){
     #Partition Coefficients (from Allendorf 2021)
     PL = 0.434698291544763 #liver:blood
     PK = 0.413283707125888 #kidney:blood
-    PR = 0.534206103089267 #rest of body:blood
+    #PR = 0.534206103089267 #rest of body:blood
     
     #rate constants
     kdif = 0.001*24	#diffusion rate from proximal tubule cells (L/day)
-    #kabsc = 2.12*24	#rate of absorption of chemical from small intestine to liver (1/(day*BW^-0.25))(fit to data)
+    kabsc = 2.12*24	#rate of absorption of chemical from small intestine to liver (1/(day*BW^-0.25))(fit to data)
     #kunabsc = 7.06e-5*24	#rate of unabsorbed dose to appear in feces (1/(day*BW^-0.25))(fit to data)
     GEC = 3.5*24#gastric emptying time (1/(day*BW^-0.25)); from Yang, 2013
     k0C = 1.0*24	#rate of uptake from the stomach into the liver (1/(day*BW^-0.25)) (fit to data)
     
-    #keffluxc =0.1*24 #rate of clearance of PFOA from proximal tubule cells into blood (1/(day*BW^-0.25))
+    keffluxc =0.1*24 #rate of clearance of PFOA from proximal tubule cells into blood (1/(day*BW^-0.25))
     #kbilec = 0.0001*24 #biliary elimination rate ((male); liver to feces storage (1/(day*BW^-0.25)) (fit to data)
-    #kurinec = 0.063*24 #rate of urine elimination from urine storage (male) (1/(day*BW^-0.25))(fit to data)
+    kurinec = 0.063*24 #rate of urine elimination from urine storage (male) (1/(day*BW^-0.25))(fit to data)
     kvoid = 0.06974*24  #daily urine volume rate (L/day); Van Haarst, 2004                                                   
     
     #Scaled Parameters
@@ -113,7 +112,7 @@ create.params  <- function(user_input){
                  'kdif' = kdif, "Km_baso" = Km_baso, "Km_apical" = Km_apical,
                  "kbile" = kbile, "kurine" = kurine, "kefflux" = kefflux,
                  "GFR" = GFR, "kabs" = kabs, "kunabs" = kunabs, "GE" = GE, "k0" = k0,
-                 "PL" = PL, "PK" = PK, "PR" = PR, "kvoid" = kvoid, "admin_type" = admin_type,
+                 "PL" = PL,  "PR" = PR, "kvoid" = kvoid, "admin_type" = admin_type,
                  "admin_time_iv" = admin_time_iv, "admin_dose_iv" = admin_dose_iv,
                  "Cwater" = Cwater, "Cwater_time" = Cwater_time,
                  "ingestion" = ingestion,"ingestion_time" = ingestion_time,
@@ -242,7 +241,6 @@ cumulative_exp_data<-function(df,time_col,concentration_col, multiply_col){
   if (nrow(clean_df) == 0) {
     stop("No complete cases found after removing NA values")
   }
-  
   # Multiply and calculate cumulative sum
   multiplied_concentration <- clean_df[[concentration_col]] * clean_df[[multiply_col]]
   
@@ -387,12 +385,8 @@ ingestion_time <- c(0)
 
 #RAFbaso = 1	
 RAFapi = 0.0007	
-#PL = 0.434698291544763 
-#PR = 0.534206103089267 
+PR = 0.5
 Free = 0.001
-keffluxc =0.1*24
-kabsc = 2.12*24
-kurinec = 0.063*24
 kbilec = 0.0001*24
 kunabsc = 7.06e-5*24
 
@@ -411,11 +405,9 @@ obj.func<-function(x){
                       "ingestion_time" = ingestion_time,
                       "RAFapi"=x[1],
                       "Free"=x[2],
-                      "keffluxc"=x[3],
-                      "kabsc"=x[4],
-                      "kurinec"=x[5],
-                      "kbilec"=x[6],
-                      "kunabsc"=x[7])
+                      "kbilec"=x[3],
+                      "kunabsc"=x[4],
+                      "PR"=x[5])
   
   params <- create.params(user_input)
   inits <- create.inits(params)
@@ -472,18 +464,16 @@ obj.func<-function(x){
 
 x0 <- c("RAFapi"=RAFapi,
         "Free"=Free,
-        "keffluxc"=keffluxc,
-        "kabsc"=kabsc,
-        "kurinec"=kurinec,
         "kbilec"=kbilec,
-        "kunabsc"=kunabsc)
+        "kunabsc"=kunabsc,
+        "PR"=PR)
 
 # Maximum number of iterations of the optimization algorithm
 N_iter <- 1000
 
 
 # Extra options for the optimization algorithm
-opts <- list( "algorithm" = "NLOPT_LN_NEWUOA", #"NLOPT_LN_NEWUOA",  #"NLOPT_LN_SBPLX" ,
+opts <- list( "algorithm" = "NLOPT_LN_SBPLX", #"NLOPT_LN_NEWUOA",  #"NLOPT_LN_SBPLX" ,
               "xtol_rel" = 1e-05,
               "ftol_rel" = 1e-05,
               "ftol_abs" = 0.0,
@@ -491,11 +481,22 @@ opts <- list( "algorithm" = "NLOPT_LN_NEWUOA", #"NLOPT_LN_NEWUOA",  #"NLOPT_LN_S
               "maxeval" = N_iter,
               "print_level" = 1 )
 
+lower_bounds <- c("RAFapi"=0.0001,
+                  "Free"=0.001,
+                  "kbilec"=0.001,
+                  "kunabsc"=1e-05,
+                  "PR"=1e-03)
+
+upper_bounds <- c("RAFapi"=1,
+                  "Free"=0.00245,
+                  "kbilec"=1e+02,
+                  "kunabsc"=1e+02,
+                  "PR"=0.5)    
 #Call the optimization algorithm and provide him with the input data
 optimization <- nloptr::nloptr(x0 = x0,
                               eval_f = obj.func,
-                              lb	= rep(1e-05, length(x0)),
-                              ub = rep(1e+03, length(x0)),
+                              lb	= lower_bounds ,
+                              ub = upper_bounds,
                               opts = opts)
 
 
@@ -519,11 +520,9 @@ x_opt <- optimization$solution
                       "ingestion_time" = ingestion_time,
                       "RAFapi"=x_opt[1],
                       "Free"=x_opt[2],
-                      "keffluxc"=x_opt[3],
-                      "kabsc"=x_opt[4],
-                      "kurinec"=x_opt[5],
-                      "kbilec"=x_opt[6],
-                      "kunabsc"=x_opt[7])
+                      "kbilec"=x_opt[3],
+                      "kunabsc"=x_opt[4],
+                      "PR"=x_opt[5])
 
 params <- create.params(user_input)
 inits <- create.inits(params)
@@ -579,14 +578,13 @@ plot2 <- ggplot()+
         legend.title=element_text(hjust = 0.5,size=25),
         legend.text=element_text(size=22),
         panel.border = element_rect(colour = "black", fill=NA, size=1.0)) +
-  
+        #xlim(0,6)+
   scale_color_manual("Compartments", values=color_codes)+
   theme(legend.key.size = unit(1.5, 'cm'),
         legend.title = element_text(size=14),
         legend.text = element_text(size=14),
         axis.text = element_text(size = 14))
-
 print(plot2)
 
-dx=(x_opt-x0)/x0
+dx=(x_opt-x0)/x0*100
 View(dx)

@@ -32,7 +32,7 @@ create.params <- function(BW) {
 
   # --- Chemical Specific Parameters ---
   MW <- 414.07  # PFOA molecular mass (g/mol)
-  Free <- 0.001  # free fraction in plasma (Smeltz 2023)
+  Free <- 0.001  # free fraction in plasma (Smeltz 2023); fitted to model
 
   # --- Kidney Transport Parameters ---
   Vmax_baso_invitro <- 439.2  # Vmax of basolateral transporter (pmol/mg protein/min)
@@ -40,23 +40,22 @@ create.params <- function(BW) {
   Vmax_apical_invitro <- 37400  # Vmax of apical transporter (pmol/mg protein/min)
   Km_apical <- 77500  # Km of apical transporter (ug/L)
   RAFbaso <- 1  # relative activity factor, basolateral transporters (male)
-  RAFapi <- 0.0007  # relative activity factor, apical transporters (male)
+  RAFapi <- 0.0007*(1+0.665907) # relative activity factor, apical transporters (male); fitted to model
   protein <- 2.0e-6  # amount of protein in proximal tubule cells (mg protein/cell)
   GFRC <- 24.19 * 24  # glomerular filtration rate (L/day/kg kidney); Corley 2005
 
   # --- Partition Coefficients (from Allendorf 2021) ---
   PL <- 0.434698291544763  # liver:blood
-  PK <- 0.413283707125888  # kidney:blood
-  PR <- 0.08#0.534206103089267  # rest of body:blood
+  PR <- 0.5*(1-0.8347) # rest of body:blood#; fitted to model
 
   # --- Rate Constants ---
   kdif <- 0.001 * 24  # diffusion rate from proximal tubule cells (L/day)
   kabsc <- 2.12 * 24  # rate of absorption from small intestine (1/(day*BW^-0.25))
-  kunabsc <- 7.06e-5 * 24  # rate of unabsorbed dose to feces (1/(day*BW^-0.25))
+  kunabsc <- 7.06e-5 * 24 * (1-0.9941) # rate of unabsorbed dose to feces (1/(day*BW^-0.25)); fitted to model 
   GEC <- 3.5 * 24  # gastric emptying time (1/(day*BW^-0.25)); Yang 2013
   k0C <- 1.0 * 24  # rate of uptake from stomach to liver (1/(day*BW^-0.25))
   keffluxc <- 0.1 * 24  # rate of efflux from PTC to blood (1/(day*BW^-0.25))
-  kbilec <- 0.0001 * 24  # biliary elimination rate (1/(day*BW^-0.25))
+  kbilec <- 0.0001 * 24 * (1-0.47892) # biliary elimination rate (1/(day*BW^-0.25)); fitted to model 
   kurinec <- 0.063 * 24  # urinary elimination rate (1/(day*BW^-0.25))
   kvoid <- 0.06974 * 24  # daily urine volume rate (L/day); Van Haarst 2004
 
@@ -110,7 +109,7 @@ create.params <- function(BW) {
     "kdif" = kdif, "Km_baso" = Km_baso, "Km_apical" = Km_apical,
     "kbile" = kbile, "kurine" = kurine, "kefflux" = kefflux,
     "GFR" = GFR, "kabs" = kabs, "kunabs" = kunabs, "GE" = GE, "k0" = k0,
-    "PL" = PL, "PK" = PK, "PR" = PR, "kvoid" = kvoid,
+    "PL" = PL, "PR" = PR, "kvoid" = kvoid,
     "water_consumption" = water_consumption
   ))
 }
@@ -341,19 +340,19 @@ cat("ODEs solved successfully!\n")
 cat("Loading experimental data...\n")
 
 # Feces experimental data
-exp_data_feces <- read.csv("Human_PBK_PFAS/exp_data_feces.csv")
+exp_data_feces <- read.csv("exp_data_feces.csv")
 feces_exp <- cumulative_exp_data(exp_data_feces, "time", "PFOA", "feces.weight") %>%
   mutate(cumulative_mass = cumulative_mass / 1000) %>%
   filter(time <= 6)
 
 # Urine experimental data
-exp_data_urine <- read.csv("Human_PBK_PFAS/exp_data_urine.csv")
+exp_data_urine <- read.csv("exp_data_urine.csv")
 urine_exp <- cumulative_exp_data(exp_data_urine, "time", "PFOA", "urine.volume") %>%
   mutate(time = time / 24) %>%
   filter(time <= 6)
 
 # Plasma experimental data
-plasma_exp <- read.csv("Human_PBK_PFAS/exp_data_plasma.csv") %>%
+plasma_exp <- read.csv("exp_data_plasma.csv") %>%
   select("time", "PFOA")
 
 cat("Experimental data loaded!\n")
