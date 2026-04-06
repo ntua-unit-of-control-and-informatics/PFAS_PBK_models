@@ -6,28 +6,28 @@ library(deSolve)
 
 create_variable_params <- function(test_pars, BW,sex,   fixed_params){
 
-  RAFOatp_lu_ap <- 0.00188877 #4.992703e-01#4.060400e-01
-  RAFOatp_lu_bas <- 0.42333523#RAFOatp_lu_ap
+  RAFOatp_lu_ap <- test_pars[1] #4.992703e-01#4.060400e-01
+  RAFOatp_lu_bas <- test_pars[2]#RAFOatp_lu_ap
   
   if(sex == "M"){
-    RAFOatp_k <-  1.567845e+01
+    RAFOatp_k <-  test_pars[3]
   }else{
-    RAFOatp_k <-3.950214e-03 
+    RAFOatp_k <- test_pars[4]
   }
-  RAFOat3 <- 9.859003e+03*test_pars[1]
+  RAFOat3 <- test_pars[5]
   
-  CL_int <- 1.961917e+00 #uL/min/million hepatocytes
+  CL_int <- test_pars[6] #uL/min/million hepatocytes
   HEPGL <- 104  #million hepatocytes/gram of rat liver (Fattah et al., 2016. [doi: 10.1124/dmd.115.066381] )
   # Scaled hepatobiliary clearance
   CL_hepatobiliary <- CL_int*1e-6*HEPGL*(fixed_params$MLi_drained*1000) *60 #L/h
   
-  RAFOatp_l <-4.992703e-01
+  RAFOatp_l <-test_pars[7]
   RAFUrat <- RAFOatp_k
   RAFOat1 <- RAFOat3
   RAFOatp2_l <- RAFOatp_l
   
   RAFNtcp <- RAFOatp_l
-  RAFOatp2_Int <-  6.158004e-06
+  RAFOatp2_Int <-  test_pars[8] #6.799068e-07
   
   # The parameters below were part of tests involving hypothetical transporters in the kidneys.
   # In the final model these transporters are switched off.
@@ -37,10 +37,10 @@ create_variable_params <- function(test_pars, BW,sex,   fixed_params){
   KmK_api <-   5e4
   
   KLfabp <-  1.2e5#[L/mol]. From Sheng et al. (2018) [doi:10.1007/s00204-017-2055-1]
-  Ka <- 2.391203e+04#[L/mol]. From Rue et al. (2024)
+  Ka <- test_pars[9]#[L/mol]. From Rue et al. (2024)
   Ka2u <- 1e03 #[L/mol], from Han et al. (2004) [doi:10.1081/DCT-200039725]
   
-  CLfeces_unscaled <- 8.214905e-05 #in L/h/BW^(-0.25), scaling similar to Loccisano et al. (2012)
+  CLfeces_unscaled <- test_pars[10] #in L/h/BW^(-0.25), scaling similar to Loccisano et al. (2012)
   CLfeces <- CLfeces_unscaled*BW^(-0.25) 
   
   f_alb_avail<-  1
@@ -51,7 +51,7 @@ create_variable_params <- function(test_pars, BW,sex,   fixed_params){
   koff_fabp <-  1e-2*3600#[1/h]
   koff_a2u <- 1e-2*3600#[1/h]
   
-  reduction_factor <- 3.714130e-02*test_pars[2]
+  reduction_factor <- test_pars[11]
   
   f_tubular <- 0.8
   f_PTC_prot_to_tub_prot <- 0.6939
@@ -289,7 +289,7 @@ create_variable_params <- function(test_pars, BW,sex,   fixed_params){
   #Diffusion rates in L/h between  tubule cells and interstitial space
   kDtcF <- ((2*Peff_monolayer/100) * fixed_params$AcK_DTC) *1000
   kPtcF <- ((2*Peff_monolayer/100) * fixed_params$AcK_PTC) *1000
-  kDalcF <- ((2*Peff_monolayer) * fixed_params$AcK_DALC) *1000 #diffusion between proximal tubule cells and interstitial space
+  kDalcF <- ((2*Peff_monolayer/100) * fixed_params$AcK_DALC) *1000 #diffusion between proximal tubule cells and interstitial space
   kCdcF <- ((2*Peff_monolayer/100) * fixed_params$AcK_CDC) *1000 #diffusion between descending/ascending cells and interstitial space
   kKTrestF  <- ((2*Peff_monolayer/100) * fixed_params$AcKTrest) *1000 #diffusion between rest of kidney cells and interstitial space
   
@@ -1541,7 +1541,7 @@ ode.func <- function(time, inits, params){
     
     #Arterial Blood
     dMArt_tot = QBLu*CLuBf - CArtf*(QBK+QBL+QBM+QBA+QBR+QBSP+QBH+QBBr+
-                                      QBST+QBIN+QBGo+QBSK+QBBo) - QGFR*CArtf
+                                      QBST+QBIN+QBGo+QBSK+QBBo) 
     
     #Venous Blood
     dMVen_tot = - CVenf*QBLu + QBK*CKBf + QBLtot*CLBf + QBM*CMBf + QBA*CABf + QBR*CRBf+
@@ -1550,7 +1550,7 @@ ode.func <- function(time, inits, params){
     #Kidney
     #blood subcompartment
     dMKB_tot = QBK*CArtf - QBK*CKBf - (Ptrans_diff_K+PparaKi)*A_peritubular*(CKBf-CKFf) + 
-      (VmK_baso*CPTCf/(KmK_baso+CPTCf))
+      (VmK_baso*CPTCf/(KmK_baso+CPTCf)) - QGFR*CArtf
     
     #interstitial fluid subcompartment
     dMKF_tot = (Ptrans_diff_K+PparaKi)*A_peritubular*(CKBf-CKFf) - 
@@ -3729,7 +3729,7 @@ obj.func <- function(x, dataset, fixed_params){
   score[34] <- AAFE(predictions = preds_gus_OR_Mtissues, observations = obs_gus_OR_Mtissues)
   N_points[34] <-   sum(unlist(lapply( obs_gus_OR_Mtissues,length)))
   
-  final_AAFE <- 1000*sum(score* N_points) /sum(N_points)
+  final_AAFE <- sum(score* N_points) /sum(N_points)
 }
 
 ##########
@@ -3792,7 +3792,7 @@ gus_OR_Mblood <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Plasma Male rats
 gus_OR_Mtissues <- openxlsx::read.xlsx("Data/Gustafsson 2022_PFOA_Tissues Male rats_Oral.xlsx")
 gus_OR_Mtissues$Tissue[1] <- "BALF"
 
-setwd('/Users/eviepapakyriakopoulou/Documents/GitHub/PFOA rat model simplification')
+setwd('/Users/eviepapakyriakopoulou/Documents/GitHub/PFAS_PBK_models/PFOA rat model simplification')
 
 dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mtissues, "df4" = kim_OR_Mtissues,
                 "df5" = kim_IV_Ftissues, "df6" = kim_OR_Ftissues, "df7" = dzi_OR_Mtissues, "df8" = dzi_OR_Ftissues,
@@ -3810,29 +3810,68 @@ dataset <- list("df1" = kudo_high_dose, "df2" = kudo_low_dose, "df3" = kim_IV_Mt
 
 fixed_params <- create_all_fixed_params()
 
+#Initialise optimiser to NULL for better error handling later
+opts <- list( "algorithm" = "NLOPT_LN_SBPLX",#"NLOPT_LN_NEWUOA","NLOPT_LN_SBPLX"
+              "xtol_rel" = 1e-07,
+              "ftol_rel" = 0.0,
+              "ftol_abs" = 0.0,
+              "xtol_abs" = 0.0 ,
+              "maxeval" = 300, 
+              "print_level" = 1)
 
-####Test RAFOat3
-RAFOat3_res <- rep(NA,10)
-counter <- 1
-for (val in c(0.01, 0.05, 0.1, 0.3,0.4, 0.5, 0.6,0.75,1)){
-  
-  print(counter)
-  test_pars <- c(val, 1)
-  RAFOat3_res[counter] <- obj.func(test_pars, dataset, fixed_params)
-  counter <- counter+ 1
-  
-}    
-######################
-####Test reduction_factor
-reduction_factor_res <- rep(NA,10)
-counter <- 1
-for (val in c(0.01, 0.05,0.075, 0.1, 0.25, 0.5, 0.75,1, 2, 5)){
-  print(counter)
-  test_pars <- c(1, val)
-  reduction_factor_res[counter] <- obj.func(test_pars, dataset, fixed_params)
-  counter <- counter + 1
-  
-}
+# Create initial conditions (zero initialisation)
+#Parameter names:
+# Male RAFOatp_k, Male RAFOat1, Male RAFOat3, Male RAFOatp_l,Male RAFNtcp
+# Female RAFOatp_k, Female RAFOat1, Female RAFOat3, Female RAFOatp_l,female RAFNtcp
+#  CF_Peff
+
+N_pars <- 11 # Number of parameters to be fitted
+fit <-  c(0.00188877, 0.42333523, 1.567845e+01, 3.950214e-03,
+          9.859003e+03, 1.961917e+00, 4.992703e-01, 6.158004e-06,
+          2.391203e+04, 8.214905e-05, 3.714130e-02)
+
+lb = c(rep(log(1e-4),2), rep(log(1e-7),3), log(1e-3), log(1e-1), log(1e-8), log(5e3), log(1e-6),log(1e-2))
+ub = c(rep(log(1e2),2), rep(log(1e5),3), log(1e3),  log(2e1), log(1e2),log(1e6), log(1e-3), log(1e2))
+
+
+
+# Run the optimization algorithmm to estimate the parameter values
+optimizer <- nloptr::nloptr( x0= fit,
+                             eval_f = obj.func,
+                             lb	= lb,
+                             ub = ub,
+                             opts = opts,
+                             dataset = dataset,
+                             fixed_params = fixed_params
+)
+
+#estimated_params <- exp(optimizer$solution)
+test_pars <- exp(optimizer$solution)
+
+save.image("test_evie.RData")
+
+# ####Test RAFOat3
+# RAFOat3_res <- rep(NA,10)
+# counter <- 1
+# for (val in c(0.01, 0.05, 0.1, 0.3,0.4, 0.5, 0.6,0.75,1)){
+#   
+#   print(counter)
+#   test_pars <- c(val, 1)
+#   RAFOat3_res[counter] <- obj.func(test_pars, dataset, fixed_params)
+#   counter <- counter+ 1
+#   
+# }    
+# ######################
+# ####Test reduction_factor
+# reduction_factor_res <- rep(NA,10)
+# counter <- 1
+# for (val in c(0.01, 0.05,0.075, 0.1, 0.25, 0.5, 0.75,1, 2, 5)){
+#   print(counter)
+#   test_pars <- c(1, val)
+#   reduction_factor_res[counter] <- obj.func(test_pars, dataset, fixed_params)
+#   counter <- counter + 1
+#   
+# }
 
      
 
