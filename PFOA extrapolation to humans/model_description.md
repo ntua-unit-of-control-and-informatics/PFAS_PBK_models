@@ -6,8 +6,7 @@ This service provides a **whole-body physiologically based pharmacokinetic (PBPK
 **perfluorooctanoic acid (PFOA)** in humans. PFOA (C₇F₁₅COOH, MW = 414.07 g/mol) is a
 per- and polyfluoroalkyl substance (PFAS) that is persistent in the environment and
 accumulates in the human body, primarily in serum, liver, and kidneys. The model predicts
-time-dependent PFOA concentrations in blood, plasma, and 14 major organs/tissues following
-different routes of exposure.
+time-dependent PFOA concentrations in blood, plasma, and 14 major tissue compartments along with arterial and venous blood pools, as well as additional mechanistic subcompartments for renal tubular segments, gastrointestinal lumen, bile, and respiratory lining fluids.
 
 The model was developed by extrapolating from rodent data to humans using in-vitro to in-vivo
 extrapolation (IVIVE) of transporter kinetics and was calibrated against human biomonitoring data
@@ -72,7 +71,7 @@ via IVIVE:
 | OATP | Lung epithelium (apical/basolateral) | Uptake |
 | OATP2B1 | Intestinal epithelium | Uptake |
 
-Passive transcellular diffusion and paracellular (gap-junction) transport are modelled for
+Passive transcellular diffusion and paracellular transport through endothelial pores/fenestrations are modelled for
 every capillary–interstitium interface using the Renkin pore model.
 
 ### Elimination Routes
