@@ -68,8 +68,8 @@ via IVIVE:
 | OATP1B1/1B3 | Liver (basolateral) | Uptake into hepatocytes |
 | OATP2B1 | Liver (basolateral) | Uptake into hepatocytes |
 | NTCP (SLC10A1) | Liver (basolateral) | Uptake into hepatocytes |
-| OATP | Lung epithelium (apical/basolateral) | Uptake |
-| OATP2B1 | Intestinal epithelium | Uptake |
+| OATP | Lung epithelium (apical/basolateral) | Uptake into  lung tissue cells |
+| OATP2B1 | Intestinal epithelium | Uptake into intestine tissue cells |
 
 Passive transcellular diffusion and paracellular transport through endothelial pores/fenestrations are modelled for
 every capillary–interstitium interface using the Renkin pore model.
