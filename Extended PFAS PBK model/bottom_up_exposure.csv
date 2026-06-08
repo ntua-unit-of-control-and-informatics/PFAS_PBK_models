@@ -1,0 +1,45 @@
+﻿PFAS,Source of exposure,Year,Country/cohort,Exposure (pg/kg bw/d),Exposure estimated from metric of the population,,ingestion,Atissue (ug),Aloss (ug),Atotal (ug),CA (ug/L)
+PFOA,diet,2016-2017,EuroMix/Norway,450,mean_exposure,,0.0387,1.49E-01,5.92E+00,6.07E+00,1.71E-02
+PFOA,diet,2016-2018,EuroMix/Norway,210,GM_exposure,,0.01806,6.97E-02,2.76E+00,2.83E+00,8.00E-03
+PFOA,diet,2016-2019,EuroMix/Norway,170,median_exposure,,0.01462,5.64E-02,2.24E+00,2.29E+00,6.48E-03
+PFOA,diet,2016-2020,EuroMix/Norway,1600,P95_exposure,,0.1376,5.31E-01,2.11E+01,2.16E+01,6.10E-02
+PFHxA,diet,2010,Sweden,59.4,mean_exposure,,0.0051084,1.48E-03,8.00E-01,8.02E-01,5.79E-05
+PFHpA,diet,2010,Sweden,22,mean_exposure,,0.001892,2.40E-03,2.95E-01,2.97E-01,1.86E-04
+PFOA,diet,2010,Sweden,692,mean_exposure,,0.059512,2.30E-01,9.11E+00,9.34E+00,2.64E-02
+PFNA,diet,2010,Sweden,68.2,mean_exposure,,0.0058652,2.69E-02,8.94E-01,9.21E-01,1.82E-03
+PFDA,diet,2010,Sweden,107,mean_exposure,,0.009202,1.02E-01,1.34E+00,1.44E+00,5.40E-03
+PFHxS,diet,2010,Sweden,37.4,mean_exposure,,0.0032164,2.65E-02,4.78E-01,5.05E-01,2.80E-03
+PFOS,diet,2010,Sweden,1005,mean_exposure,,0.08643,2.08E+00,1.15E+01,1.36E+01,9.74E-02
+PFHxS,diet,2013-2014,Norway,11,mean_exposure,,0.000946,7.79E-03,1.41E-01,1.48E-01,8.25E-04
+PFHxS,diet,2013-2015,Norway,7.6,median_exposure,,0.0006536,5.38E-03,9.72E-02,1.03E-01,5.70E-04
+PFHxS,diet,2013-2016,Norway,24,P95_exposure,,0.002064,1.70E-02,3.07E-01,3.24E-01,1.80E-03
+PFOS,diet,2013-2014,Norway,156,mean_exposure,,0.013416,3.22E-01,1.78E+00,2.11E+00,1.51E-02
+PFOS,diet,2013-2015,Norway,100,median_exposure,,0.0086,2.07E-01,1.14E+00,1.35E+00,9.69E-03
+PFOS,diet,2013-2016,Norway,365,P95_exposure,,0.03139,7.54E-01,4.17E+00,4.93E+00,3.54E-02
+PFHxA,diet,2013-2014,Norway,90,mean_exposure,,0.00774,2.24E-03,1.21E+00,1.21E+00,8.77E-05
+PFHxA,diet,2013-2015,Norway,67,median_exposure,,0.005762,1.67E-03,9.03E-01,9.04E-01,6.53E-05
+PFHxA,diet,2013-2016,Norway,284,P95_exposure,,0.024424,7.06E-03,3.83E+00,3.83E+00,2.77E-04
+PFHpA,diet,2013-2014,Norway,47,mean_exposure,,0.004042,5.14E-03,6.29E-01,6.34E-01,3.97E-04
+PFHpA,diet,2013-2015,Norway,39,median_exposure,,0.003354,4.26E-03,5.22E-01,5.26E-01,3.30E-04
+PFHpA,diet,2013-2016,Norway,100,P95_exposure,,0.0086,1.09E-02,1.34E+00,1.35E+00,8.45E-04
+PFOA,diet,2013-2014,Norway,269,mean_exposure,,0.023134,8.92E-02,3.54E+00,3.63E+00,1.02E-02
+PFOA,diet,2013-2015,Norway,248,median_exposure,,0.021328,8.23E-02,3.27E+00,3.35E+00,9.45E-03
+PFOA,diet,2013-2016,Norway,519,P95_exposure,,0.044634,1.72E-01,6.83E+00,7.01E+00,1.98E-02
+PFNA,diet,2013-2014,Norway,38,mean_exposure,,0.003268,1.50E-02,4.98E-01,5.13E-01,1.02E-03
+PFNA,diet,2013-2015,Norway,33,median_exposure,,0.002838,1.30E-02,4.32E-01,4.45E-01,8.82E-04
+PFNA,diet,2013-2016,Norway,77,P95_exposure,,0.006622,3.03E-02,1.01E+00,1.04E+00,2.06E-03
+PFDA,diet,2013-2014,Norway,72,mean_exposure,,0.006192,6.88E-02,9.03E-01,9.72E-01,3.64E-03
+PFDA,diet,2013-2015,Norway,69,median_exposure,,0.005934,6.59E-02,8.65E-01,9.31E-01,3.48E-03
+PFDA,diet,2013-2016,Norway,131,P95_exposure,,0.011266,1.25E-01,1.64E+00,1.77E+00,6.61E-03
+PFHxA,diet,1997-2009,Europe (EFSA),70,median_exposure,,0.00602,1.74E-03,9.43E-01,9.45E-01,6.82E-05
+PFHpA,diet,1997-2009,Europe (EFSA),70,median_exposure,,0.00602,7.65E-03,9.37E-01,9.45E-01,5.91E-04
+PFNA,diet,1997-2009,Europe (EFSA),30,median_exposure,,0.00258,1.18E-02,3.93E-01,4.05E-01,8.02E-04
+PFDA,diet,1997-2009,Europe (EFSA),20,median_exposure,,0.00172,1.91E-02,2.51E-01,2.70E-01,1.01E-03
+PFBS,diet,1997-2009,Europe (EFSA),70,median_exposure,,0.00602,1.94E-03,9.43E-01,9.45E-01,8.28E-05
+PFHxS,diet,1997-2009,Europe (EFSA),50,median_exposure,,0.0043,3.54E-02,6.39E-01,6.75E-01,3.75E-03
+PFOS,diet,1997-2009,Europe (EFSA),800,median_exposure,,0.0688,1.65E+00,9.14E+00,1.08E+01,7.75E-02
+PFOA,diet,1997-2009,Europe (EFSA),130,median_exposure,,0.01118,4.31E-02,1.71E+00,1.75E+00,4.95E-03
+PFOA,diet,2010-2016,Greece,490,Lower_bound,,0.04214,1.63E-01,6.45E+00,6.61E+00,1.87E-02
+PFOA,diet,2010-2017,Greece,6530,Upper_bound,,0.56158,2.17E+00,8.60E+01,8.81E+01,2.49E-01
+PFOS,diet,2010-2016,Greece,910,Lower_bound,,0.07826,1.88E+00,1.04E+01,1.23E+01,8.82E-02
+PFOS,diet,2010-2017,Greece,6810,Upper_bound,,0.58566,1.41E+01,7.78E+01,9.19E+01,6.60E-01
