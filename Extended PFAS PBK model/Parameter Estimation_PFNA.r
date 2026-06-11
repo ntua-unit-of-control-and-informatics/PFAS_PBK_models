@@ -57,28 +57,28 @@
     VPTCC <- 1.35e-4  # vol. of proximal tubule cells (L/g kidney)
 
     # --- Chemical Specific Parameters ---
-    MW <- variables["MW","HFPO_DA"]  # HFPO_DA molecular mass (g/mol)
-    Free <- variables["Free","HFPO_DA"]  # free fraction in plasma (Smeltz 2023); fitted to model
+    MW <- variables["MW","PFNA"]  # PFNA molecular mass (g/mol)
+    Free <- variables["Free","PFNA"]  # free fraction in plasma (Smeltz 2023); fitted to model
 
     # --- Kidney Transport Parameters ---
-    Vmax_baso_invitro <- variables["Vmax_baso_invitro","HFPO_DA"]  # Vmax of basolateral transporter (pmol/mg protein/min)
-    Km_baso <- variables["Km_baso","HFPO_DA"] * variables["MW","HFPO_DA"]  # Km of basolateral transporter (ug/L)
-    Vmax_apical_invitro <- variables["Vmax_apical_invitro", "HFPO_DA"]  # Vmax of apical transporter (pmol/mg protein/min)
-    Km_apical <- variables["Km_apical", "HFPO_DA"] * variables["MW", "HFPO_DA"]  # Km of apical transporter (ug/L)
+    Vmax_baso_invitro <- variables["Vmax_baso_invitro","PFNA"]  # Vmax of basolateral transporter (pmol/mg protein/min)
+    Km_baso <- variables["Km_baso","PFNA"] * variables["MW","PFNA"]  # Km of basolateral transporter (ug/L)
+    Vmax_apical_invitro <- variables["Vmax_apical_invitro", "PFNA"]  # Vmax of apical transporter (pmol/mg protein/min)
+    Km_apical <- variables["Km_apical", "PFNA"] * variables["MW", "PFNA"]  # Km of apical transporter (ug/L)
     protein <- 2.0e-6  # amount of protein in proximal tubule cells (mg protein/cell)
     GFRC <- 24.19 * 24  # glomerular filtration rate (L/day/kg kidney); Corley 2005
 
     # --- Partition Coefficients (from Allendorf 2021) ---
-    PAdi <- (1-Htc)*PC["Adipose","HFPO_DA"]/2 # adipose tissue:plasma;
-    PBra <- (1-Htc)*PC["Brain","HFPO_DA"] # brain:plasma;
-    PGon <- (1-Htc)*PC["Gonads","HFPO_DA"] # gonads:plasma;
-    PGI <-  (1-Htc)*PC["Gut","HFPO_DA"] # GI tract:plasma;
-    PHea <- (1-Htc)*PC["Heart","HFPO_DA"] # heart:plasma;
-    PL <-   (1-Htc)*PC["Liver","HFPO_DA"]/1.5 # liver:plasma;
-    PLun <- (1-Htc)*PC["Lung","HFPO_DA"]  # lung:plasma;
-    PMus <- (1-Htc)*PC["Muscle","HFPO_DA"] # muscle:plasma;
-    PSki <- (1-Htc)*PC["Skin","HFPO_DA"]   # skin:plasma;
-    PSpl <- (1-Htc)*PC["Spleen","HFPO_DA"]  # spleen:plasma;
+    PAdi <- (1-Htc)*PC["Adipose","PFNA"] # adipose tissue:plasma;
+    PBra <- (1-Htc)*PC["Brain","PFNA"]* # brain:plasma;
+    PGon <- (1-Htc)*PC["Gonads","PFNA"] # gonads:plasma;
+    PGI <-  (1-Htc)*PC["Gut","PFNA"] # GI tract:plasma;
+    PHea <- (1-Htc)*PC["Heart","PFNA"] # heart:plasma;
+    PL <-   (1-Htc)*PC["Liver","PFNA"] # liver:plasma;
+    PLun <- (1-Htc)*PC["Lung","PFNA"]  # lung:plasma;
+    PMus <- (1-Htc)*PC["Muscle","PFNA"] # muscle:plasma;
+    PSki <- (1-Htc)*PC["Skin","PFNA"]   # skin:plasma;
+    PSpl <- (1-Htc)*PC["Spleen","PFNA"]  # spleen:plasma;
     PPan <- (PGI+PSpl)/2 # pancreas:plasma; estimated as average of GI tract and spleen
     PR <- 0.1 # rest of body:blood
 
@@ -141,8 +141,8 @@
     VR <- (0.93 * BW) - VPlas- VPTC - Vfil - VL -VAdi - VBra - VGon - VHea - VLun - VMus - VSki - VSpl - VPan - VGI  # volume of rest of body (L)
     VBal <- (0.93 * BW) - (VR + VL + VPTC + Vfil + VPlas + VAdi + VBra + VGon + VHea + VLun + VMus + VSki + VSpl + VPan + VGI)  # Balance check; should equal zero
 
-    Vmax_basoC <- (Vmax_baso_invitro * RAFbaso * PTC * protein * 60 * (variables["MW", "HFPO_DA"] / 1e12) * 1e6) * 24
-    Vmax_apicalC <- (Vmax_apical_invitro * RAFapi * PTC * protein * 60 * (variables["MW", "HFPO_DA"] / 1e12) * 1e6) * 24
+    Vmax_basoC <- (Vmax_baso_invitro * RAFbaso * PTC * protein * 60 * (variables["MW", "PFNA"] / 1e12) * 1e6) * 24
+    Vmax_apicalC <- (Vmax_apical_invitro * RAFapi * PTC * protein * 60 * (variables["MW", "PFNA"] / 1e12) * 1e6) * 24
     Vmax_baso <- Vmax_basoC * BW^0.75  # (ug/day)
     Vmax_apical <- Vmax_apicalC * BW^0.75  # (ug/day)
     kbile <- kbilec * BW^(-0.25)  # biliary elimination; liver to feces storage (/day)
@@ -397,7 +397,7 @@
       CVL <- CL / PL  # concentration in the venous blood leaving the liver (ug/L)
       
       CA_free <- Aplas_free / VPlas  # free concentration in plasma (ug/L)
-      CA <- CA_free / Free  # concentration of total HFPO_DA in plasma (ug/L)
+      CA <- CA_free / Free  # concentration of total PFNA in plasma (ug/L)
       
       # Rest of Body (Tis)
       dAR <- QR * (CA - CVR) * Free
@@ -516,7 +516,7 @@
   # --- Dosing and Administration Settings ---
 
   admin_type <- "bolus"  # administration type: "iv", "oral", or "bolus"
-  admin_dose_bolus <- c(variables["admin_dose_bolus","HFPO_DA"])  # administered dose through bolus (ug)
+  admin_dose_bolus <- c(variables["admin_dose_bolus","PFNA"])  # administered dose through bolus (ug)
   admin_time_bolus <- c(0)  # time when bolus doses are administered (days)
   admin_dose_iv <- 0  # administered dose through IV (ug)
   admin_time_iv <- 0  # time when IV doses are administered (days)
@@ -530,10 +530,10 @@
   #============================
   #7. Parameters for estimation 
   #============================
-  RAFbaso <-variables["RAFbaso", "HFPO_DA"]  # relative activity factor, basolateral transporters
-  RAFapi <- variables["RAFapi", "HFPO_DA"] # relative activity factor, apical transporter
-  keffluxc <-variables["keffluxc", "HFPO_DA"] # rate of efflux from PTC to blood (1/(day*BW^-0.25))
-  kbilec <-variables["kbilec", "HFPO_DA"]  # biliary elimination rate (1/(day*BW^-0.25))
+  RAFbaso <-variables["RAFbaso", "PFNA"]  # relative activity factor, basolateral transporters
+  RAFapi <- variables["RAFapi", "PFNA"] # relative activity factor, apical transporter
+  keffluxc <-variables["keffluxc", "PFNA"] # rate of efflux from PTC to blood (1/(day*BW^-0.25))
+  kbilec <-variables["kbilec", "PFNA"]  # biliary elimination rate (1/(day*BW^-0.25))
 
 
   #=====================
@@ -551,7 +551,7 @@
                         "RAFbaso" = x[1],
                         "RAFapi" = x[2],
                         "kbilec"= x[3],
-                        "keffluxc"=x[4]
+                        "keffluxc"= x[4]
                         )
 
     params <- create.params(user_input,variables,PC)
@@ -597,17 +597,17 @@
     
     if (metric == "AAFE"){
     # Calculate scores AAFE
-    score_plasma <- AAFE(preds_plasma, plasma_exp$HFPO_DA
+    score_plasma <- AAFE(preds_plasma, plasma_exp$PFNA
     ,weight = weight,threshold = threshold ,times = time_plasma)
     }else if(metric == "rmsd"){
-      score_plasma <- rmsd(preds_plasma, plasma_exp$HFPO_DA
+      score_plasma <- rmsd(preds_plasma, plasma_exp$PFNA
                            ,weight = weight,threshold = threshold ,times = time_plasma)
     }
     score_urine <- AAFE(preds_urine, urine_exp$cumulative_mass)
      score_feces <- AAFE(preds_feces, feces_exp$cumulative_mass)
     
     # #Calculate scores RMSD
-    # score_plasma <- rmsd(preds_plasma, plasma_exp$HFPO_DA)
+    # score_plasma <- rmsd(preds_plasma, plasma_exp$PFNA)
     # score_urine <- rmsd(preds_urine, urine_exp$cumulative_mass)
     # score_feces <- rmsd(preds_feces, feces_exp$cumulative_mass)
 
@@ -627,9 +627,9 @@
      ,score_feces
     )))
 
-    # return((score_plasma*length(plasma_exp$HFPO_DA) + score_urine*length(exp_data_urine) +
+    # return((score_plasma*length(plasma_exp$PFNA) + score_urine*length(exp_data_urine) +
     #  score_feces*length(exp_data_feces))
-    # /(length(plasma_exp$HFPO_DA) + length(exp_data_urine) + length(exp_data_feces)))
+    # /(length(plasma_exp$PFNA) + length(exp_data_urine) + length(exp_data_feces)))
   }
   #---------------------------------#
   # Set up the Optimization process #
@@ -644,16 +644,16 @@
    exp_data_feces <- read.csv("exp_data_feces.csv")
 
   # # Original data up to 6 hours
-  feces_exp <- cumulative_exp_data(exp_data_feces, "time", "HFPO_DA", "feces.weight") %>% 
+  feces_exp <- cumulative_exp_data(exp_data_feces, "time", "PFNA", "feces.weight") %>% 
     mutate(cumulative_mass = cumulative_mass / 1000) %>% 
     filter(time <= 6) %>% 
     arrange(time)
 
   #  # Extension data beyond 6 hours
   # feces_ext <- exp_data_feces %>% 
-  #   filter(time > 6, HFPO_DA>0) %>% 
-  #   select(time, HFPO_DA) %>% 
-  #   mutate(HFPO_DA = HFPO_DA / 1000) %>%  # Convert from ng/g to ug/g
+  #   filter(time > 6, PFNA>0) %>% 
+  #   select(time, PFNA) %>% 
+  #   mutate(PFNA = PFNA / 1000) %>%  # Convert from ng/g to ug/g
   #   arrange(time)
 
   # fecal_excretion_rate <- 128 # g/day
@@ -663,8 +663,8 @@
   # t_dense_feces <- seq(min(feces_ext$time), max(feces_ext$time), by = step_feces)
 
 
-  # # Interpolate HFPO_DA onto dense grid & compute cumulative mass
-  # feces_cum_dense <- approx(feces_ext$time, feces_ext$HFPO_DA, xout = t_dense_feces)$y %>% 
+  # # Interpolate PFNA onto dense grid & compute cumulative mass
+  # feces_cum_dense <- approx(feces_ext$time, feces_ext$PFNA, xout = t_dense_feces)$y %>% 
   #   { cumsum(fecal_excretion_rate * . * step_feces) + tail(feces_exp$cumulative_mass, 1) }
 
   # df_feces_dense <- data.frame(time = t_dense_feces, cumulative_mass = feces_cum_dense)
@@ -679,15 +679,15 @@
   exp_data_urine <- read.csv("exp_data_urine.csv")
 
   # # Fixed: merged duplicate mutate lines & applied time/24 consistently
-  urine_exp <- cumulative_exp_data(exp_data_urine, "time", "HFPO_DA", "urine.volume") %>% 
+  urine_exp <- cumulative_exp_data(exp_data_urine, "time", "PFNA", "urine.volume") %>% 
     mutate(cumulative_mass = cumulative_mass , time = time / 24) %>% 
     filter(time <= 6) %>% 
     arrange(time)
 
   # urine_ext <- exp_data_urine%>% 
   #   mutate(time = time / 24)%>%
-  #   filter(time > 6, HFPO_DA>0) %>% 
-  #   select(time, HFPO_DA)
+  #   filter(time > 6, PFNA>0) %>% 
+  #   select(time, PFNA)
   
 
   # urine_excretion_rate <- 1.4 # L/day
@@ -697,7 +697,7 @@
   # t_dense_urine <- seq(min(urine_ext$time), max(urine_ext$time), by = step_urine)
 
   # # Interpolate & compute cumulative mass
-  # urine_cum_dense <- approx(urine_ext$time, urine_ext$HFPO_DA, xout = t_dense_urine)$y %>% 
+  # urine_cum_dense <- approx(urine_ext$time, urine_ext$PFNA, xout = t_dense_urine)$y %>% 
   #   { cumsum(urine_excretion_rate * . * step_urine) + tail(urine_exp$cumulative_mass, 1) }
 
   # # Map back to original time points
@@ -707,7 +707,7 @@
   # urine_exp <- rbind(urine_exp, df_urine_dense) 
 
   #Creates a teble with time and plasma concentration
-  plasma_exp <- read.csv("exp_data_plasma.csv")%>% select("time","HFPO_DA") #%>%filter(time<=28)#%>%
+  plasma_exp <- read.csv("exp_data_plasma.csv")%>% select("time","PFNA") #%>%filter(time<=28)#%>%
   #slice(c(seq(1,12,1),seq(13,55,4),seq(56,n(),1))) 
   # # 1. Extend time points
 
@@ -720,7 +720,7 @@
 
   # C_el= 1.365*exp(-0.246*total_time)+0.607*exp(-7.749*total_time)
 
-  # plasma_art<- data.frame(time = c(total_time), HFPO_DA = C_el)
+  # plasma_art<- data.frame(time = c(total_time), PFNA = C_el)
 
 
 
@@ -751,7 +751,7 @@
   upper_bounds <- c("RAFbaso"=1e4,
                     "RAFapi"= 1e4,
                     "kbilec"= 1e4,
-                    "keffluxc"= 2e2
+                    "keffluxc"= 1e4
                     )    
   #Call the optimization algorithm and provide him with the input data
   optimization <- nloptr::nloptr(x0 = x0,
@@ -759,8 +759,8 @@
                                 lb	= lower_bounds ,
                                 ub = upper_bounds,
                                 opts = opts,
-                                weight = 3, 
-                                threshold = 1,
+                                weight = 10, 
+                                threshold = 10,
                                 metric = "AAFE")
 
 
@@ -809,13 +809,13 @@
   plot1 <- ggplot()+
   geom_line(data = solution, aes(x = time, y = Aurine, color='Aurine'), size=1.3)+
   geom_line(data = solution, aes(x = time, y = Afeces, color='Afeces'), size=1.3)+
-  geom_point(data = urine_exp, aes(x = time, y = cumulative_mass, color='Aurine'), size=5)+
+  #geom_point(data = urine_exp, aes(x = time, y = cumulative_mass, color='Aurine'), size=5)+
   geom_point(data = feces_exp, aes(x = time, y = cumulative_mass, color='Afeces'), size=5)+
   
   labs(title = 'Predicted vs Observed Values',
         y = 'Mass (ug)' , x = "Time (days)")+
   xlim(0,10)+
-  ylim(0,0.25)+
+  #ylim(0,0.025)+
   theme(plot.title = element_text(hjust = 0.5,size=30),
         axis.title.y =element_text(hjust = 0.5,size=25,face="bold"),
         axis.text.y=element_text(size=22),
@@ -832,11 +832,11 @@
   print(plot1)
 
   plot2 <- ggplot()+
-    geom_line(data = solution, aes(x = time, y = CA, color='CA'), size=1.3)+
-    geom_point(data = plasma_exp, aes(x = time, y = HFPO_DA, color='CA'), size=5)+
-    #geom_point(data = plasma_art, aes(x = time/365, y = HFPO_DA, color='CA'), size=5, shape=17)+
+    geom_line(data = solution, aes(x = time/365, y = CA, color='CA'), size=1.3)+
+    geom_point(data = plasma_exp, aes(x = time/365, y = PFNA, color='CA'), size=5)+
+    #geom_point(data = plasma_art, aes(x = time/365, y = PFNA, color='CA'), size=5, shape=17)+
     labs(title = "Predicted vs Observed Values",
-        y = "Mass (ug/L)" , x = "Time (days)")+
+        y = "Mass (ug/L)" , x = "Time (years)")+
     theme(plot.title = element_text(hjust = 0.5,size=30),
           axis.title.y =element_text(hjust = 0.5,size=25,face="bold"),
           axis.text.y=element_text(size=22),
@@ -845,7 +845,7 @@
           legend.title=element_text(hjust = 0.5,size=25),
           legend.text=element_text(size=22),
           panel.border = element_rect(colour = "black", fill=NA, size=1.0)) +
-          xlim(0,30)+
+          #xlim(0,10/365)+
     scale_color_manual("Compartments", values=color_codes)+
     theme(legend.key.size = unit(1.5, 'cm'),
           legend.title = element_text(size=14),
@@ -861,7 +861,7 @@
 library(PKNCA)
 
 # --- Step 1: Prepare concentration data ---
-conc_exp <- data.frame(Subject = "Experimental", Time = plasma_exp$time, Concentration = plasma_exp$HFPO_DA)
+conc_exp <- data.frame(Subject = "Experimental", Time = plasma_exp$time, Concentration = plasma_exp$PFNA)
 conc_pred <- data.frame(Subject = "Predicted", Time = solution$time, Concentration = solution$CA)
 conc_df <- rbind(conc_exp, conc_pred)
 
@@ -925,5 +925,5 @@ View(nca_results_df)
 
 
 # # Optional: Save to CSV
- write.csv(nca_results_df, "NCA_results_HFPO_DA.csv", row.names = FALSE)
- write.csv(c(params,x_opt), "Optimized_Parameters_HFPO_DA.csv", row.names = TRUE)
+ write.csv(nca_results_df, "NCA_results_PFNA.csv", row.names = FALSE)
+ write.csv(c(params,x_opt), "Optimized_Parameters_PFNA.csv", row.names = TRUE)

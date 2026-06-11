@@ -357,7 +357,7 @@ obj.func <- function(x, dp, pfas_name, user_input){
   inits <- create.inits(params)
   events <- create.events(params)
   
-  sample_time <- seq(0, 6, 0.01)
+  sample_time <- c(seq(0, 6, 0.01),seq(7,24,1),seq(50,450,10))
   solution <- as.data.frame(
     ode(
       times = sample_time,
@@ -646,7 +646,7 @@ ggsave(filename = file.path(output_dir, "heatmap_all_outputs_combined.png"),
        dpi = 600)
 cat("Saved: heatmap_all_outputs_combined.png\n")
 
-output_dir <- "Extended PFAS PBK model/PFAS_sensitivity_heatmaps"
+output_dir <- "PFAS_sensitivity_heatmaps_prior"
 if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
 
 pert_pct <- sprintf("%.0f", dp * 100)

@@ -191,10 +191,3 @@ return(list("exposure" = exposure,
   return(results)
 }
 
-# try1<- .reverse_dosimetry_exposure(chemical = "PFOA", BW = 82, duration = 15, time_scale = "years", bio_mon=data.frame(bio_con = c(0.1, 0.05), bio_time = c(5, 10)))
-# try1
-# a=c(try1$exposure)#/(365*82)*1000 #ng/kg/day
-# try2<-changing_exp_forward_dosimetry("PFOA", ingestion = a, ingestion_time = c(0,5), BW = 82, duration = 15, time_scale = "years")
-# view(try2)
-# (a[1]*5+a[2]*15)*365*82/1000
-

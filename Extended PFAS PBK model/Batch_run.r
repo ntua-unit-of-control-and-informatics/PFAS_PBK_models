@@ -7,123 +7,6 @@ library(tidyverse)
 pfas_compounds <- c("PFHpA", "PFOA", "PFNA", "PFDA", "PFBS", 
                     "PFHxS", "PFOS", "DONA", "HFPO_DA", "PFBA", "PFHxA")
 
-#=========================
-# PK PARAMETER CALCULATION FUNCTION
-#=========================
-calculate_pk_parameters <- function(time, conc, route = c("IV", "Oral"), 
-                                    plot = TRUE, min_points = 3, 
-                                    output_dir = NULL, pfas_name = NULL,
-                                    data_type = "Model") {
-  # --- 1. Input Validation & Cleaning ---
-  route <- match.arg(route)
-  
-  if (length(time) != length(conc)) {
-    stop("Time and Concentration vectors must be the same length.")
-  }
-  
-  # Create data frame and remove NA or Zero/Negative concentrations for log calculations
-  df <- data.frame(time = time, conc = conc)
-  df_clean <- df[!is.na(df$conc) & df$conc > 0, ]
-  df_clean <- df_clean[order(df_clean$time), ]
-  
-  if (nrow(df_clean) < min_points) {
-    warning(paste("Not enough valid data points. Need at least", min_points))
-    return(list(
-      half_life = NA, lambda_z = NA, cmax = NA, tmax = NA, 
-      auc_0_last = NA, auc_0_inf = NA, reason = "Insufficient data points",
-      data_type = data_type
-    ))
-  }
-  
-  # --- 2. Cmax and Tmax Calculation ---
-  cmax <- max(df$conc, na.rm = TRUE)
-  tmax <- df$time[which.max(df$conc)]
-  
-  # --- 3. AUC Calculation (Trapezoidal Rule) ---
-  # AUC from time 0 to last measured time point
-  auc_0_last <- 0
-  for (i in 2:nrow(df)) {
-    dt <- df$time[i] - df$time[i-1]
-    avg_conc <- (df$conc[i] + df$conc[i-1]) / 2
-    auc_0_last <- auc_0_last + (dt * avg_conc)
-  }
-  
-  # --- 4. Route Specific Filtering for Half-Life ---
-  if (route == "Oral") {
-    max_conc_idx <- which.max(df_clean$conc)
-    t_max <- df_clean$time[max_conc_idx]
-    df_elim <- df_clean[df_clean$time >= t_max, ]
-    
-    if (nrow(df_elim) < min_points) {
-      warning("Oral route selected, but not enough points after Tmax to calculate half-life.")
-      return(list(
-        half_life = NA, lambda_z = NA, cmax = cmax, tmax = tmax,
-        auc_0_last = auc_0_last, auc_0_inf = NA,
-        reason = "Insufficient post-Tmax data", data_type = data_type
-      ))
-    }
-  } else {
-    df_elim <- df_clean
-  }
-  
-  # --- 5. Automated Terminal Phase Selection ---
-  n <- nrow(df_elim)
-  best_model <- NULL
-  best_adj_r2 <- -Inf
-  best_range <- NULL
-  
-  for (i in 1:(n - min_points + 1)) {
-    subset_data <- df_elim[i:n, ]
-    model <- lm(log(conc) ~ time, data = subset_data)
-    slope <- coef(model)[2]
-    
-    if (slope < 0) {
-      adj_r2 <- summary(model)$adj.r.squared
-      if (adj_r2 > best_adj_r2) {
-        best_adj_r2 <- adj_r2
-        best_model <- model
-        best_range <- subset_data
-      }
-    }
-  }
-  
-  # --- 6. Half-Life Calculation ---
-  if (is.null(best_model)) {
-    warning("Could not identify a terminal elimination phase (no negative slope found).")
-    return(list(
-      half_life = NA, lambda_z = NA, cmax = cmax, tmax = tmax,
-      auc_0_last = auc_0_last, auc_0_inf = NA,
-      reason = "No negative slope found", data_type = data_type
-    ))
-  }
-  
-  lambda_z <- -coef(best_model)[2]
-  half_life <- log(2) / lambda_z
-  
-  # AUC from 0 to infinity (AUC_0-inf = AUC_0-last + Clast/lambda_z)
-  clast <- best_range$conc[nrow(best_range)]
-  tlast <- best_range$time[nrow(best_range)]
-  auc_extra <- clast / lambda_z
-  auc_0_inf <- auc_0_last + auc_extra
-  
-  
-  # --- 8. Return Results ---
-  return(list(
-    half_life = half_life,
-    lambda_z = lambda_z,
-    cmax = cmax,
-    tmax = tmax,
-    auc_0_last = auc_0_last,
-    auc_0_inf = auc_0_inf,
-    clast = clast,
-    tlast = tlast,
-    route = route,
-    points_used = nrow(best_range),
-    adj_r_squared = best_adj_r2,
-    terminal_data = best_range,
-    data_type = data_type
-  ))
-}
 
 #=========================
 # 1. Parameters of the model
@@ -175,17 +58,17 @@ create.params <- function(variables, PC, BW, pfas_name) {
   protein <- 2.0e-6
   GFRC <- 24.19 * 24
 
-  PR <- 0.01
-  PAdi <- PC["Adipose", pfas_name]
-  PBra <- PC["Brain", pfas_name]
-  PGon <- PC["Gonads", pfas_name]
-  PGI <- PC["Gut", pfas_name]
-  PHea <- PC["Heart", pfas_name]
-  PL <- PC["Liver", pfas_name]
-  PLun <- PC["Lung", pfas_name]
-  PMus <- PC["Muscle", pfas_name]
-  PSki <- PC["Skin", pfas_name]
-  PSpl <- PC["Spleen", pfas_name]
+  PR <- 0.1
+  PAdi <-(1-Htc) * PC["Adipose", pfas_name]
+  PBra <- (1-Htc) *PC["Brain", pfas_name]
+  PGon <- (1-Htc) *PC["Gonads", pfas_name]
+  PGI <- (1-Htc) *PC["Gut", pfas_name]
+  PHea <- (1-Htc) *PC["Heart", pfas_name]
+  PL <-(1-Htc) * PC["Liver", pfas_name]
+  PLun <- (1-Htc) *PC["Lung", pfas_name]
+  PMus <- (1-Htc) *PC["Muscle", pfas_name]
+  PSki <- (1-Htc) *PC["Skin", pfas_name]
+  PSpl <- (1-Htc) *PC["Spleen", pfas_name]
   PPan <- (PGI + PSpl) / 2
 
   kdif <- 0.001 * 24
@@ -468,6 +351,17 @@ for (pfas in pfas_compounds) {
   plasma_exp <- read.csv("C:\\Users\\fotis\\Documents\\GitHub\\PFAS_PBK_models\\Extended PFAS PBK model\\exp_data_plasma.csv") %>%
     select("time", all_of(pfas)) %>%
     filter(!is.na(!!sym(pfas)))
+exp_data_feces <- read.csv("exp_data_feces.csv")
+  feces_exp <- cumulative_exp_data(exp_data_feces, "time", pfas, "feces.weight") %>%
+    mutate(cumulative_mass = cumulative_mass / 1000) %>%
+    filter(time <= 6)
+
+  # Urine experimental data
+  exp_data_urine <- read.csv("exp_data_urine.csv")
+  urine_exp <- cumulative_exp_data(exp_data_urine, "time", pfas, "urine.volume") %>%
+    mutate(time = time / 24) %>%
+    filter(time <= 6)
+
 
   cat("Experimental data loaded!\n")
 
@@ -496,47 +390,169 @@ if (pfas %in% colnames(plasma_exp)) {
 } else {
   cat("WARNING: Column '", pfas, "' not found in plasma_exp!\n")
 }
+cat("Creating plots...\n")
 
-  # ================================================================================
-  # 8. PK PARAMETER CALCULATIONS
-  # ================================================================================
-  cat("Calculating PK parameters...\n")
-
-  # Model predicted plasma PK parameters
-  model_pk <- calculate_pk_parameters(
-    time = solution$time,
-    conc = solution$CA,
-    route = "Oral",
-    plot = TRUE,
-    min_points = 5,
-    output_dir = output_dir,
-    pfas_name = pfas,
-    data_type = "Model"
-  )
-
-  # Observed plasma PK parameters
-  if (nrow(plasma_exp) > 0 && pfas %in% colnames(plasma_exp)) {
-    obs_pk <- calculate_pk_parameters(
-      time = plasma_exp$time,
-      conc = plasma_exp[[pfas]],
-      route = "Oral",
-      plot = TRUE,
-      min_points = 3,
-      output_dir = output_dir,
-      pfas_name = pfas,
-      data_type = "Observed"
+  # --- Plot 1: Mass in Liver, Rest of Body, and Plasma ---
+  plot_mass <- ggplot(solution) +
+    geom_line(aes(x = time, y = AL, color = "Liver"), linewidth = 1.3) +
+    geom_line(aes(x = time, y = AR, color = "Rest of Body"), linewidth = 1.3) +
+    geom_line(aes(x = time, y = Aplas_free, color = "Plasma"), linewidth = 1.3) +
+    geom_line(aes(x = time, y = ASpl, color = "Spleen"), linewidth = 1.3) +
+    geom_line(aes(x = time, y = APan, color = "Pancreas"), linewidth = 1.3) +
+    geom_line(aes(x = time, y = AGI, color = "GI Tract"), linewidth = 1.3) +
+    geom_line(aes(x = time, y = AAdi, color = "Adipose"), linewidth = 1.3) +
+    geom_line(aes(x = time, y = ABra, color = "Brain"), linewidth = 1.3) +
+    geom_line(aes(x = time, y = AGon, color = "Gonads"), linewidth = 1.3) +
+    geom_line(aes(x = time, y = AHea, color = "Heart"), linewidth = 1.3) +
+    geom_line(aes(x = time, y = ALun, color = "Lung"), linewidth = 1.3) +
+    geom_line(aes(x = time, y = AMus, color = "Muscle"), linewidth = 1.3) +
+    geom_line(aes(x = time, y = ASki, color = "Skin"), linewidth = 1.3) +
+    labs(
+      title = "Mass in Different Compartments",
+      x = "Time (days)",
+      y = "Mass (ug)",
+      color = "Compartment"
+    ) +
+    theme_bw() +
+    theme(
+      plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+      axis.title = element_text(size = 14, face = "bold"),
+      axis.text = element_text(size = 12),
+      legend.title = element_text(size = 12, face = "bold"),
+      legend.text = element_text(size = 11),
+      panel.border = element_rect(colour = "black", fill = NA, linewidth = 1.0)
     )
-  } else {
-    obs_pk <- list(
-      half_life = NA, lambda_z = NA, cmax = NA, tmax = NA,
-      auc_0_last = NA, auc_0_inf = NA, reason = "No observed data",
-      data_type = "Observed"
+
+  print(plot_mass)
+
+  # --- Plot 2: Concentration in Liver, Rest of Body, and Plasma ---
+  plot_concentration <- ggplot(solution) +
+    geom_line(aes(x = time, y = CL, color = "Liver"), linewidth = 1.3) +
+    geom_line(aes(x = time, y = CR, color = "Rest of Body"), linewidth = 1.3) +
+    geom_line(aes(x = time, y = CA, color = "Plasma"), linewidth = 1.3) +
+    geom_line(aes(x = time, y = CSpl, color = "Spleen"), linewidth = 1.3) +
+    geom_line(aes(x = time, y = Cpan, color = "Pancreas"), linewidth = 1.3) +
+    geom_line(aes(x = time, y = CGI, color = "GI Tract"), linewidth = 1.3) +
+    geom_line(aes(x = time, y = CAdi, color = "Adipose"), linewidth = 1.3) +
+    geom_line(aes(x = time, y = CBra, color = "Brain"), linewidth = 1.3) +
+    geom_line(aes(x = time, y = CGon, color = "Gonads"), linewidth = 1.3) +
+    geom_line(aes(x = time, y = CHea, color = "Heart"), linewidth = 1.3) +
+    geom_line(aes(x = time, y = CLun, color = "Lung"), linewidth = 1.3) +
+    geom_line(aes(x = time, y = CMus, color = "Muscle"), linewidth = 1.3) +
+    geom_line(aes(x = time, y = CSki, color = "Skin"), linewidth = 1.3) +
+    labs(
+      title = "Concentration in Different Compartments",
+      x = "Time (days)",
+      y = "Concentration (ug/L)",
+      color = "Compartment"
+    ) +
+    theme_bw() +
+    theme(
+      plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+      axis.title = element_text(size = 14, face = "bold"),
+      axis.text = element_text(size = 12),
+      legend.title = element_text(size = 12, face = "bold"),
+      legend.text = element_text(size = 11),
+      panel.border = element_rect(colour = "black", fill = NA, linewidth = 1.0)
     )
-  }
 
-  cat("PK parameter calculations complete!\n")
+  print(plot_concentration)
 
+  # --- Plot 3: Feces and Urine - Predictions vs Data ---
+  plot_excretion <- ggplot() +
+    geom_line(data = solution, aes(x = time, y = Aurine, color = "Urine (Model)"),
+              linewidth = 1.3) +
+    geom_line(data = solution, aes(x = time, y = Afeces, color = "Feces (Model)"),
+              linewidth = 1.3) +
+    geom_point(data = urine_exp, aes(x = time, y = cumulative_mass, color = "Urine (Data)"),
+              size = 4) +
+    geom_point(data = feces_exp, aes(x = time, y = cumulative_mass, color = "Feces (Data)"),
+              size = 4) +
+    labs(
+      title = "Feces and Urine: Model Predictions vs Experimental Data",
+      x = "Time (days)",
+      y = "Cumulative Mass (ug)",
+      color = "Legend"
+    ) +
+    xlim(0, 6) +
+    #ylim(0, 0.05) +
+    theme_bw() +
+    theme(
+      plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+      axis.title = element_text(size = 14, face = "bold"),
+      axis.text = element_text(size = 12),
+      legend.title = element_text(size = 12, face = "bold"),
+      legend.text = element_text(size = 11),
+      panel.border = element_rect(colour = "black", fill = NA, linewidth = 1.0)
+    )
 
+  print(plot_excretion)
+
+  # --- Plot 4: Plasma - Predictions vs Data ---
+  plot_plasma <- ggplot() +
+    geom_line(data = solution, aes(x = time/365, y = CA, color = "Model Prediction"),
+              linewidth = 1.3) +
+    geom_point(data = plasma_exp, aes(x = time/365, y= plasma_exp[,2], color = "Experimental Data"),
+              size = 4) +
+    labs(
+      title = "Plasma Concentration: Model Predictions vs Experimental Data",
+      x = "Time (days)",
+      y = "Concentration (ug/L)",
+      color = "Legend"
+    ) +
+    theme_bw() +
+    theme(
+      plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+      axis.title = element_text(size = 14, face = "bold"),
+      axis.text = element_text(size = 12),
+      legend.title = element_text(size = 12, face = "bold"),
+      legend.text = element_text(size = 11),
+      panel.border = element_rect(colour = "black", fill = NA, linewidth = 1.0)
+    )
+
+  print(plot_plasma)
+
+  cat("\nSimulation complete! All plots generated.\n")
+
+    output_dir <- paste0(pfas, "_simulation_plots")
+  if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
+
+  png_file <- file.path(output_dir, paste0("MASS_IN_BODY.png"))
+    ggsave(
+      filename = png_file,
+      plot = plot_mass,
+      width = 10,
+      height = 8,
+      dpi = 300
+    )
+
+  png_file <- file.path(output_dir, paste0("CONCENTRATION_IN_BODY.png"))
+    ggsave(
+      filename = png_file,
+      plot = plot_concentration,
+      width = 10,
+      height = 8,
+      dpi = 300
+    )   
+
+  png_file <- file.path(output_dir, paste0("URINE_FECES_COMPARISON.png"))
+    ggsave(
+      filename = png_file,
+      plot = plot_excretion,
+      width = 10,
+      height = 8,
+      dpi = 300
+    )
+  png_file <- file.path(output_dir, paste0("PLASMA_COMPARISON.png"))
+    ggsave( 
+      filename = png_file,
+      plot = plot_plasma,
+      width = 10,
+      height = 8,
+      dpi = 300
+    )
+
+  write.csv(solution, file.path(output_dir, paste0(pfas, "_simulation_results.csv")), row.names = FALSE)
 
   # ================================================================================
   # 10. SUMMARY OUTPUT
@@ -548,20 +564,11 @@ if (pfas %in% colnames(plasma_exp)) {
   cat("Bolus Dose:", admin_dose_bolus, "ug at time", admin_time_bolus, "days\n")
   cat("Simulation Time:", simulation_time, "days\n")
   cat("\n=== PK PARAMETERS ===\n")
-  cat("Model Cmax:", round(model_pk$cmax, 4), "ug/L\n")
-  cat("Model Tmax:", round(model_pk$tmax, 2), "days\n")
-  cat("Model AUC(0-last):", round(model_pk$auc_0_last, 4), "ug·day/L\n")
-  cat("Model AUC(0-inf):", round(model_pk$auc_0_inf, 4), "ug·day/L\n")
-  cat("Model Half-Life:", round(model_pk$half_life, 2), "days\n")
-  cat("\nObserved Cmax:", round(obs_pk$cmax, 4), "ug/L\n")
-  cat("Observed Tmax:", round(obs_pk$tmax, 2), "days\n")
-  cat("Observed AUC(0-last):", round(obs_pk$auc_0_last, 4), "ug·day/L\n")
-  cat("Observed AUC(0-inf):", round(obs_pk$auc_0_inf, 4), "ug·day/L\n")
-  cat("Observed Half-Life:", round(obs_pk$half_life, 2), "days\n")
+  
   cat("==========================\n")
 
   all_results[[pfas]] <- solution
-  
+}
   summary_row <- data.frame(
     PFAS = pfas,
     BW = params$BW,
@@ -576,33 +583,6 @@ if (pfas %in% colnames(plasma_exp)) {
   )
   all_summaries <- rbind(all_summaries, summary_row)
 
-  pk_row <- data.frame(
-    PFAS = pfas,
-    # Model PK Parameters
-    Model_Cmax_ug_L = round(model_pk$cmax, 4),
-    Model_Tmax_days = round(model_pk$tmax, 2),
-    Model_AUC_0_last = round(model_pk$auc_0_last, 4),
-    Model_AUC_0_inf = round(model_pk$auc_0_inf, 4),
-    Model_Half_Life_days = round(model_pk$half_life, 2),
-    Model_Lambda_z = round(model_pk$lambda_z, 4),
-    Model_Points_Used = model_pk$points_used,
-    Model_Adj_R2 = round(model_pk$adj_r_squared, 3),
-    # Observed PK Parameters
-    Observed_Cmax_ug_L = round(obs_pk$cmax, 4),
-    Observed_Tmax_days = round(obs_pk$tmax, 2),
-    Observed_AUC_0_last = round(obs_pk$auc_0_last, 4),
-    Observed_AUC_0_inf = round(obs_pk$auc_0_inf, 4),
-    Observed_Half_Life_days = round(obs_pk$half_life, 2),
-    Observed_Lambda_z = round(obs_pk$lambda_z, 4),
-    Observed_Points_Used = obs_pk$points_used,
-    Observed_Adj_R2 = round(obs_pk$adj_r_squared, 3),
-    # Ratios (Model/Observed)
-    Cmax_Ratio = round(model_pk$cmax / obs_pk$cmax, 2),
-    AUC_Ratio = round(model_pk$auc_0_last / obs_pk$auc_0_last, 2),
-    Half_Life_Ratio = round(model_pk$half_life / obs_pk$half_life, 2)
-  )
-  all_pk_parameters <- rbind(all_pk_parameters, pk_row)
-}
 
 write.csv(all_summaries, "PFAS_simulation_summary.csv", row.names = FALSE)
 write.csv(all_pk_parameters, "PFAS_PK_parameters_comparison.csv", row.names = FALSE)
@@ -611,7 +591,4 @@ cat("\n\n========================================\n")
 cat("ALL SIMULATIONS COMPLETE!\n")
 cat("========================================\n")
 cat("Summary saved to: PFAS_simulation_summary.csv\n")
-cat("PK parameters saved to: PFAS_PK_parameters_comparison.csv\n")
-cat("========================================\n")
 
-print(all_pk_parameters)
