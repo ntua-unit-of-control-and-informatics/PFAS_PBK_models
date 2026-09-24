@@ -24,12 +24,12 @@ variables <-data.frame(
            0.00054072, 0.00E+00, 18.42, 5.525079871),
   PFHxS = c(403.11, 6.95E-04, 5800, 778, 7300, 92, 44.76000058, 
             0.000165342, 2.40E-03, 3.76, 0.959152914),
-  PFOS = c(500.13, 2.18E-03, 2500, 137.5, 2200, 48, 0.000424071, 
+  PFOS = c(500.13, 0.000753, 2500, 137.5, 2200, 48, 0.000424071, 
            0.700484202, 0, 3.78, 0.069918193),
   DONA = c(378.07, 0.0268, 2500, 137.5, 4500, 39, 5.68E-05, 
            8.11E-05, 0.015495299, 3.71, 98.46893334),
-  HFPO_DA = c(330.0489, 0.00385, 2500, 137.5, 4500, 47, 2.39E-01, 
-              1.06E-05, 4.51E-02, 19.58, 2.00E+02),
+  HFPO_DA = c(330.0489, 0.00385, 2500, 137.5, 4500, 47, 
+          4.39E-02, 4.75E-06, 6.12E-02, 19.58, 1.41),
   PFBA = c(214.04, 2.29E-01, 2500, 137.5, 4500, 47, 0, 
            0.000224546, 0.00E+00, 4.01, 50.4078006),
   PFHxA = c(314.05, 3.80E-02, 2500, 137.5, 4500, 47, 0.011660009, 
@@ -77,7 +77,7 @@ rownames(PC) <- c("Adipose", "Brain", "Gonads", "Gut", "Heart", "Liver",
     inv_time_scale <- 1/time_scale
 
     # --- Cardiac Output and Blood Flow (as fraction of cardiac output) ---
-    QCC <- 12.5 * inv_time_scale  # cardiac output in L/day/kg^0.75; Brown 1997
+    QCC <- 12.5 * inv_time_scale  # cardiac output in L/time scale/kg^0.75; Brown 1997
     QLC <- 0.065  # fraction blood flow to liver; Brown 1997
     QKC <- 0.175  # fraction blood flow to kidney; Brown 1997
     QAdiC <-0.05  # fraction blood flow to adipose tissue; Brown 1997
@@ -123,10 +123,10 @@ rownames(PC) <- c("Adipose", "Brain", "Gonads", "Gut", "Heart", "Liver",
     RAFbaso <- variables["RAFbaso", ]  # relative activity factor, basolateral transporters (male)
     RAFapi <- variables["RAFapi", ] # relative activity factor, apical transporters (male); fitted to model
     protein <- 2.0e-6  # amount of protein in proximal tubule cells (mg protein/cell)
-    GFRC <- 24.19 * inv_time_scale  # glomerular filtration rate (L/day/kg kidney); Corley 2005
+    GFRC <- 24.19 * inv_time_scale  # glomerular filtration rate (L/time scale/kg kidney); Corley 2005
 
     # --- Partition Coefficients (from Allendorf 2021) ---
-    PR <- 0.01 # rest of body:blood#; fitted to model
+    PR <- 0.1 # rest of body:blood#; fitted to model
     PAdi <- (1-Htc) * PC["Adipose",] # adipose tissue:blood;
     PBra <- (1-Htc) * PC["Brain",]  # brain:blood;
     PGon <- (1-Htc) * PC["Gonads",]  # gonads:blood;
@@ -140,7 +140,7 @@ rownames(PC) <- c("Adipose", "Brain", "Gonads", "Gut", "Heart", "Liver",
     PPan <- (PGI+PSpl)/2  # pancreas:blood; estimated as average of GI tract and spleen
 
     # --- Rate Constants ---
-    kdif <- 0.001 * inv_time_scale  # diffusion rate from proximal tubule cells (L/day)
+    kdif <- 0.001 * inv_time_scale  # diffusion rate from proximal tubule cells (L/time scale)
     kabsc <-  2.12 * inv_time_scale  # rate of absorption from small intestine (1/(day*BW^-0.25))
     kunabsc <- 7.06e-5 * inv_time_scale  # rate of unabsorbed dose to feces (1/(day*BW^-0.25)); fitted to model 
     keffluxc <-variables["keffluxc", ] * inv_time_scale  # rate of efflux from PTC to blood (1/(day*BW^-0.25))
@@ -148,29 +148,27 @@ rownames(PC) <- c("Adipose", "Brain", "Gonads", "Gut", "Heart", "Liver",
     kurinec <- 0.063 * inv_time_scale  # urinary elimination rate (1/(day*BW^-0.25))
     
     # --- Water Consumption ---
-    water_consumption <- 1.36  # L/day
+    water_consumption <- 1.36  # L/time scale
 
     # === SCALED PARAMETERS (calculated from above) ===
 
     # Cardiac output and blood flows
-    QC <- QCC * (BW^0.75) * (1 - Htc)  # cardiac output in L/day; adjusted for plasma
-    QK <- (QKC * QC)  # plasma flow to kidney (L/day)
-    QL <- (QLC * QC)  # plasma flow to liver (L/day)
-    QAdi <- (QAdiC * QC)  # plasma flow to adipose tissue (L/day)
-    QBra <- (QBraC * QC)  # plasma flow to brain (L/day)
-    QGon <- (QGonC * QC)  # plasma flow to gonads (L/day)
-    QHea <- (QHeaC * QC)  # plasma flow to heart (L/day)
-    QLun <- (QLunC * QC)  # plasma flow to lung (L/day)
-    QMus <- (QMusC * QC)  # plasma flow to muscle (L/day)
-    QSki <- (QSkiC * QC)  # plasma flow to skin (L/day)
-    QSpl <- (QSplC * QC)  # plasma flow to spleen (L/day)
-    QPan <- (QPanC * QC)  # plasma flow to pancreas (L/day)
-    QGI <- (QGIC * QC)  # plasma flow to GI tract (L/day)
-    QR <- QC - QK - QL - QAdi - QBra - QGon - QHea - QLun -
-    QMus - QSki - QSpl - QPan - QGI  # plasma flow to rest of body (L/day)
+    QC <- QCC * (BW^0.75) * (1 - Htc) # cardiac output in L/time scale; adjusted for plasma
+    QK <- (QKC * QC)  # plasma flow to kidney (L/time scale)
+    QL <- (QLC * QC)  # plasma flow to liver (L/time scale)
+    QAdi <- (QAdiC * QC)  # plasma flow to adipose tissue (L/time scale)
+    QBra <- (QBraC * QC)  # plasma flow to brain (L/time scale)
+    QGon <- (QGonC * QC)  # plasma flow to gonads (L/time scale)
+    QHea <- (QHeaC * QC)  # plasma flow to heart (L/time scale)
+    QLun <- (QLunC * QC)  # plasma flow to lung (L/time scale)
+    QMus <- (QMusC * QC)  # plasma flow to muscle (L/time scale)
+    QSki <- (QSkiC * QC)  # plasma flow to skin (L/time scale)
+    QSpl <- (QSplC * QC)  # plasma flow to spleen (L/time scale)
+    QPan <- (QPanC * QC)  # plasma flow to pancreas (L/time scale)
+    QGI <- (QGIC * QC)  # plasma flow to GI tract (L/time scale)
+    QR <- QC - QK - QL - QAdi - QBra - QGon - QHea - QLun - QMus - QSki - QSpl - QPan - QGI  # plasma flow to rest of body (L/time scale)
 
-    QBal <- QC - (QK + QL + QR + QAdi + QBra + QGon + QHea + QLun +
-    QMus + QSki + QSpl + QPan + QGI)  # Balance check; should equal zero
+    QBal <- QC - (QK + QL + QR + QAdi + QBra + QGon + QHea + QLun + QMus + QSki + QSpl + QPan + QGI)  # Balance check; should equal zero
 
     # Tissue Volumes
     VPlas <- VplasC * BW  # volume of plasma (L)
@@ -196,23 +194,21 @@ rownames(PC) <- c("Adipose", "Brain", "Gonads", "Gut", "Heart", "Liver",
     PTC <- VKC * 1000 * 6e7  # number of PTC (cells/kg BW)
     VPTC <- VK * 1000 * VPTCC  # volume of proximal tubule cells (L)
     MPTC <- VPTC * 1000  # mass of the proximal tubule cells (g)
-    VR <- (0.93 * BW) - VPlas- VPTC - Vfil - VL -VAdi - VBra
-    - VGon - VHea - VLun - VMus - VSki - VSpl - VPan - VGI  # volume of rest of body (L)
+    VR <- (0.93 * BW) - VPlas- VPTC - Vfil - VL -VAdi - VBra - VGon - VHea - VLun - VMus - VSki - VSpl - VPan - VGI  # volume of rest of body (L)
     VBal <- (0.93 * BW) - (VR + VL + VPTC + Vfil + VPlas + VAdi 
     + VBra + VGon + VHea + VLun + VMus + VSki + VSpl + VPan + VGI)  # Balance check; should equal zero
 
-    Vmax_basoC <- (Vmax_baso_invitro * RAFbaso * PTC * protein * 60 * (MW / 1e12) * 1e6) * 24
-    Vmax_apicalC <- (Vmax_apical_invitro * RAFapi * PTC * protein * 60 * (MW / 1e12) * 1e6) * 24
-    Vmax_baso <- Vmax_basoC * BW^0.75  # (ug/day)
-    Vmax_apical <- Vmax_apicalC * BW^0.75  # (ug/day)
-    kbile <- kbilec * BW^(-0.25)  # biliary elimination; liver to feces storage (/day)
-    kurine <- kurinec * BW^(-0.25)  # urinary elimination, from filtrate (/day)
-    kefflux <- keffluxc * BW^(-0.25)  # efflux clearance rate, from PTC to blood (/day)
-    GFR <- GFRC*VK # glomerular filtration rate, (L/day)Abraham's personal value
-
+    Vmax_basoC <- (Vmax_baso_invitro * RAFbaso * PTC * protein * 60 * (MW / 1e12) * 1e6) * 24 * inv_time_scale 
+    Vmax_apicalC <- (Vmax_apical_invitro * RAFapi * PTC * protein * 60 * (MW / 1e12) * 1e6) * 24 * inv_time_scale
+    Vmax_baso <- Vmax_basoC * BW^0.75  # (ug/time scale)
+    Vmax_apical <- Vmax_apicalC * BW^0.75  # (ug/time scale)
+    kbile <- kbilec * BW^(-0.25)  # biliary elimination; liver to feces storage (/time scale)
+    kurine <- kurinec * BW^(-0.25)  # urinary elimination, from filtrate (/time scale)
+    kefflux <- keffluxc * BW^(-0.25)  # efflux clearance rate, from PTC to blood (/time scale)
+    GFR <- GFRC*VK # glomerular filtration rate, (L/time scale)
     # GI Tract Parameters
-    kabs <- kabsc * BW^(-0.25)  # rate of absorption from small intestine (/day)
-    kunabs <- kunabsc * BW^(-0.25)  # rate of unabsorbed dose to feces (/day)
+    kabs <- kabsc * BW^(-0.25)  # rate of absorption from small intestine (/time scale)
+    kunabs <- kunabsc * BW^(-0.25)  # rate of unabsorbed dose to feces (/time scale)
 
 
     return(list(
