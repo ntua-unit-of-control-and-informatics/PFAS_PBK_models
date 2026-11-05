@@ -332,9 +332,9 @@ changing_exp_forward_dosimetry<- function(chemical, ingestion,ingestion_time, BW
 
   solution <- .run_extended(user_input, solver = solver, rtol = rtol, atol = atol)
 
-  col_map <- c(serum = "CA", liver = "CL", adipose = "CAdi", brain = "CBra",
+  col_map <- c(plasma = "CA", serum = "CA", liver = "CL", adipose = "CAdi", brain = "CBra",
                gonads = "CGon", gut = "CGI", heart = "CHea", lung = "CLun",
-               muscle = "CMus", skin = "CSki", kidney = "CKb")
+               muscle = "CMus", skin = "CSki", kidney = "CPTC", pancreas = "Cpan")
 
   col <- col_map[tolower(compartment)]
   if (is.na(col)) stop("Invalid compartment: ", compartment)

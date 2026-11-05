@@ -21,14 +21,20 @@ forward_dosimetry <- function(BW, duration, time_step, chemical, ingestion,
 
   exposure_time <- sort(unique(c(seq(0, duration, by = time_step), duration)))
 
-  ingestion_input <- switch(time_scale,
-    "minutes" = (1/24/60) * ingestion * BW / 1000,
-    "hours"   = (1/24)    * ingestion * BW / 1000,
-    "days"    =             ingestion * BW / 1000,
-    "weeks"   = 7         * ingestion * BW / 1000,
-    "months"  = 30        * ingestion * BW / 1000,
-    "years"   = 365       * ingestion * BW / 1000
-  )
+  if (exp_type == "pharmacokinetics") {
+    # Single doses in ng/kg BW -> ug, independent of the time scale
+    ingestion_input <- ingestion * BW / 1000
+  } else {
+    # Intake rate in ng/kg BW/day -> ug per time-scale unit
+    ingestion_input <- switch(time_scale,
+      "minutes" = (1/24/60) * ingestion * BW / 1000,
+      "hours"   = (1/24)    * ingestion * BW / 1000,
+      "days"    =             ingestion * BW / 1000,
+      "weeks"   = 7         * ingestion * BW / 1000,
+      "months"  = 30        * ingestion * BW / 1000,
+      "years"   = 365       * ingestion * BW / 1000
+    )
+  }
 
   user_input <- list(
     BW             = BW,
